@@ -1,0 +1,13 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Soline dot and corner mark">
+  <!-- Icon B: the signature orange tittle (dot) above a minimal teal spatial corner -->
+  <rect x="0" y="0" width="512" height="512" rx="116" ry="116" fill="#FBF4E6"/>
+  <!-- teal open rounded corner = a measured space -->
+  <path d="M 176 190
+           L 176 320
+           Q 176 336 192 336
+           L 336 336"
+        fill="none" stroke="#1596A8" stroke-width="52"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- the orange dot: the "i" tittle, a measured point -->
+  <circle cx="336" cy="190" r="46" fill="#F49A1A"/>
+</svg>

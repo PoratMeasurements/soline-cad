@@ -1,0 +1,372 @@
+{
+  "triangle": {
+    "sink": {
+      "X": 1000,
+      "Y": 0
+    },
+    "hob": {
+      "X": 2500,
+      "Y": 0
+    },
+    "fridge": {
+      "X": 3650,
+      "Y": 0
+    }
+  },
+  "tri": {
+    "legs": [
+      [
+        "כיור→כיריים",
+        1500
+      ],
+      [
+        "כיריים→מקרר",
+        1150
+      ],
+      [
+        "מקרר→כיור",
+        2650
+      ]
+    ],
+    "sum": 5300
+  },
+  "warnings": [
+    "משולש עבודה: צלע כיריים→מקרר=1.15מ' קצרה מהמינימום 1.2מ' (NKBA)"
+  ],
+  "corners": [],
+  "layout": [
+    {
+      "wall": 0,
+      "length": 4000,
+      "base": [
+        {
+          "type": "base",
+          "family": "base",
+          "role": "drawers",
+          "code": "SB-DWR-500",
+          "w": 500,
+          "a": 0,
+          "b": 500,
+          "_drawers": {
+            "system": "LEGRABOX",
+            "NL": 550,
+            "boxW": 438,
+            "load": 70,
+            "fronts": [
+              {
+                "h": 158,
+                "sys": "M"
+              },
+              {
+                "h": 280,
+                "sys": "C"
+              },
+              {
+                "h": 280,
+                "sys": "C"
+              }
+            ]
+          }
+        },
+        {
+          "type": "filler",
+          "family": "filler",
+          "code": "SF-50",
+          "w": 50,
+          "a": 500,
+          "b": 550
+        },
+        {
+          "type": "base",
+          "family": "appliance",
+          "special": "SINK",
+          "cat": "sink",
+          "code": "SB-SINK-900",
+          "w": 900,
+          "a": 550,
+          "b": 1450,
+          "needs": [
+            "water",
+            "drain"
+          ],
+          "front": "door",
+          "svcX": 1000,
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        },
+        {
+          "type": "base",
+          "family": "appliance",
+          "special": "DW",
+          "cat": "dishwasher",
+          "code": "SB-DW-600",
+          "w": 600,
+          "a": 1450,
+          "b": 2050,
+          "needs": [
+            "water",
+            "drain",
+            "elec"
+          ],
+          "front": "panel",
+          "svcX": 1600
+        },
+        {
+          "type": "filler",
+          "family": "filler",
+          "code": "SF-50",
+          "w": 50,
+          "a": 2050,
+          "b": 2100
+        },
+        {
+          "type": "base",
+          "family": "appliance",
+          "special": "HOB",
+          "cat": "hob",
+          "code": "SB-HOB-800",
+          "w": 800,
+          "a": 2100,
+          "b": 2900,
+          "needs": [
+            "gas_or_elec"
+          ],
+          "front": "drawers",
+          "svcX": 2500,
+          "_drawers": {
+            "system": "TANDEMBOX antaro",
+            "NL": 550,
+            "boxW": 738,
+            "load": 65,
+            "fronts": [
+              {
+                "h": 129,
+                "sys": "M"
+              },
+              {
+                "h": 294,
+                "sys": "K"
+              },
+              {
+                "h": 294,
+                "sys": "K"
+              }
+            ]
+          }
+        },
+        {
+          "type": "base",
+          "family": "base",
+          "role": "drawers",
+          "code": "SB-DWR-400",
+          "w": 400,
+          "a": 2900,
+          "b": 3300,
+          "_drawers": {
+            "system": "LEGRABOX",
+            "NL": 550,
+            "boxW": 338,
+            "load": 70,
+            "fronts": [
+              {
+                "h": 158,
+                "sys": "M"
+              },
+              {
+                "h": 280,
+                "sys": "C"
+              },
+              {
+                "h": 280,
+                "sys": "C"
+              }
+            ]
+          }
+        },
+        {
+          "type": "tall",
+          "family": "tall",
+          "special": "FRIDGE",
+          "cat": "fridge",
+          "code": "ST-FRIDGE-700",
+          "w": 700,
+          "a": 3300,
+          "b": 4000,
+          "needs": [
+            "elec"
+          ],
+          "front": "panel",
+          "svcX": 3650
+        }
+      ],
+      "uppers": [
+        {
+          "type": "wall",
+          "family": "wall",
+          "role": "lift",
+          "code": "SW-LIFT-1000",
+          "w": 1000,
+          "a": 0,
+          "b": 1000,
+          "lift": {
+            "code": "HS",
+            "name": "AVENTOS HS (up & over)",
+            "minH": 350,
+            "maxH": 800,
+            "maxW": 1800,
+            "note": "דלת מלמעלה-ומעל"
+          },
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        },
+        {
+          "type": "wall",
+          "family": "wall",
+          "role": "lift",
+          "code": "SW-LIFT-1000",
+          "w": 1000,
+          "a": 1000,
+          "b": 2000,
+          "lift": {
+            "code": "HS",
+            "name": "AVENTOS HS (up & over)",
+            "minH": 350,
+            "maxH": 800,
+            "maxW": 1800,
+            "note": "דלת מלמעלה-ומעל"
+          },
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        },
+        {
+          "type": "wall",
+          "family": "wall",
+          "role": "lift",
+          "code": "SW-LIFT-1000",
+          "w": 1000,
+          "a": 2000,
+          "b": 3000,
+          "lift": {
+            "code": "HS",
+            "name": "AVENTOS HS (up & over)",
+            "minH": 350,
+            "maxH": 800,
+            "maxW": 1800,
+            "note": "דלת מלמעלה-ומעל"
+          },
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        },
+        {
+          "type": "wall",
+          "family": "wall",
+          "role": "lift",
+          "code": "SW-LIFT-1000",
+          "w": 1000,
+          "a": 3000,
+          "b": 4000,
+          "lift": {
+            "code": "HS",
+            "name": "AVENTOS HS (up & over)",
+            "minH": 350,
+            "maxH": 800,
+            "maxW": 1800,
+            "note": "דלת מלמעלה-ומעל"
+          },
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        }
+      ],
+      "hood": true
+    }
+  ],
+  "islands": [
+    {
+      "name": "אי מרכזי",
+      "kind": "island",
+      "length": 2400,
+      "base": [
+        {
+          "type": "base",
+          "family": "base",
+          "role": "door",
+          "code": "SB-1200",
+          "w": 1200,
+          "a": 0,
+          "b": 1200,
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        },
+        {
+          "type": "base",
+          "family": "base",
+          "role": "door",
+          "code": "SB-1200",
+          "w": 1200,
+          "a": 1200,
+          "b": 2400,
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        }
+      ]
+    }
+  ],
+  "modules": {
+    "SB-DWR-500": 1,
+    "SF-50": 2,
+    "SB-SINK-900": 1,
+    "SB-DW-600": 1,
+    "SB-HOB-800": 1,
+    "SB-DWR-400": 1,
+    "ST-FRIDGE-700": 1,
+    "SW-LIFT-1000": 4,
+    "SB-1200": 2
+  },
+  "sheets": {
+    "MFC": {
+      "name": "מלמין (MFC 18mm)",
+      "sheet": "2800×2070",
+      "sheets": 7,
+      "parts": 75,
+      "util": 56.3,
+      "oversize": 0
+    },
+    "HDF": {
+      "name": "גב HDF/מלמין 8mm",
+      "sheet": "2800×2070",
+      "sheets": 3,
+      "parts": 21,
+      "util": 59.3,
+      "oversize": 0
+    },
+    "MDF": {
+      "name": "MDF צבוע/מצופה 18mm",
+      "sheet": "2800×2070",
+      "sheets": 3,
+      "parts": 25,
+      "util": 47.9,
+      "oversize": 0
+    }
+  }
+}

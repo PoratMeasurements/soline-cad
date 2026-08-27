@@ -1,0 +1,523 @@
+<title>Soline · ניהול והגדרות — Wireframes</title>
+<style>
+  :root {
+    --bg:#eef2f7; --grid:rgba(20,60,110,0.05); --panel:#ffffff; --panel-2:#f1f5fa;
+    --line:rgba(24,52,92,0.16); --line-strong:rgba(24,52,92,0.30);
+    --ink:#0e1f36; --ink-2:#3d5273; --muted:#6a7a95;
+    --accent:#0d6fbf; --accent-soft:rgba(13,111,191,0.10);
+    --go:#0a9d63; --go-soft:rgba(10,157,99,0.12); --nogo:#d23a3f; --nogo-soft:rgba(210,58,63,0.12);
+    --flag:#c67c10; --flag-soft:rgba(198,124,16,0.14);
+    --mono:ui-monospace,"SF Mono","Menlo","Consolas",monospace;
+    --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI","Arial Hebrew",Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){ :root{
+    --bg:#080f1a; --grid:rgba(120,165,225,0.05); --panel:#0f1a2b; --panel-2:#152134;
+    --line:rgba(130,165,220,0.16); --line-strong:rgba(130,165,220,0.30);
+    --ink:#e6eefb; --ink-2:#aebfdc; --muted:#8296b6;
+    --accent:#5cc8ff; --accent-soft:rgba(92,200,255,0.12);
+    --go:#2fce8f; --go-soft:rgba(47,206,143,0.14); --nogo:#ff6b70; --nogo-soft:rgba(255,107,112,0.14);
+    --flag:#f5b544; --flag-soft:rgba(245,181,68,0.16); } }
+  :root[data-theme="light"]{ --bg:#eef2f7; --grid:rgba(20,60,110,0.05); --panel:#fff; --panel-2:#f1f5fa;
+    --line:rgba(24,52,92,0.16); --line-strong:rgba(24,52,92,0.30); --ink:#0e1f36; --ink-2:#3d5273; --muted:#6a7a95;
+    --accent:#0d6fbf; --accent-soft:rgba(13,111,191,0.10); --go:#0a9d63; --go-soft:rgba(10,157,99,0.12);
+    --nogo:#d23a3f; --nogo-soft:rgba(210,58,63,0.12); --flag:#c67c10; --flag-soft:rgba(198,124,16,0.14); }
+  :root[data-theme="dark"]{ --bg:#080f1a; --grid:rgba(120,165,225,0.05); --panel:#0f1a2b; --panel-2:#152134;
+    --line:rgba(130,165,220,0.16); --line-strong:rgba(130,165,220,0.30); --ink:#e6eefb; --ink-2:#aebfdc; --muted:#8296b6;
+    --accent:#5cc8ff; --accent-soft:rgba(92,200,255,0.12); --go:#2fce8f; --go-soft:rgba(47,206,143,0.14);
+    --nogo:#ff6b70; --nogo-soft:rgba(255,107,112,0.14); --flag:#f5b544; --flag-soft:rgba(245,181,68,0.16); }
+
+  * { box-sizing:border-box; }
+  body { margin:0; direction:rtl; background:var(--bg); color:var(--ink); font-family:var(--sans); line-height:1.55;
+    background-image: linear-gradient(var(--grid) 1px,transparent 1px), linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:26px 26px; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1080px; margin:0 auto; padding: clamp(16px,4vw,40px) clamp(12px,4vw,32px) 72px; }
+  .ltr { direction:ltr; unicode-bidi:isolate; }
+  .mono { font-family:var(--mono); font-variant-numeric:tabular-nums; }
+  h1,h2,h3 { margin:0; text-wrap:balance; }
+  .eyebrow { font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); display:inline-flex; gap:8px; align-items:center; }
+  .eyebrow::before { content:""; width:22px; height:1px; background:var(--accent); }
+  header.top h1 { font-size: clamp(24px,4vw,38px); font-weight:700; letter-spacing:-0.015em; margin-top:10px; }
+  header.top p { color:var(--ink-2); font-size: clamp(14px,2vw,16px); margin:8px 0 0; max-width:64ch; }
+
+  /* web app chrome */
+  .appbar { display:flex; align-items:center; gap:12px; margin-top:26px; padding:14px 18px; border:1px solid var(--line); border-radius:16px; background:var(--panel); }
+  .brandmark { width:34px; height:34px; border-radius:10px; background:var(--accent); color:#fff; display:grid; place-items:center; font-weight:800; }
+  .appbar .prod { font-weight:700; font-size:15px; }
+  .appbar .prod small { display:block; font-family:var(--mono); font-size:10.5px; color:var(--muted); font-weight:500; letter-spacing:.08em; }
+  .appbar .who { margin-inline-start:auto; display:flex; align-items:center; gap:9px; font-size:13px; color:var(--ink-2); }
+  .appbar .who .av { width:32px; height:32px; border-radius:50%; background:var(--accent-soft); color:var(--accent); display:grid; place-items:center; font-weight:700; }
+
+  /* segmented control */
+  .segments { display:flex; flex-wrap:wrap; gap:6px; margin:20px 0 22px; }
+  .segments button { font-family:var(--sans); font-size:13px; font-weight:600; padding:9px 14px; border-radius:10px;
+    border:1px solid var(--line); background:var(--panel); color:var(--ink-2); cursor:pointer; display:inline-flex; gap:7px; align-items:center; }
+  .segments button .n { font-family:var(--mono); font-size:10px; color:var(--muted); }
+  .segments button[aria-current="true"] { border-color:var(--accent); color:var(--ink); box-shadow: inset 0 0 0 1px var(--accent-soft); }
+  .segments button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+
+  /* screen shell */
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:20px; overflow:hidden; }
+  .scr-head { padding:20px 22px 16px; border-bottom:1px solid var(--line); }
+  .scr-head h2 { font-size:21px; font-weight:700; }
+  .scr-head .sub { font-size:13px; color:var(--muted); font-family:var(--mono); margin-top:4px; }
+  .body { padding:20px 22px 24px; }
+
+  /* strawman note */
+  .note { display:flex; gap:12px; align-items:flex-start; background:var(--flag-soft); border:1px solid var(--flag); border-radius:14px; padding:14px 16px; margin-bottom:20px; }
+  .note .ic { font-size:18px; color:var(--flag); flex:0 0 auto; }
+  .note .tx { font-size:13.5px; color:var(--ink); }
+  .note .tx b { color:var(--flag); }
+
+  /* generic info banner */
+  .banner { display:flex; gap:12px; align-items:flex-start; background:var(--accent-soft); border:1px solid var(--accent); border-radius:14px; padding:14px 16px; margin-bottom:20px; }
+  .banner .ic { font-size:18px; color:var(--accent); flex:0 0 auto; }
+  .banner .tx { font-size:13.5px; color:var(--ink); }
+
+  /* tables */
+  .tblwrap { overflow-x:auto; border:1px solid var(--line); border-radius:14px; }
+  table { border-collapse:collapse; width:100%; min-width:640px; font-size:13.5px; }
+  thead th { text-align:start; font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--muted);
+    padding:12px 14px; border-bottom:1px solid var(--line-strong); background:var(--panel-2); white-space:nowrap; }
+  tbody td { padding:11px 14px; border-bottom:1px solid var(--line); vertical-align:middle; }
+  tbody tr:last-child td { border-bottom:none; }
+  td .vert { font-weight:650; font-size:14px; }
+  .cellnum { font-family:var(--mono); font-variant-numeric:tabular-nums; }
+
+  /* input-like cells */
+  .inp { display:inline-flex; align-items:center; gap:4px; font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:13px; font-weight:600;
+    border:1px solid var(--line-strong); border-radius:8px; padding:6px 10px; background:var(--panel-2); color:var(--ink); min-width:74px; }
+  .inp .u { color:var(--muted); font-size:11px; font-weight:500; }
+  tr:hover .inp { border-color:var(--accent); }
+
+  /* policy pills */
+  .pol { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; border-radius:999px; padding:5px 12px; white-space:nowrap; }
+  .pol.block { background:var(--nogo-soft); color:var(--nogo); border:1px solid var(--nogo); }
+  .pol.flag { background:var(--flag-soft); color:var(--flag); border:1px solid var(--flag); }
+  .pol.accept { background:var(--go-soft); color:var(--go); border:1px solid var(--go); }
+  .caret { font-size:9px; opacity:.6; }
+
+  /* toggle */
+  .toggle { position:relative; width:44px; height:26px; border-radius:999px; background:var(--line-strong); border:none; cursor:pointer; flex:0 0 auto; transition:background .15s; }
+  .toggle::after { content:""; position:absolute; top:3px; right:3px; width:20px; height:20px; border-radius:50%; background:#fff; transition:transform .15s; box-shadow:0 1px 3px rgba(0,0,0,.3); }
+  .toggle[aria-pressed="true"] { background:var(--go); }
+  .toggle[aria-pressed="true"]::after { transform:translateX(-18px); }
+  .toggle:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .toggle.sm { width:38px; height:22px; }
+  .toggle.sm::after { width:16px; height:16px; top:3px; right:3px; }
+  .toggle.sm[aria-pressed="true"]::after { transform:translateX(-16px); }
+
+  /* vertical cards */
+  .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:14px; }
+  .vcard { border:1px solid var(--line); border-radius:16px; padding:16px; background:var(--panel); }
+  .vcard.on { border-color:var(--go); box-shadow: inset 0 0 0 1px var(--go-soft); }
+  .vcard.off { opacity:.72; }
+  .vcard .vhead { display:flex; align-items:center; gap:10px; }
+  .vcard .vico { width:38px; height:38px; border-radius:11px; background:var(--accent-soft); color:var(--accent); display:grid; place-items:center; font-size:19px; flex:0 0 auto; }
+  .vcard .vname { font-weight:700; font-size:16px; }
+  .vcard .vstate { margin-top:12px; display:flex; align-items:center; justify-content:space-between; }
+  .stat { font-family:var(--mono); font-size:11px; font-weight:600; padding:3px 9px; border-radius:7px; }
+  .stat.live { background:var(--go-soft); color:var(--go); }
+  .stat.planned { background:var(--flag-soft); color:var(--flag); }
+  .vcard .vmeta { font-size:12px; color:var(--muted); margin-top:10px; }
+
+  /* checklist editor */
+  .chkgroup { border:1px solid var(--line); border-radius:16px; overflow:hidden; margin-bottom:16px; }
+  .chkgroup > .gh { display:flex; align-items:center; gap:10px; padding:12px 16px; background:var(--panel-2); border-bottom:1px solid var(--line); font-weight:700; font-size:14px; }
+  .chkgroup > .gh .tag { font-family:var(--mono); font-size:10.5px; font-weight:600; color:var(--muted); border:1px solid var(--line); border-radius:6px; padding:2px 7px; }
+  .crow { display:flex; align-items:center; gap:12px; padding:12px 16px; border-bottom:1px solid var(--line); }
+  .crow:last-child { border-bottom:none; }
+  .crow .grip { color:var(--muted); font-size:14px; cursor:grab; flex:0 0 auto; }
+  .crow .ctext { flex:1; min-width:0; }
+  .crow .ctext .ct { font-size:14px; font-weight:550; }
+  .crow .ctext .cd { font-size:12px; color:var(--muted); margin-top:2px; }
+  .reqtog { display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:600; color:var(--muted); flex:0 0 auto; }
+  .reqtog .star { color:var(--nogo); }
+  .addrow { padding:12px 16px; }
+  .ghost { border:1px dashed var(--accent); color:var(--accent); background:transparent; border-radius:10px; padding:9px 14px; font-family:var(--sans); font-weight:700; font-size:13px; cursor:pointer; }
+
+  /* users */
+  .rolechip { display:inline-flex; align-items:center; font-size:11.5px; font-weight:700; border-radius:7px; padding:3px 9px; }
+  .rolechip.admin { background:var(--nogo-soft); color:var(--nogo); }
+  .rolechip.lead { background:var(--flag-soft); color:var(--flag); }
+  .rolechip.op { background:var(--accent-soft); color:var(--accent); }
+  .rolechip.ro { background:var(--panel-2); color:var(--muted); border:1px solid var(--line); }
+  .rolechip.int { background:var(--go-soft); color:var(--go); }
+  .uav { width:30px; height:30px; border-radius:50%; background:var(--accent-soft); color:var(--accent); display:inline-grid; place-items:center; font-weight:700; font-size:13px; margin-inline-end:9px; vertical-align:middle; }
+  .yes { color:var(--go); font-weight:700; } .no { color:var(--muted); }
+
+  .legend-grid { margin-top:18px; display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:10px; }
+  .lg { display:flex; gap:10px; align-items:flex-start; border:1px solid var(--line); border-radius:12px; padding:12px 14px; }
+  .lg .ld { font-size:12px; color:var(--muted); margin-top:3px; }
+
+  /* integrations */
+  .icard { display:flex; align-items:center; gap:14px; border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:12px; }
+  .icard .ilogo { width:44px; height:44px; border-radius:12px; display:grid; place-items:center; font-family:var(--mono); font-weight:800; font-size:13px; flex:0 0 auto; background:var(--panel-2); color:var(--ink-2); border:1px solid var(--line); }
+  .icard .imain { min-width:0; flex:1; }
+  .icard .iname { font-weight:700; font-size:15px; display:flex; align-items:center; gap:9px; }
+  .icard .idesc { font-size:12.5px; color:var(--muted); margin-top:2px; }
+  .connchip { font-family:var(--mono); font-size:10.5px; font-weight:600; padding:3px 9px; border-radius:999px; display:inline-flex; align-items:center; gap:5px; }
+  .connchip.on { background:var(--go-soft); color:var(--go); border:1px solid var(--go); }
+  .connchip.off { background:var(--panel-2); color:var(--muted); border:1px solid var(--line); }
+  .icard .iact { display:flex; align-items:center; gap:12px; flex:0 0 auto; }
+
+  .btn { border:1px solid var(--accent); color:var(--accent); background:transparent; border-radius:10px; padding:9px 16px; font-family:var(--sans); font-weight:700; font-size:13px; cursor:pointer; }
+  .btn.solid { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .btn:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+
+  .toolbar { display:flex; align-items:center; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
+  .toolbar .spacer { margin-inline-start:auto; }
+
+  footer { margin-top:40px; padding-top:18px; border-top:1px solid var(--line); font-family:var(--mono); font-size:11px; color:var(--muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+
+  [hidden]{ display:none !important; }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">ניהול והגדרות · Wireframes</div>
+    <h1>מנוע המדידה החכם — משטח התצורה</h1>
+    <p>כאן מוגדרים חוקי המשחק: מערכי האימות לכל ורטיקל, אילו ורטיקלים פעילים, רשימות המוכנות, ההרשאות מי רשאי לעקוף אימות, והאינטגרציות שאליהן המנוע פולט אירועים. זהו משטח <b>web</b> — לא טלפון. החליפו בין המסכים:</p>
+  </header>
+
+  <div class="appbar">
+    <div class="brandmark">S</div>
+    <div class="prod">Soline · מנוע המדידה<small>ADMIN · CONFIG CONSOLE</small></div>
+    <div class="who"><span class="av">מ</span><span>מיכאל · Admin</span></div>
+  </div>
+
+  <div class="segments" role="tablist" aria-label="מסכי הניהול">
+    <button data-screen="tolerances" role="tab" aria-current="true"><span class="n">01</span> מערך כללי אימות</button>
+    <button data-screen="verticals" role="tab"><span class="n">02</span> ורטיקלים</button>
+    <button data-screen="checklists" role="tab"><span class="n">03</span> רשימות תיוג</button>
+    <button data-screen="users" role="tab"><span class="n">04</span> משתמשים ותפקידים</button>
+    <button data-screen="integrations" role="tab"><span class="n">05</span> אינטגרציות</button>
+  </div>
+
+  <!-- 01 TOLERANCES -->
+  <section class="panel" data-scr="tolerances">
+    <div class="scr-head">
+      <h2>מערך כללי אימות</h2>
+      <div class="sub">TOLERANCES · טולרנסים ומדיניות אי-הסכמה לכל ורטיקל</div>
+    </div>
+    <div class="body">
+      <div class="note">
+        <span class="ic">⚠︎</span>
+        <span class="tx"><b>שימו לב:</b> אלו ערכי ברירת-מחדל (strawman) הממתינים לאשרור מומחה תחום. אין להסתמך עליהם כתקן מחייב עד לחתימת בעל המקצוע הרלוונטי לכל ורטיקל.</span>
+      </div>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ורטיקל</th>
+              <th>אורך קריטי</th>
+              <th>אורך כללי</th>
+              <th>זווית</th>
+              <th>מדיניות באי-הסכמה</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="vert">שיש</span></td>
+              <td><span class="inp">±1.5<span class="u">מ״מ</span></span></td>
+              <td><span class="inp">±3.0<span class="u">מ״מ</span></span></td>
+              <td><span class="inp">±0.5<span class="u">°</span></span></td>
+              <td><span class="pol block">BLOCK GO <span class="caret">▾</span></span></td>
+            </tr>
+            <tr>
+              <td><span class="vert">זכוכית</span></td>
+              <td><span class="inp">±1.0<span class="u">מ״מ</span></span></td>
+              <td><span class="inp">±2.0<span class="u">מ״מ</span></span></td>
+              <td><span class="inp">±0.3<span class="u">°</span></span></td>
+              <td><span class="pol block">BLOCK GO <span class="caret">▾</span></span></td>
+            </tr>
+            <tr>
+              <td><span class="vert">אלומיניום</span></td>
+              <td><span class="inp">±2.0<span class="u">מ״מ</span></span></td>
+              <td><span class="inp">±4.0<span class="u">מ״מ</span></span></td>
+              <td><span class="inp">±0.5<span class="u">°</span></span></td>
+              <td><span class="pol flag">סימון <span class="caret">▾</span></span></td>
+            </tr>
+            <tr>
+              <td><span class="vert">מטבחים</span></td>
+              <td><span class="inp">±3.0<span class="u">מ״מ</span></span></td>
+              <td><span class="inp">±5.0<span class="u">מ״מ</span></span></td>
+              <td><span class="inp">±1.0<span class="u">°</span></span></td>
+              <td><span class="pol flag">סימון <span class="caret">▾</span></span></td>
+            </tr>
+            <tr>
+              <td><span class="vert">אדריכלות</span></td>
+              <td><span class="inp">±5.0<span class="u">מ״מ</span></span></td>
+              <td><span class="inp">±10<span class="u">מ״מ</span></span></td>
+              <td><span class="inp">±1.0<span class="u">°</span></span></td>
+              <td><span class="pol accept">קבלה+תיעוד <span class="caret">▾</span></span></td>
+            </tr>
+            <tr>
+              <td><span class="vert">בנייה</span></td>
+              <td><span class="inp">±10<span class="u">מ״מ</span></span></td>
+              <td><span class="inp">±25<span class="u">מ״מ</span></span></td>
+              <td><span class="inp">±2.0<span class="u">°</span></span></td>
+              <td><span class="pol accept">קבלה+תיעוד <span class="caret">▾</span></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="toolbar" style="margin-top:18px">
+        <span class="mono" style="font-size:11.5px; color:var(--muted)">מדיניות: <b style="color:var(--nogo)">BLOCK GO</b> חוסם הכרעה · <b style="color:var(--flag)">סימון</b> מתיר עם דגל · <b style="color:var(--go)">קבלה+תיעוד</b> מקבל ומתעד</span>
+        <span class="spacer"></span>
+        <button class="btn">שחזר ברירת-מחדל</button>
+        <button class="btn solid">שמור שינויים</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 VERTICALS -->
+  <section class="panel" data-scr="verticals" hidden>
+    <div class="scr-head">
+      <h2>ורטיקלים</h2>
+      <div class="sub">VERTICALS · אילו תחומים פעילים במנוע</div>
+    </div>
+    <div class="body">
+      <div class="banner">
+        <span class="ic">◑</span>
+        <span class="tx"><b>v1</b> משיק עם <b>מטבחים ושיש</b> בלבד. שאר הוורטיקלים מתוכננים אך כבויים — מערך האימות שלהם קיים כ-strawman וימתין לאשרור לפני הפעלה.</span>
+      </div>
+      <div class="cards">
+        <div class="vcard on">
+          <div class="vhead"><span class="vico">🍽</span><span class="vname">מטבחים</span></div>
+          <div class="vstate"><span class="stat live">פעיל · v1</span><button class="toggle" aria-pressed="true" aria-label="הפעל מטבחים"></button></div>
+          <div class="vmeta">טולרנס אורך קריטי ±3.0 מ״מ · מדיניות: סימון</div>
+        </div>
+        <div class="vcard on">
+          <div class="vhead"><span class="vico">◼</span><span class="vname">שיש</span></div>
+          <div class="vstate"><span class="stat live">פעיל · v1</span><button class="toggle" aria-pressed="true" aria-label="הפעל שיש"></button></div>
+          <div class="vmeta">טולרנס אורך קריטי ±1.5 מ״מ · מדיניות: BLOCK GO</div>
+        </div>
+        <div class="vcard off">
+          <div class="vhead"><span class="vico">▨</span><span class="vname">אלומיניום</span></div>
+          <div class="vstate"><span class="stat planned">מתוכנן · כבוי</span><button class="toggle" aria-pressed="false" aria-label="הפעל אלומיניום"></button></div>
+          <div class="vmeta">טולרנס אורך קריטי ±2.0 מ״מ · ממתין לאשרור</div>
+        </div>
+        <div class="vcard off">
+          <div class="vhead"><span class="vico">▢</span><span class="vname">זכוכית</span></div>
+          <div class="vstate"><span class="stat planned">מתוכנן · כבוי</span><button class="toggle" aria-pressed="false" aria-label="הפעל זכוכית"></button></div>
+          <div class="vmeta">טולרנס אורך קריטי ±1.0 מ״מ · ממתין לאשרור</div>
+        </div>
+        <div class="vcard off">
+          <div class="vhead"><span class="vico">▤</span><span class="vname">אדריכלות</span></div>
+          <div class="vstate"><span class="stat planned">מתוכנן · כבוי</span><button class="toggle" aria-pressed="false" aria-label="הפעל אדריכלות"></button></div>
+          <div class="vmeta">טולרנס אורך קריטי ±5.0 מ״מ · ממתין לאשרור</div>
+        </div>
+        <div class="vcard off">
+          <div class="vhead"><span class="vico">🏗</span><span class="vname">בנייה</span></div>
+          <div class="vstate"><span class="stat planned">מתוכנן · כבוי</span><button class="toggle" aria-pressed="false" aria-label="הפעל בנייה"></button></div>
+          <div class="vmeta">טולרנס אורך קריטי ±10 מ״מ · ממתין לאשרור</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 CHECKLISTS -->
+  <section class="panel" data-scr="checklists" hidden>
+    <div class="scr-head">
+      <h2>רשימות תיוג מוכנות</h2>
+      <div class="sub">READINESS CHECKLISTS · שיש · פריט מסומן ★ חוסם GO אם פתוח</div>
+    </div>
+    <div class="body">
+      <div class="banner">
+        <span class="ic">☑</span>
+        <span class="tx">כל ורטיקל יורש את הפריטים <b>המשותפים</b> ומוסיף פריטים <b>ספציפיים</b>. פריט המסומן <b class="mono">חובה ★</b> חוסם את שער ה-GO/NO-GO כל עוד לא אושר.</span>
+      </div>
+
+      <div class="chkgroup">
+        <div class="gh"><span>פריטים משותפים</span><span class="tag">SHARED · כל הוורטיקלים</span></div>
+        <div class="crow">
+          <span class="grip">⋮⋮</span>
+          <div class="ctext"><div class="ct">רצפה נגישה ומדידה</div></div>
+          <span class="reqtog">חובה <span class="star">★</span><button class="toggle sm" aria-pressed="true" aria-label="חובה"></button></span>
+        </div>
+        <div class="crow">
+          <span class="grip">⋮⋮</span>
+          <div class="ctext"><div class="ct">תקרה נגישה</div></div>
+          <span class="reqtog">חובה <span class="star">★</span><button class="toggle sm" aria-pressed="true" aria-label="חובה"></button></span>
+        </div>
+        <div class="crow">
+          <span class="grip">⋮⋮</span>
+          <div class="ctext"><div class="ct">קירות נגישים</div></div>
+          <span class="reqtog">חובה <span class="star">★</span><button class="toggle sm" aria-pressed="true" aria-label="חובה"></button></span>
+        </div>
+        <div class="crow">
+          <span class="grip">⋮⋮</span>
+          <div class="ctext"><div class="ct">תאורה / חשמל למכשיר</div><div class="cd">נדרש להפעלת סורק/מכשיר מדידה</div></div>
+          <span class="reqtog">חובה <span class="star">★</span><button class="toggle sm" aria-pressed="false" aria-label="חובה"></button></span>
+        </div>
+        <div class="addrow"><button class="ghost">＋ הוסף פריט משותף</button></div>
+      </div>
+
+      <div class="chkgroup">
+        <div class="gh"><span>ספציפי לשיש</span><span class="tag">VERTICAL · שיש</span></div>
+        <div class="crow">
+          <span class="grip">⋮⋮</span>
+          <div class="ctext"><div class="ct">ארונות מותקנים ומפולסים</div><div class="cd">מדידת שיש על תשתית לא מפולסת = לוח שגוי</div></div>
+          <span class="reqtog">חובה <span class="star">★</span><button class="toggle sm" aria-pressed="true" aria-label="חובה"></button></span>
+        </div>
+        <div class="crow">
+          <span class="grip">⋮⋮</span>
+          <div class="ctext"><div class="ct">מיקומי חיתוך (כיור / כיריים) מסומנים</div><div class="cd">דורש אישור לקוח לפני מדידה</div></div>
+          <span class="reqtog">חובה <span class="star">★</span><button class="toggle sm" aria-pressed="true" aria-label="חובה"></button></span>
+        </div>
+        <div class="crow">
+          <span class="grip">⋮⋮</span>
+          <div class="ctext"><div class="ct">גובה סופי של ארונות תחתונים ננעל</div></div>
+          <span class="reqtog">חובה <span class="star">★</span><button class="toggle sm" aria-pressed="true" aria-label="חובה"></button></span>
+        </div>
+        <div class="crow">
+          <span class="grip">⋮⋮</span>
+          <div class="ctext"><div class="ct">כיוון סיב / גוון לוח מאושר</div><div class="cd">מומלץ — אינו חוסם</div></div>
+          <span class="reqtog">חובה <span class="star">★</span><button class="toggle sm" aria-pressed="false" aria-label="חובה"></button></span>
+        </div>
+        <div class="crow">
+          <span class="grip">⋮⋮</span>
+          <div class="ctext"><div class="ct">מרווח לקיר אחורי נבדק (חיפוי/פנלים)</div></div>
+          <span class="reqtog">חובה <span class="star">★</span><button class="toggle sm" aria-pressed="false" aria-label="חובה"></button></span>
+        </div>
+        <div class="addrow"><button class="ghost">＋ הוסף פריט לשיש</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 USERS -->
+  <section class="panel" data-scr="users" hidden>
+    <div class="scr-head">
+      <h2>משתמשים ותפקידים</h2>
+      <div class="sub">USERS & ROLES · מי רשאי לעקוף אימות</div>
+    </div>
+    <div class="body">
+      <div class="toolbar">
+        <span class="mono" style="font-size:11.5px; color:var(--muted)">2 משתמשים פעילים</span>
+        <span class="spacer"></span>
+        <button class="btn solid">＋ הזמן משתמש</button>
+      </div>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th>משתמש</th>
+              <th>דוא״ל</th>
+              <th>תפקיד</th>
+              <th>עקיפת אימות</th>
+              <th>סטטוס</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="uav">מ</span>מיכאל סיבוני</td>
+              <td class="mono" style="font-size:12px">michael@soline.co.il</td>
+              <td><span class="rolechip admin">Admin</span></td>
+              <td class="yes">✓ כן</td>
+              <td class="mono" style="font-size:11.5px; color:var(--go)">פעיל</td>
+            </tr>
+            <tr>
+              <td><span class="uav">י</span>יותם</td>
+              <td class="mono" style="font-size:12px">yotam@soline.co.il</td>
+              <td><span class="rolechip lead">Lead</span></td>
+              <td class="yes">✓ כן</td>
+              <td class="mono" style="font-size:11.5px; color:var(--go)">פעיל</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-size:15px; margin:22px 0 4px">מקרא תפקידים — הרשאת עקיפת אימות</h3>
+      <div class="legend-grid">
+        <div class="lg"><span class="rolechip op">Operator</span><div class="ld">מפעיל שדה. מבצע מדידות ומריץ את השער — <b>אינו</b> רשאי לעקוף NO-GO.</div></div>
+        <div class="lg"><span class="rolechip lead">Lead</span><div class="ld">ראש צוות. <b>רשאי לעקוף</b> אימות עם סיבה מתועדת.</div></div>
+        <div class="lg"><span class="rolechip admin">Admin</span><div class="ld">ניהול מלא — טולרנסים, ורטיקלים, משתמשים. <b>רשאי לעקוף</b>.</div></div>
+        <div class="lg"><span class="rolechip ro">ReadOnly</span><div class="ld">צפייה בלבד בנתונים ובתעודות. ללא עריכה וללא עקיפה.</div></div>
+        <div class="lg"><span class="rolechip int">Integrator</span><div class="ld">חשבון מערכת לאינטגרציות ו-Webhooks. ללא הרשאת עקיפה אנושית.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 INTEGRATIONS -->
+  <section class="panel" data-scr="integrations" hidden>
+    <div class="scr-head">
+      <h2>אינטגרציות</h2>
+      <div class="sub">INTEGRATIONS · המנוע פולט אירועים החוצה</div>
+    </div>
+    <div class="body">
+      <div class="banner">
+        <span class="ic">⇄</span>
+        <span class="tx"><b>ADR-009:</b> המנוע <b>פולט אירועים</b> אל המערכות הללו (מדידה אומתה, הכרעת GO/NO-GO, תעודה הונפקה) — הוא <b>אינו מחליף</b> אותן. ה-CRM נשאר ה-CRM, מערכת הכספים נשארת מערכת הכספים.</span>
+      </div>
+
+      <div class="icard">
+        <span class="ilogo">PD</span>
+        <div class="imain">
+          <div class="iname">Pipedrive <span class="connchip on">● מחובר</span></div>
+          <div class="idesc">CRM · פולט אירועי שער והכרעה אל כרטיס העסקה</div>
+        </div>
+        <div class="iact"><button class="btn">הגדר</button><button class="toggle" aria-pressed="true" aria-label="Pipedrive"></button></div>
+      </div>
+
+      <div class="icard">
+        <span class="ilogo">₪</span>
+        <div class="imain">
+          <div class="iname">חשבשבת / iCount <span class="connchip on">● מחובר</span></div>
+          <div class="idesc">כספים · תעודת מדידה מוסמכת מפעילה חיוב/מסמך</div>
+        </div>
+        <div class="iact"><button class="btn">הגדר</button><button class="toggle" aria-pressed="true" aria-label="חשבשבת"></button></div>
+      </div>
+
+      <div class="icard">
+        <span class="ilogo">GM</span>
+        <div class="imain">
+          <div class="iname">Google Maps <span class="connchip on">● מחובר</span></div>
+          <div class="idesc">ניווט וכתובות עבודה · מרחקים במסך העבודות</div>
+        </div>
+        <div class="iact"><button class="btn">הגדר</button><button class="toggle" aria-pressed="true" aria-label="Google Maps"></button></div>
+      </div>
+
+      <div class="icard">
+        <span class="ilogo">GC</span>
+        <div class="imain">
+          <div class="iname">Google Calendar <span class="connchip off">○ מנותק</span></div>
+          <div class="idesc">תיאום מדידות · סנכרון חלונות זמן לצוות השדה</div>
+        </div>
+        <div class="iact"><button class="btn solid">חבר</button><button class="toggle" aria-pressed="false" aria-label="Google Calendar"></button></div>
+      </div>
+
+      <div class="icard">
+        <span class="ilogo">‹∕›</span>
+        <div class="imain">
+          <div class="iname">Webhooks <span class="connchip off">○ לא מוגדר</span></div>
+          <div class="idesc">נקודת פליטה גולמית · שלח כל אירוע ל-endpoint משלך</div>
+        </div>
+        <div class="iact"><button class="btn">הוסף endpoint</button><button class="toggle" aria-pressed="false" aria-label="Webhooks"></button></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="ltr">SOLINE · MEASUREMENT ENGINE · ADMIN WIREFRAMES</span>
+    <span>מלווה את ADR-009 ומערך ה-strawman · עדיין ללא מימוש</span>
+  </footer>
+</div>
+
+<script>
+  (function(){
+    var seg = document.querySelectorAll('.segments button');
+    var screens = document.querySelectorAll('.panel[data-scr]');
+    function show(name){
+      screens.forEach(function(s){ s.hidden = (s.getAttribute('data-scr') !== name); });
+      seg.forEach(function(b){ b.setAttribute('aria-current', b.getAttribute('data-screen')===name ? 'true':'false'); });
+    }
+    seg.forEach(function(b){ b.addEventListener('click', function(){ show(b.getAttribute('data-screen')); }); });
+    // visual-only toggles
+    document.querySelectorAll('.toggle').forEach(function(t){
+      t.addEventListener('click', function(){
+        t.setAttribute('aria-pressed', t.getAttribute('aria-pressed')==='true' ? 'false':'true');
+      });
+    });
+    show('tolerances');
+  })();
+</script>

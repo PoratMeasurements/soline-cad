@@ -1,0 +1,263 @@
+<title>Soline · אפיון-אב</title>
+<style>
+  :root{
+    --bg:#eef2f8; --surface:#ffffff; --surface2:#f4f7fb; --line:#dde5f0; --line2:#c6d2e2;
+    --ink:#0e1f36; --ink2:#42567a; --muted:#7688a5; --accent:#0d6fbf; --accent2:#6b3fc9;
+    --go:#0a9d63; --warn:#b5710e; --bad:#d23a3f;
+    --mono:ui-monospace,"Consolas",monospace; --sans:system-ui,"Segoe UI","Arial Hebrew",Arial,sans-serif;
+    --r:14px; --sh:0 10px 30px -18px rgba(16,40,80,.4);
+  }
+  :root:not([data-theme="light"]){ @media (prefers-color-scheme:dark){
+    --bg:#0a111d; --surface:#101b2c; --surface2:#16233a; --line:#25344a; --line2:#33475f;
+    --ink:#e8effb; --ink2:#b3c4e0; --muted:#8296b6; --accent:#5cc8ff; --accent2:#a78bfa;
+    --go:#2fce8f; --warn:#f5b544; --bad:#ff6b70;
+  }}
+  :root[data-theme="dark"]{
+    --bg:#0a111d; --surface:#101b2c; --surface2:#16233a; --line:#25344a; --line2:#33475f;
+    --ink:#e8effb; --ink2:#b3c4e0; --muted:#8296b6; --accent:#5cc8ff; --accent2:#a78bfa;
+    --go:#2fce8f; --warn:#f5b544; --bad:#ff6b70;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .layout{max-width:1160px;margin:0 auto;padding:clamp(20px,4vw,40px) clamp(14px,3vw,28px);display:grid;grid-template-columns:230px 1fr;gap:32px;align-items:start}
+  @media(max-width:860px){.layout{grid-template-columns:1fr}.toc{position:static!important;max-height:none!important}}
+
+  .toc{position:sticky;top:20px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+    padding:16px;box-shadow:var(--sh);max-height:calc(100vh - 40px);overflow-y:auto}
+  .toc h4{margin:0 0 10px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-family:var(--mono)}
+  .toc a{display:block;color:var(--ink2);text-decoration:none;font-size:13px;padding:5px 8px;border-radius:8px;font-weight:600}
+  .toc a:hover{background:var(--surface2);color:var(--accent)}
+
+  main{min-width:0}
+  .hero{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-radius:18px;padding:clamp(22px,4vw,38px);margin-bottom:26px;box-shadow:var(--sh)}
+  .hero .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.1em;opacity:.85;margin:0 0 10px}
+  .hero h1{margin:0;font-size:clamp(26px,4.5vw,40px);font-weight:850;letter-spacing:-.01em}
+  .hero p{margin:12px 0 0;font-size:clamp(14px,2vw,17px);opacity:.95;max-width:60ch}
+  .hero .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .hero .tags span{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:700}
+
+  section{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px clamp(16px,3vw,26px);margin-bottom:18px;box-shadow:var(--sh);scroll-margin-top:20px}
+  section h2{margin:0 0 4px;font-size:20px;font-weight:800;display:flex;align-items:center;gap:10px}
+  section h2 .n{font-family:var(--mono);font-size:14px;color:var(--accent);font-weight:700}
+  section .ref{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin:0 0 14px}
+  section h3{font-size:14.5px;font-weight:800;color:var(--ink2);margin:18px 0 8px}
+  p,li{color:var(--ink);font-size:14.5px}
+  ul{margin:8px 0;padding-inline-start:22px}
+  li{margin:5px 0}
+  code{font-family:var(--mono);font-size:.88em;background:var(--surface2);padding:2px 6px;border-radius:6px;color:var(--accent2);unicode-bidi:plaintext;direction:ltr;display:inline-block}
+  .lead{color:var(--ink2)}
+  .fr{font-family:var(--mono);font-weight:700;color:var(--accent);font-size:.9em}
+  .scroll{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:13px;min-width:440px}
+  th,td{text-align:start;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.03em}
+  tbody tr:last-child td{border-bottom:0}
+  .pipe{font-family:var(--mono);font-size:12px;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;unicode-bidi:plaintext;direction:ltr;text-align:left;overflow-x:auto}
+  .callout{background:var(--surface2);border-inline-start:3px solid var(--accent);border-radius:10px;padding:14px 16px;margin:14px 0;font-size:14px}
+  .callout.warn{border-color:var(--warn)} .callout.go{border-color:var(--go)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:620px){.grid2{grid-template-columns:1fr}}
+  .card{background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .card h4{margin:0 0 8px;font-size:13.5px;font-weight:800;color:var(--accent)}
+  .final{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:0}
+  .final p{color:#fff;font-size:16px;font-weight:600;margin:0}
+</style>
+
+<div class="layout" dir="rtl" lang="he">
+  <nav class="toc" aria-label="תוכן עניינים">
+    <h4>תוכן עניינים</h4>
+    <a href="#s1">1 · תמצית מנהלים</a>
+    <a href="#s2">2 · מפת המסמכים</a>
+    <a href="#s3">3 · היקף המוצר</a>
+    <a href="#s4">4 · התהליך (11 שלבים)</a>
+    <a href="#s5">5 · תפקידים והרשאות</a>
+    <a href="#s6">6 · דרישות פונקציונליות</a>
+    <a href="#s7">7 · מודל נתונים</a>
+    <a href="#s8">8 · פורמט .sol</a>
+    <a href="#s9">9 · תוכנת העיצוב</a>
+    <a href="#s10">10 · אסטרטגיה</a>
+    <a href="#s11">11 · ערכי המוצר</a>
+    <a href="#s14">12 · שלבי פיתוח</a>
+    <a href="#s15">13 · החלטות פתוחות</a>
+  </nav>
+
+  <main>
+    <div class="hero">
+      <p class="eyebrow">SOLINE · MASTER SPECIFICATION</p>
+      <h1>אפיון-אב</h1>
+      <p>מסמך הכניסה למתכנתים — מאחד את כל אפיון Soline: פלטפורמת שירות + עיצוב + מדידה + ייצור לנגרים, סביב הפורמט הקנייני <code>.sol</code>.</p>
+      <div class="tags"><span>4 תפקידים</span><span>11 שלבים</span><span>פורמט .sol</span><span>מנוע מדדים</span><span>תוכנת עיצוב</span><span>רמת NASDAQ</span></div>
+    </div>
+
+    <section id="s1">
+      <h2><span class="n">1</span> תמצית מנהלים</h2>
+      <p><b>היום:</b> נגר מזמין מדידה → מודדים בשטח (InnoDraw→ORDX + DISTO) → ממירים ל-DXF/PDP → מחזירים.</p>
+      <p><b>החזון (הנחת יסוד: שליטה בשוק, רמת חברה נסחרת):</b> לולאה סגורה — הנגר <b>מעצב</b> תכנון ראשוני בתוכנת Soline → אנחנו <b>מודדים</b> → <b>מעמידים ומתאימים</b> למציאות → מחזירים <code>.sol</code> שהנגר <b>ממשיך לעבוד עליו</b> → לייצור.</p>
+      <div class="grid2">
+        <div class="card"><h4>הנכסים האסטרטגיים</h4>הממיר ORDX→PDP (IP ייחודי) · פורמט <code>.sol</code> כסטנדרט (חפיר בסגנון DWG) · לולאת דאטה שמשתפרת עם כל מדידה.</div>
+        <div class="card"><h4>התובנה המרכזת</h4>המדידה נראית כמו העסק — אבל היא ערוץ הרכישה הזול לעסק ה-SaaS/marketplace עתיר-השוליים שמעליה.</div>
+      </div>
+    </section>
+
+    <section id="s2">
+      <h2><span class="n">2</span> מפת המסמכים</h2>
+      <p class="ref">כל נושא מפורט במסמך-בן ייעודי; זה מסמך-האב המאחד.</p>
+      <div class="scroll"><table>
+        <thead><tr><th>מסמך</th><th>תחום</th></tr></thead>
+        <tbody>
+          <tr><td><code>WORKFLOW.md</code></td><td>התהליך המלא (11 שלבים) + תרשים</td></tr>
+          <tr><td><code>ROLES_PERMISSIONS.md</code></td><td>4 תפקידים + הרשאות + בידוד דייר</td></tr>
+          <tr><td><code>SPEC.md</code></td><td>אפיון פונקציונלי (מסכים, נתונים, NFR)</td></tr>
+          <tr><td><code>PRICING_CATALOG.md</code></td><td>קטלוג מק״טים + תמחור</td></tr>
+          <tr><td><code>METRICS_ENGINE.md</code></td><td>מנוע מדדים נסתר — אדמין בלבד</td></tr>
+          <tr><td><code>ADMIN_DASHBOARD.md</code></td><td>דאשבורד + KPI — אדמין בלבד</td></tr>
+          <tr><td><code>SOL_FORMAT.md</code></td><td>פורמט <code>.sol</code> (8 שכבות)</td></tr>
+          <tr><td><code>DESIGN_TOOL_SPEC.md</code></td><td>תוכנת העיצוב (אדריכל+CAD+מתכנת)</td></tr>
+          <tr><td><code>MEASURE_TOOL_SPEC.md</code></td><td>Soline Measure — מערכת המדידה של המודד</td></tr>
+          <tr><td><code>CARPENTER_TOOLS.md</code></td><td>כלי שימור הנגר + אקוסיסטם</td></tr>
+          <tr><td><code>PLATFORM_VISION.md</code></td><td>חזון חברה נסחרת + ערכי מוצר</td></tr>
+          <tr><td><code>STRATEGY / OWNER_ANALYSIS / STAKEHOLDERS</code></td><td>אסטרטגיה, פערים, בעלי עניין</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="s3">
+      <h2><span class="n">3</span> היקף המוצר — ארבע תצוגות, אפליקציה אחת</h2>
+      <p class="lead">אותו בסיס (web + Capacitor APK), התצוגה וההרשאות נגזרות מהתפקיד.</p>
+      <div class="grid2">
+        <div class="card"><h4>👤 פורטל נגר (web)</h4>הזמנות, מעקב, הורדה + תוכנת עיצוב וכלי אקוסיסטם.</div>
+        <div class="card"><h4>📱 אפליקציית מודד (offline)</h4>העבודות שלי + <b>Soline Measure</b> (מדידה בתוכנה של סוליין, לא InnoDraw) + GPS למנוע.</div>
+        <div class="card"><h4>🖥️ קונסולת מתאם</h4>תור, כל העבודות, בירור, שיבוץ, תמחור, בדיקה, מסירה.</div>
+        <div class="card"><h4>📊 דאשבורד מנהל</h4>KPI, מנוע מדדים, קטלוג, משתמשים, הגדרות.</div>
+      </div>
+    </section>
+
+    <section id="s4">
+      <h2><span class="n">4</span> התהליך המלא (11 שלבים)</h2>
+      <p class="ref">פירוט ותרשים: WORKFLOW.md</p>
+      <div class="pipe">submitted → accepted → assessment → scheduled → in_field → measured(DR1) → processing → review(DR2) → delivered → approved → closed</div>
+      <p style="margin-top:12px">5 לולאות תיקון: הזמנה חסרה · בירור לא מספק · בעיית עיבוד · חסר מידע שטח · בקשת שינויים.</p>
+    </section>
+
+    <section id="s5">
+      <h2><span class="n">5</span> תפקידים והרשאות</h2>
+      <p class="ref">פירוט: ROLES_PERMISSIONS.md</p>
+      <ul>
+        <li><b>carpenter</b> (נגר, חיצוני) — רק ההזמנות שלו.</li>
+        <li><b>surveyor</b> (מודד) — רק עבודות שהוקצו לו.</li>
+        <li><b>coordinator</b> (מתאם) — כל העבודות.</li>
+        <li><b>manager</b> (מנהל) — הכול + אדמין. <b>מנוע המדדים והדאשבורד — אדמין בלבד.</b></li>
+      </ul>
+      <div class="callout">בידוד דייר (multi-tenant) נאכף בשכבת הנתונים, לא רק בהסתרת כפתורים.</div>
+    </section>
+
+    <section id="s6">
+      <h2><span class="n">6</span> דרישות פונקציונליות</h2>
+      <p class="ref">מספור לצוות הפיתוח · פירוט במסמכי-הבן</p>
+      <h3>פורטל נגר</h3>
+      <ul>
+        <li><span class="fr">FR-CARP-01…06</span> התחברות · "ההזמנות שלי" · טופס הזמנה (מק״טים + מחיר חי) · מעקב+אישור מחיר+הורדה+בקשת שינויים · ספריית פרויקטים · הזמנה חוזרת.</li>
+      </ul>
+      <h3>אפליקציית מודד</h3>
+      <ul>
+        <li><span class="fr">FR-FIELD-01…06</span> "העבודות שלי" · <b>מדידה ב-Soline Measure</b> (לא InnoDraw) · DISTO · <b>צ'קליסט שלמות חוסם-יציאה</b> · אירועי מנוע (GPS) · סנכרון.</li>
+      </ul>
+      <h3>קונסולת מתאם</h3>
+      <ul>
+        <li><span class="fr">FR-COORD-01…06</span> תור+לוח · קליטה ואישור · בירור ואימות שטח · תמחור · שיבוץ+לו״ז (+<b>גאוגרפי</b>) · בדיקה DR2 ומסירה.</li>
+      </ul>
+      <h3>דאשבורד מנהל</h3>
+      <ul>
+        <li><span class="fr">FR-MGR-01…05</span> דאשבורד KPI · מנוע מדדים (עלות/רווחיות) · קטלוג ומחירונים · משתמשים והרשאות · הגדרות. <b>אדמין בלבד.</b></li>
+      </ul>
+      <h3>תוכנת העיצוב</h3>
+      <ul>
+        <li><span class="fr">FR-DESIGN-01…06</span> קנבס 2D/חזיתות/חתכים · 3D+רינדור · קטלוג פרמטרי+אילוצים · <b>תצוגת fit (תכנון מול נמדד)</b> · מנוע R1–R10 · חוצה-פלטפורמות+offline.</li>
+      </ul>
+      <h3>כלי אקוסיסטם / שימור</h3>
+      <ul>
+        <li><span class="fr">FR-ECO-01…06</span> BOM+nesting · יצוא CNC · <b>תמחור הנגר ללקוח-הקצה</b> · רינדרים · <b>Marketplace</b> · שיתוף+גרסאות+אנליטיקה.</li>
+      </ul>
+      <div class="grid2" style="margin-top:14px">
+        <div class="card"><h4>FR-NOTIF · התראות</h4>בתוך האפליקציה (שלב 1) → <b>וואטסאפ</b> (WhatsApp Business API, שלב 2).</div>
+        <div class="card"><h4>FR-BILL · גבייה</h4>דו״ח סוף-חודש · אינטגרציה ל-<b>iCount</b> (מסמכי-מס) · גיל חוב + אשראי + חסימת חייבים.</div>
+      </div>
+    </section>
+
+    <section id="s7">
+      <h2><span class="n">7</span> מודל נתונים מאוחד</h2>
+      <p class="ref">SPEC.md §9 · SOL_FORMAT.md</p>
+      <p>ישויות תפעול: <code>users</code> · <code>carpenters</code> · <code>catalog</code> · <code>carpenterRates</code> · <code>jobs</code> · <code>measurements</code> · <code>deliverables</code> · <code>metrics</code>.</p>
+      <p>ישות-על: <code>.sol</code> — קונטיינר פרויקט ב-8 שכבות. מודל-האובייקט של הממיר הוא סכמת-הליבה של <code>.sol</code>.</p>
+    </section>
+
+    <section id="s8">
+      <h2><span class="n">8</span> פורמט <code>.sol</code></h2>
+      <p class="ref">פירוט מלא + סכמות: SOL_FORMAT.md</p>
+      <p>קונטיינר ZIP + <code>manifest.json</code> + שכבות-JSON + נכסים בינאריים. פורמט-הַאב: ORDX/DXF/PDP/glTF נכנסים ויוצאים.</p>
+      <div class="pipe">design · measured · fit · catalog · bom · 3d · annotations · meta+revisions</div>
+      <div class="callout go" style="margin-top:12px"><b>הבידול:</b> שכבת <code>fit/</code> — ידע ההתאמה (R1–R10) שהיום אובד בראש המודד הופך לדאטה מובנית.</div>
+      <div class="callout warn"><b>אבטחה (החלטה):</b> פורמט <b>סגור ומאובטח ללא-העתקה</b> — הצפנה פר-שכבה + קשירת-רישיון (המפתח לא בקובץ, אימות מול שרת), כך שקובץ מועתק חסר-ערך מחוץ ל-Soline. <b>תוצרי-ייצור בלבד יוצאים</b> (DXF/PDF/CNC); המקור העשיר לא יוצא. חתימה + tamper-evidence לאחריות משפטית.</div>
+    </section>
+
+    <section id="s9">
+      <h2><span class="n">9</span> תוכנת העיצוב</h2>
+      <p class="ref">DESIGN_TOOL_SPEC.md</p>
+      <div class="grid2">
+        <div class="card"><h4>אדריכל / מעצב</h4>2D · חזיתות · חתכים · 3D+סיור · חומרים/תאורה · שכבת-על של המדידה · הדמיה ללקוח.</div>
+        <div class="card"><h4>CAD / UX</h4>כלים · snapping · אובייקטים פרמטריים · פותר-אילוצים · ספריות · מדידה/אנוטציה.</div>
+        <div class="card"><h4>מתכנת</h4>רינדור (three.js/Blender) · geometry kernel · CRDT · אינטגרציית <code>.sol</code> · offline.</div>
+        <div class="card"><h4>הייחוד של Soline</h4>התכנון מונח על המציאות הנמדדת · auto-fit ארונות לקירות · זיהוי פערים/התנגשויות (R1–R10).</div>
+      </div>
+    </section>
+
+    <section id="s10">
+      <h2><span class="n">10</span> אסטרטגיה ומודל עסקי</h2>
+      <p class="ref">PLATFORM_VISION.md · STRATEGY.md</p>
+      <ul>
+        <li><b>כלכלת יחידה:</b> שיבוץ גאוגרפי מקפיץ שוליים מ~13% ל~44% ותפוקה +55%.</li>
+        <li><b>הכנסות:</b> SaaS recurring (ARR/NRR) + marketplace + per-measurement; שוליי SaaS 80–90% מול מדידה 13–44%.</li>
+        <li><b>חפיר:</b> IP הממיר + לולאת דיוק + switching cost של <code>.sol</code> + יתרון צפיפות גאוגרפי.</li>
+        <li><b>מה חסר לרמת NASDAQ:</b> SaaS ענן רב-דיירת, SOC2/ISO27001, SLA, observability, CI/CD, בקרות פיננסיות, ממשל דאטה, הגנת IP, ארגון.</li>
+      </ul>
+    </section>
+
+    <section id="s11">
+      <h2><span class="n">11</span> ערכי המוצר (מומחשים בתוכנה)</h2>
+      <p class="ref">PLATFORM_VISION.md</p>
+      <p>אמון ואמינות · בעלות הנגר על הדאטה · אינטרופרביליות (ייצוא פתוח) · שקיפות · דיוק/מלאכת-מחשבת · מהירות · פשטות · המשכיות. כל ערך ממופה לביטוי מוצר קונקרטי.</p>
+    </section>
+
+    <section id="s14">
+      <h2><span class="n">12</span> שלבי פיתוח</h2>
+      <ul>
+        <li><b>H1 · 0–3 ח׳ — ליבה ואמת:</b> פלטפורמה (נגר+מתאם+שטח, 11 שלבים), צ'קליסט שטח, מנוע+דאשבורד בסיסי, גבייה בסיסית. <b>מתחילים מפורטל הנגר.</b></li>
+        <li><b>H2 · 3–9 ח׳ — יעילות ושימור:</b> שיבוץ גאוגרפי, התראות וואטסאפ, SLA, גבייה+אשראי, חיבור חי לממיר + DISTO.</li>
+        <li><b>H3 · 9–18 ח׳ — עיצוב וחפיר:</b> תוכנת העיצוב + <code>.sol</code> מלא, כלי אקוסיסטם, תמחור מונחה-דאטה.</li>
+        <li><b>H4–H5 (חברה נסחרת):</b> marketplace ספקים, BI, הרחבה, SaaS-ify.</li>
+      </ul>
+      <div class="callout warn"><b>עדיפויות ROI מיידיות (חוצות בעלי עניין):</b> (1) מנוע מדדים+דאשבורד · (2) צ'קליסט שטח · (3) התראות אוטומטיות · (4) גבייה.</div>
+    </section>
+
+    <section id="s15">
+      <h2><span class="n">13</span> החלטות</h2>
+      <h3>הוכרעו (2026-08-15)</h3>
+      <ul>
+        <li>✅ <b>שליטה בקטלוג/מחירים</b> — אדמין בלבד בהתחלה, יורחב למנהל תפעול (COO).</li>
+        <li>✅ <b>גבייה</b> — דו״חות סוף-חודש + אינטגרציה למערכת הנה״ח מאושרת מס הכנסה (לא הפקת מסמכי-מס עצמאית).</li>
+        <li>✅ <b>תמחור</b> — היברידי: מחיר בסיס קבוע + תוספות אוטומטיות (מרחק/קומה/מורכבות/דחיפות).</li>
+        <li>✅ <b><code>.sol</code></b> — פורמט סגור ומאובטח ללא-העתקה; תוצרי-ייצור בלבד יוצאים.</li>
+        <li>✅ <b>תוכנת העיצוב</b> — web-first רספונסיבי חוצה-מכשירים (טלפון/טאבלט/מחשב).</li>
+      </ul>
+        <li>✅ <b>ערוץ התראות</b> — וואטסאפ (WhatsApp Business API).</li>
+        <li>✅ <b>מערכת הנה״ח</b> — iCount (אינטגרציית API).</li>
+        <li>✅ <b>מדידה</b> — <b>Soline Measure</b>: המודד מודד בתוכנה של סוליין (לא InnoDraw).</li>
+      </ul>
+      <p class="lead" style="margin-top:10px">פרטי <code>.sol</code> הטכניים (סנכרון דלתאי, cache-רישיון) — להחלטת צוות הפיתוח.</p>
+    </section>
+
+    <section class="final">
+      <p>Soline אינה חברת מדידות — היא פלטפורמת ניצולת-ודאטה שהמדידה היא ערוץ הכניסה שלה, ו-<code style="background:rgba(255,255,255,.2);color:#fff">.sol</code> הוא הסטנדרט שמחזיק את כל האקוסיסטם.</p>
+    </section>
+  </main>
+</div>

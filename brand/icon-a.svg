@@ -1,0 +1,11 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Soline s monogram">
+  <!-- Icon A: bold lowercase "s" monogram, cream mark on orange squircle tile -->
+  <rect x="0" y="0" width="512" height="512" rx="116" ry="116" fill="#F49A1A"/>
+  <path d="M 330 200
+           C 306 150 214 150 194 200
+           C 176 244 214 258 256 266
+           C 300 274 342 286 330 328
+           C 312 378 216 378 198 328"
+        fill="none" stroke="#FBF4E6" stroke-width="76"
+        stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

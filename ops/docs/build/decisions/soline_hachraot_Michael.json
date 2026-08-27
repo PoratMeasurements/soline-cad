@@ -1,0 +1,704 @@
+{
+  "meta": {
+    "tool": "soline-decision-dashboard",
+    "reviewer": "Michael",
+    "source": "chat-bulk-approve",
+    "date": "2026-08-17",
+    "total": 99
+  },
+  "decisions": {
+    "D23": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "מבנה-קוד רב-מודולי",
+      "track": "ארכיטקטורה וסטאק — Soline Measure (התאמת CVSM)",
+      "priority": "P0"
+    },
+    "D24": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "ארכיטקטורת-האפליקציה",
+      "track": "ארכיטקטורה וסטאק — Soline Measure (התאמת CVSM)",
+      "priority": "P0"
+    },
+    "D25": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "מיקום שכבת ה-.sol",
+      "track": "ארכיטקטורה וסטאק — Soline Measure (התאמת CVSM)",
+      "priority": "P0"
+    },
+    "D28": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "שכבת-החומרה (BLE)",
+      "track": "ארכיטקטורה וסטאק — Soline Measure (התאמת CVSM)",
+      "priority": "P0"
+    },
+    "D30": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "applicationId ומיגרציית-נתונים",
+      "track": "ארכיטקטורה וסטאק — Soline Measure (התאמת CVSM)",
+      "priority": "P0"
+    },
+    "D52": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "יחס ‎.sol‎ ל-Room DB",
+      "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+      "priority": "P0"
+    },
+    "D53": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "סקופ סכמת-v1",
+      "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+      "priority": "P0"
+    },
+    "D54": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "עקרון lossless מ-Room",
+      "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+      "priority": "P0"
+    },
+    "D11": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "מיקום שער-האימות החוסם",
+      "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+      "priority": "P0"
+    },
+    "D14": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "סף T-join ואישור-מודד",
+      "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+      "priority": "P0"
+    },
+    "D16": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "סניטציית-שם-קובץ אחידה",
+      "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+      "priority": "P0"
+    },
+    "D45": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "סף T-join לאישור-מודד",
+      "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+      "priority": "P0"
+    },
+    "D01": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "הפשטת LaserDevice אחת מול שני managers נפרדים",
+      "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+      "priority": "P0"
+    },
+    "D02": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "מודל-יכולות (capabilities) מול בדיקות-סוג",
+      "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+      "priority": "P0"
+    },
+    "D03": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "מדידה גולמית נאמנה; ההיטל ל-3D מחוץ לשכבה",
+      "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+      "priority": "P0"
+    },
+    "D04": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "הסרת ה-USB Encoder משכבת-המכשירים",
+      "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+      "priority": "P0"
+    },
+    "D83": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "מודל רב-דיירות ובידוד-דייר",
+      "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+      "priority": "P0"
+    },
+    "D87": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "ארכיטקטורת הסנכרון (offline-first)",
+      "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+      "priority": "P0"
+    },
+    "D95": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "מקור-האמת של job.stage",
+      "track": "חיבור Soline Measure לפלטפורמת התפעול ולפורטל הנגר — שבעת התפרים של המדידה באקוסיסטם",
+      "priority": "P0"
+    },
+    "D65": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "שכבת ה-BLE/USB במיגרציה",
+      "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+      "priority": "P0"
+    },
+    "D66": {
+      "verdict": "approve",
+      "note": "אושר בכמות — טכני-פנימי (ירוק)",
+      "title": "אחסון-פנימי מול פורמט .sol",
+      "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+      "priority": "P0"
+    },
+    "D22": {
+      "verdict": "approve",
+      "note": "התאמה = reimplement (לכתוב את שלנו לפי השרטוט שלהם, לא לשלוח את הקוד שלהם). הובהר גם לגבי לפטופ.",
+      "title": "התאמה מול בנייה-מחדש מול שכתוב-web",
+      "track": "ארכיטקטורה וסטאק — Soline Measure (התאמת CVSM)",
+      "priority": "P0"
+    },
+    "D57": {
+      "verdict": "approve",
+      "note": "אושר — כחול-ברור",
+      "title": "ארכיטקטורת הצפנה וניהול-מפתחות",
+      "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+      "priority": "P0"
+    },
+    "D32": {
+      "verdict": "approve",
+      "note": "אושר — כחול-ברור",
+      "title": "מודל-הנתונים כתנאי-קדם: קיר-כפרופיל + בליטה-כשדה",
+      "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+      "priority": "P0"
+    },
+    "D33": {
+      "verdict": "approve",
+      "note": "אושר — כחול-ברור",
+      "title": "סדר-בנייה: R4 בליטה-מול-עומק ראשון",
+      "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+      "priority": "P0"
+    },
+    "D34": {
+      "verdict": "approve",
+      "note": "אושר — כחול-ברור",
+      "title": "לכידת עומק-בליטה D בשטח",
+      "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+      "priority": "P0"
+    },
+    "D12": {
+      "verdict": "approve",
+      "note": "אושר — כחול-ברור",
+      "title": "טולרנס סגירת-פוליגון",
+      "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+      "priority": "P0"
+    },
+    "D13": {
+      "verdict": "approve",
+      "note": "אושר — כחול-ברור",
+      "title": "חיבור-קירות אוטומטי בזמן-מדידה",
+      "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+      "priority": "P0"
+    },
+    "D15": {
+      "verdict": "approve",
+      "note": "אושר — כחול-ברור",
+      "title": "פלט PDF עברי-RTL תקין",
+      "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+      "priority": "P0"
+    },
+    "D42": {
+      "verdict": "approve",
+      "note": "אושר — כחול-ברור",
+      "title": "חיבור-קירות אוטומטי בזמן-המדידה",
+      "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+      "priority": "P0"
+    },
+    "D43": {
+      "verdict": "approve",
+      "note": "אושר — כחול-ברור",
+      "title": "עומק-בליטה — מדידה נכפית מול שדה-ידני",
+      "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+      "priority": "P0"
+    },
+    "D44": {
+      "verdict": "approve",
+      "note": "אושר — כחול-ברור",
+      "title": "סטטוס-מידה — היקף האכיפה",
+      "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+      "priority": "P0"
+    },
+    "D84": {
+      "verdict": "approve",
+      "note": "אושר — כחול-ברור",
+      "title": "שרת-רישוי (החלפת קבצי-ה-GitHub של bravh)",
+      "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+      "priority": "P0"
+    },
+    "D85": {
+      "verdict": "approve",
+      "note": "אושר — כחול-ברור",
+      "title": "מנגנון האימות (Authentication)",
+      "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+      "priority": "P0"
+    },
+    "D93": {
+      "verdict": "approve",
+      "note": "אושר — כחול-ברור",
+      "title": "תוכן וזמן חבילת-קליטת-העבודה",
+      "track": "חיבור Soline Measure לפלטפורמת התפעול ולפורטל הנגר — שבעת התפרים של המדידה באקוסיסטם",
+      "priority": "P0"
+    },
+    "D64": {
+      "verdict": "reject",
+      "note": "אין יחסי-רישוי מול bravh — לא רלוונטי",
+      "title": "בירור-רישוי bravh לפני פיתוח",
+      "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+      "priority": "P0"
+    },
+    "D63": {
+      "verdict": "approve",
+      "note": "דו-שלבי, קודם מדידה אח\"כ עיצוב",
+      "title": "אסטרטגיית ניתוק מ-bravh",
+      "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+      "priority": "P0"
+    },
+    "D31": {
+      "verdict": "approve",
+      "note": "רכיב-אחד משותף (מדידה+עיצוב). הבידול.",
+      "title": "מיקום המנוע: חבילה טהורה משותפת",
+      "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+      "priority": "P0"
+    },
+    "D41": {
+      "verdict": "approve",
+      "note": "חסימה-קשה עם עקיפה מנומקת (נימוק נשמר ליומן).",
+      "title": "שער-איכות חוסם-יציאה מול אזהרה-רכה",
+      "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+      "priority": "P0"
+    },
+    "D73": {
+      "verdict": "approve",
+      "note": "ORDX ייצוא-בלבד; .sol מקור-אמת",
+      "title": "מעמד ORDX בצינור",
+      "track": "גשר ORDX והחלפת bravh / 3D OrdX — הבעלות על השרשרת מדידה→עיצוב→ייצור סביב .sol",
+      "priority": "P0"
+    },
+    "D74": {
+      "verdict": "approve",
+      "note": "עקרונית כן; מתויג v3 (אחרי מדידה+בידול)",
+      "title": "ערוץ-אספקת-הארונות לייצור",
+      "track": "גשר ORDX והחלפת bravh / 3D OrdX — הבעלות על השרשרת מדידה→עיצוב→ייצור סביב .sol",
+      "priority": "P0"
+    },
+    "D75": {
+      "verdict": "approve",
+      "note": "כן, לא דחוף — כשמגיעים לשלב",
+      "title": "פיצוח ordx_templates ומילוי <Cabinet> ב-ORDX",
+      "track": "גשר ORDX והחלפת bravh / 3D OrdX — הבעלות על השרשרת מדידה→עיצוב→ייצור סביב .sol",
+      "priority": "P0"
+    },
+    "D92": {
+      "verdict": "approve",
+      "note": "היברידי: מתחילים Google Drive, אח\"כ עוברים לשרת משלנו",
+      "title": "backend משותף לכל התצוגות",
+      "track": "חיבור Soline Measure לפלטפורמת התפעול ולפורטל הנגר — שבעת התפרים של המדידה באקוסיסטם",
+      "priority": "P0"
+    },
+    "D82": {
+      "verdict": "approve",
+      "note": "Supabase בגרסת self-host = שרת משלנו (Postgres מנוהל+RLS). לאמת אם רוצים מאפס.",
+      "title": "בחירת פלטפורמת ה-Backend",
+      "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+      "priority": "P0"
+    },
+    "D70": {
+      "verdict": "approve",
+      "note": "תיעוד מהיום + repo משותף + גיוס מהנדס-שני מוקדם (תוכנית-הצוות)",
+      "title": "הגנת key-person על ידע-הממיר ו-.sol",
+      "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+      "priority": "P0"
+    },
+    "D71": {
+      "verdict": "approve",
+      "note": "גבייה/חשבוניות לתוך המוצר כבר ב-H1 — הגנת-תזרים",
+      "title": "תזמון הגבייה (הגנת-תזרים)",
+      "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+      "priority": "P0"
+    },
+    "D26": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "שיתוף עם תוכנת-העיצוב — KMP מול חוזה",
+      "track": "ארכיטקטורה וסטאק — Soline Measure (התאמת CVSM)",
+      "priority": "P1"
+    },
+    "D27": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "מנוע ה-fit (fit-engine)",
+      "track": "ארכיטקטורה וסטאק — Soline Measure (התאמת CVSM)",
+      "priority": "P1"
+    },
+    "D29": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "רישוי ו-multi-tenant",
+      "track": "ארכיטקטורה וסטאק — Soline Measure (התאמת CVSM)",
+      "priority": "P1"
+    },
+    "D55": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "אסטרטגיית מיגרציה מ-Room",
+      "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+      "priority": "P1"
+    },
+    "D56": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "יציבות-מזהים (join keys)",
+      "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+      "priority": "P1"
+    },
+    "D58": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "הצפנה-בשלבים",
+      "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+      "priority": "P1"
+    },
+    "D61": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "יחס ל-ORDX",
+      "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+      "priority": "P1"
+    },
+    "D35": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "פרופילי-הפעלה field מול office",
+      "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+      "priority": "P1"
+    },
+    "D36": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "מצב-כפול: reconcile מול sanity",
+      "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+      "priority": "P1"
+    },
+    "D37": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "טולרנסים: config מעוגן-נגרות ומגורסן",
+      "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+      "priority": "P1"
+    },
+    "D38": {
+      "verdict": "approve",
+      "note": "auto-fit: מנוע מציע, אדם מאשר",
+      "title": "פתרון ו-auto-fit: הצעה + אישור-אנושי",
+      "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+      "priority": "P1"
+    },
+    "D39": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "גשר טיוטה-שטח → משרד",
+      "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+      "priority": "P1"
+    },
+    "D17": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "לכידת גובה דו-קצה + מפלס-רצפה",
+      "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+      "priority": "P1"
+    },
+    "D18": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "ולידציית-מיקום-אביזר + כפיית-עומק",
+      "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+      "priority": "P1"
+    },
+    "D19": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "הרחבת-מודל-הנתונים (תשתית משותפת)",
+      "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+      "priority": "P1"
+    },
+    "D46": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "מפלס-רצפה/גבהים דו-קצה",
+      "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+      "priority": "P1"
+    },
+    "D47": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "אזהרת R4 חיה — תלות ברקע-תכנון",
+      "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+      "priority": "P1"
+    },
+    "D51": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "פלט עברי-תקין — בעלות-ציר",
+      "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+      "priority": "P1"
+    },
+    "D05": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "API מבוסס Kotlin Flow / StateFlow",
+      "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+      "priority": "P1"
+    },
+    "D06": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "DST360 polling — כימוס פנימי + gate צריכת-סוללה",
+      "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+      "priority": "P1"
+    },
+    "D07": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "dedup (מונה/isNew) בתוך המימוש",
+      "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+      "priority": "P1"
+    },
+    "D08": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "מחזור-חיים + reconnect אוטומטי אחיד",
+      "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+      "priority": "P1"
+    },
+    "D76": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "בלוק הרחבה <Ext sol> לגישור חסר-אובדן",
+      "track": "גשר ORDX והחלפת bravh / 3D OrdX — הבעלות על השרשרת מדידה→עיצוב→ייצור סביב .sol",
+      "priority": "P1"
+    },
+    "D77": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "תיקון-פרסר ושער אי-אובדן",
+      "track": "גשר ORDX והחלפת bravh / 3D OrdX — הבעלות על השרשרת מדידה→עיצוב→ייצור סביב .sol",
+      "priority": "P1"
+    },
+    "D78": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "אימוץ סכמת catalog.sqlite כקטלוג-.sol",
+      "track": "גשר ORDX והחלפת bravh / 3D OrdX — הבעלות על השרשרת מדידה→עיצוב→ייצור סביב .sol",
+      "priority": "P1"
+    },
+    "D79": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "מקור ייצוא-ה-ORDX",
+      "track": "גשר ORDX והחלפת bravh / 3D OrdX — הבעלות על השרשרת מדידה→עיצוב→ייצור סביב .sol",
+      "priority": "P1"
+    },
+    "D86": {
+      "verdict": "approve",
+      "note": "מודל מושבים+קשירת-מכשיר (זווית-תמחור)",
+      "title": "קשירת-מכשיר ומודל-מושבים (seats)",
+      "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+      "priority": "P1"
+    },
+    "D88": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "אחסון-קבצים וקשירת-ה-DRM של .sol",
+      "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+      "priority": "P1"
+    },
+    "D89": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "הפצת-האפליקציה והעדכונים",
+      "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+      "priority": "P1"
+    },
+    "D90": {
+      "verdict": "approve",
+      "note": "אחסון EU פרנקפורט + תאימות-פרטיות + בעלות-נגר",
+      "title": "תאימות, אזור-אירוח וממשל-דאטה",
+      "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+      "priority": "P1"
+    },
+    "D94": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "נתיב-המסירה לממיר בעידן .sol",
+      "track": "חיבור Soline Measure לפלטפורמת התפעול ולפורטל הנגר — שבעת התפרים של המדידה באקוסיסטם",
+      "priority": "P1"
+    },
+    "D96": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "ארכיטקטורת הסנכרון-מעלה",
+      "track": "חיבור Soline Measure לפלטפורמת התפעול ולפורטל הנגר — שבעת התפרים של המדידה באקוסיסטם",
+      "priority": "P1"
+    },
+    "D97": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "אכיפת-פרטיות של דאטת-המנוע",
+      "track": "חיבור Soline Measure לפלטפורמת התפעול ולפורטל הנגר — שבעת התפרים של המדידה באקוסיסטם",
+      "priority": "P1"
+    },
+    "D67": {
+      "verdict": "approve",
+      "note": "תוכנת-עיצוב ב-H4 מול עלות-שכירת-OrdX",
+      "title": "תזמון בניית תוכנת-העיצוב (ניתוק OrdX)",
+      "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+      "priority": "P1"
+    },
+    "D68": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "אסטרטגיית מנוע-משותף (מדידה↔עיצוב)",
+      "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+      "priority": "P1"
+    },
+    "D69": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "מיגרציית-נתונים בשטח",
+      "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+      "priority": "P1"
+    },
+    "D72": {
+      "verdict": "approve",
+      "note": "אושר (P1) — יישום טכני של הכרעת-P0",
+      "title": "סדר-מימוש מנוע-ההתאמה R1-R10",
+      "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+      "priority": "P1"
+    },
+    "D59": {
+      "verdict": "approve",
+      "note": "אושר (P2) — משני/טכני",
+      "title": "מעטפת-הצפנה: ZIP-כולו מול פר-entry",
+      "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+      "priority": "P2"
+    },
+    "D60": {
+      "verdict": "approve",
+      "note": "אושר (P2) — משני/טכני",
+      "title": "יחידת-סנכרון",
+      "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+      "priority": "P2"
+    },
+    "D62": {
+      "verdict": "approve",
+      "note": "אושר (P2) — משני/טכני",
+      "title": "tamper-evidence וחתימה דיגיטלית",
+      "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+      "priority": "P2"
+    },
+    "D40": {
+      "verdict": "approve",
+      "note": "אושר (P2) — משני/טכני",
+      "title": "incrementality: spatial-index + dirty-tracking",
+      "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+      "priority": "P2"
+    },
+    "D20": {
+      "verdict": "approve",
+      "note": "אושר (P2) — משני/טכני",
+      "title": "לוקליזציה-מטרית + ניקוי ברירות-מחדל אימפריאליות",
+      "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+      "priority": "P2"
+    },
+    "D21": {
+      "verdict": "approve",
+      "note": "אושר (P2) — משני/טכני",
+      "title": "יציבות-ניווט (null) + פולינג-סוללה",
+      "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+      "priority": "P2"
+    },
+    "D48": {
+      "verdict": "approve",
+      "note": "אושר (P2) — משני/טכני",
+      "title": "רקע-תכנון + מנוע-הצפה R1–R10 — בעלות-ציר",
+      "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+      "priority": "P2"
+    },
+    "D49": {
+      "verdict": "approve",
+      "note": "אושר (P2) — משני/טכני",
+      "title": "מנוע-קיזוז אזורי",
+      "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+      "priority": "P2"
+    },
+    "D50": {
+      "verdict": "approve",
+      "note": "אושר (P2) — משני/טכני",
+      "title": "ארגונומיית-שדה: הערה-קולית ומקרי-חושך",
+      "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+      "priority": "P2"
+    },
+    "D09": {
+      "verdict": "approve",
+      "note": "אושר (P2) — משני/טכני",
+      "title": "FakeLaserDevice לפיתוח ובדיקות ללא חומרה",
+      "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+      "priority": "P2"
+    },
+    "D10": {
+      "verdict": "approve",
+      "note": "אושר (P2) — משני/טכני",
+      "title": "הפשטת-transport (BLE) נפרדת — עכשיו או דחייה",
+      "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+      "priority": "P2"
+    },
+    "D80": {
+      "verdict": "approve",
+      "note": "אושר (P2) — משני/טכני",
+      "title": "החלפת 3D OrdX ב-soline-cad-engine ותוכנת-העיצוב",
+      "track": "גשר ORDX והחלפת bravh / 3D OrdX — הבעלות על השרשרת מדידה→עיצוב→ייצור סביב .sol",
+      "priority": "P2"
+    },
+    "D81": {
+      "verdict": "approve",
+      "note": "לשמור CV כיעד-ייצוא אופציונלי (ריכוך #31)",
+      "title": "יעד Cabinet Vision במורד-הזרם",
+      "track": "גשר ORDX והחלפת bravh / 3D OrdX — הבעלות על השרשרת מדידה→עיצוב→ייצור סביב .sol",
+      "priority": "P2"
+    },
+    "D91": {
+      "verdict": "approve",
+      "note": "KMS + escrow של IP אצל Michael — לפני שיחת-משקיע",
+      "title": "ניהול-מפתחות, סודות ו-escrow",
+      "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+      "priority": "P2"
+    },
+    "D98": {
+      "verdict": "approve",
+      "note": "אושר (P2) — משני/טכני",
+      "title": "בסיס-הסטאק של אפליקציית-המדידה",
+      "track": "חיבור Soline Measure לפלטפורמת התפעול ולפורטל הנגר — שבעת התפרים של המדידה באקוסיסטם",
+      "priority": "P2"
+    },
+    "D99": {
+      "verdict": "approve",
+      "note": "אושר (P2) — משני/טכני",
+      "title": "התפר לאקוסיסטם ולמסע-הנגר",
+      "track": "חיבור Soline Measure לפלטפורמת התפעול ולפורטל הנגר — שבעת התפרים של המדידה באקוסיסטם",
+      "priority": "P2"
+    }
+  }
+}

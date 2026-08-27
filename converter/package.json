@@ -1,0 +1,9 @@
+{
+  "name": "soline-converter",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Soline measurement -> DXF/PDP/HTML/ORDX/ORD export toolkit",
+  "scripts": {
+    "test": "node test/regression.js"
+  }
+}

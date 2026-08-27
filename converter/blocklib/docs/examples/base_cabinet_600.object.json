@@ -1,0 +1,113 @@
+{
+  "schemaVersion": "1.0.0",
+  "key": "KIT-BASE-DR2-0600",
+  "family": "KIT-BASE",
+  "subfamily": "KIT-BASE-DR",
+  "domain": "interior-kitchen",
+  "hebrewName": "ארון תחתון 2 דלתות 60",
+  "englishName": "Base cabinet, 2-door, 600",
+
+  "params": {
+    "doorCount":   { "type": "integer", "value": 2, "unit": "count", "min": 1, "max": 2, "description": "leaves across the front" },
+    "handleType":  { "type": "enum", "value": "bar", "options": ["bar", "knob", "grip-rail", "handleless"], "description": "front pull style (plan tick + front glyph)" },
+    "hingeSide":   { "type": "enum", "value": "split", "options": ["L", "R", "split"], "description": "single-door hinge side; split = 2-door pair" },
+    "showSwing":   { "type": "boolean", "value": true, "description": "draw door-swing indication in plan" },
+    "carcassThk":  { "type": "number", "value": 18, "unit": "mm", "min": 16, "max": 19, "description": "panel thickness" },
+    "backSetin":   { "type": "number", "value": 40, "unit": "mm", "description": "carcass back set-in from worktop rear edge" }
+  },
+
+  "dims": {
+    "w": 600, "d": 560, "h": 720,
+    "toeKickH": 100, "toeKickSetback": 50, "worktopH": 900,
+    "clearance": { "worktopOverhangFront": 20, "worktopDepth": 600 }
+  },
+
+  "variants": [
+    { "suffix": "0300", "label": "300", "overrides": { "dims": { "w": 300 }, "params": { "doorCount": { "value": 1 }, "hingeSide": { "value": "L" } } } },
+    { "suffix": "0450", "label": "450", "overrides": { "dims": { "w": 450 }, "params": { "doorCount": { "value": 1 }, "hingeSide": { "value": "L" } } } },
+    { "suffix": "0600", "label": "600", "overrides": { "dims": { "w": 600 } } },
+    { "suffix": "0800", "label": "800", "overrides": { "dims": { "w": 800 } } },
+    { "suffix": "0900", "label": "900", "overrides": { "dims": { "w": 900 } } }
+  ],
+
+  "views": {
+    "plan": {
+      "provided": true,
+      "build": {
+        "recipe": "base-cabinet-plan",
+        "notes": "carcass footprint W×D on outline; worktop overhang dashed on hidden; door-swing quarter-arcs per doorCount/hingeSide on door layer; handle ticks on front edge"
+      },
+      "primitives": [
+        { "t": "rect", "x0": 0, "y0": 0, "x1": 600, "y1": 560, "layer": "SOL-RIHUT" },
+        { "t": "rect", "x0": -20, "y0": -20, "x1": 620, "y1": 0, "dash": true, "layer": "SOL-RIHUT-HID" },
+        { "t": "line", "x1": 300, "y1": 0, "x2": 300, "y2": 40, "layer": "SOL-RIHUT-DOOR" },
+        { "t": "arc", "x0": -260, "y0": 0, "x1": 300, "y1": 560, "a0": 270, "sweep": 90, "layer": "SOL-RIHUT-DOOR" },
+        { "t": "arc", "x0": 300, "y0": 0, "x1": 860, "y1": 560, "a0": 180, "sweep": 90, "layer": "SOL-RIHUT-DOOR" }
+      ],
+      "bbox": { "w": 640, "h": 580 }
+    },
+    "front": {
+      "provided": true,
+      "build": { "recipe": "base-cabinet-front", "notes": "carcass rect over toe-kick; two door panels with reveal gap; handles per handleType" },
+      "primitives": [
+        { "t": "rect", "x0": 0, "y0": 100, "x1": 600, "y1": 820, "layer": "SOL-RIHUT" },
+        { "t": "rect", "x0": 50, "y0": 0, "x1": 550, "y1": 100, "layer": "SOL-RIHUT-HID", "dash": true },
+        { "t": "rect", "x0": 6, "y0": 106, "x1": 297, "y1": 814, "layer": "SOL-RIHUT-DOOR" },
+        { "t": "rect", "x0": 303, "y0": 106, "x1": 594, "y1": 814, "layer": "SOL-RIHUT-DOOR" },
+        { "t": "line", "x1": 270, "y1": 760, "x2": 270, "y2": 620, "layer": "SOL-RIHUT-HW" },
+        { "t": "line", "x1": 330, "y1": 760, "x2": 330, "y2": 620, "layer": "SOL-RIHUT-HW" }
+      ],
+      "bbox": { "w": 600, "h": 820 }
+    },
+    "side": {
+      "provided": true,
+      "build": { "recipe": "base-cabinet-side", "notes": "depth×height carcass; toe-kick recess; worktop cap" },
+      "primitives": [
+        { "t": "rect", "x0": 0, "y0": 100, "x1": 560, "y1": 820, "layer": "SOL-RIHUT" },
+        { "t": "rect", "x0": -40, "y0": 820, "x1": 600, "y1": 860, "layer": "SOL-RIHUT" },
+        { "t": "line", "x1": 50, "y1": 100, "x2": 50, "y2": 0, "layer": "SOL-RIHUT-HID", "dash": true }
+      ],
+      "bbox": { "w": 640, "h": 860 }
+    }
+  },
+
+  "insertion": {
+    "basePoint": {
+      "anchor": "back-left",
+      "plan":  { "x": 0, "y": 0 },
+      "front": { "x": 0, "y": 0 },
+      "side":  { "x": 0, "y": 0 }
+    },
+    "rotationRule": "wall-aligned",
+    "wallSide": "against-wall"
+  },
+
+  "layers": {
+    "outline": "SOL-RIHUT",
+    "door": "SOL-RIHUT-DOOR",
+    "hardware": "SOL-RIHUT-HW",
+    "hidden": "SOL-RIHUT-HID",
+    "annotation": "SOL-TEKST"
+  },
+
+  "attributes": [
+    { "tag": "UNIT",  "prompt": "מספר יחידה", "default": "B?",   "visible": true,  "view": "plan",  "at": { "x": 300, "y": 300 }, "height": 125 },
+    { "tag": "WIDTH", "prompt": "רוחב",        "default": "600",  "visible": false, "type": "number" },
+    { "tag": "TYPE",  "prompt": "סוג",         "default": "ארון תחתון 2 דלתות", "visible": false },
+    { "tag": "HINGE", "prompt": "צד ציר",      "default": "split", "visible": false, "type": "enum", "options": ["L", "R", "split"] }
+  ],
+
+  "metadata": {
+    "originalGeometry": true,
+    "sources": [
+      { "kind": "standard", "ref": "Standard EU kitchen module widths 300/400/450/500/600/800/900/1000; carcass height 720, depth 560, worktop 900", "note": "generic industry-standard cabinet module dimensions (facts)", "retrieved": "2026-08-22" },
+      { "kind": "manufacturer-spec", "ref": "Blum hinge/runner install envelope charts", "note": "used ONLY to size the hinge/handle zone; geometry drawn from scratch", "retrieved": "2026-08-22" },
+      { "kind": "cc0", "ref": "GSStnb/dxfBlocks — proportion sanity-check", "note": "re-drawn parametrically; no linework copied", "retrieved": "2026-08-22" }
+    ],
+    "mepCompanions": ["socket_counter", "outlet_dishwasher"],
+    "tags": ["base", "door", "carcass", "kitchen"],
+    "created": "2026-08-22",
+    "author": "blocklib",
+    "notes": "Prototype family per J_FIRST20 (widths 300/450/600/800/900). Illustrative primitives; final linework produced by the resolver at build time."
+  }
+}

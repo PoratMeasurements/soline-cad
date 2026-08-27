@@ -1,0 +1,11 @@
+{
+  "appId": "il.co.soline.ops",
+  "appName": "Soline Ops",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

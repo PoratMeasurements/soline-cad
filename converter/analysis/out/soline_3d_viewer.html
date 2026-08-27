@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Soline — מציג מטבח 3D (PDP → מוחשי)</title>
+<!--
+  ============================================================================
+  Soline 3D Viewer  (analysis/out/soline_3d_viewer.html)
+  ============================================================================
+  מציג WebGL עצמאי ו-OFFLINE (ללא אינטרנט, ללא ספריות חיצוניות — מנוע-רינדור
+  מוטמע בקובץ). טוען סצנת PDP שלמה של Raumplan ומציג הכל מוצלל, כמו ב-Raumplan:
+  קירות (נפחים מלאים) + תשתיות (אביזרי MEP) + ארונות (קופסאות W×D×H מהקטלוג).
+
+  הנתונים: שתי סצנות שנוצרו ע"י `src/readPdp.js` מקבצי PDP אמיתיים (פורמט
+  Raumplan-native, header ffffff7f):
+    • תשתיות.pdp — 11 קירות + 22 נקודות-תשתית (SUPP_FR), מיקומים אמיתיים int32.
+    • 2922.pdp   — ארונות (KORPUS + קודי-קטלוג SO60/KP60/AP60/IK363...) ממופים
+                   לגיאומטריית קטלוג אלקינצ'ו.
+
+  מיפוי-צירים (Raumplan מ"מ, Y=עומק): worldX=x/1000, worldY=גובה/1000 (Y-up),
+  worldZ=-y/1000.
+  ============================================================================
+-->
+<style>
+  :root{ --bg:#e9ecf0; --panel:rgba(255,255,255,.92); --ink:#1a2532; --muted:#5a6b7a;
+    --line:#d3d9e0; --accent:#3f7cae; }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0e131a; --panel:rgba(22,29,37,.92); --ink:#e6edf3; --muted:#8ea0b0;
+      --line:#28323d; --accent:#6fa8d6; } }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+    font-family:"Segoe UI",Arial,sans-serif;overflow:hidden}
+  #gl{position:fixed;inset:0;display:block;touch-action:none}
+  .panel{position:absolute;top:12px;right:12px;background:var(--panel);
+    backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:12px;
+    padding:12px 14px;max-width:292px;box-shadow:0 6px 26px rgba(0,0,0,.16);
+    max-height:calc(100vh - 24px);overflow:auto}
+  h1{font-size:14px;margin:0 0 3px} .sub{font-size:11px;color:var(--muted);margin:0 0 9px;line-height:1.45}
+  select{width:100%;padding:5px 6px;border-radius:7px;border:1px solid var(--line);
+    background:var(--bg);color:var(--ink);font-size:12.5px;margin-bottom:4px}
+  .row{display:flex;align-items:center;gap:7px;font-size:12.5px;margin:5px 0}
+  .row input{accent-color:var(--accent)}
+  .grp{border-top:1px solid var(--line);margin-top:9px;padding-top:8px}
+  .grp b{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .bom{font-size:11px;line-height:1.5;margin-top:5px;max-height:150px;overflow:auto}
+  .bom span{display:inline-block;background:rgba(127,127,127,.13);border-radius:4px;padding:1px 6px;margin:2px 2px 0 0}
+  .legend div{display:flex;align-items:center;gap:7px;font-size:11.5px;margin:3px 0}
+  .sw{width:13px;height:13px;border-radius:3px;border:1px solid rgba(0,0,0,.25)}
+  .kv{font-size:11.5px;color:var(--muted);margin:2px 0}.kv b{color:var(--ink)}
+  .hint{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-size:11px;color:var(--muted);pointer-events:none}
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<div class="panel">
+  <h1>Soline · מטבח 3D מוחשי</h1>
+  <p class="sub">קובץ PDP שלם של Raumplan — קירות + תשתיות + ארונות, מוצלל. גרור לסובב · גלגלת לזום. עובד <b>offline</b> (מנוע מוטמע).</p>
+  <select id="dataset"></select>
+  <div class="kv">מקור: <b id="mSrc">—</b> · פורמט <b id="mFmt">—</b></div>
+  <div class="kv" id="mCounts">—</div>
+
+  <div class="grp"><b>תצוגה</b>
+    <div class="row"><input type="checkbox" id="tgWalls" checked><label for="tgWalls">קירות</label></div>
+    <div class="row"><input type="checkbox" id="tgCut" checked><label for="tgCut">חיתוך-קיר אוטומטי (רואים פנימה)</label></div>
+    <div class="row"><input type="checkbox" id="tgFix" checked><label for="tgFix">תשתיות (MEP)</label></div>
+    <div class="row"><input type="checkbox" id="tgCab" checked><label for="tgCab">ארונות</label></div>
+    <div class="row"><input type="checkbox" id="tgWire"><label for="tgWire">מצב קווי (wireframe)</label></div>
+  </div>
+
+  <div class="grp legend"><b>מקרא</b>
+    <div><span class="sw" style="background:#9c6b3f"></span>ארון (עץ)</div>
+    <div><span class="sw" style="background:#3a3d42"></span>משטח-עבודה (שיש)</div>
+    <div><span class="sw" style="background:#d98f45"></span>תשתית / נקודת MEP</div>
+    <div><span class="sw" style="background:#e7e3da"></span>קיר</div>
+  </div>
+
+  <div class="grp"><b>מצאי מה-PDP</b><div class="bom" id="bom"></div></div>
+</div>
+<div class="hint">פרסר: src/readPdp.js · קטלוג: docs/elkincho_catalog.json · תכנון: docs/rendering_design.md</div>
+
+<script>
+"use strict";
+/* ==== Two real PDP scenes (produced by src/readPdp.js) ==================== */
+const SCENES = {
+  "תשתיות.pdp — קירות + תשתיות": {"walls":[{"x1":-3700,"y1":4060,"x2":1630,"y2":4060,"thick":250,"height":2500},{"x1":1630,"y1":4060,"x2":1630,"y2":-2040,"thick":250,"height":2500},{"x1":1630,"y1":-2040,"x2":-3700,"y2":-2040,"thick":250,"height":2500},{"x1":-3700,"y1":-2040,"x2":-3700,"y2":4060,"thick":250,"height":2500},{"x1":0,"y1":0,"x2":0,"y2":1530,"thick":100,"height":2600},{"x1":0,"y1":1530,"x2":1530,"y2":1530,"thick":100,"height":2600},{"x1":1530,"y1":1530,"x2":1530,"y2":80,"thick":100,"height":2600},{"x1":1530,"y1":80,"x2":1400,"y2":80,"thick":100,"height":2600},{"x1":1400,"y1":80,"x2":1400,"y2":-1940,"thick":100,"height":2600},{"x1":1400,"y1":-1940,"x2":-3600,"y2":-1940,"thick":100,"height":2600},{"x1":-3600,"y1":-1940,"x2":-3600,"y2":4060,"thick":100,"height":2600}],"items":[{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":1400,"y":-1930,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":1200,"y":-1925,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":1056,"y":-1930,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":906,"y":-1930,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":756,"y":-1930,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":686,"y":-1930,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":486,"y":-1930,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":416,"y":-1880,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":356,"y":-1925,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":276,"y":-1924,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":66,"y":-1930,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":-14,"y":-1930,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":-114,"y":-1930,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":-174,"y":-1923,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":-254,"y":-1930,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":-404,"y":-1930,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":-529,"y":-1930,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":-629,"y":-1930,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":-779,"y":-1923,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":-923,"y":-1930,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":-1173,"y":-1924,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90},{"name":"SUPP_FR","category":"תשתית","type":"SUPP_FR","x":-1383,"y":-1930,"z":1100,"rotation_deg":0,"width":90,"depth":40,"height":90}],"cabinets":[],"_pdp":{"file":"תשתיות.pdp","format":"native","job":"OUXM","cabinetCount":0,"fixtureCount":22,"fixtureType":"SUPP_FR","catalog":{"DKP60":1,"DLB60":1},"wallsFromPdp":true,"primitives":{"QUADER":60,"ZYLINDER":35,"WUERFEL":11,"ZYL20V":1}}},
+  "2922.pdp — ארונות (קטלוג)":   {"walls":[{"x1":-100,"y1":1320,"x2":15987,"y2":1320,"thick":250,"height":2500},{"x1":15987,"y1":1320,"x2":15987,"y2":-2132,"thick":250,"height":2500},{"x1":15987,"y1":-2132,"x2":-100,"y2":-2132,"thick":250,"height":2500},{"x1":-100,"y1":-2132,"x2":-100,"y2":1320,"thick":250,"height":2500},{"x1":0,"y1":0,"x2":0,"y2":700,"thick":100,"height":2600},{"x1":0,"y1":700,"x2":4950,"y2":700,"thick":100,"height":2600},{"x1":4950,"y1":700,"x2":4950,"y2":-1700,"thick":100,"height":2600},{"x1":4950,"y1":-1700,"x2":1490,"y2":-1700,"thick":100,"height":2600},{"x1":8250,"y1":740,"x2":10290,"y2":740,"thick":150,"height":2795},{"x1":10290,"y1":740,"x2":10290,"y2":1170,"thick":150,"height":2795},{"x1":10290,"y1":1170,"x2":15820,"y2":1170,"thick":150,"height":2795},{"x1":15820,"y1":1170,"x2":15836,"y2":-1182,"thick":150,"height":2795},{"x1":15836,"y1":-1182,"x2":12206,"y2":-1182,"thick":150,"height":2795},{"x1":12206,"y1":-1182,"x2":12206,"y2":-1982,"thick":150,"height":2795},{"x1":12206,"y1":-1982,"x2":9526,"y2":-1982,"thick":150,"height":2795}],"items":[],"cabinets":[{"code":"IK363","kind":"base","x":1775,"y":1895,"z0":100,"w":3630,"d":900,"h":720,"rotation_deg":0},{"code":"IK363","kind":"base","x":5405,"y":1895,"z0":100,"w":3630,"d":900,"h":720,"rotation_deg":0},{"code":"IK363","kind":"base","x":9035,"y":1895,"z0":100,"w":3630,"d":900,"h":720,"rotation_deg":0},{"code":"IK363","kind":"base","x":12665,"y":1895,"z0":100,"w":3630,"d":900,"h":720,"rotation_deg":0},{"code":"IK363","kind":"base","x":14112,"y":-2707,"z0":100,"w":3630,"d":900,"h":720,"rotation_deg":180},{"code":"IK363","kind":"base","x":10482,"y":-2707,"z0":100,"w":3630,"d":900,"h":720,"rotation_deg":180},{"code":"IK363","kind":"base","x":6852,"y":-2707,"z0":100,"w":3630,"d":900,"h":720,"rotation_deg":180},{"code":"IK363","kind":"base","x":3222,"y":-2707,"z0":100,"w":3630,"d":900,"h":720,"rotation_deg":180},{"code":"BAUM07","kind":"base","x":1372,"y":-2537,"z0":100,"w":70,"d":560,"h":720,"rotation_deg":180},{"code":"BAUM07","kind":"base","x":1302,"y":-2537,"z0":100,"w":70,"d":560,"h":720,"rotation_deg":180},{"code":"BAUM07","kind":"base","x":1232,"y":-2537,"z0":100,"w":70,"d":560,"h":720,"rotation_deg":180},{"code":"KP60","kind":"base","x":897,"y":-2537,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":180},{"code":"KP60","kind":"base","x":297,"y":-2537,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":180},{"code":"KP60","kind":"base","x":10650,"y":1525,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":0},{"code":"KP60","kind":"base","x":11250,"y":1525,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":0},{"code":"KP60","kind":"base","x":11850,"y":1525,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":0},{"code":"KP60","kind":"base","x":12450,"y":1525,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":0},{"code":"LB60","kind":"base","x":13050,"y":1525,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":0},{"code":"LB60","kind":"base","x":13650,"y":1525,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":0},{"code":"LB60","kind":"base","x":14250,"y":1525,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":0},{"code":"LB60","kind":"base","x":14850,"y":1525,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":0},{"code":"LB60","kind":"base","x":15450,"y":1525,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":0},{"code":"SO60","kind":"base","x":360,"y":1030,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":0},{"code":"SO60","kind":"base","x":960,"y":1030,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":0},{"code":"SO60","kind":"base","x":1560,"y":1030,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":0},{"code":"SO60","kind":"base","x":2160,"y":1030,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":0},{"code":"SO60","kind":"base","x":2760,"y":1030,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":0},{"code":"SO60","kind":"base","x":3360,"y":1030,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":0},{"code":"SO60","kind":"base","x":3960,"y":1030,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":0},{"code":"SO60","kind":"base","x":4560,"y":1030,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":0},{"code":"SO60","kind":"base","x":15476,"y":-1537,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":180},{"code":"SO60","kind":"base","x":14876,"y":-1537,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":180},{"code":"SO60","kind":"base","x":14276,"y":-1537,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":180},{"code":"SO60","kind":"base","x":13676,"y":-1537,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":180},{"code":"SO60","kind":"base","x":13076,"y":-1537,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":180},{"code":"SO60","kind":"base","x":4590,"y":-2030,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":180},{"code":"SO60","kind":"base","x":3990,"y":-2030,"z0":100,"w":600,"d":560,"h":720,"rotation_deg":180},{"code":"KM13","kind":"base","x":3625,"y":-2030,"z0":100,"w":130,"d":560,"h":720,"rotation_deg":180},{"code":"KM13","kind":"base","x":3495,"y":-2030,"z0":100,"w":130,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3425,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3415,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3405,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3395,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3385,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3375,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3365,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3355,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3345,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3335,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3325,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3315,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3305,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3295,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3285,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3275,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3265,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3255,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3245,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3235,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3225,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3215,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3205,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"BFL01","kind":"base","x":3195,"y":-2030,"z0":100,"w":10,"d":560,"h":720,"rotation_deg":180},{"code":"AP","kind":"worktop","x":7220,"y":1755,"z0":900,"w":14520,"d":620,"h":40,"rotation_deg":0},{"code":"AP","kind":"worktop","x":7962,"y":-2567,"z0":900,"w":15930,"d":620,"h":40,"rotation_deg":180},{"code":"AP","kind":"worktop","x":13050,"y":1555,"z0":900,"w":5400,"d":620,"h":40,"rotation_deg":0},{"code":"AP","kind":"worktop","x":2460,"y":1060,"z0":900,"w":4800,"d":620,"h":40,"rotation_deg":0},{"code":"AP","kind":"worktop","x":14276,"y":-1567,"z0":900,"w":3000,"d":620,"h":40,"rotation_deg":180},{"code":"AP","kind":"worktop","x":4040,"y":-2060,"z0":900,"w":1700,"d":620,"h":40,"rotation_deg":180}],"_pdp":{"file":"2922.pdp","format":"native","job":"D2868","cabinetCount":80,"fixtureCount":0,"fixtureType":"BFL01","catalog":{"TUERE05X":1,"IK363":8,"TUERE01X":2,"MARMOR01":4,"BAUM07":3,"TNS02":1,"DRGLA001":1,"KP60":6,"LB60":5,"DOOR13L":10,"DOOR13R":8,"SO60":15,"KM13":2,"AP60":11,"BFL01":24,"APE65R":2,"FILLER13":6,"DKP60":1,"DLB60":1},"wallsFromPdp":true,"primitives":{"KORPUS":52,"QUADER":26,"ZYLINDER":53,"WUERFEL":21,"FENSTER":4}}},
+};
+
+/* ==== Minimal mat4/vec helpers (no libraries) ============================ */
+const M4={
+  persp(fov,a,n,f){const t=1/Math.tan(fov/2);return[t/a,0,0,0, 0,t,0,0, 0,0,(f+n)/(n-f),-1, 0,0,2*f*n/(n-f),0];},
+  mul(a,b){const o=new Array(16);for(let r=0;r<4;r++)for(let c=0;c<4;c++){let s=0;for(let k=0;k<4;k++)s+=a[k*4+r]*b[c*4+k];o[c*4+r]=s;}return o;},
+  look(e,c,u){const z=norm(sub(e,c)),x=norm(cross(u,z)),y=cross(z,x);
+    return[x[0],y[0],z[0],0, x[1],y[1],z[1],0, x[2],y[2],z[2],0, -dot(x,e),-dot(y,e),-dot(z,e),1];},
+  trs(tx,ty,tz,ry,sx,sy,sz){const c=Math.cos(ry),s=Math.sin(ry);
+    // T * Ry * S  (column-major)
+    return[c*sx,0,-s*sx,0,  0*sy,sy,0,0,  s*sz,0,c*sz,0,  tx,ty,tz,1];},
+  ry3(ry){const c=Math.cos(ry),s=Math.sin(ry);return[c,0,-s, 0,1,0, s,0,c];},
+};
+function sub(a,b){return[a[0]-b[0],a[1]-b[1],a[2]-b[2]];}
+function cross(a,b){return[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];}
+function dot(a,b){return a[0]*b[0]+a[1]*b[1]+a[2]*b[2];}
+function norm(a){const l=Math.hypot(a[0],a[1],a[2])||1;return[a[0]/l,a[1]/l,a[2]/l];}
+
+/* ==== WebGL setup ======================================================== */
+const canvas=document.getElementById('gl');
+const gl=canvas.getContext('webgl',{antialias:true});
+const VS=`attribute vec3 aPos; attribute vec3 aNormal;
+uniform mat4 uProj,uView,uModel; uniform mat3 uNMat;
+varying vec3 vN;
+void main(){ gl_Position=uProj*uView*uModel*vec4(aPos,1.0); vN=normalize(uNMat*aNormal); }`;
+const FS=`precision mediump float; varying vec3 vN;
+uniform vec3 uColor,uLight; uniform float uWire;
+void main(){
+  if(uWire>0.5){ gl_FragColor=vec4(uColor*0.2,1.0); return; }
+  vec3 N=normalize(vN);
+  float diff=max(dot(N,normalize(uLight)),0.0);
+  float hemi=0.5+0.5*N.y;
+  vec3 amb=mix(vec3(0.34,0.32,0.30),vec3(0.56,0.61,0.67),hemi);
+  vec3 col=uColor*(amb+diff*0.8);
+  col=pow(col,vec3(0.85)); // gentle tone
+  gl_FragColor=vec4(col,1.0);
+}`;
+function sh(t,src){const s=gl.createShader(t);gl.shaderSource(s,src);gl.compileShader(s);
+  if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw gl.getShaderInfoLog(s);return s;}
+const prog=gl.createProgram();
+gl.attachShader(prog,sh(gl.VERTEX_SHADER,VS));gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FS));
+gl.linkProgram(prog);gl.useProgram(prog);
+const A={pos:gl.getAttribLocation(prog,'aPos'),nrm:gl.getAttribLocation(prog,'aNormal')};
+const U={};for(const n of['uProj','uView','uModel','uNMat','uColor','uLight','uWire'])U[n]=gl.getUniformLocation(prog,n);
+
+/* unit cube [-0.5..0.5], 6 faces × 4 verts, with face normals */
+const CUBE=(()=>{const f=[
+  [[0,0,1],[[-.5,-.5,.5],[.5,-.5,.5],[.5,.5,.5],[-.5,.5,.5]]],
+  [[0,0,-1],[[.5,-.5,-.5],[-.5,-.5,-.5],[-.5,.5,-.5],[.5,.5,-.5]]],
+  [[1,0,0],[[.5,-.5,.5],[.5,-.5,-.5],[.5,.5,-.5],[.5,.5,.5]]],
+  [[-1,0,0],[[-.5,-.5,-.5],[-.5,-.5,.5],[-.5,.5,.5],[-.5,.5,-.5]]],
+  [[0,1,0],[[-.5,.5,.5],[.5,.5,.5],[.5,.5,-.5],[-.5,.5,-.5]]],
+  [[0,-1,0],[[-.5,-.5,-.5],[.5,-.5,-.5],[.5,-.5,.5],[-.5,-.5,.5]]],
+];const P=[],N=[],I=[];let v=0;
+for(const[n,q]of f){for(const p of q){P.push(...p);N.push(...n);}I.push(v,v+1,v+2,v,v+2,v+3);v+=4;}
+return{P:new Float32Array(P),N:new Float32Array(N),I:new Uint16Array(I)};})();
+const posB=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,posB);gl.bufferData(gl.ARRAY_BUFFER,CUBE.P,gl.STATIC_DRAW);
+gl.enableVertexAttribArray(A.pos);gl.vertexAttribPointer(A.pos,3,gl.FLOAT,false,0,0);
+const nrmB=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,nrmB);gl.bufferData(gl.ARRAY_BUFFER,CUBE.N,gl.STATIC_DRAW);
+gl.enableVertexAttribArray(A.nrm);gl.vertexAttribPointer(A.nrm,3,gl.FLOAT,false,0,0);
+const idxB=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,idxB);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,CUBE.I,gl.STATIC_DRAW);
+gl.enable(gl.DEPTH_TEST);
+
+/* ==== Scene → boxes ====================================================== */
+const S=0.001;
+const COL={wall:[.905,.890,.855],wallExt:[.85,.83,.80],floor:[.74,.68,.58],
+  wood:[.61,.42,.25],stone:[.23,.24,.26],fixture:[.85,.56,.27],metal:[.79,.80,.82]};
+let boxes=[], walls=[], roomC=[0,0,0], roomR=5, orbit={yaw:0.9,pitch:0.5,r:9};
+
+function buildScene(scene){
+  boxes=[]; walls=[];
+  const bb={x0:1/0,x1:-1/0,y0:1/0,y1:-1/0};
+  for(const w of scene.walls){bb.x0=Math.min(bb.x0,w.x1,w.x2);bb.x1=Math.max(bb.x1,w.x1,w.x2);
+    bb.y0=Math.min(bb.y0,w.y1,w.y2);bb.y1=Math.max(bb.y1,w.y1,w.y2);}
+  const cx=(bb.x0+bb.x1)/2, cy=(bb.y0+bb.y1)/2;
+  roomC=[cx*S, 0.9, -cy*S];
+  roomR=Math.max(bb.x1-bb.x0,bb.y1-bb.y0)*S;
+  orbit={yaw:0.85,pitch:0.62,r:roomR*1.15};
+  // floor
+  boxes.push({t:[cx*S,-0.02,-cy*S],ry:0,s:[(bb.x1-bb.x0)*S+0.6,0.04,(bb.y1-bb.y0)*S+0.6],col:COL.floor,cls:'floor'});
+  // walls (as volumes) — record outward normal for cutaway
+  for(const w of scene.walls){
+    const dx=w.x2-w.x1,dy=w.y2-w.y1,L=Math.hypot(dx,dy)||1;
+    const mx=(w.x1+w.x2)/2,my=(w.y1+w.y2)/2;
+    const ry=-Math.atan2(dy,dx);
+    const out=norm([mx-cx,0,-(my-cy)]); // world-space outward (XZ)
+    const b={t:[mx*S,w.height*S/2,-my*S],ry,s:[L*S,w.height*S,w.thick*S],
+      col:w.thick>150?COL.wallExt:COL.wall,cls:'wall',outward:out};
+    boxes.push(b); walls.push(b);
+  }
+  // cabinets
+  for(const c of (scene.cabinets||[])){
+    const col=c.kind==='worktop'?COL.stone:COL.wood;
+    boxes.push({t:[c.x*S,(c.z0+c.h/2)*S,-c.y*S],ry:-(c.rotation_deg||0)*Math.PI/180,
+      s:[c.w*S,c.h*S,c.d*S],col,cls:'cab'});
+  }
+  // fixtures (MEP)
+  for(const it of (scene.items||[])){
+    boxes.push({t:[it.x*S,(it.z+it.height/2)*S,-it.y*S],ry:-(it.rotation_deg||0)*Math.PI/180,
+      s:[it.width*S,it.height*S,Math.max(it.depth,40)*S],col:COL.fixture,cls:'fix'});
+  }
+}
+
+/* ==== Render loop ======================================================== */
+const opt={walls:true,cut:true,fix:true,cab:true,wire:false};
+function resize(){const dpr=Math.min(devicePixelRatio,2);
+  canvas.width=innerWidth*dpr;canvas.height=innerHeight*dpr;
+  canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';
+  gl.viewport(0,0,canvas.width,canvas.height);}
+addEventListener('resize',resize);resize();
+
+function camPos(){const{yaw,pitch,r}=orbit;
+  return[roomC[0]+r*Math.cos(pitch)*Math.sin(yaw), roomC[1]+r*Math.sin(pitch), roomC[2]+r*Math.cos(pitch)*Math.cos(yaw)];}
+
+function draw(){
+  const bgc=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+  const rgb=hex(bgc); gl.clearColor(rgb[0],rgb[1],rgb[2],1);
+  gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  const eye=camPos();
+  const proj=M4.persp(50*Math.PI/180,canvas.width/canvas.height,0.02,200);
+  const view=M4.look(eye,roomC,[0,1,0]);
+  gl.uniformMatrix4fv(U.uProj,false,new Float32Array(proj));
+  gl.uniformMatrix4fv(U.uView,false,new Float32Array(view));
+  gl.uniform3fv(U.uLight,new Float32Array(norm([0.5,1.0,0.6])));
+  gl.uniform1f(U.uWire,opt.wire?1:0);
+  const camDir=norm(sub(eye,roomC));
+  for(const b of boxes){
+    if(b.cls==='wall'){ if(!opt.walls)continue;
+      if(opt.cut && dot(b.outward,camDir)>0.25)continue; } // hide near walls
+    if(b.cls==='fix'&&!opt.fix)continue;
+    if(b.cls==='cab'&&!opt.cab)continue;
+    const model=M4.trs(b.t[0],b.t[1],b.t[2],b.ry,b.s[0],b.s[1],b.s[2]);
+    gl.uniformMatrix4fv(U.uModel,false,new Float32Array(model));
+    gl.uniformMatrix3fv(U.uNMat,false,new Float32Array(M4.ry3(b.ry)));
+    gl.uniform3fv(U.uColor,new Float32Array(b.col));
+    if(opt.wire){gl.drawElements(gl.LINES,CUBE.I.length,gl.UNSIGNED_SHORT,0);}
+    else gl.drawElements(gl.TRIANGLES,CUBE.I.length,gl.UNSIGNED_SHORT,0);
+  }
+  requestAnimationFrame(draw);
+}
+function hex(c){c=c||'#e9ecf0';const m=/^#?([0-9a-f]{6})$/i.exec(c.replace(/\s/g,''));
+  if(!m)return[.91,.925,.94];const n=parseInt(m[1],16);return[(n>>16&255)/255,(n>>8&255)/255,(n&255)/255];}
+
+/* ==== Orbit controls ===================================================== */
+let drag=false,px=0,py=0;
+canvas.addEventListener('pointerdown',e=>{drag=true;px=e.clientX;py=e.clientY;canvas.setPointerCapture(e.pointerId);});
+canvas.addEventListener('pointerup',()=>drag=false);
+canvas.addEventListener('pointermove',e=>{if(!drag)return;
+  orbit.yaw-=(e.clientX-px)*0.008; orbit.pitch=Math.max(0.05,Math.min(1.5,orbit.pitch+(e.clientY-py)*0.006));
+  px=e.clientX;py=e.clientY;});
+canvas.addEventListener('wheel',e=>{e.preventDefault();orbit.r=Math.max(1,Math.min(60,orbit.r*(1+Math.sign(e.deltaY)*0.1)));},{passive:false});
+
+/* ==== UI ================================================================= */
+const $=id=>document.getElementById(id);
+const sel=$('dataset');
+Object.keys(SCENES).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=k;sel.appendChild(o);});
+function load(key){const s=SCENES[key];buildScene(s);
+  const p=s._pdp||{};
+  $('mSrc').textContent=p.file||key; $('mFmt').textContent=p.format||'—';
+  $('mCounts').textContent=`קירות ${s.walls.length} · תשתיות ${(s.items||[]).length} · ארונות ${(s.cabinets||[]).length}`;
+  const bom=Object.entries(p.catalog||{}).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<span>${k} ×${v}</span>`).join('')
+    +(p.primitives?Object.entries(p.primitives).map(([k,v])=>`<span>${k}:${v}</span>`).join(''):'');
+  $('bom').innerHTML=bom||'<span>—</span>';
+}
+sel.onchange=()=>load(sel.value);
+$('tgWalls').onchange=e=>opt.walls=e.target.checked;
+$('tgCut').onchange=e=>opt.cut=e.target.checked;
+$('tgFix').onchange=e=>opt.fix=e.target.checked;
+$('tgCab').onchange=e=>opt.cab=e.target.checked;
+$('tgWire').onchange=e=>opt.wire=e.target.checked;
+load(Object.keys(SCENES)[0]);
+draw();
+</script>
+</body>
+</html>

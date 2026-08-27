@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- CV ORDX Order XML File -->
+<Job Created="16/08/2026 23:09:35">
+  <ProductVersion>2025</ProductVersion>
+  <Unit>mm</Unit>
+  <Properties>
+    <Job>
+      <Information>
+        <Job>
+          <Name>SOLINE — חדר דמו (כל האלמנטים)</Name>
+          <Description>נוצר לבדיקת ייצוא ORDX עם כל סוגי האלמנטים</Description>
+        </Job>
+        <Customer>
+          <Name></Name>
+          <Address1></Address1>
+          <Address2></Address2>
+          <City></City>
+          <State></State>
+          <Zip></Zip>
+          <Email></Email>
+          <Phone></Phone>
+          <Mobile></Mobile>
+          <Fax></Fax>
+          <Contact></Contact>
+          <Comment></Comment>
+        </Customer>
+        <ShipTo>
+          <Name></Name>
+          <Address1></Address1>
+          <Address2></Address2>
+          <City></City>
+          <State></State>
+          <Zip></Zip>
+          <Email></Email>
+          <Phone></Phone>
+          <Mobile></Mobile>
+          <Fax></Fax>
+          <Contact></Contact>
+          <Comment></Comment>
+        </ShipTo>
+      </Information>
+      <Attributes>
+        <Parameter></Parameter>
+      </Attributes>
+    </Job>
+    <Room>
+      <Attributes></Attributes>
+    </Room>
+  </Properties>
+
+  <Rooms>
+    <Room>
+      <Perspective></Perspective>
+      <RoomProperties>
+        <Room>
+          <General>
+            <Name>חדר דמו — כל האלמנטים</Name>
+            <Description></Description>
+            <Type>Room</Type>
+          </General>
+          <Parameters></Parameters>
+        </Room>
+        <Cabinet></Cabinet>
+        <Closets></Closets>
+      </RoomProperties>
+      <Walls>
+        <Wall>
+          <Number>1</Number>
+          <Description>Wall 1</Description>
+          <Position>
+            <StartX>1943.023</StartX>
+            <StartY>-2229.604</StartY>
+            <Angle>-90.032</Angle><!--EndX, EndY are optional, if present they will override wall length-->
+            <EndX>1939.878</EndX>
+            <EndY>3477.956</EndY>
+            <LeftWallNumber>5</LeftWallNumber><!--If a valid wall number, this will override any StartX, StartY-->
+          </Position>
+          <Type>
+            <Style>Standard</Style><!--Standard|Peninsula|Cathedral|VaultLeft|VaultRight-->
+          </Type>
+          <Dimensions>
+            <Length>5707.561</Length>
+            <Height>2526.700</Height>
+            <Soffit>20.000</Soffit>
+            <Thick>100.000</Thick>
+            <VaultHeight>1219.200</VaultHeight>
+          </Dimensions>
+          <Fixtures>
+            <Fixture>
+              <Catalog>אלמנטים למדידה</Catalog>
+              <Properties>
+                <General>
+                  <Name>שקע בודד</Name>
+                  <Description>Single Socket</Description><!--Class and Type are optional and must match the item or no item will be selected. It is recommended to omit them-->
+                  <Class>Fixture</Class>
+                  <Type>Miscellaneous</Type>
+                  <Size><!--Note: Size is only required if modified from original size-->
+                    <Width>85.000</Width>
+                    <Height>77.000</Height>
+                  </Size>
+                </General>
+              </Properties>
+              <Position>
+                <X>200.000</X>
+                <Y>300.000</Y>
+              </Position>
+            </Fixture>
+            <Fixture>
+              <Catalog>אלמנטים למדידה</Catalog>
+              <Properties>
+                <General>
+                  <Name>גז</Name>
+                  <Description>Gas</Description><!--Class and Type are optional and must match the item or no item will be selected. It is recommended to omit them-->
+                  <Class>Fixture</Class>
+                  <Type>Part</Type>
+                  <Size><!--Note: Size is only required if modified from original size-->
+                    <Width>40.000</Width>
+                    <Height>40.000</Height>
+                  </Size>
+                </General>
+              </Properties>
+              <Position>
+                <X>800.000</X>
+                <Y>500.000</Y>
+              </Position>
+            </Fixture>
+          </Fixtures>
+        </Wall>
+        <Wall>
+          <Number>2</Number>
+          <Description>Wall 2</Description>
+          <Position>
+            <StartX>1939.878</StartX>
+            <StartY>3477.956</StartY>
+            <Angle>-179.875</Angle><!--EndX, EndY are optional, if present they will override wall length-->
+            <EndX>561.787</EndX>
+            <EndY>3480.961</EndY>
+            <LeftWallNumber>1</LeftWallNumber><!--If a valid wall number, this will override any StartX, StartY-->
+          </Position>
+          <Type>
+            <Style>Standard</Style><!--Standard|Peninsula|Cathedral|VaultLeft|VaultRight-->
+          </Type>
+          <Dimensions>
+            <Length>1378.094</Length>
+            <Height>2526.700</Height>
+            <Soffit>20.000</Soffit>
+            <Thick>100.000</Thick>
+            <VaultHeight>1219.200</VaultHeight>
+          </Dimensions>
+          <Fixtures>
+            <Fixture>
+              <Catalog>אלמנטים למדידה</Catalog>
+              <Properties>
+                <General>
+                  <Name>שקע מרובע</Name>
+                  <Description>Multi Socket</Description><!--Class and Type are optional and must match the item or no item will be selected. It is recommended to omit them-->
+                  <Class>Fixture</Class>
+                  <Type>Miscellaneous</Type>
+                  <Size><!--Note: Size is only required if modified from original size-->
+                    <Width>160.000</Width>
+                    <Height>77.000</Height>
+                  </Size>
+                </General>
+              </Properties>
+              <Position>
+                <X>200.000</X>
+                <Y>300.000</Y>
+              </Position>
+            </Fixture>
+          </Fixtures>
+          <Furnishings>
+            <Furnishing>
+              <Catalog>אלמנטים למדידה</Catalog>
+              <Properties>
+                <General>
+                  <Name>חלון</Name>
+                  <Description>Window</Description><!--Class and Type are optional and must match the item or no item will be selected. It is recommended to omit them-->
+                  <Class>Decorative</Class>
+                  <Type>Window</Type>
+                  <Size><!--Note: Size is only required if modified from original size-->
+                    <Width>900.000</Width>
+                    <Height>1200.000</Height>
+                  </Size>
+                </General>
+              </Properties>
+              <Position>
+                <X>428.094</X>
+                <Y>900.000</Y>
+              </Position>
+            </Furnishing>
+            <Furnishing>
+              <Catalog>אלמנטים למדידה</Catalog>
+              <Properties>
+                <General>
+                  <Name>הנמכת תקרה עם מזגן</Name><!--Class and Type are optional and must match the item or no item will be selected. It is recommended to omit them-->
+                  <Class>Decorative</Class>
+                  <Type>Miscellaneous</Type>
+                  <Size><!--Note: Size is only required if modified from original size-->
+                    <Width>800.000</Width>
+                    <Height>300.000</Height>
+                    <Depth>650.000</Depth></Size></General>
+                <Attributes>
+                  <Parameter><Name>SLOTDX</Name><Type>M</Type><Value>700.000</Value></Parameter>
+                  <Parameter><Name>SLOTDY</Name><Type>M</Type><Value>100.000</Value></Parameter>
+                  <Parameter><Name>SLOTX</Name><Type>M</Type><Value>100.000</Value></Parameter>
+                  <Parameter><Name>SLOTY</Name><Type>M</Type><Value>100.000</Value></Parameter>
+                </Attributes>
+              </Properties>
+              <Position>
+                <X>528.094</X>
+                <Y>2226.000</Y>
+              </Position></Furnishing>
+          </Furnishings>
+        </Wall>
+        <Wall>
+          <Number>3</Number>
+          <Description>Wall 3</Description>
+          <Position>
+            <StartX>-893.169</StartX>
+            <StartY>1293.906</StartY>
+            <Angle>178.459</Angle><!--EndX, EndY are optional, if present they will override wall length-->
+            <EndX>-2226.389</EndX>
+            <EndY>1258.032</EndY>
+          </Position>
+          <Type>
+            <Style>Standard</Style><!--Standard|Peninsula|Cathedral|VaultLeft|VaultRight-->
+          </Type>
+          <Dimensions>
+            <Length>1333.703</Length>
+            <Height>2526.700</Height>
+            <Soffit>20.000</Soffit>
+            <Thick>100.000</Thick>
+            <VaultHeight>1219.200</VaultHeight>
+          </Dimensions>
+          <Fixtures>
+            <Fixture>
+              <Catalog>אלמנטים למדידה</Catalog>
+              <Properties>
+                <General>
+                  <Name>תשתית חשמל -קיר</Name>
+                  <Description>Wall Electric Line</Description><!--Class and Type are optional and must match the item or no item will be selected. It is recommended to omit them-->
+                  <Class>Fixture</Class>
+                  <Type>Miscellaneous</Type>
+                  <Size><!--Note: Size is only required if modified from original size-->
+                    <Width>50.000</Width>
+                    <Height>50.000</Height>
+                  </Size>
+                </General>
+              </Properties>
+              <Position>
+                <X>200.000</X>
+                <Y>300.000</Y>
+              </Position>
+            </Fixture>
+          </Fixtures>
+          <Furnishings>
+            <Furnishing>
+              <Catalog>אלמנטים למדידה</Catalog>
+              <Properties>
+                <General>
+                  <Name>מעבר</Name>
+                  <Description>Passage</Description><!--Class and Type are optional and must match the item or no item will be selected. It is recommended to omit them-->
+                  <Class>Decorative</Class>
+                  <Type>EntryDoor</Type>
+                  <Size><!--Note: Size is only required if modified from original size-->
+                    <Width>900.000</Width>
+                    <Height>2100.000</Height>
+                  </Size>
+                </General>
+              </Properties>
+              <Position>
+                <X>383.703</X>
+                <Y>0.000</Y>
+              </Position>
+            </Furnishing>
+          </Furnishings>
+        </Wall>
+        <Wall>
+          <Number>4</Number>
+          <Description>Wall 4</Description>
+          <Position>
+            <StartX>-2226.716</StartX>
+            <StartY>1258.919</StartY>
+            <Angle>89.709</Angle><!--EndX, EndY are optional, if present they will override wall length-->
+            <EndX>-2208.983</EndX>
+            <EndY>-2229.604</EndY>
+          </Position>
+          <Type>
+            <Style>Standard</Style><!--Standard|Peninsula|Cathedral|VaultLeft|VaultRight-->
+          </Type>
+          <Dimensions>
+            <Length>3488.568</Length>
+            <Height>2526.700</Height>
+            <Soffit>20.000</Soffit>
+            <Thick>100.000</Thick>
+            <VaultHeight>1219.200</VaultHeight>
+          </Dimensions>
+          <Fixtures>
+            <Fixture>
+              <Catalog>אלמנטים למדידה</Catalog>
+              <Properties>
+                <General>
+                  <Name>מים</Name>
+                  <Description>Water</Description><!--Class and Type are optional and must match the item or no item will be selected. It is recommended to omit them-->
+                  <Class>Fixture</Class>
+                  <Type>Miscellaneous</Type>
+                  <Size><!--Note: Size is only required if modified from original size-->
+                    <Width>40.000</Width>
+                    <Height>40.000</Height>
+                  </Size>
+                </General>
+              </Properties>
+              <Position>
+                <X>200.000</X>
+                <Y>300.000</Y>
+              </Position>
+            </Fixture>
+          </Fixtures>
+          <Furnishings>
+            <Furnishing>
+              <Catalog>אלמנטים למדידה</Catalog>
+              <Properties>
+                <General>
+                  <Name>מפתח עם משקוף</Name>
+                  <Description>Doorway with Frame</Description><!--Class and Type are optional and must match the item or no item will be selected. It is recommended to omit them-->
+                  <Class>Decorative</Class>
+                  <Type>EntryDoor</Type>
+                  <Size><!--Note: Size is only required if modified from original size-->
+                    <Width>800.000</Width>
+                    <Height>2050.000</Height>
+                    <Depth>100.000</Depth></Size></General>
+              </Properties>
+              <Position>
+                <X>800.000</X>
+                <Y>0.000</Y>
+                <Z>-100.000</Z></Position></Furnishing>
+          </Furnishings>
+        </Wall>
+        <Wall>
+          <Number>5</Number>
+          <Description>Wall 5</Description>
+          <Position>
+            <StartX>-2208.983</StartX>
+            <StartY>-2229.604</StartY>
+            <Angle>-0.000</Angle><!--EndX, EndY are optional, if present they will override wall length-->
+            <EndX>1943.023</EndX>
+            <EndY>-2229.604</EndY>
+            <LeftWallNumber>4</LeftWallNumber><!--If a valid wall number, this will override any StartX, StartY-->
+          </Position>
+          <Type>
+            <Style>VaultRight</Style><!--Standard|Peninsula|Cathedral|VaultLeft|VaultRight-->
+          </Type>
+          <Dimensions>
+            <Length>4152.006</Length>
+            <Height>2526.700</Height>
+            <Soffit>20.000</Soffit>
+            <Thick>100.000</Thick>
+            <VaultHeight>1.000</VaultHeight>
+          </Dimensions>
+          <Furnishings>
+            <Furnishing>
+              <Catalog>אלמנטים למדידה</Catalog>
+              <Properties>
+                <General>
+                  <Name>תמי4</Name>
+                  <Description>Water Bar</Description><!--Class and Type are optional and must match the item or no item will be selected. It is recommended to omit them-->
+                  <Class>Decorative</Class>
+                  <Type>Miscellaneous</Type>
+                  <Size><!--Note: Size is only required if modified from original size-->
+                    <Width>150.000</Width>
+                    <Height>40.000</Height>
+                  </Size>
+                </General>
+              </Properties>
+              <Position>
+                <X>200.000</X>
+                <Y>300.000</Y>
+              </Position>
+            </Furnishing>
+            <Furnishing>
+              <Catalog>אלמנטים למדידה</Catalog>
+              <Properties>
+                <General>
+                  <Name>דלת פנימה שמאל</Name>
+                  <Description>Hinged Left In Door</Description><!--Class and Type are optional and must match the item or no item will be selected. It is recommended to omit them-->
+                  <Class>Decorative</Class>
+                  <Type>EntryDoor</Type>
+                  <Size><!--Note: Size is only required if modified from original size-->
+                    <Width>800.000</Width>
+                    <Height>2050.000</Height>
+                  </Size>
+                </General>
+              </Properties>
+              <Position>
+                <X>800.000</X>
+                <Y>0.000</Y>
+              </Position>
+            </Furnishing>
+          </Furnishings>
+        </Wall>
+      </Walls>
+    </Room>
+  </Rooms>
+</Job>

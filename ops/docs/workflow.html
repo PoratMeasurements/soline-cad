@@ -1,0 +1,361 @@
+<title>תהליך תפעול המדידות</title>
+<style>
+  :root{
+    --bg:#eef2f8; --surface:#ffffff; --surface2:#f4f7fb; --line:#dde5f0; --line2:#c6d2e2;
+    --ink:#0e1f36; --ink2:#42567a; --muted:#7688a5; --accent:#0d6fbf;
+    --office:#0d6fbf; --office-bg:#e7f1fb;
+    --field:#b5710e;  --field-bg:#fbf1e0;
+    --conv:#0a9d63;   --conv-bg:#e6f6ef;
+    --carp:#6b3fc9;   --carp-bg:#efe9fb;
+    --dec:#d23a3f;    --dec-bg:#fdecec;
+    --ok:#0a9d63;
+    --mono:ui-monospace,"Consolas",monospace;
+    --sans:system-ui,"Segoe UI","Arial Hebrew",Arial,sans-serif;
+    --r:16px; --sh:0 10px 30px -18px rgba(16,40,80,.4);
+  }
+  :root:not([data-theme="light"]){ @media (prefers-color-scheme:dark){
+    --bg:#0a111d; --surface:#101b2c; --surface2:#16233a; --line:#25344a; --line2:#33475f;
+    --ink:#e8effb; --ink2:#b3c4e0; --muted:#8296b6; --accent:#5cc8ff;
+    --office:#5cc8ff; --office-bg:#12283e;
+    --field:#f5b544;  --field-bg:#2a2110;
+    --conv:#2fce8f;   --conv-bg:#0f2a20;
+    --carp:#a78bfa;   --carp-bg:#221a3a;
+    --dec:#ff6b70;    --dec-bg:#2c1416; --ok:#2fce8f;
+  }}
+  :root[data-theme="dark"]{
+    --bg:#0a111d; --surface:#101b2c; --surface2:#16233a; --line:#25344a; --line2:#33475f;
+    --ink:#e8effb; --ink2:#b3c4e0; --muted:#8296b6; --accent:#5cc8ff;
+    --office:#5cc8ff; --office-bg:#12283e;
+    --field:#f5b544;  --field-bg:#2a2110;
+    --conv:#2fce8f;   --conv-bg:#0f2a20;
+    --carp:#a78bfa;   --carp-bg:#221a3a;
+    --dec:#ff6b70;    --dec-bg:#2c1416; --ok:#2fce8f;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:1000px;margin:0 auto;padding:clamp(24px,5vw,56px) clamp(16px,4vw,32px) 72px}
+
+  header{margin-bottom:26px}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--accent);margin:0 0 10px;font-weight:600}
+  h1{font-size:clamp(26px,4.5vw,38px);font-weight:800;margin:0;letter-spacing:-.01em;text-wrap:balance}
+  .lead{color:var(--ink2);font-size:clamp(15px,2vw,17px);margin:10px 0 0;max-width:62ch}
+  .note{display:flex;gap:11px;align-items:flex-start;margin-top:18px;padding:13px 16px;
+    background:var(--carp-bg);border:1px solid color-mix(in srgb,var(--carp) 30%,transparent);
+    border-radius:12px;font-size:14px;color:var(--ink2)}
+  .note b{color:var(--ink)}
+
+  .legend{display:flex;flex-wrap:wrap;gap:9px;margin:26px 0 18px}
+  .role{font-size:13px;font-weight:700;padding:8px 14px;border-radius:10px;border:1px solid transparent}
+  .role-carp{background:var(--carp-bg);color:var(--carp);border-color:color-mix(in srgb,var(--carp) 30%,transparent)}
+  .role-office{background:var(--office-bg);color:var(--office);border-color:color-mix(in srgb,var(--office) 30%,transparent)}
+  .role-field{background:var(--field-bg);color:var(--field);border-color:color-mix(in srgb,var(--field) 30%,transparent)}
+  .role-conv{background:var(--conv-bg);color:var(--conv);border-color:color-mix(in srgb,var(--conv) 30%,transparent)}
+
+  figure{margin:0}
+  .diagram-panel{background:#ffffff;border:1px solid var(--line2);border-radius:var(--r);
+    padding:22px 18px;overflow-x:auto;box-shadow:var(--sh)}
+  .diagram-panel .mermaid{min-width:640px;display:flex;justify-content:center}
+  /* תיקון כיוון (bidi) לתוויות מעורבות עברית+אנגלית בתרשים */
+  .diagram-panel svg text,
+  .diagram-panel svg tspan{unicode-bidi:plaintext}
+  .diagram-panel foreignObject{direction:rtl}
+  .diagram-panel foreignObject div,
+  .diagram-panel .nodeLabel,
+  .diagram-panel .edgeLabel,
+  .diagram-panel .edgeLabel span{unicode-bidi:plaintext;direction:rtl}
+  figcaption{color:var(--muted);font-size:12.5px;margin-top:12px;text-align:center}
+
+  h2{font-size:20px;font-weight:800;margin:44px 0 14px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--sh)}
+
+  .scroll{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+  th,td{text-align:start;padding:10px 10px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:700;font-size:11.5px;letter-spacing:.03em;text-transform:uppercase}
+  tbody tr:last-child td{border-bottom:0}
+  td.c,th.c{text-align:center}
+  .yes{color:var(--ok);font-weight:800}
+  .no{color:var(--muted)}
+  .part{color:var(--field);font-weight:700}
+  .rl{display:inline-block;width:9px;height:9px;border-radius:3px;margin-inline-end:7px;vertical-align:middle}
+  .own{font-size:10.5px;color:var(--muted);font-weight:600}
+
+  .grid{display:grid;grid-template-columns:1.3fr 1fr;gap:18px;align-items:start;margin-top:14px}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}}
+  .card h3{margin:0 0 14px;font-size:14px;font-weight:800;color:var(--ink2);letter-spacing:.02em}
+  .stage{font-family:var(--mono);font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;
+    background:var(--surface2);color:var(--ink2);white-space:nowrap}
+  .loop{display:flex;gap:13px;padding:13px 0;border-bottom:1px dashed var(--line)}
+  .loop:last-child{border-bottom:0;padding-bottom:0}
+  .loop .ic{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+    background:var(--dec-bg);color:var(--dec);font-weight:800;font-size:15px}
+  .loop .t{font-weight:750;font-size:14px}
+  .loop .d{color:var(--ink2);font-size:12.5px;margin-top:2px}
+  .loop .path{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:4px}
+  .adminpill{font-size:12px;font-weight:700;color:var(--carp);background:var(--carp-bg);
+    padding:4px 11px;border-radius:999px;vertical-align:middle;margin-inline-start:8px;
+    border:1px solid color-mix(in srgb,var(--carp) 32%,transparent)}
+  .tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:14px 0}
+  @media(max-width:760px){.tiles{grid-template-columns:repeat(2,1fr)}}
+  .tile{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 15px;box-shadow:var(--sh)}
+  .tile .lbl{font-size:11.5px;color:var(--muted);font-weight:700}
+  .tile .num{font-size:24px;font-weight:800;margin-top:6px;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .tile .sub{font-size:11px;font-weight:700;margin-top:4px;color:var(--muted)}
+  .up{color:var(--ok)} .warnc{color:var(--dec)}
+  .dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:4px}
+  @media(max-width:760px){.dash-grid{grid-template-columns:1fr}}
+  .funnel{display:flex;flex-direction:column;gap:8px}
+  .frow{display:grid;grid-template-columns:96px 1fr 26px;align-items:center;gap:10px;font-size:12px}
+  .frow .fname{color:var(--ink2);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ftrack{background:var(--surface2);border-radius:6px;height:16px;overflow:hidden}
+  .ffill{height:100%;background:var(--accent);border-radius:6px}
+  .frow .fct{text-align:end;font-variant-numeric:tabular-nums;color:var(--ink);font-weight:800}
+  .bars{display:flex;align-items:flex-end;gap:22px;height:150px;padding:6px 8px 0}
+  .bargrp{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+  .barpair{display:flex;align-items:flex-end;gap:6px;height:100%;width:100%;justify-content:center}
+  .bar{width:24px;border-radius:4px 4px 0 0}
+  .bar.rev{background:var(--accent)} .bar.cost{background:var(--field)}
+  .barlbl{font-size:11px;color:var(--muted);font-weight:700}
+  .chart-legend{display:flex;gap:16px;font-size:12px;font-weight:700;margin-top:10px}
+  .chart-legend .k{display:inline-flex;align-items:center;gap:6px;color:var(--ink2)}
+  .sw{width:11px;height:11px;border-radius:3px}
+</style>
+
+<div class="wrap" dir="rtl" lang="he">
+  <header>
+    <p class="eyebrow">Soline Ops · מערך תפעול מדידות</p>
+    <h1>תהליך העבודה — מהנגר ובחזרה אליו</h1>
+    <p class="lead">התהליך מתחיל אצל הנגר שמזמין עבודה, עובר דרך Soline (בירור → מדידה → המרה → בדיקה), ומסתיים כשהנגר מקבל את הקבצים. כל שלב שייך לתפקיד ולמכשיר — וזה מה שקובע מה כל אחד רואה ומה מותר לו.</p>
+    <div class="note">👤 <span><b>פלטפורמת שירות רב־נגרים.</b> הנגר הוא הלקוח: פותח הזמנה, עוקב אחרי הסטטוס בזמן אמת, ומוריד את הקבצים בסוף. כל נגר רואה רק את שלו.</span></div>
+  </header>
+
+  <section class="legend" aria-label="מקרא תפקידים">
+    <span class="role role-carp">👤 נגר · פורטל לקוח</span>
+    <span class="role role-office">🖥️ משרד · מתאם/מנהל</span>
+    <span class="role role-field">📱 מודד · סמארטפון</span>
+    <span class="role role-conv">⚙️ ממיר · אוטומטי</span>
+  </section>
+
+  <figure class="diagram-panel">
+    <pre class="mermaid">
+%%{init: {'theme':'base','themeVariables':{'fontFamily':'system-ui, sans-serif','fontSize':'14px','lineColor':'#6b7c96','clusterBkg':'#f8fafc','clusterBorder':'#d7e0ec'}}}%%
+flowchart TB
+  subgraph CARP[👤 נגר · פורטל לקוח]
+    N1["הזמנת עבודה<br/>טופס מפורט + קבצים"]:::carp
+    Track["📊 מעקב סטטוס חי"]:::carp
+    N8["בדיקה + הורדת קבצים"]:::carp
+    N9{מאשר?}:::dec
+  end
+  N1 --> O1
+
+  subgraph OFF1[🖥️ משרד · קליטת הזמנה]
+    O1["ההזמנה נכנסת לתור"]:::office --> O2{הזמנה שלמה?}:::dec
+    O2 -->|כן| O3["אישור, תמחור (מק״טים)<br/>וקבלת עבודה"]:::office
+  end
+  O2 -->|לא · חסר מידע| N1
+  O3 --> V1
+
+  subgraph ASSESS[🖥️ משרד · בירור ואימות מצב שטח]
+    V1["בירור אופי העבודה<br/>שיחה + בדיקת חומר הלקוח"]:::office --> V2["אימות מצב השטח<br/>גישה · מורכבות · גבהים"]:::office
+    V2 --> V3["הערכת היקף + זמן למודד"]:::office
+    V3 --> V4{מספיק מידע לשיבוץ?}:::dec
+  end
+  V4 -->|לא · חסר מידע| N1
+  V4 -->|כן| O4
+
+  subgraph OFF2[🖥️ משרד · שיבוץ ותיאום]
+    O4["שיבוץ מודד + מועד<br/>לפי הזמן שהוערך"]:::office --> O5["תיאום כניסה לאתר"]:::office
+  end
+  O5 --> F1
+
+  subgraph FIELD[📱 מודד · סמארטפון · offline]
+    F1["העבודות שלי<br/>יציאה לאתר"]:::field --> F2["מדידה + DISTO ➜ ORDX"]:::field
+    F2 --> F3["צילומים + הערות"]:::field
+    F3 --> F4["קליטה · DR1"]:::field
+  end
+  F4 -.->|מסתנכרן כשיש רשת| P1
+
+  subgraph CONV[⚙️ ממיר · אוטומטי]
+    P1["ORDX ➜ DXF 2D/3D + PDP"]:::conv --> P2["בדיקת תקינות"]:::conv
+  end
+  P2 --> Q1
+
+  subgraph OFF3[🖥️ משרד · בדיקה ומסירה]
+    Q1["בדיקה DR2 + חוקי התאמת נגרות"]:::office --> Q2{תקין?}:::dec
+    Q2 -->|כן| D1["מסירת קבצים לנגר"]:::office
+  end
+  Q2 -->|לא · בעיית עיבוד| P1
+  Q2 -->|לא · חסר מידע שטח| F1
+
+  D1 --> N8 --> N9
+  N9 -->|לא · בקשת שינויים| Q1
+  N9 -->|כן| E1["סגירה + ארכוב"]:::office
+  E1 --> Done([✓ הושלם]):::carp
+
+  O3 -.->|עדכוני סטטוס בכל שלב| Track
+
+  classDef carp   fill:#efe9fb,stroke:#6b3fc9,color:#2a1a4a,stroke-width:1.5px;
+  classDef office fill:#e7f1fb,stroke:#0d6fbf,color:#0a3358,stroke-width:1.5px;
+  classDef field  fill:#fbf1e0,stroke:#b5710e,color:#5a3a08,stroke-width:1.5px;
+  classDef conv   fill:#e6f6ef,stroke:#0a9d63,color:#08402a,stroke-width:1.5px;
+  classDef dec    fill:#fdecec,stroke:#d23a3f,color:#5a1416,stroke-width:1.5px;
+    </pre>
+    <figcaption>קו מקווקו = פעולה אסינכרונית (סנכרון offline / עדכון סטטוס). חצים אדומים חוזרים = לולאות תיקון. <b>שלב הבירור</b> מוודא את מצב השטח ומעריך זמן — כי הלקוח לא תמיד משקף מצב אמיתי — לפני השיבוץ.</figcaption>
+  </figure>
+
+  <h2>שלבים · תפקיד · סטטוס</h2>
+  <div class="card scroll">
+    <table>
+      <thead><tr><th>שלב</th><th>תפקיד · מכשיר</th><th>סטטוס פנימי</th><th>מה הנגר רואה</th></tr></thead>
+      <tbody>
+        <tr><td><span class="rl" style="background:var(--carp)"></span>הזמנת עבודה (טופס)</td><td>נגר · web</td><td><span class="stage">submitted</span></td><td>נשלחה — ממתינה לאישור</td></tr>
+        <tr><td><span class="rl" style="background:var(--office)"></span>קליטה + אישור הזמנה</td><td>מתאם · מחשב</td><td><span class="stage">accepted</span></td><td>התקבלה</td></tr>
+        <tr><td><span class="rl" style="background:var(--office)"></span>בירור ואימות מצב שטח + הערכת זמן</td><td>מתאם · מחשב</td><td><span class="stage">assessment</span></td><td>בבירור פרטים</td></tr>
+        <tr><td><span class="rl" style="background:var(--office)"></span>שיבוץ + תיאום כניסה</td><td>מתאם · מחשב</td><td><span class="stage">scheduled</span></td><td>בתיאום מועד</td></tr>
+        <tr><td><span class="rl" style="background:var(--field)"></span>יציאה + מדידה בשטח</td><td>מודד · טלפון</td><td><span class="stage">in_field</span></td><td>במדידה</td></tr>
+        <tr><td><span class="rl" style="background:var(--field)"></span>קליטת ORDX + הערות</td><td>מודד · טלפון</td><td><span class="stage">measured · DR1</span></td><td>במדידה</td></tr>
+        <tr><td><span class="rl" style="background:var(--conv)"></span>המרה + בדיקת תקינות</td><td>ממיר · אוטומטי</td><td><span class="stage">processing</span></td><td>בעיבוד</td></tr>
+        <tr><td><span class="rl" style="background:var(--office)"></span>בדיקה DR2 + התאמת נגרות</td><td>מתאם · מחשב</td><td><span class="stage">review · DR2</span></td><td>בבדיקה</td></tr>
+        <tr><td><span class="rl" style="background:var(--office)"></span>מסירת קבצים לנגר</td><td>מתאם · מחשב</td><td><span class="stage">delivered</span></td><td>✅ מוכן — לאשר ולהוריד</td></tr>
+        <tr><td><span class="rl" style="background:var(--carp)"></span>בדיקה + הורדה + אישור</td><td>נגר · web</td><td><span class="stage">approved</span></td><td>הושלם</td></tr>
+        <tr><td><span class="rl" style="background:var(--office)"></span>סגירה + ארכוב</td><td>מתאם · מחשב</td><td><span class="stage">closed</span></td><td>הושלם</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid">
+    <div class="card scroll">
+      <h3>מטריצת הרשאות</h3>
+      <table>
+        <thead><tr><th>יכולת</th><th class="c">נגר</th><th class="c">מודד</th><th class="c">מתאם</th><th class="c">מנהל</th></tr></thead>
+        <tbody>
+          <tr><td>יצירת הזמנה</td><td class="c"><span class="yes">✓</span><br><span class="own">שלו</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
+          <tr><td>צפייה בהזמנות שלו</td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td></tr>
+          <tr><td>צפייה בכל העבודות</td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
+          <tr><td>עבודות שהוקצו לי</td><td class="c"><span class="no">–</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
+          <tr><td>קליטת/אישור הזמנה</td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
+          <tr><td>בירור ואימות שטח</td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
+          <tr><td>שיבוץ + לו״ז</td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
+          <tr><td>קליטת מדידה בשטח</td><td class="c"><span class="no">–</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="yes">✓</span></td></tr>
+          <tr><td>בדיקה DR2 / QA</td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
+          <tr><td>מסירת קבצים לנגר</td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
+          <tr><td>הורדת קבצים סופיים</td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
+          <tr><td>בקשת שינויים</td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td></tr>
+          <tr><td>ניהול קטלוג מק״טים + מחירים</td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="yes">✓</span></td></tr>
+          <tr><td>בניית הצעת מחיר</td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
+          <tr><td>צפייה במחיר ההזמנה</td><td class="c"><span class="yes">✓</span><br><span class="own">שלו</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
+          <tr><td>אישור הצעת מחיר</td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td></tr>
+          <tr><td>רווחיות (מחיר − עלות)</td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="yes">✓</span></td></tr>
+          <tr><td>ניהול משתמשים + הרשאות</td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="yes">✓</span></td></tr>
+          <tr><td>דוחות וסטטיסטיקה</td><td class="c"><span class="part">◐</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
+          <tr><td>הגדרות מערכת</td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="no">–</span></td><td class="c"><span class="yes">✓</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>לולאות תיקון</h3>
+      <div class="loop"><div class="ic">↺</div><div>
+        <div class="t">הזמנה חסרה</div><div class="d">ההזמנה לא שלמה — בקשת הבהרה חוזרת לנגר.</div>
+        <div class="path">קליטה ➜ נגר</div></div></div>
+      <div class="loop"><div class="ic">↺</div><div>
+        <div class="t">בירור לא מספק</div><div class="d">מצב השטח לא ברור דיו לשיבוץ — דרוש מידע נוסף.</div>
+        <div class="path">בירור ➜ נגר</div></div></div>
+      <div class="loop"><div class="ic">↺</div><div>
+        <div class="t">בעיית עיבוד</div><div class="d">תכנית שגויה בגלל המרה — מריצים שוב את הממיר.</div>
+        <div class="path">בדיקה ➜ עיבוד</div></div></div>
+      <div class="loop"><div class="ic">↺</div><div>
+        <div class="t">חסר מידע שטח</div><div class="d">חסרה מדידה — חוזר לטלפון של המודד.</div>
+        <div class="path">בדיקה ➜ שטח</div></div></div>
+      <div class="loop"><div class="ic">↺</div><div>
+        <div class="t">הנגר ביקש שינויים</div><div class="d">תיקון מבוקש — חוזרים לבדיקה/עדכון.</div>
+        <div class="path">אישור ➜ בדיקה</div></div></div>
+    </div>
+  </div>
+
+  <h2>💰 תמחור וקטלוג מק״טים</h2>
+  <p class="lead" style="margin-bottom:16px">כל התמחור בתוך התוכנה. קטלוג של שירותים — כל אחד מק״ט + מחיר — עם מחירון מיוחד לכל נגר. ההזמנה נבנית משורות מק״ט ➜ הצעת מחיר ➜ אישור הנגר.</p>
+  <div class="grid">
+    <div class="card scroll">
+      <h3>דוגמת קטלוג (למילוי מולך)</h3>
+      <table>
+        <thead><tr><th>מק״ט</th><th>שירות</th><th>יחידה</th></tr></thead>
+        <tbody>
+          <tr><td><span class="stage">MDD-KIT</span></td><td>מדידת מטבח</td><td>יח׳</td></tr>
+          <tr><td><span class="stage">MDD-FULL</span></td><td>מדידת דירה מלאה</td><td>יח׳</td></tr>
+          <tr><td><span class="stage">ADD-3D</span></td><td>תוספת DXF 3D</td><td>יח׳</td></tr>
+          <tr><td><span class="stage">ADD-PDP</span></td><td>תוספת קובץ PDP</td><td>יח׳</td></tr>
+          <tr><td><span class="stage">ADD-FLOOR</span></td><td>תוספת קומה</td><td>קומה</td></tr>
+          <tr><td><span class="stage">ADD-RUSH</span></td><td>עבודה דחופה</td><td>יח׳</td></tr>
+          <tr><td><span class="stage">TRV-KM</span></td><td>נסיעה מעל X ק״מ</td><td>ק״מ</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>מחיר מול עלות</h3>
+      <div class="loop"><div class="ic" style="background:var(--conv-bg);color:var(--conv)">₪</div><div>
+        <div class="t">מחיר (הכנסה)</div><div class="d">מהמק״טים. גלוי ל<b>נגר (שלו)</b> ול<b>משרד</b>.</div></div></div>
+      <div class="loop"><div class="ic">₪</div><div>
+        <div class="t">עלות + רווחיות</div><div class="d">מחיר − עלות מהמנוע הנסתר. <b>רק האדמין הראשי.</b></div></div></div>
+      <div class="loop" style="border:0"><div class="ic" style="background:var(--field-bg);color:var(--field)">↺</div><div>
+        <div class="t">איפה בתהליך</div><div class="d">המחיר נבנה בקליטה/בירור (כשההיקף ידוע), הנגר מאשר, וממשיכים לשיבוץ.</div></div></div>
+    </div>
+  </div>
+
+  <h2>🕒 מנוע מדדים נסתר <span class="adminpill">🔒 רק האדמין הראשי</span></h2>
+  <p class="lead" style="margin-bottom:16px">שכבה שרצה ברקע ואוספת אוטומטית זמן ומרחק בכל שלב — כדי לדעת את העלות האמיתית והרווחיות של כל עבודה. נאסף פסיבית (המשרד לא עושה כלום, המודד כמה טאפים/GPS), ומוצג <b>רק ל-Michael</b>. אף תפקיד אחר לא רואה אותו.</p>
+  <figure class="diagram-panel">
+    <pre class="mermaid">
+%%{init: {'theme':'base','themeVariables':{'fontFamily':'system-ui, sans-serif','fontSize':'14px','lineColor':'#6b7c96'}}}%%
+flowchart RL
+  A["זמן עבודת משרד<br/>אוטומטי מחותמות"]:::src --> ENG
+  B["זמן נסיעת מודד<br/>GPS · הלוך+חזור"]:::src --> ENG
+  C["זמן מדידה<br/>חותמות באתר"]:::src --> ENG
+  D["ק״מ נסיעה<br/>אורך מסלול GPS"]:::src --> ENG
+  ENG[["🕒 מנוע מדדים נסתר"]]:::eng
+  ENG --> R["עלות ורווחיות<br/>לכל עבודה"]:::out
+  ENG -.->|לולאת שיפור| EST["מדייק את הערכת<br/>הזמן בשלב הבירור"]:::est
+  classDef src fill:#eef3f9,stroke:#7688a5,color:#2b3a52,stroke-width:1.5px;
+  classDef eng fill:#0e1f36,stroke:#0e1f36,color:#ffffff,stroke-width:1.5px;
+  classDef out fill:#e6f6ef,stroke:#0a9d63,color:#08402a,stroke-width:1.5px;
+  classDef est fill:#fbf1e0,stroke:#b5710e,color:#5a3a08,stroke-width:1.5px;
+    </pre>
+    <figcaption>ארבעה מדדים נאספים ברקע ➜ מנוע ➜ עלות ורווחיות. הקו המקווקו: הזמן שנמדד בפועל חוזר ומדייק את הערכת הזמן בשלב הבירור — ההערכה נעשית חכמה יותר עם הזמן.</figcaption>
+  </figure>
+
+  <h2>📊 דאשבורד ניהולי + KPI <span class="adminpill">🔒 רק האדמין הראשי</span></h2>
+  <p class="lead" style="margin-bottom:6px">מסך הבית של האדמין — חדר הבקרה שמנקז תפעול, כספים, עלות/רווחיות ויעילות שטח למקום אחד. <b>תצוגה מקדימה · נתוני דמו.</b></p>
+  <div class="tiles">
+    <div class="tile"><div class="lbl">הכנסות החודש</div><div class="num">₪48,200</div><div class="sub up">▲ 12%</div></div>
+    <div class="tile"><div class="lbl">רווחיות</div><div class="num">34%</div><div class="sub up">▲ 3%</div></div>
+    <div class="tile"><div class="lbl">עבודות פעילות</div><div class="num">23</div><div class="sub">מתוך 41</div></div>
+    <div class="tile"><div class="lbl">זמן מחזור ממוצע</div><div class="num">6.4<span style="font-size:13px"> ימים</span></div><div class="sub up">▼ 0.8</div></div>
+    <div class="tile"><div class="lbl">עבודות בפיגור</div><div class="num warnc">3</div><div class="sub warnc">דורש טיפול</div></div>
+  </div>
+  <div class="dash-grid">
+    <div class="card"><h3>משפך שלבים · עבודות פעילות</h3>
+      <div class="funnel">
+        <div class="frow"><span class="fname">קליטת הזמנה</span><span class="ftrack"><span class="ffill" style="width:100%"></span></span><span class="fct">5</span></div>
+        <div class="frow"><span class="fname">אישור + תמחור</span><span class="ftrack"><span class="ffill" style="width:60%"></span></span><span class="fct">3</span></div>
+        <div class="frow"><span class="fname">בירור שטח</span><span class="ftrack"><span class="ffill" style="width:40%"></span></span><span class="fct">2</span></div>
+        <div class="frow"><span class="fname">שיבוץ</span><span class="ftrack"><span class="ffill" style="width:80%"></span></span><span class="fct">4</span></div>
+        <div class="frow"><span class="fname">במדידה</span><span class="ftrack"><span class="ffill" style="width:40%"></span></span><span class="fct">2</span></div>
+        <div class="frow"><span class="fname">בעיבוד</span><span class="ftrack"><span class="ffill" style="width:40%"></span></span><span class="fct">2</span></div>
+        <div class="frow"><span class="fname">בבדיקה</span><span class="ftrack"><span class="ffill" style="width:40%"></span></span><span class="fct">2</span></div>
+        <div class="frow"><span class="fname">למסירה</span><span class="ftrack"><span class="ffill" style="width:20%"></span></span><span class="fct">1</span></div>
+      </div>
+    </div>
+    <div class="card"><h3>הכנסה מול עלות · 3 חודשים</h3>
+      <div class="bars" role="img" aria-label="הכנסה מול עלות לאורך שלושה חודשים: ההכנסה עולה מ-38 ל-48 אלף ש״ח, העלות מ-27 ל-32 אלף">
+        <div class="bargrp"><div class="barpair"><span class="bar rev" style="height:103px"></span><span class="bar cost" style="height:73px"></span></div><span class="barlbl">יוני</span></div>
+        <div class="bargrp"><div class="barpair"><span class="bar rev" style="height:114px"></span><span class="bar cost" style="height:76px"></span></div><span class="barlbl">יולי</span></div>
+        <div class="bargrp"><div class="barpair"><span class="bar rev" style="height:130px"></span><span class="bar cost" style="height:87px"></span></div><span class="barlbl">אוגוסט</span></div>
+      </div>
+      <div class="chart-legend">
+        <span class="k"><span class="sw" style="background:var(--accent)"></span>הכנסה</span>
+        <span class="k"><span class="sw" style="background:var(--field)"></span>עלות</span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+{
+  "name": "Soline Ops · תפעול מדידות",
+  "short_name": "Soline Ops",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b1119",
+  "theme_color": "#0b1119",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

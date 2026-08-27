@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15600 3713" width="3900" height="928.25">
+<rect x="0" y="0" width="15600" height="3713" fill="#ffffff"/>
+<polygon points="300,3113 3900,3113 3900,370 300,370" fill="none" stroke="#000000" stroke-width="12" data-layer="WALL"/>
+<line x1="300" y1="3113" x2="3900" y2="3113" stroke="#333333" stroke-width="12" data-layer="FLOOR"/>
+<text x="2100" y="3413" font-size="168" fill="#000000" font-family="monospace" data-layer="WALL">קיר W1 · 3600×2743</text>
+<circle cx="1800" cy="2813" r="70" fill="none" stroke="#ffff00" stroke-width="12" data-layer="ELEC-FIN"/>
+<line x1="1775.5" y1="2844.5" x2="1775.5" y2="2781.5" stroke="#ffff00" stroke-width="12" data-layer="ELEC-FIN"/>
+<line x1="1824.5" y1="2844.5" x2="1824.5" y2="2781.5" stroke="#ffff00" stroke-width="12" data-layer="ELEC-FIN"/>
+<line x1="1800" y1="3113" x2="1800" y2="2813" stroke="#000000" stroke-width="12" data-layer="DIM"/>
+<text x="1840" y="2963" font-size="126" fill="#000000" font-family="monospace" data-layer="DIM">300</text>
+<polygon points="630,2083 770,2083 770,1943 630,1943" fill="none" stroke="#ffff00" stroke-width="12" data-layer="ELEC-BOX"/>
+<polygon points="701,2083 841,2083 841,1943 701,1943" fill="none" stroke="#ffff00" stroke-width="12" data-layer="ELEC-BOX"/>
+<polygon points="772,2083 912,2083 912,1943 772,1943" fill="none" stroke="#ffff00" stroke-width="12" data-layer="ELEC-BOX"/>
+<polygon points="843,2083 983,2083 983,1943 843,1943" fill="none" stroke="#ffff00" stroke-width="12" data-layer="ELEC-BOX"/>
+<line x1="700" y1="3113" x2="700" y2="2013" stroke="#000000" stroke-width="12" data-layer="DIM"/>
+<text x="740" y="2563" font-size="126" fill="#000000" font-family="monospace" data-layer="DIM">1100</text>
+<line x1="771" y1="3113" x2="771" y2="2013" stroke="#000000" stroke-width="12" data-layer="DIM"/>
+<text x="811" y="2563" font-size="126" fill="#000000" font-family="monospace" data-layer="DIM">1100</text>
+<line x1="842" y1="3113" x2="842" y2="2013" stroke="#000000" stroke-width="12" data-layer="DIM"/>
+<text x="882" y="2563" font-size="126" fill="#000000" font-family="monospace" data-layer="DIM">1100</text>
+<line x1="913" y1="3113" x2="913" y2="2013" stroke="#000000" stroke-width="12" data-layer="DIM"/>
+<text x="953" y="2563" font-size="126" fill="#000000" font-family="monospace" data-layer="DIM">1100</text>
+<circle cx="2900" cy="2563" r="39.2" fill="none" stroke="#00ffff" stroke-width="12" data-layer="PLUMB-POINT"/>
+<line x1="2860.8" y1="2563" x2="2939.2" y2="2563" stroke="#00ffff" stroke-width="12" data-layer="PLUMB-POINT"/>
+<line x1="2900" y1="2602.2" x2="2900" y2="2523.8" stroke="#00ffff" stroke-width="12" data-layer="PLUMB-POINT"/>
+<line x1="2900" y1="3113" x2="2900" y2="2563" stroke="#000000" stroke-width="12" data-layer="DIM"/>
+<text x="2940" y="2838" font-size="126" fill="#000000" font-family="monospace" data-layer="DIM">550</text>
+<polygon points="4900,3113 7300,3113 7300,370 4900,370" fill="none" stroke="#000000" stroke-width="12" data-layer="WALL"/>
+<line x1="4900" y1="3113" x2="7300" y2="3113" stroke="#333333" stroke-width="12" data-layer="FLOOR"/>
+<text x="6100" y="3413" font-size="168" fill="#000000" font-family="monospace" data-layer="WALL">קיר W2 · 2400×2743</text>
+<polygon points="5200,3113 6100,3113 6100,1063 5200,1063" fill="none" stroke="#00ff00" stroke-width="12" data-layer="DOOR"/>
+<line x1="5200" y1="3113" x2="5200" y2="3113" stroke="#000000" stroke-width="12" data-layer="DIM"/>
+<text x="5240" y="3113" font-size="126" fill="#000000" font-family="monospace" data-layer="DIM">0</text>
+<polygon points="8300,3113 11900,3113 11900,370 8300,370" fill="none" stroke="#000000" stroke-width="12" data-layer="WALL"/>
+<line x1="8300" y1="3113" x2="11900" y2="3113" stroke="#333333" stroke-width="12" data-layer="FLOOR"/>
+<text x="10100" y="3413" font-size="168" fill="#000000" font-family="monospace" data-layer="WALL">קיר W3 · 3600×2743</text>
+<polygon points="9200,2213 10400,2213 10400,813 9200,813" fill="none" stroke="#00ff00" stroke-width="12" data-layer="WINDOW"/>
+<line x1="9200" y1="3113" x2="9200" y2="2213" stroke="#000000" stroke-width="12" data-layer="DIM"/>
+<text x="9240" y="2663" font-size="126" fill="#000000" font-family="monospace" data-layer="DIM">900</text>
+<circle cx="8900" cy="370" r="70" fill="none" stroke="#ff9955" stroke-width="12" data-layer="LIGHT-SHELL"/>
+<circle cx="8900" cy="370" r="11.2" fill="none" stroke="#ff9955" stroke-width="12" data-layer="LIGHT-SHELL"/>
+<circle cx="9800" cy="370" r="70" fill="none" stroke="#ff9955" stroke-width="12" data-layer="LIGHT-SHELL"/>
+<circle cx="9800" cy="370" r="11.2" fill="none" stroke="#ff9955" stroke-width="12" data-layer="LIGHT-SHELL"/>
+<circle cx="10700" cy="370" r="70" fill="none" stroke="#ff9955" stroke-width="12" data-layer="LIGHT-SHELL"/>
+<circle cx="10700" cy="370" r="11.2" fill="none" stroke="#ff9955" stroke-width="12" data-layer="LIGHT-SHELL"/>
+<line x1="8900" y1="3113" x2="8900" y2="370" stroke="#000000" stroke-width="12" data-layer="DIM"/>
+<text x="8940" y="1741.5" font-size="126" fill="#000000" font-family="monospace" data-layer="DIM">2743</text>
+<line x1="9800" y1="3113" x2="9800" y2="370" stroke="#000000" stroke-width="12" data-layer="DIM"/>
+<text x="9840" y="1741.5" font-size="126" fill="#000000" font-family="monospace" data-layer="DIM">2743</text>
+<line x1="10700" y1="3113" x2="10700" y2="370" stroke="#000000" stroke-width="12" data-layer="DIM"/>
+<text x="10740" y="1741.5" font-size="126" fill="#000000" font-family="monospace" data-layer="DIM">2743</text>
+<polygon points="12900,3113 15300,3113 15300,370 12900,370" fill="none" stroke="#000000" stroke-width="12" data-layer="WALL"/>
+<line x1="12900" y1="3113" x2="15300" y2="3113" stroke="#333333" stroke-width="12" data-layer="FLOOR"/>
+<text x="14100" y="3413" font-size="168" fill="#000000" font-family="monospace" data-layer="WALL">קיר W4 · 2400×2743</text>
+<circle cx="13100" cy="1813" r="49" fill="none" stroke="#ffff00" stroke-width="12" data-layer="ELEC-FIN"/>
+<line x1="13100" y1="1813" x2="13183.3" y2="1729.7" stroke="#ffff00" stroke-width="12" data-layer="ELEC-FIN"/>
+<circle cx="13183.3" cy="1729.7" r="8.4" fill="none" stroke="#ffff00" stroke-width="12" data-layer="ELEC-FIN"/>
+<line x1="13100" y1="3113" x2="13100" y2="1813" stroke="#000000" stroke-width="12" data-layer="DIM"/>
+<text x="13140" y="2463" font-size="126" fill="#000000" font-family="monospace" data-layer="DIM">1300</text>
+</svg>

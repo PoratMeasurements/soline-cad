@@ -1,0 +1,189 @@
+{
+  "export": {
+    "slots": [
+      {
+        "type": "+שקע",
+        "code": 3,
+        "t1": [
+          150,
+          10,
+          120
+        ],
+        "t2": [
+          800,
+          0,
+          600
+        ],
+        "unit": "030012000000000e000000"
+      },
+      {
+        "type": "שקע",
+        "code": 3,
+        "t1": [
+          150,
+          10,
+          120
+        ],
+        "t2": [
+          150,
+          10,
+          120
+        ],
+        "unit": "030012000000000e000000"
+      }
+    ]
+  },
+  "base": {
+    "+שקע": {
+      "plusT1": [
+        150,
+        10,
+        120
+      ],
+      "plusT2": [
+        500,
+        0,
+        500
+      ],
+      "plainT1": [
+        150,
+        10,
+        120
+      ],
+      "plainT2": [
+        150,
+        10,
+        120
+      ],
+      "sameCode": true,
+      "sameUnit": true,
+      "t1EqualsPlainNative": true,
+      "plainT1EqualsT2": true
+    },
+    "+מפסק": {
+      "plusT1": [
+        150,
+        10,
+        120
+      ],
+      "plusT2": [
+        170,
+        0,
+        320
+      ],
+      "plainT1": [
+        150,
+        10,
+        120
+      ],
+      "plainT2": [
+        150,
+        10,
+        120
+      ],
+      "sameCode": true,
+      "sameUnit": true,
+      "t1EqualsPlainNative": true,
+      "plainT1EqualsT2": true
+    },
+    "+טלפון": {
+      "plusT1": [
+        60,
+        10,
+        80
+      ],
+      "plusT2": [
+        300,
+        0,
+        800
+      ],
+      "plainT1": [
+        60,
+        10,
+        80
+      ],
+      "plainT2": [
+        60,
+        10,
+        80
+      ],
+      "sameCode": true,
+      "sameUnit": true,
+      "t1EqualsPlainNative": true,
+      "plainT1EqualsT2": true
+    }
+  },
+  "pairs": [
+    {
+      "proof": "t2 varies between two +שקע samples while t1+code+unit are locked",
+      "exportPlus": {
+        "t1": [
+          150,
+          10,
+          120
+        ],
+        "t2": [
+          800,
+          0,
+          600
+        ],
+        "code": 3,
+        "unit": "030012000000000e000000"
+      },
+      "basePlus": {
+        "t1": [
+          150,
+          10,
+          120
+        ],
+        "t2": [
+          500,
+          0,
+          500
+        ],
+        "code": 3,
+        "unit": "030012000000000e000000"
+      },
+      "basePlain": {
+        "t1": [
+          150,
+          10,
+          120
+        ],
+        "t2": [
+          150,
+          10,
+          120
+        ],
+        "code": 3,
+        "unit": "030012000000000e000000"
+      },
+      "t1_locked": true,
+      "t2_varies": true,
+      "code_unit_locked": true
+    }
+  ],
+  "prototype": {
+    "method": "copy plain-socket slot; write \"+שקע\" @0x09 + t2 @0x7f; nothing else",
+    "unitUntouched": true,
+    "t1Preserved": true,
+    "labelMatches": true,
+    "t2Matches": true,
+    "unitMatches": true,
+    "remainingDiffsVsNativePlus": [
+      "0x33",
+      "0x34",
+      "0x35",
+      "0x36",
+      "0x37",
+      "0x38",
+      "0x39",
+      "0x3a",
+      "0x85",
+      "0x86",
+      "0x89",
+      "0x8a"
+    ],
+    "note": "remaining diffs are only secondary-name-label (0x33+) + position (0x85-0x8a) — placement/label, never [0x91,0x9c)"
+  }
+}

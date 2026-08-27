@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Job Created="2026-08-14">
+  <ProductVersion>CV 2023</ProductVersion>
+  <Unit>mm</Unit>
+  <Properties><Job><Information><Job><Name>Room 4x4</Name><Description>4x4m room: door + windows + infrastructure</Description></Job></Information></Job></Properties>
+  <Rooms>
+    <Room>
+      <RoomProperties><Room><General><Name>Room 4x4</Name><Type>Kitchen</Type></General></Room></RoomProperties>
+      <Walls>
+        <!-- Wall 1: bottom, kitchen wall (4000mm) - sockets over counter + gas + faucet + water/sewage -->
+        <Wall>
+          <Number>1</Number>
+          <Position><StartX>0</StartX><StartY>0</StartY><Angle>0</Angle><EndX>4000</EndX><EndY>0</EndY></Position>
+          <Dimensions><Length>4000</Length><Height>2600</Height><Thick>100</Thick></Dimensions>
+          <Fixtures>
+            <Fixture><Catalog>InnoDraw</Catalog><Properties><General><Name>Socket</Name><Class>Fixture</Class><Type>Miscellaneous</Type><Width>80</Width><Depth>15</Depth><Height>80</Height><Size></Size></General></Properties><Position><X>500</X><Y>1100</Y></Position></Fixture>
+            <Fixture><Catalog>InnoDraw</Catalog><Properties><General><Name>Duplex Socket</Name><Class>Fixture</Class><Type>Miscellaneous</Type><Width>160</Width><Depth>15</Depth><Height>80</Height><Size></Size></General></Properties><Position><X>1400</X><Y>1100</Y></Position></Fixture>
+            <Fixture><Catalog>InnoDraw</Catalog><Properties><General><Name>Gas</Name><Class>Fixture</Class><Type>Part</Type><Width>20</Width><Height>80</Height><Size></Size></General></Properties><Position><X>2200</X><Y>700</Y></Position></Fixture>
+            <Fixture><Catalog>InnoDraw</Catalog><Properties><General><Name>Faucet</Name><Class>Fixture</Class><Type>Part</Type><Width>20</Width><Height>80</Height><Size></Size></General></Properties><Position><X>3100</X><Y>1050</Y></Position></Fixture>
+            <Fixture><Catalog>InnoDraw</Catalog><Properties><General><Name>Water Supply</Name><Class>Fixture</Class><Type>Part</Type><Width>20</Width><Height>80</Height><Size></Size></General></Properties><Position><X>3200</X><Y>500</Y></Position></Fixture>
+            <Fixture><Catalog>InnoDraw</Catalog><Properties><General><Name>Sewage</Name><Class>Fixture</Class><Type>Part</Type><Width>50</Width><Height>80</Height><Size></Size></General></Properties><Position><X>3100</X><Y>200</Y></Position></Fixture>
+          </Fixtures>
+          <Furnishings></Furnishings>
+        </Wall>
+        <!-- Wall 2: right (4000mm) - a window + socket -->
+        <Wall>
+          <Number>2</Number>
+          <Position><StartX>4000</StartX><StartY>0</StartY><Angle>90</Angle><EndX>4000</EndX><EndY>4000</EndY></Position>
+          <Dimensions><Length>4000</Length><Height>2600</Height><Thick>100</Thick></Dimensions>
+          <Fixtures>
+            <Fixture><Catalog>InnoDraw</Catalog><Properties><General><Name>Socket</Name><Class>Fixture</Class><Type>Miscellaneous</Type><Width>80</Width><Depth>15</Depth><Height>80</Height><Size></Size></General></Properties><Position><X>600</X><Y>350</Y></Position></Fixture>
+          </Fixtures>
+          <Furnishings>
+            <Furnishing><Catalog>InnoDraw</Catalog><Properties><General><Name>Window</Name><Class>Decorative</Class><Type>Window</Type><Size><Width>1400.000000</Width><Height>1400.000000</Height><Depth>100.000000</Depth></Size></General></Properties><Position><X>2000</X><Y>900</Y><Z>-100</Z></Position></Furnishing>
+          </Furnishings>
+        </Wall>
+        <!-- Wall 3: top (4000mm) - a large window -->
+        <Wall>
+          <Number>3</Number>
+          <Position><StartX>4000</StartX><StartY>4000</StartY><Angle>180</Angle><EndX>0</EndX><EndY>4000</EndY></Position>
+          <Dimensions><Length>4000</Length><Height>2600</Height><Thick>100</Thick></Dimensions>
+          <Fixtures></Fixtures>
+          <Furnishings>
+            <Furnishing><Catalog>InnoDraw</Catalog><Properties><General><Name>Window</Name><Class>Decorative</Class><Type>Window</Type><Size><Width>1800.000000</Width><Height>1400.000000</Height><Depth>100.000000</Depth></Size></General></Properties><Position><X>2000</X><Y>900</Y><Z>-100</Z></Position></Furnishing>
+          </Furnishings>
+        </Wall>
+        <!-- Wall 4: left, entry (4000mm) - a DOOR near the corner + junction box next to it -->
+        <Wall>
+          <Number>4</Number>
+          <Position><StartX>0</StartX><StartY>4000</StartY><Angle>270</Angle><EndX>0</EndX><EndY>0</EndY></Position>
+          <Dimensions><Length>4000</Length><Height>2600</Height><Thick>100</Thick></Dimensions>
+          <Fixtures>
+            <Fixture><Catalog>InnoDraw</Catalog><Properties><General><Name>Junction Box</Name><Class>Fixture</Class><Type>Miscellaneous</Type><Width>80</Width><Depth>15</Depth><Height>80</Height><Size></Size></General></Properties><Position><X>3450</X><Y>1350</Y></Position></Fixture>
+          </Fixtures>
+          <Furnishings>
+            <Furnishing><Catalog>InnoDraw</Catalog><Properties><General><Name>Doorway w/o Frame</Name><Class>Decorative</Class><Type>Door</Type><Size><Width>900.000000</Width><Height>2050.000000</Height><Depth>100.000000</Depth></Size></General></Properties><Position><X>2900</X><Y>1025</Y><Z>0</Z></Position></Furnishing>
+          </Furnishings>
+        </Wall>
+      </Walls>
+    </Room>
+  </Rooms>
+</Job>

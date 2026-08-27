@@ -1,0 +1,138 @@
+<title>Soline — לוח מצב הפרויקט</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --ground:#eef1f5; --panel:#ffffff; --panel-2:#f6f8fb; --ink:#141b26; --muted:#5b6675;
+    --line:#dde3ec; --accent:#1e5fff; --accent-soft:#e5edff;
+    --done:#12855f; --done-bg:#daf1e8; --prog:#a4680a; --prog-bg:#faefd6; --open:#6a7482; --open-bg:#e8ebf0;
+    --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,"Noto Sans Hebrew",sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --ground:#0c1017; --panel:#141b25; --panel-2:#1a2330; --ink:#e9edf3; --muted:#94a0b0;
+    --line:#26303d; --accent:#5b8cff; --accent-soft:#1a2740;
+    --done:#4bd6a0; --done-bg:#123027; --prog:#e8b45e; --prog-bg:#33280f; --open:#8b96a5; --open-bg:#1d2430;
+  }}
+  :root[data-theme="dark"]{
+    --ground:#0c1017; --panel:#141b25; --panel-2:#1a2330; --ink:#e9edf3; --muted:#94a0b0;
+    --line:#26303d; --accent:#5b8cff; --accent-soft:#1a2740;
+    --done:#4bd6a0; --done-bg:#123027; --prog:#e8b45e; --prog-bg:#33280f; --open:#8b96a5; --open-bg:#1d2430;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.6;
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:32px 20px 64px}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+  h1{font-size:clamp(30px,5vw,46px);line-height:1.08;margin:.3em 0 .2em;text-wrap:balance;letter-spacing:-.01em}
+  .thesis{font-size:clamp(16px,2.4vw,20px);color:var(--muted);max-width:60ch;margin:0}
+  header{border-bottom:1px solid var(--line);padding-bottom:26px;margin-bottom:30px}
+  .statline{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+  .pill{font-family:var(--mono);font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);
+        display:inline-flex;align-items:center;gap:7px;background:var(--panel)}
+  .dot{width:7px;height:7px;border-radius:50%}
+  .grid{display:grid;gap:14px}
+  .stats{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:34px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .stat .n{font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .stat .l{font-size:13px;color:var(--muted)}
+  h2{font-size:14px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+     margin:38px 0 14px;font-weight:600}
+  .rail{display:flex;flex-direction:column;gap:2px}
+  .step{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;background:var(--panel);
+        border:1px solid var(--line);padding:14px 16px}
+  .step:first-child{border-radius:12px 12px 0 0}.step:last-child{border-radius:0 0 12px 12px}
+  .step+.step{border-top:0}
+  .step .marker{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:13px;
+        font-family:var(--mono);margin-top:2px}
+  .step .body b{display:block;font-size:15px}
+  .step .body span{font-size:13.5px;color:var(--muted)}
+  .tag{font-family:var(--mono);font-size:11px;padding:4px 9px;border-radius:999px;white-space:nowrap;margin-top:2px}
+  .s-done .marker{background:var(--done-bg);color:var(--done)} .s-done .tag{background:var(--done-bg);color:var(--done)}
+  .s-prog .marker{background:var(--prog-bg);color:var(--prog)} .s-prog .tag{background:var(--prog-bg);color:var(--prog)}
+  .s-open .marker{background:var(--open-bg);color:var(--open)} .s-open .tag{background:var(--open-bg);color:var(--open)}
+  .caps{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .cap{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .cap b{font-size:14.5px} .cap p{margin:.35em 0 0;font-size:13.5px;color:var(--muted)}
+  .cap .k{font-family:var(--mono);font-size:11.5px;color:var(--accent)}
+  .cta{background:var(--panel);border:1px solid var(--accent);border-radius:14px;padding:22px 22px;margin-top:14px;
+       box-shadow:0 1px 0 var(--accent-soft)}
+  .cta h3{margin:0 0 4px;font-size:19px}
+  .cta ol{margin:14px 0 0;padding-inline-start:22px;display:flex;flex-direction:column;gap:9px}
+  .cta li{font-size:14.5px}
+  .cta code{font-family:var(--mono);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);
+            padding:2px 6px;border-radius:6px;direction:ltr;display:inline-block}
+  footer{margin-top:40px;color:var(--muted);font-size:12.5px;font-family:var(--mono);text-align:center}
+  @media(max-width:520px){.step{grid-template-columns:auto 1fr}.tag{grid-column:2}}
+</style>
+
+<div class="wrap" dir="rtl">
+  <header>
+    <div class="eyebrow">Soline · לוח מצב פנימי</div>
+    <h1>ממיר מדידה → תכנית תשתית, אוטומטי</h1>
+    <p class="thesis">מפענחים את פורמט ה-CAD הבינארי (PDP) כדי להפוך קובץ מדידה (ORDX) לתכנית חשמל/תשתית מלאה — עם ספריית אלמנטים עצמאית משלנו, בלי תלות ב-InnoDraw או ב-ELC_SND.</p>
+    <div class="statline">
+      <span class="pill"><span class="dot" style="background:var(--done)"></span>PDP: מנגנון-הקירות פוצח — קובץ מפוברק נטען ב-Raumplan</span>
+      <span class="pill"><span class="dot" style="background:var(--prog)"></span>מרכיבים חדר מלא (קירות + אביזרים)</span>
+    </div>
+  </header>
+
+  <div class="grid stats">
+    <div class="stat"><div class="n">170</div><div class="l">אלמנטים בספרייה</div></div>
+    <div class="stat"><div class="n">131</div><div class="l">סמלים מעוצבים (תקן IEC)</div></div>
+    <div class="stat"><div class="n">4</div><div class="l">פורמטי ייצוא</div></div>
+    <div class="stat"><div class="n">25<span style="font-size:16px;color:var(--muted)">/25</span></div><div class="l">אביזרים בהמרה מלאה מ-ORDX</div></div>
+  </div>
+
+  <h2>המרה מ-ORDX — מה עובד היום</h2>
+  <div class="grid caps" style="margin-bottom:8px">
+    <div class="cap"><span class="k">ORDX → DXF 2D</span><br><b>◐ עובד — דורש ליטוש</b><p>מפיק תכנית מלאה מכל ORDX: קווי-קיר, קירות-poché, בלוקי-סמלים, מימוד ושכבות סמנטיות. <b>פתוח:</b> העברית מוצגת כ-"????" ב-AutoCAD והמימוד חופף — עדיין לא ברמה מקצועית.</p></div>
+    <div class="cap"><span class="k">ORDX → DXF 3D</span><br><b>◐ עובד — דורש ליטוש</b><p>שכבות סמנטיות, בלוקים (BLOCK/INSERT), ~300 3DFACE. <b>פתוח:</b> הקירות לא בולטים בתצוגת-3D. עצמאי מ-ELC_SND.</p></div>
+    <div class="cap"><span class="k">ORDX → ORDX</span><br><b>✅ מאומת round-trip</b><p>קריאה וכתיבה זהות — בסיס לעריכה ותיקון קבצי מדידה.</p></div>
+  </div>
+
+  <h2>אבני דרך</h2>
+  <div class="rail">
+    <div class="step s-done"><div class="marker">✓</div><div class="body"><b>ספרייה + סמלים עצמאיים — 170</b><span>170 אלמנטים (חשמל/אינסטלציה/גז/מיזוג/בית-חכם/אנרגיה + אלמנטי-קיר) + 170 סמלי-IEC מנורמלים. לא מבוסס InnoDraw.</span></div><span class="tag">הושלם</span></div>
+    <div class="step s-done"><div class="marker">✓</div><div class="body"><b>ממיר ORDX → DXF ברמת-ייחוС</b><span>2D עם מנוע-מימוד + קירות-poché + בלוקים + מקרא עברי; 3D עם שכבות סמנטיות + BLOCK/INSERT (92% מהייחוС). מאומת על כל הקורפוС.</span></div><span class="tag">הושלם</span></div>
+    <div class="step s-done"><div class="marker">✓</div><div class="body"><b>בסיס-ידע מהשטח — 9 מסמכי מחקר</b><span>1,882 PDF, תהליך התאמת-שטח, העמדת-מטבח + בעיות-נגרות, אבטחה, QA — הבסיס לפיצ'רים הבאים.</span></div><span class="tag">הושלם</span></div>
+    <div class="step s-prog"><div class="marker">◐</div><div class="body"><b>אפליקציית טאבלט (Soline)</b><span>מעלים ORDX → תצוגה + הורדה. חיה. הבאת מנוע ה-DXF המקצועי לאפליקציה — בהמשך.</span></div><span class="tag">בעבודה</span></div>
+    <div class="step s-prog"><div class="marker">◐</div><div class="body"><b>ייצוא ל-PDP מאפס (Raumplan-native)</b><span>פריצת-דרך: מנגנון-הקירות פוצח בית-בבית; ה-GUID הפנימי אינו-קריטי; קובץ מפוברק שלנו נטען והוצג נכון ב-Raumplan; מבנה הרכבת-רב-קיר (רשומת 42 בתים) אותר; בלוק-אביזר מוכן לשכפול. מרכיבים חדר מלא.</span></div><span class="tag">בעבודה</span></div>
+  </div>
+
+  <h2>PDP מאפס — פירוק מדויק</h2>
+  <div class="rail">
+    <div class="step s-done"><div class="marker">✓</div><div class="body"><b>שינוי-גודל קיר</b><span>שדות-הרוחב זוהו במדויק (השוואת 4000↔3000, שחזור בית-בבית).</span></div><span class="tag">פוצח</span></div>
+    <div class="step s-done"><div class="marker">✓</div><div class="body"><b>ה-GUID אינו-קריטי</b><span>Raumplan אינו מאמת את חתימת-16-הבתים — אפשר להשאירה. אושר.</span></div><span class="tag">פוצח</span></div>
+    <div class="step s-done"><div class="marker">✓</div><div class="body"><b>Raumplan מקבל קבצים מפוברקים</b><span>קובץ ששוכתב ידנית נטען, הוצג נכון (6000), ונשמר-מחדש תקין.</span></div><span class="tag">פוצח</span></div>
+    <div class="step s-done"><div class="marker">✓</div><div class="body"><b>הרכבת רב-קיר אותרה</b><span>כל קיר = רשומת-גוף 42 בתים במערך רצוף. הבסיס לבניית חדר.</span></div><span class="tag">פוצח</span></div>
+    <div class="step s-prog"><div class="marker">◐</div><div class="body"><b>בניית חדר מלבני מלא</b><span>פענוח סופי של רשומת-הקיר → כתיבת חדר סגור → בדיקת-טעינה.</span></div><span class="tag">הבא בתור</span></div>
+    <div class="step s-open"><div class="marker">·</div><div class="body"><b>הזרקת אביזרים + חיבור לממיר</b><span>בלוק-שקע מוכן (ניתן לשכפול); לאחר הקירות — חיבור ל-ORDX→PDP מלא.</span></div><span class="tag">מתוכנן</span></div>
+  </div>
+
+  <h2>מה כבר עובד</h2>
+  <div class="grid caps">
+    <div class="cap"><span class="k">parse</span><br><b>קריאת ORDX</b><p>פרסר מלא של קובץ המדידה: חדרים, קירות, אביזרים, מידות ומיקומים.</p></div>
+    <div class="cap"><span class="k">placement</span><br><b>מיקום פרמטרי</b><p>נוסחת מיקום לאורך הקיר + מרכז/היסט, אוריינטציה מזווית הקיר, גובה התקנה.</p></div>
+    <div class="cap"><span class="k">size</span><br><b>גודל מ-ORDX</b><p>W×D×H לכל אלמנט נכתב ישירות מהמדידה, לא מקטלוג קבוע.</p></div>
+    <div class="cap"><span class="k">inject</span><br><b>הזרקה רב-פריטית</b><p>מוסיף כל אביזר כ-7 בלוקים + תיקון ספירות, בקובץ שנטען ב-Raumplan.</p></div>
+    <div class="cap"><span class="k">symbol</span><br><b>מחולל סמלים</b><p>הופך הגדרת סמל וקטורית לבלוק PDP — הבסיס לסמלים העצמאיים.</p></div>
+    <div class="cap"><span class="k">library</span><br><b>ספרייה עצמאית</b><p>קטלוג אלמנטים משלנו עם מונחים, מידות וגבהים לפי נוהג ישראלי.</p></div>
+  </div>
+
+  <h2>איך אתה מתחבר ותורם</h2>
+  <div class="cta">
+    <h3>שלושה צעדים</h3>
+    <ol>
+      <li>Michael משתף איתך בגוגל דרייב את התיקייה <code>claude/ordx-pdp-converter</code> (ואת <code>לקוחות</code> לנתוני מקור).</li>
+      <li>אתה פותח את <b>Claude</b> שלך על אותה תיקייה — הוא קורא את <code>STATUS.md</code> ואת <code>COLLABORATION.md</code> ומבין את הפרויקט מיד.</li>
+      <li>כל ידע או קובץ שאתה רוצה להכניס → שם בתיקיית <code>inbox/</code> (או פשוט כתוב ב-<code>inbox/notes-ceo.md</code> בשפה חופשית). זה נטמע לספרייה ולקוד.</li>
+    </ol>
+  </div>
+
+  <footer>Soline · לוח מצב חי · עדכון אחרון: 14 באוגוסט 2026 — יום פריצת-דרך ל-PDP</footer>
+</div>
+<script>
+  // Live dashboard: re-fetch the latest published version periodically so a phone
+  // left open shows updates without a manual refresh.
+  setTimeout(function () { location.reload(); }, 240000); // every 4 min
+</script>

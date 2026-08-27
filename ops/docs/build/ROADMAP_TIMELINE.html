@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="he" dir="rtl" data-theme="">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Soline Measure — ציר-זמן ואבני-דרך</title>
+<style>
+:root{
+  --bg:#f4f5f7;--panel:#fff;--panel2:#fafbfc;--ink:#111826;--muted:#5b6472;--line:#e3e6ea;
+  --accent:#2b6cff;--shadow:0 1px 3px rgba(16,24,40,.07),0 1px 2px rgba(16,24,40,.04);
+  --h0:#697586;--h1:#2b6cff;--h2:#12805c;--h3:#c47a04;--h4:#7c3aed;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1117;--panel:#161b22;--panel2:#1b2129;--ink:#e6edf3;--muted:#9aa7b4;--line:#2a313c;
+  --accent:#4f8cff;--shadow:0 1px 3px rgba(0,0,0,.4);
+  --h0:#8b97a6;--h1:#4f8cff;--h2:#41c48d;--h3:#e2a53a;--h4:#a879f0;
+}}
+:root[data-theme="dark"]{
+  --bg:#0e1117;--panel:#161b22;--panel2:#1b2129;--ink:#e6edf3;--muted:#9aa7b4;--line:#2a313c;
+  --accent:#4f8cff;--shadow:0 1px 3px rgba(0,0,0,.4);
+  --h0:#8b97a6;--h1:#4f8cff;--h2:#41c48d;--h3:#e2a53a;--h4:#a879f0;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,Arial,"Noto Sans Hebrew",sans-serif;line-height:1.55}
+.wrap{max-width:960px;margin:0 auto;padding:24px 18px 70px}
+h1{font-size:24px;margin:0 0 4px}
+.sub{color:var(--muted);font-size:14px;margin:0 0 18px}
+.strip{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+.s{flex:1;min-width:150px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow)}
+.s b{display:block;font-size:15px}
+.s .t{font-size:22px;font-weight:800;line-height:1.1;margin-top:2px}
+.s span{font-size:12px;color:var(--muted)}
+.tl{position:relative;margin-top:8px}
+.tl:before{content:"";position:absolute;right:18px;top:8px;bottom:8px;width:3px;background:var(--line)}
+.ph{position:relative;padding:0 46px 22px 0;margin:0}
+.dot{position:absolute;right:9px;top:4px;width:21px;height:21px;border-radius:50%;border:4px solid var(--bg)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px 17px;box-shadow:var(--shadow)}
+.card:before{content:"";position:absolute}
+.htag{display:inline-block;font-size:11px;font-weight:800;color:#fff;border-radius:6px;padding:2px 8px;margin-inline-end:8px;vertical-align:middle}
+.when{font-size:12.5px;color:var(--muted);font-weight:600}
+h2{font-size:18px;margin:8px 0 2px}
+.can{background:var(--panel2);border-radius:9px;padding:9px 11px;margin:10px 0;font-size:14px;border-inline-start:3px solid var(--accent)}
+.can b{color:var(--accent)}
+ul{margin:8px 0 4px;padding-inline-start:18px}
+li{margin:3px 0;font-size:13.5px}
+.refs{font-size:11.5px;color:var(--muted);margin-top:8px}
+.team{font-size:12.5px;color:var(--muted);margin-top:6px}
+.note{margin-top:22px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:13px;color:var(--muted);box-shadow:var(--shadow)}
+.note b{color:var(--ink)}
+.h0 .dot{background:var(--h0)} .h0 .htag{background:var(--h0)} .h0 .can{border-color:var(--h0)} .h0 .can b{color:var(--h0)}
+.h1 .dot{background:var(--h1)} .h1 .htag{background:var(--h1)} .h1 .can{border-color:var(--h1)} .h1 .can b{color:var(--h1)}
+.h2 .dot{background:var(--h2)} .h2 .htag{background:var(--h2)} .h2 .can{border-color:var(--h2)} .h2 .can b{color:var(--h2)}
+.h3 .dot{background:var(--h3)} .h3 .htag{background:var(--h3)} .h3 .can{border-color:var(--h3)} .h3 .can b{color:var(--h3)}
+.h4 .dot{background:var(--h4)} .h4 .htag{background:var(--h4)} .h4 .can{border-color:var(--h4)} .h4 .can b{color:var(--h4)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>🚀 Soline Measure — ציר-זמן ואבני-דרך</h1>
+<p class="sub">מהכלי הקיים אל התוכנה שלנו, במסלול הכי-מהיר. מבוסס על 46 הכרעות ה-P0 (45 אושרו) + תוכנית-הצוות. הערכות לצוות רזה מואץ-AI (מהנדס אחד → שניים).</p>
+
+<div class="strip">
+  <div class="s"><span>ההתחלה</span><div class="t">עכשיו</div><b>פיילוט + גיוס</b></div>
+  <div class="s"><span>Soline Measure v1</span><div class="t">3–6 ח'</div><b>הכלי שלנו בשטח</b></div>
+  <div class="s"><span>הבידול v2</span><div class="t">9–12 ח'</div><b>מנוע ההתאמה</b></div>
+  <div class="s"><span>האקוסיסטם v3</span><div class="t">18+ ח'</div><b>עיצוב עצמי + .sol</b></div>
+</div>
+
+<div class="tl">
+
+  <div class="ph h0">
+    <div class="dot"></div>
+    <div class="card">
+      <span class="htag">H0</span><span class="when">עכשיו · 0–1 חודש</span>
+      <h2>פיילוט והנעה</h2>
+      <div class="can"><b>מה Soline יכולה לעשות:</b> להמשיך למדוד עם הכלי הקיים ולצרף נגרים-לקוחות ראשונים — בלי פער-הכנסות בזמן הבנייה.</div>
+      <ul>
+        <li>גיוס <b>מהנדס-אנדרואיד מוביל</b> — המשרה הקריטית</li>
+        <li>הקמת סביבת-פיתוח, repo, חשבון Google Play</li>
+        <li>פיילוט-שטח מבוקר עם הכלי הקיים (למידה + לקוחות)</li>
+      </ul>
+      <div class="team">👤 Michael + קלוד · מגייסים מהנדס #1</div>
+      <div class="refs">החלטות: #1 (reimplement) · #45 (תיעוד+גיוס)</div>
+    </div>
+  </div>
+
+  <div class="ph h1">
+    <div class="dot"></div>
+    <div class="card">
+      <span class="htag">H1</span><span class="when">v1 · 1–6 חודשים</span>
+      <h2>Soline Measure v1 — הכלי שלנו</h2>
+      <div class="can"><b>מה Soline יכולה לעשות:</b> לתת למודדים אפליקציית-מדידה <b>ממותגת ובשליטתנו</b>, עם תיקוני-הליבה וגבייה — ולהעביר אליה את הלקוחות מהפיילוט.</div>
+      <ul>
+        <li>Reimplement + מיתוג Soline; <b>שרת-רישוי ועדכונים שלנו</b> (מנתק את bravh)</li>
+        <li>תיקוני-ליבה: T-Join, חסימת חדר-לא-תקין, חיבור-קירות אוטומטי, PDF עברי תקין</li>
+        <li>שדרוג מודל-הנתונים (קיר-כפרופיל + בליטה) + לכידת גבהים/עומק/סטטוס-מידה</li>
+        <li>גבייה/חשבוניות בסיסית; "דבק" על Google Drive להוכחת-החוזים</li>
+      </ul>
+      <div class="team">👥 מהנדס #1 + קלוד · מגייסים מהנדס Backend לקראת הסוף</div>
+      <div class="refs">החלטות: #35 · #18/#25 · #21 · #17 · #19 · #12 · #14/#23/#24 · #46 · #38(Drive)</div>
+    </div>
+  </div>
+
+  <div class="ph h2">
+    <div class="dot"></div>
+    <div class="card">
+      <span class="htag">H2</span><span class="when">v2 · 6–11 חודשים</span>
+      <h2>הבידול — מנוע ההתאמה</h2>
+      <div class="can"><b>מה Soline יכולה לעשות:</b> לתת לנגר את <b>התשובה</b> — "הארון ייכנס / יש בליטה של 3 ס"מ" — לפני הייצור. זה מה שאף אחד בשוק לא נותן, וזה מה שהנגר משלם עליו.</div>
+      <ul>
+        <li>מנוע-ההתאמה R1–R10 (רכיב משותף), החל מ-R4 (בליטה-מול-עומק)</li>
+        <li>חיבור תכנון-הנגר אל המדידה בשטח (רמזים חיים)</li>
+        <li>מעבר לשרת אמיתי — <b>Supabase (self-host)</b> + בידוד רב-דיירת</li>
+        <li>פורטל-נגר: הזמנה, מעקב, הורדת קבצים</li>
+      </ul>
+      <div class="team">👥 מהנדס #1 + Backend + קלוד</div>
+      <div class="refs">החלטות: #11 · #13 · #33 · #34 · #38(שרת) · #30 (ORDX ייצוא)</div>
+    </div>
+  </div>
+
+  <div class="ph h3">
+    <div class="dot"></div>
+    <div class="card">
+      <span class="htag">H3</span><span class="when">11–18 חודשים</span>
+      <h2>עומק ושלמות</h2>
+      <div class="can"><b>מה Soline יכולה לעשות:</b> שרשרת-מדידה מלאה ואיתנה — שלמות-שטח מקצה-לקצה, וגשר-ארונות ל-ORDX בלי כלי-הביניים של bravh.</div>
+      <ul>
+        <li>פיצוח ומילוי בלוק-הארונות ב-ORDX (מייתר את 3D OrdX)</li>
+        <li>שלמות-שטח מלאה (כל מקרי-הקצה של המודד)</li>
+        <li>הקשחה, בדיקות, סנכרון offline מלא</li>
+      </ul>
+      <div class="team">👥 צוות של 2 + קלוד</div>
+      <div class="refs">החלטות: #32 · שלמות-שטח · #37 (סנכרון)</div>
+    </div>
+  </div>
+
+  <div class="ph h4">
+    <div class="dot"></div>
+    <div class="card">
+      <span class="htag">H4</span><span class="when">v3 · 18+ חודשים</span>
+      <h2>האקוסיסטם המלא</h2>
+      <div class="can"><b>מה Soline יכולה לעשות:</b> בעלות מלאה על כל הדרך — עיצוב, מדידה, וייצור — סביב פורמט ה-.sol. עצמאות מלאה מ-bravh ומ-Cabinet Vision.</div>
+      <ul>
+        <li>תוכנת-עיצוב עצמית שמחליפה את OrdX (הנגר מעצב אצלנו)</li>
+        <li>פלט-ייצור (רשימת-חיתוך/CNC) ישירות מ-.sol — מייתר את Cabinet Vision</li>
+        <li>.sol מקצה-לקצה, מוצפן וקשור-רישיון</li>
+      </ul>
+      <div class="team">👥 צוות מורחב (+ מהנדס web/עיצוב)</div>
+      <div class="refs">החלטות: #31 · #10 (הצפנה) · פורמט .sol מלא</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="note">
+  <b>הנחות והסתייגויות:</b> הטווחים מניחים <b>צוות רזה מואץ-AI</b> — מהנדס-מוביל אחד בהתחלה, מהנדס Backend תוך רבעון. קלוד כותב את חלק-הארי של הקוד תחת בקרתם. <b>מהנדס נוסף מקצר ~30–40%.</b> הכלי הקיים ממשיך לשרת לקוחות לאורך H0–H1. אלה הערכות-תכנון, לא התחייבות — הן יתחדדו אחרי גיוס המהנדס-המוביל וקביעת ההיקף המדויק של v1.<br><br>
+  <b>הצעד הבא בפועל:</b> לגייס את מהנדס-האנדרואיד המוביל → ואז אני + הוא מתחילים את H1.
+</div>
+
+</div>
+</body>
+</html>

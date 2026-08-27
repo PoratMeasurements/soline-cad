@@ -1,0 +1,16 @@
+{
+  "$comment": "Soline IP-Protection config. The signing secret is what makes a fingerprint UNFORGEABLE and is the one value that must never ship inside an exported file. Prefer the SOLINE_IP_SECRET environment variable in production; the value below is a DEV placeholder only.",
+  "secret": "DEV-ONLY-CHANGE-ME-soline-ip-signing-key",
+  "secretEnv": "SOLINE_IP_SECRET",
+  "issuerLog": "issued.log.jsonl",
+  "tiers": {
+    "standard": { "metadata": true, "stego": true, "visibleNotice": true, "telemetryAllowed": false },
+    "pro":      { "metadata": true, "stego": true, "visibleNotice": false, "telemetryAllowed": true },
+    "enterprise": { "metadata": true, "stego": true, "visibleNotice": false, "telemetryAllowed": true }
+  },
+  "beacon": {
+    "$comment": "Disclosed telemetry ONLY. Firing this on open is lawful only when the customer's signed license discloses it (see LEGAL_DISCLOSURE.md). Empty = disabled.",
+    "url": "",
+    "disclosedInLicense": false
+  }
+}

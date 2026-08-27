@@ -1,0 +1,117 @@
+<title>עיצוב הפלט — פונטים וצבעים</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;800&family=Heebo:wght@400;500;700;800&family=Rubik:wght@400;500;700&family=Alef:wght@400;700&family=Secular+One&family=Suez+One&family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Noto+Serif+Hebrew:wght@400;600;800&family=Varela+Round&display=swap">
+<style>
+  :root{--bg:#FBF4E6;--surface:#fff;--text:#2B2B2B;--muted:#6E6656;--border:#EAE0CB;--accent:#E8890B;--teal:#127C8C;--shadow:0 1px 2px rgba(74,58,20,.05),0 8px 22px rgba(74,58,20,.08)}
+  @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#17191B;--surface:#202427;--text:#ECE7DB;--muted:#A7A093;--border:#2E3338;--accent:#F7AC3A;--teal:#3BB6C7}}
+  :root[data-theme=dark]{--bg:#17191B;--surface:#202427;--text:#ECE7DB;--muted:#A7A093;--border:#2E3338;--accent:#F7AC3A;--teal:#3BB6C7}
+  *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Assistant,system-ui,sans-serif;direction:rtl;line-height:1.5}
+  .wrap{max-width:900px;margin:0 auto;padding:24px 18px 80px}
+  h1{font-size:30px;font-weight:800;color:var(--accent);margin:0 0 2px}
+  .sub{color:var(--muted);margin:0 0 8px;font-weight:600}
+  .note{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:11px 15px;font-size:14px;color:var(--muted);box-shadow:var(--shadow);margin:14px 0 30px}
+  h2{font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);font-weight:800;margin:36px 0 14px;display:flex;align-items:center;gap:10px}
+  h2 .c{background:var(--teal);color:#fff;border-radius:999px;font-size:12px;padding:1px 10px;letter-spacing:0}
+  h2::after{content:"";flex:1;height:1px;background:var(--border)}
+  /* preset report cards */
+  .presets{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media(max-width:760px){.presets{grid-template-columns:1fr}}
+  .rep{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:0;box-shadow:var(--shadow);overflow:hidden}
+  .rep .tag{background:var(--accent);color:#fff;font-weight:800;font-size:12px;padding:5px 12px;display:flex;justify-content:space-between}
+  .rep .body{padding:16px 16px 18px}
+  .rep .wm{font-size:26px;font-weight:800;letter-spacing:-.5px}.rep .wm span{color:var(--teal)}
+  .rep .wm small{display:block;font-size:11px;color:var(--muted);letter-spacing:.18em;font-weight:600;margin-top:2px}
+  .rep .hd{margin:14px 0 6px;font-weight:800;font-size:16px;border-bottom:2px solid var(--accent);padding-bottom:4px;display:inline-block}
+  .rep .row{display:flex;justify-content:space-between;font-size:14px;padding:3px 0;border-bottom:1px dashed var(--border)}
+  .rep .dim{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+  .rep .fine{font-size:11.5px;color:var(--muted);margin-top:10px}
+  .repfoot{padding:9px 16px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);background:color-mix(in srgb,var(--surface),var(--bg) 40%)}
+  /* per-role */
+  .role{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);margin-bottom:12px}
+  .role .lbl{font-size:12px;font-weight:800;color:var(--teal);letter-spacing:.05em;margin-bottom:8px}
+  .opts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  @media(max-width:640px){.opts{grid-template-columns:1fr}}
+  .opt{border:1px solid var(--border);border-radius:9px;padding:9px 11px;background:var(--bg)}
+  .opt .fn{font-size:10.5px;color:var(--muted);font-family:ui-monospace,monospace;margin-bottom:3px;font-weight:700}
+  .opt .sm{line-height:1.35}
+  /* colors */
+  .pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+  .sw{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;box-shadow:var(--shadow);display:flex;align-items:center;gap:11px}
+  .chip{width:26px;height:26px;border-radius:7px;flex:0 0 auto;border:1px solid rgba(0,0,0,.12)}
+  .sw .nm{font-weight:700;font-size:14px}.sw .hx{font-size:11px;color:var(--muted);font-family:ui-monospace,monospace}
+  footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--border);color:var(--muted);font-size:14px}
+  .tog{position:fixed;top:12px;left:12px;background:var(--surface);border:1px solid var(--border);border-radius:999px;width:36px;height:36px;cursor:pointer;box-shadow:var(--shadow);color:var(--text)}
+</style>
+<button class="tog" onclick="var r=document.documentElement,d=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');r.setAttribute('data-theme',d==='dark'?'light':'dark')">◐</button>
+<div class="wrap">
+  <h1>עיצוב הפלט — לאישור</h1>
+  <p class="sub">פונטים וצבעים ל-PDF / HTML · Soline</p>
+  <div class="note">בחר <b>ערכה שלמה</b> (הכי מהיר), או כוונן <b>פונט לכל סוג-טקסט</b> בנפרד למטה. אחרי אישורך אבנה <b>פונקציית-בחירה בשכבות-הייצוא</b>: בכל ייצוא תוכל לבחור ערכת-פונט + פלטת-צבעים-לפי-דיסציפלינה. סמן מה שאהבת.</div>
+
+  <h2>ערכות מוכנות <span class="c">בחר אחת</span></h2>
+  <div class="presets">
+    <div class="rep">
+      <div class="tag"><span>ערכה A · קלאסי-נקי</span><span>מומלצת</span></div>
+      <div class="body" style="font-family:Heebo">
+        <div class="wm" style="font-family:Heebo">soline<span>.</span><small>מדידה · ייצור</small></div>
+        <div class="hd">קיר צפון — חשמל</div>
+        <div class="row"><span>שקע כפול</span><span class="dim">85 / 30</span></div>
+        <div class="row"><span>נק' תאורה</span><span class="dim">120</span></div>
+        <div class="fine">כותרות Heebo 800 · גוף Heebo · מידות Heebo tabular</div>
+      </div>
+      <div class="repfoot">כותרת · גוף · מידות = Heebo</div>
+    </div>
+    <div class="rep">
+      <div class="tag"><span>ערכה B · יוקרתי-סריף</span><span></span></div>
+      <div class="body">
+        <div class="wm" style="font-family:'Frank Ruhl Libre'">soline<span>.</span><small style="font-family:Assistant">מדידה · ייצור</small></div>
+        <div class="hd" style="font-family:'Frank Ruhl Libre';font-weight:900">קיר צפון — חשמל</div>
+        <div class="row" style="font-family:Assistant"><span>שקע כפול</span><span class="dim">85 / 30</span></div>
+        <div class="row" style="font-family:Assistant"><span>נק' תאורה</span><span class="dim">120</span></div>
+        <div class="fine" style="font-family:Assistant">כותרות Frank Ruhl Libre · גוף Assistant · מידות Assistant</div>
+      </div>
+      <div class="repfoot">כותרות סריף · גוף Assistant</div>
+    </div>
+    <div class="rep">
+      <div class="tag"><span>ערכה C · תעשייתי-חזק</span><span></span></div>
+      <div class="body">
+        <div class="wm" style="font-family:'Suez One'">soline<span>.</span><small style="font-family:Heebo">מדידה · ייצור</small></div>
+        <div class="hd" style="font-family:'Secular One';border-color:var(--teal)">קיר צפון — חשמל</div>
+        <div class="row" style="font-family:Rubik"><span>שקע כפול</span><span class="dim">85 / 30</span></div>
+        <div class="row" style="font-family:Rubik"><span>נק' תאורה</span><span class="dim">120</span></div>
+        <div class="fine" style="font-family:Rubik">כותרת-על Suez One · כותרות Secular One · גוף+מידות Rubik</div>
+      </div>
+      <div class="repfoot">Suez One · Secular One · Rubik</div>
+    </div>
+  </div>
+
+  <h2>כוונון לכל סוג-טקסט <span class="c">אופציונלי</span></h2>
+  <div id="roles"></div>
+
+  <h2>צבעים לפי דיסציפלינה <span class="c">תשתיות</span></h2>
+  <div class="note" style="margin-top:0">כל אלמנט/תשתית מקבל צבע קבוע — בשרטוט, במידות, ובדוח. זו פלטת-ברירת-המחדל; אמור מה לשנות. (בפונקציה תוכל להחליף פלטה או צבע-בודד לכל ייצוא.)</div>
+  <div class="pal" id="pal"></div>
+
+  <footer>סמן: ערכה + פלטה (או תיקונים נקודתיים) → אבנה את פונקציית-הבחירה בשכבות-הייצוא. · Soline</footer>
+</div>
+<script>
+  var ROLES=[
+    ["כותרת-על / לוגו","'Suez One'","Suez One","'Frank Ruhl Libre'","Frank Ruhl 900","Heebo","Heebo 800","soline · מטבח מודרני"],
+    ["כותרות-סעיף","'Secular One'","Secular One","Heebo","Heebo 800","'Frank Ruhl Libre'","Frank Ruhl 700","קיר צפון — חשמל ותאורה"],
+    ["שמות-אלמנטים / תוויות","Assistant","Assistant 600","Heebo","Heebo 500","Rubik","Rubik 500","שקע כפול · נק' תאורה · ברז מים"],
+    ["מידות / מספרים","Heebo","Heebo tabular","Rubik","Rubik","'Varela Round'","Varela Round","85 · 120 · 2050 · 30/45"],
+    ["גוף-טבלה / טקסט","Assistant","Assistant","Heebo","Heebo","'Noto Serif Hebrew'","Noto Serif","מקרא וספירת אלמנטים לפי דיסציפלינה"],
+    ["הערות / כיתוב-קטן","Assistant","Assistant","Alef","Alef","Rubik","Rubik","הערת מודד: לוודא גובה שקע מול שיש"]
+  ];
+  document.getElementById("roles").innerHTML=ROLES.map(function(r){
+    var o=[[r[1],r[2]],[r[3],r[4]],[r[5],r[6]]].map(function(f){
+      return '<div class="opt"><div class="fn">'+f[1]+'</div><div class="sm" style="font-family:'+f[0]+';font-size:'+(r[0].indexOf("מידות")>=0?'19px;font-variant-numeric:tabular-nums':r[0].indexOf("על")>=0?'22px;font-weight:800':'15px')+'">'+r[7]+'</div></div>'}).join('');
+    return '<div class="role"><div class="lbl">'+r[0]+'</div><div class="opts">'+o+'</div></div>'}).join('');
+  var PAL=[
+    ["חשמל","#E8A400"],["תאורה","#F5C542"],["מים","#1E78C8"],["ניקוז","#2E9E6B"],
+    ["גז","#D94A28"],["מיזוג","#17A2B8"],["מבנה / קירות","#3A3A3A"],["דלתות","#8A5A2B"],
+    ["חלונות","#5AA9E6"],["ריהוט","#B08968"],["מטבח / נגרות","#127C8C"],["מידות-כלליות","#7A6C55"]
+  ];
+  document.getElementById("pal").innerHTML=PAL.map(function(p){
+    return '<div class="sw"><span class="chip" style="background:'+p[1]+'"></span><span><span class="nm">'+p[0]+'</span><br><span class="hx">'+p[1]+'</span></span></div>'}).join('');
+</script>

@@ -1,0 +1,1664 @@
+{
+  "months": [
+    {
+      "month": "אוגוסט 2025",
+      "income": [],
+      "expenses": [
+        {
+          "category": "גוגל 7+8",
+          "amount": 83.5,
+          "capex": false
+        },
+        {
+          "category": "סוללות",
+          "amount": 18.0,
+          "capex": false
+        },
+        {
+          "category": "רכב",
+          "amount": 67000.0,
+          "capex": true
+        },
+        {
+          "category": "בדיקה לרכב",
+          "amount": 690.0,
+          "capex": true
+        },
+        {
+          "category": "CRM",
+          "amount": 83.8,
+          "capex": false
+        },
+        {
+          "category": "העברת בעלות",
+          "amount": 235.0,
+          "capex": false
+        },
+        {
+          "category": "ביטוח חובה",
+          "amount": 1822.0,
+          "capex": false
+        },
+        {
+          "category": "שמשות וגרירה",
+          "amount": 430.0,
+          "capex": false
+        },
+        {
+          "category": "דלק",
+          "amount": 298.86,
+          "capex": false
+        },
+        {
+          "category": "תיק למחשב",
+          "amount": 145.0,
+          "capex": true
+        },
+        {
+          "category": "כביש 6",
+          "amount": 96.5,
+          "capex": false
+        },
+        {
+          "category": "ביטוח מקיף",
+          "amount": 2409.0,
+          "capex": false
+        },
+        {
+          "category": "חצובה+ עגלה",
+          "amount": 600.0,
+          "capex": true
+        },
+        {
+          "category": "דומיין שנתי",
+          "amount": 190.0,
+          "capex": false
+        },
+        {
+          "category": "מחשב",
+          "amount": 1000.0,
+          "capex": true
+        },
+        {
+          "category": "D2",
+          "amount": 1534.0,
+          "capex": true
+        },
+        {
+          "category": "X6",
+          "amount": 8142.0,
+          "capex": true
+        }
+      ],
+      "draws": [
+        {
+          "name": "יותם",
+          "amount": 9676.0
+        },
+        {
+          "name": "מיכאל",
+          "amount": 75101.66
+        }
+      ]
+    },
+    {
+      "month": "ספטמבר 2025",
+      "income": [
+        {
+          "client": "אלקינצו",
+          "amount": 7198.0
+        },
+        {
+          "client": "שגב",
+          "amount": 826.0
+        },
+        {
+          "client": "פולינוי",
+          "amount": 1652.0
+        },
+        {
+          "client": "פורמג'ו",
+          "amount": 413.0
+        },
+        {
+          "client": "אדור קונספט",
+          "amount": 3835.0
+        }
+      ],
+      "expenses": [
+        {
+          "category": "גוגל",
+          "amount": 56.93,
+          "capex": false
+        },
+        {
+          "category": "דלק",
+          "amount": 331.0,
+          "capex": false
+        },
+        {
+          "category": "דלק",
+          "amount": 300.0,
+          "capex": false
+        },
+        {
+          "category": "דלק",
+          "amount": 308.72,
+          "capex": false
+        },
+        {
+          "category": "CRM",
+          "amount": 82.64,
+          "capex": false
+        },
+        {
+          "category": "טלפון",
+          "amount": 30.17,
+          "capex": false
+        },
+        {
+          "category": "כביש  6",
+          "amount": 198.23,
+          "capex": false
+        },
+        {
+          "category": "וישרים",
+          "amount": 80.0,
+          "capex": false
+        },
+        {
+          "category": "פלס לייזר",
+          "amount": 2300.0,
+          "capex": true
+        },
+        {
+          "category": "דלקן",
+          "amount": 1433.0,
+          "capex": false
+        },
+        {
+          "category": "CRM",
+          "amount": 83.8,
+          "capex": false
+        },
+        {
+          "category": "הקמה CRM",
+          "amount": 4200.0,
+          "capex": true
+        },
+        {
+          "category": "טסט",
+          "amount": 118.61,
+          "capex": false
+        },
+        {
+          "category": "אגרה",
+          "amount": 1383.0,
+          "capex": false
+        },
+        {
+          "category": "צמיגים",
+          "amount": 1230.0,
+          "capex": false
+        },
+        {
+          "category": "חתימה ירוקה מנוי שנתי",
+          "amount": 497.0,
+          "capex": false
+        },
+        {
+          "category": "פנגו חניה",
+          "amount": 2.31,
+          "capex": false
+        },
+        {
+          "category": "אוטומציות",
+          "amount": 36.06,
+          "capex": false
+        },
+        {
+          "category": "אש''ל",
+          "amount": 60.0,
+          "capex": false
+        }
+      ],
+      "draws": [
+        {
+          "name": "מיכאל",
+          "amount": 4798.47
+        },
+        {
+          "name": "יותם",
+          "amount": 7933.0
+        }
+      ]
+    },
+    {
+      "month": "אוקטובר 2025",
+      "income": [
+        {
+          "client": "אלקינצ'ו",
+          "amount": 4720.0
+        },
+        {
+          "client": "פורמג'ו",
+          "amount": 6372.0
+        },
+        {
+          "client": "אדור קונספט",
+          "amount": 6136.0
+        },
+        {
+          "client": "טריו",
+          "amount": 342.0
+        },
+        {
+          "client": "שגב",
+          "amount": 8260.0
+        }
+      ],
+      "expenses": [
+        {
+          "category": "גוגל",
+          "amount": 65.78,
+          "capex": false
+        },
+        {
+          "category": "CRM",
+          "amount": 177.61,
+          "capex": false
+        },
+        {
+          "category": "ציוד מדידה",
+          "amount": 649.24,
+          "capex": true
+        },
+        {
+          "category": "עדכון ראומפלן",
+          "amount": 944.0,
+          "capex": true
+        },
+        {
+          "category": "הודי",
+          "amount": 341.93,
+          "capex": false
+        },
+        {
+          "category": "אש''ל",
+          "amount": 128.0,
+          "capex": false
+        },
+        {
+          "category": "כביש 6",
+          "amount": 120.64,
+          "capex": false
+        },
+        {
+          "category": "טלפון",
+          "amount": 24.9,
+          "capex": false
+        },
+        {
+          "category": "טיפול לרכב",
+          "amount": 500.0,
+          "capex": true
+        },
+        {
+          "category": "מתקן טלפון לרכב",
+          "amount": 50.0,
+          "capex": true
+        },
+        {
+          "category": "פנגו",
+          "amount": 0.95,
+          "capex": false
+        },
+        {
+          "category": "דלקן",
+          "amount": 2206.0,
+          "capex": false
+        },
+        {
+          "category": "אוטומציות",
+          "amount": 46.17,
+          "capex": false
+        },
+        {
+          "category": "כביש 6 חוצה צפון",
+          "amount": 2.84,
+          "capex": false
+        }
+      ],
+      "draws": [
+        {
+          "name": "יותם",
+          "amount": 3150.0
+        },
+        {
+          "name": "מיכאל",
+          "amount": 2108.06
+        }
+      ]
+    },
+    {
+      "month": "נובמבר 2025",
+      "income": [
+        {
+          "client": "אלקינצ'ו",
+          "amount": 11800.0
+        },
+        {
+          "client": "אדור קונספט",
+          "amount": 4484.0
+        },
+        {
+          "client": "טריו",
+          "amount": 4849.8
+        },
+        {
+          "client": "שגב",
+          "amount": 6726.0
+        },
+        {
+          "client": "HD",
+          "amount": 1416.0
+        },
+        {
+          "client": "פולינוי",
+          "amount": 413.0
+        }
+      ],
+      "expenses": [
+        {
+          "category": "גוגל",
+          "amount": 75.9,
+          "capex": false
+        },
+        {
+          "category": "פיתוח מערכת",
+          "amount": 3000.0,
+          "capex": true
+        },
+        {
+          "category": "הרחבת מנוי שנתי אוטומציות",
+          "amount": 767.79,
+          "capex": false
+        },
+        {
+          "category": "CRM",
+          "amount": 163.56,
+          "capex": false
+        },
+        {
+          "category": "ציוד מדידה",
+          "amount": 215.65,
+          "capex": true
+        },
+        {
+          "category": "כביש 6",
+          "amount": 380.57,
+          "capex": false
+        },
+        {
+          "category": "טלפון",
+          "amount": 24.9,
+          "capex": false
+        },
+        {
+          "category": "כביש 6 חוצה צפון",
+          "amount": 10.65,
+          "capex": false
+        },
+        {
+          "category": "פנגו",
+          "amount": 81.54,
+          "capex": false
+        },
+        {
+          "category": "אוטומציות",
+          "amount": 35.6,
+          "capex": false
+        },
+        {
+          "category": "דלק",
+          "amount": 3172.0,
+          "capex": false
+        }
+      ],
+      "draws": [
+        {
+          "name": "יותם",
+          "amount": 6172.0
+        },
+        {
+          "name": "מיכאל",
+          "amount": 1756.16
+        }
+      ]
+    },
+    {
+      "month": "דצמבר 2025",
+      "income": [
+        {
+          "client": "אלקינצ'ו",
+          "amount": 9912.0
+        },
+        {
+          "client": "אדור קונספט",
+          "amount": 9735.0
+        },
+        {
+          "client": "טריו",
+          "amount": 4212.6
+        },
+        {
+          "client": "שגב",
+          "amount": 9912.0
+        },
+        {
+          "client": "HD",
+          "amount": 0.0
+        },
+        {
+          "client": "פולינוי",
+          "amount": 413.0
+        },
+        {
+          "client": "אופק שושן - אוסישיקן",
+          "amount": 472.0
+        },
+        {
+          "client": "סלבה - נגריית הדור",
+          "amount": 413.0
+        },
+        {
+          "client": "פורמג'ו",
+          "amount": 413.0
+        },
+        {
+          "client": "לארגו",
+          "amount": 3717.0
+        },
+        {
+          "client": "KFT",
+          "amount": 0.0
+        },
+        {
+          "client": "בית כנסת ישורון",
+          "amount": 944.0
+        },
+        {
+          "client": "דיין",
+          "amount": 3304.0
+        },
+        {
+          "client": "חופי ואלירן",
+          "amount": 2006.0
+        },
+        {
+          "client": "גרעיני עפולה",
+          "amount": 1770.0
+        }
+      ],
+      "expenses": [
+        {
+          "category": "אשל",
+          "amount": 40.0,
+          "capex": false
+        },
+        {
+          "category": "גוגל",
+          "amount": 75.9,
+          "capex": false
+        },
+        {
+          "category": "מנהרות הכרמל",
+          "amount": 23.79,
+          "capex": false
+        },
+        {
+          "category": "מכשיר לייקה",
+          "amount": 80551.52,
+          "capex": true
+        },
+        {
+          "category": "פיתוח מערכת",
+          "amount": 1500.0,
+          "capex": true
+        },
+        {
+          "category": "משה בן עטר",
+          "amount": 1500.0,
+          "capex": false
+        },
+        {
+          "category": "הודי",
+          "amount": 590.07,
+          "capex": false
+        },
+        {
+          "category": "מטרפורט",
+          "amount": 390.0,
+          "capex": false
+        },
+        {
+          "category": "מטר ידני (מילווקי ומקיטה)",
+          "amount": 170.0,
+          "capex": true
+        },
+        {
+          "category": "CRM",
+          "amount": 162.61,
+          "capex": false
+        },
+        {
+          "category": "טלפון",
+          "amount": 24.9,
+          "capex": false
+        },
+        {
+          "category": "כביש 6",
+          "amount": 200.46,
+          "capex": false
+        },
+        {
+          "category": "השתתפות בנזק תאונה",
+          "amount": 1650.0,
+          "capex": false
+        },
+        {
+          "category": "פנגו",
+          "amount": 41.66,
+          "capex": false
+        },
+        {
+          "category": "6 חוצה צפון",
+          "amount": 7.82,
+          "capex": false
+        },
+        {
+          "category": "טיפול לרכב",
+          "amount": 620.0,
+          "capex": true
+        },
+        {
+          "category": "דלק",
+          "amount": 2336.0,
+          "capex": false
+        },
+        {
+          "category": "מנהרות הכרמל",
+          "amount": 47.58,
+          "capex": false
+        },
+        {
+          "category": "אוטומציות",
+          "amount": 34.69,
+          "capex": false
+        }
+      ],
+      "draws": [
+        {
+          "name": "יותם",
+          "amount": 84777.52
+        },
+        {
+          "name": "מיכאל",
+          "amount": 5189.48
+        }
+      ]
+    },
+    {
+      "month": "ינואר 2026",
+      "income": [
+        {
+          "client": "אלקינצ'ו",
+          "amount": 8378.0
+        },
+        {
+          "client": "אדור קונספט",
+          "amount": 2655.0
+        },
+        {
+          "client": "טריו",
+          "amount": 9971.0
+        },
+        {
+          "client": "שגב",
+          "amount": 10738.0
+        },
+        {
+          "client": "HD",
+          "amount": 1534.0
+        },
+        {
+          "client": "פולינוי",
+          "amount": 1357.0
+        },
+        {
+          "client": "דיין",
+          "amount": 1770.0
+        },
+        {
+          "client": "פורמג'ו",
+          "amount": 1888.0
+        },
+        {
+          "client": "לארגו",
+          "amount": 10142.1
+        },
+        {
+          "client": "סטודיו בולה",
+          "amount": 1770.0
+        },
+        {
+          "client": "דוד אגירת חשמל",
+          "amount": 920.4
+        }
+      ],
+      "expenses": [
+        {
+          "category": "גוגל",
+          "amount": 75.9,
+          "capex": false
+        },
+        {
+          "category": "חניה בתל אביב",
+          "amount": 44.0,
+          "capex": false
+        },
+        {
+          "category": "CRM",
+          "amount": 156.84,
+          "capex": false
+        },
+        {
+          "category": "טלפון",
+          "amount": 24.9,
+          "capex": false
+        },
+        {
+          "category": "כביש 6",
+          "amount": 423.54,
+          "capex": false
+        },
+        {
+          "category": "תחזוקת מערכת",
+          "amount": 900.0,
+          "capex": false
+        },
+        {
+          "category": "טיפול לרכב (פלאגים+מנורה אחורית+ניקוי מצערת ואיפוס מחשב)",
+          "amount": 800.0,
+          "capex": true
+        },
+        {
+          "category": "רשם החברות",
+          "amount": 2559.0,
+          "capex": false
+        },
+        {
+          "category": "עו''ד",
+          "amount": 1770.0,
+          "capex": false
+        },
+        {
+          "category": "פנגו",
+          "amount": 21.49,
+          "capex": false
+        },
+        {
+          "category": "כביש 6 חוצה צפון",
+          "amount": 17.75,
+          "capex": false
+        },
+        {
+          "category": "אוטומציות",
+          "amount": 33.81,
+          "capex": false
+        },
+        {
+          "category": "דלקן",
+          "amount": 3486.0,
+          "capex": false
+        }
+      ],
+      "draws": [
+        {
+          "name": "יותם",
+          "amount": 8715.0
+        },
+        {
+          "name": "מיכאל",
+          "amount": 1598.23
+        }
+      ]
+    },
+    {
+      "month": "פברואר 2026",
+      "income": [
+        {
+          "client": "אלקינצ'ו",
+          "amount": 9558.0
+        },
+        {
+          "client": "אדור קונספט",
+          "amount": 236.0
+        },
+        {
+          "client": "טריו",
+          "amount": 11257.2
+        },
+        {
+          "client": "שגב",
+          "amount": 10030.0
+        },
+        {
+          "client": "פולינוי",
+          "amount": 2961.8
+        },
+        {
+          "client": "דיין",
+          "amount": 944.0
+        },
+        {
+          "client": "פורמג'ו",
+          "amount": 649.0
+        },
+        {
+          "client": "לארגו",
+          "amount": 13508.05
+        },
+        {
+          "client": "סדר יועצים",
+          "amount": 765.0
+        },
+        {
+          "client": "אושרת ינקו",
+          "amount": 1770.0
+        }
+      ],
+      "expenses": [
+        {
+          "category": "גוגל",
+          "amount": 75.9,
+          "capex": false
+        },
+        {
+          "category": "חניון תל אביב",
+          "amount": 49.71,
+          "capex": false
+        },
+        {
+          "category": "כיוון פרונט",
+          "amount": 236.0,
+          "capex": false
+        },
+        {
+          "category": "ביטוח לאומי ספטמבר-דצמבר",
+          "amount": 1000.0,
+          "capex": false
+        },
+        {
+          "category": "CRM",
+          "amount": 154.34,
+          "capex": false
+        },
+        {
+          "category": "חותמות",
+          "amount": 110.0,
+          "capex": false
+        },
+        {
+          "category": "טלפון",
+          "amount": 24.91,
+          "capex": false
+        },
+        {
+          "category": "כביש 6",
+          "amount": 253.38,
+          "capex": false
+        },
+        {
+          "category": "חניה",
+          "amount": 7.0,
+          "capex": false
+        },
+        {
+          "category": "אשל",
+          "amount": 76.0,
+          "capex": false
+        },
+        {
+          "category": "פנגו",
+          "amount": 75.69,
+          "capex": false
+        },
+        {
+          "category": "דלק",
+          "amount": 3086.0,
+          "capex": false
+        },
+        {
+          "category": "אוטמציות",
+          "amount": 33.52,
+          "capex": false
+        },
+        {
+          "category": "6 חוצה צפון",
+          "amount": 29.55,
+          "capex": false
+        }
+      ],
+      "draws": [
+        {
+          "name": "יותם",
+          "amount": 3196.0
+        },
+        {
+          "name": "מיכאל",
+          "amount": 2016.0
+        }
+      ]
+    },
+    {
+      "month": "מרץ 2026",
+      "income": [
+        {
+          "client": "אלקינצ'ו",
+          "amount": 8732.0
+        },
+        {
+          "client": "טריו",
+          "amount": 5291.5
+        },
+        {
+          "client": "שגב",
+          "amount": 12499.15
+        },
+        {
+          "client": "פולינוי",
+          "amount": 1849.65
+        },
+        {
+          "client": "דיין",
+          "amount": 944.0
+        },
+        {
+          "client": "בולה סטודיו",
+          "amount": 2242.0
+        }
+      ],
+      "expenses": [
+        {
+          "category": "גוגל",
+          "amount": 75.9,
+          "capex": false
+        },
+        {
+          "category": "מנהרות הכרמל",
+          "amount": 23.66,
+          "capex": false
+        },
+        {
+          "category": "CRM",
+          "amount": 155.89,
+          "capex": false
+        },
+        {
+          "category": "טלפון",
+          "amount": 24.9,
+          "capex": false
+        },
+        {
+          "category": "כביש 6",
+          "amount": 362.93,
+          "capex": false
+        },
+        {
+          "category": "פנצ'ר",
+          "amount": 70.0,
+          "capex": false
+        },
+        {
+          "category": "חניון פנגו",
+          "amount": 26.9,
+          "capex": false
+        },
+        {
+          "category": "פנגו",
+          "amount": 24.08,
+          "capex": false
+        },
+        {
+          "category": "6 צפון",
+          "amount": 11.8,
+          "capex": false
+        },
+        {
+          "category": "דלק",
+          "amount": 3247.0,
+          "capex": false
+        },
+        {
+          "category": "אוטומציות",
+          "amount": 34.49,
+          "capex": false
+        },
+        {
+          "category": "גוגל",
+          "amount": 93.03,
+          "capex": false
+        }
+      ],
+      "draws": [
+        {
+          "name": "סוליין",
+          "amount": 127.52
+        },
+        {
+          "name": "יותם",
+          "amount": 3247.0
+        },
+        {
+          "name": "מיכאל",
+          "amount": 776.06
+        }
+      ]
+    },
+    {
+      "month": "אפריל 2026",
+      "income": [
+        {
+          "client": "אלקינצ'ו",
+          "amount": 6844.0
+        },
+        {
+          "client": "אדור קונספט",
+          "amount": 1357.0
+        },
+        {
+          "client": "טריו",
+          "amount": 2600.72
+        },
+        {
+          "client": "שגב",
+          "amount": 9864.8
+        },
+        {
+          "client": "פולינוי",
+          "amount": 2578.3
+        },
+        {
+          "client": "בולה סטודיו",
+          "amount": 944.0
+        },
+        {
+          "client": "רון שטפל",
+          "amount": 1003.0
+        },
+        {
+          "client": "מוטי גנדי",
+          "amount": 1180.0
+        },
+        {
+          "client": "אלי שושן",
+          "amount": 4141.8
+        }
+      ],
+      "expenses": [
+        {
+          "category": "טיפול לרכב",
+          "amount": 1150.0,
+          "capex": true
+        },
+        {
+          "category": "מנהרות הכרמל",
+          "amount": 47.32,
+          "capex": false
+        },
+        {
+          "category": "CRM",
+          "amount": 151.01,
+          "capex": false
+        },
+        {
+          "category": "מקדמות מס",
+          "amount": 1670.0,
+          "capex": false
+        },
+        {
+          "category": "הוט מובייל",
+          "amount": 12.85,
+          "capex": false
+        },
+        {
+          "category": "כביש 6",
+          "amount": 477.12,
+          "capex": false
+        },
+        {
+          "category": "חניון ירושלים",
+          "amount": 59.85,
+          "capex": false
+        },
+        {
+          "category": "עמלת כ''א",
+          "amount": 19.25,
+          "capex": false
+        },
+        {
+          "category": "פנגו",
+          "amount": 14.91,
+          "capex": false
+        },
+        {
+          "category": "משה אסרף",
+          "amount": 2360.0,
+          "capex": false
+        },
+        {
+          "category": "אוטומציות",
+          "amount": 32.13,
+          "capex": false
+        },
+        {
+          "category": "גוגל",
+          "amount": 151.8,
+          "capex": false
+        },
+        {
+          "category": "דלק",
+          "amount": 3535.0,
+          "capex": false
+        }
+      ],
+      "draws": [
+        {
+          "name": "סוליין",
+          "amount": 6133.39
+        },
+        {
+          "name": "יותם",
+          "amount": 3535.0
+        },
+        {
+          "name": "מיכאל",
+          "amount": 12.85
+        }
+      ]
+    },
+    {
+      "month": "מאי 2026",
+      "income": [
+        {
+          "client": "אלקינצ'ו",
+          "amount": 19116.0
+        },
+        {
+          "client": "אדור קונספט",
+          "amount": 2950.0
+        },
+        {
+          "client": "טריו",
+          "amount": 3968.34
+        },
+        {
+          "client": "שגב",
+          "amount": 8911.95
+        },
+        {
+          "client": "פולינוי",
+          "amount": 5605.0
+        },
+        {
+          "client": "רון שטפל",
+          "amount": 5074.0
+        },
+        {
+          "client": "שמעון חמיאס",
+          "amount": 472.0
+        },
+        {
+          "client": "סדר יועצים למטבח",
+          "amount": 7434.0
+        },
+        {
+          "client": "שגראווי",
+          "amount": 5310.0
+        },
+        {
+          "client": "חוסאם נגרית ניקולא",
+          "amount": 990.0
+        }
+      ],
+      "expenses": [
+        {
+          "category": "6 צפון",
+          "amount": 20.25,
+          "capex": false
+        },
+        {
+          "category": "I COUNT",
+          "amount": 69.62,
+          "capex": false
+        },
+        {
+          "category": "עמלה בבנק",
+          "amount": 17.5,
+          "capex": false
+        },
+        {
+          "category": "מנהרות הכרמל",
+          "amount": 23.64,
+          "capex": false
+        },
+        {
+          "category": "חניון קניון קרית אתא",
+          "amount": 10.95,
+          "capex": false
+        },
+        {
+          "category": "פלאפון",
+          "amount": 45.04,
+          "capex": false
+        },
+        {
+          "category": "חניון תל אביב",
+          "amount": 120.6,
+          "capex": false
+        },
+        {
+          "category": "ביטוח לאומי",
+          "amount": 1130.0,
+          "capex": false
+        },
+        {
+          "category": "משכורת לאה",
+          "amount": 9392.0,
+          "capex": false
+        },
+        {
+          "category": "CRM",
+          "amount": 147.02,
+          "capex": false
+        },
+        {
+          "category": "מקדמות מס",
+          "amount": 1329.0,
+          "capex": false
+        },
+        {
+          "category": "מע''מ",
+          "amount": 10255.0,
+          "capex": false
+        },
+        {
+          "category": "מטרפורט",
+          "amount": 2548.59,
+          "capex": false
+        },
+        {
+          "category": "6 צפון",
+          "amount": 19.05,
+          "capex": false
+        },
+        {
+          "category": "שרטוט סחאר דאוד",
+          "amount": 708.0,
+          "capex": false
+        },
+        {
+          "category": "חניה בתל אביב",
+          "amount": 30.0,
+          "capex": false
+        },
+        {
+          "category": "עו''ד",
+          "amount": 177.0,
+          "capex": false
+        },
+        {
+          "category": "כביש 6",
+          "amount": 438.58,
+          "capex": false
+        },
+        {
+          "category": "משה אסרף",
+          "amount": 2340.0,
+          "capex": false
+        },
+        {
+          "category": "פלאפון",
+          "amount": 45.04,
+          "capex": false
+        },
+        {
+          "category": "דלק",
+          "amount": 1366.0,
+          "capex": false
+        },
+        {
+          "category": "דלקן",
+          "amount": 2524.42,
+          "capex": false
+        },
+        {
+          "category": "חניה בנתניה",
+          "amount": 56.5,
+          "capex": false
+        },
+        {
+          "category": "חניה בנתניה",
+          "amount": 13.0,
+          "capex": false
+        },
+        {
+          "category": "פיתוח אוטומציות",
+          "amount": 3000.0,
+          "capex": false
+        },
+        {
+          "category": "פנגו",
+          "amount": 65.15,
+          "capex": false
+        },
+        {
+          "category": "פועלים דמי כרטיס",
+          "amount": 19.25,
+          "capex": false
+        },
+        {
+          "category": "דלק",
+          "amount": 299.0,
+          "capex": false
+        },
+        {
+          "category": "אוטומוציות",
+          "amount": 30.65,
+          "capex": false
+        }
+      ],
+      "draws": [
+        {
+          "name": "סוליין",
+          "amount": 32296.26
+        },
+        {
+          "name": "יותם",
+          "amount": 3914.59
+        },
+        {
+          "name": "מיכאל",
+          "amount": 30.0
+        }
+      ]
+    },
+    {
+      "month": "יוני 2026",
+      "income": [
+        {
+          "client": "אדור קונספט",
+          "amount": 6018.0
+        },
+        {
+          "client": "טריו",
+          "amount": 7981.52
+        },
+        {
+          "client": "שגב",
+          "amount": 7342.55
+        },
+        {
+          "client": "פולינוי",
+          "amount": 7678.85
+        },
+        {
+          "client": "טבת הנגרייה",
+          "amount": 3510.0
+        },
+        {
+          "client": "בולה סטודיו",
+          "amount": 944.0
+        },
+        {
+          "client": "פורת מדידות",
+          "amount": 1298.0
+        },
+        {
+          "client": "ליאור חנניה",
+          "amount": 1121.0
+        },
+        {
+          "client": "עומר מסגר",
+          "amount": 2124.0
+        },
+        {
+          "client": "בר סטון",
+          "amount": 2950.0
+        }
+      ],
+      "expenses": [
+        {
+          "category": "גוגל",
+          "amount": 151.8,
+          "capex": false
+        },
+        {
+          "category": "icount",
+          "amount": 69.62,
+          "capex": false
+        },
+        {
+          "category": "עמלה בבנק",
+          "amount": 31.5,
+          "capex": false
+        },
+        {
+          "category": "מנהרות הכרמל",
+          "amount": 23.64,
+          "capex": false
+        },
+        {
+          "category": "שרטוט בר סטון",
+          "amount": 708.0,
+          "capex": false
+        },
+        {
+          "category": "פיתוח מערכת",
+          "amount": 3000.0,
+          "capex": true
+        },
+        {
+          "category": "משכורת לאה",
+          "amount": 9392.0,
+          "capex": false
+        },
+        {
+          "category": "מקדמות מס",
+          "amount": 2122.0,
+          "capex": false
+        },
+        {
+          "category": "ביטוח לאומי",
+          "amount": 1130.0,
+          "capex": false
+        },
+        {
+          "category": "פלאפון",
+          "amount": 39.9,
+          "capex": false
+        },
+        {
+          "category": "שדרוג משתמש CRM",
+          "amount": 9.46,
+          "capex": false
+        },
+        {
+          "category": "ביגוד ממותג",
+          "amount": 2508.0,
+          "capex": false
+        },
+        {
+          "category": "CRM",
+          "amount": 293.66,
+          "capex": false
+        },
+        {
+          "category": "משה אסרף",
+          "amount": 2360.0,
+          "capex": false
+        },
+        {
+          "category": "כביש 6",
+          "amount": 383.08,
+          "capex": false
+        },
+        {
+          "category": "טיפול לרכב",
+          "amount": 1330.0,
+          "capex": true
+        },
+        {
+          "category": "דלק",
+          "amount": 299.0,
+          "capex": false
+        },
+        {
+          "category": "פיתוח מערכת",
+          "amount": 4500.0,
+          "capex": true
+        },
+        {
+          "category": "דמי כרטיס",
+          "amount": 15.4,
+          "capex": false
+        },
+        {
+          "category": "דלק",
+          "amount": 299.0,
+          "capex": false
+        },
+        {
+          "category": "דלק",
+          "amount": 151.55,
+          "capex": false
+        },
+        {
+          "category": "אוטומציות",
+          "amount": 32.46,
+          "capex": false
+        },
+        {
+          "category": "דלקן",
+          "amount": 4013.36,
+          "capex": false
+        },
+        {
+          "category": "6 חוצה צפון",
+          "amount": 18.35,
+          "capex": false
+        }
+      ],
+      "draws": [
+        {
+          "name": "סוליין",
+          "amount": 32881.78
+        }
+      ]
+    },
+    {
+      "month": "יולי 2026",
+      "income": [
+        {
+          "client": "אלקינצ'ו",
+          "amount": 13747.0
+        },
+        {
+          "client": "אדור קונספט",
+          "amount": 4838.0
+        },
+        {
+          "client": "טריו",
+          "amount": 8507.8
+        },
+        {
+          "client": "שגב",
+          "amount": 10443.0
+        },
+        {
+          "client": "HD",
+          "amount": 1534.0
+        },
+        {
+          "client": "פולינוי",
+          "amount": 2360.0
+        },
+        {
+          "client": "טבת הנגרייה",
+          "amount": 1652.0
+        },
+        {
+          "client": "רון שטפל",
+          "amount": 1062.0
+        },
+        {
+          "client": "ליאור חנניה",
+          "amount": 649.0
+        }
+      ],
+      "expenses": [
+        {
+          "category": "גוגל",
+          "amount": 151.8,
+          "capex": false
+        },
+        {
+          "category": "icount",
+          "amount": 69.62,
+          "capex": false
+        },
+        {
+          "category": "עץ האורן",
+          "amount": 550.0,
+          "capex": false
+        },
+        {
+          "category": "מנהרות הכרמל",
+          "amount": 35.46,
+          "capex": false
+        },
+        {
+          "category": "עמלות בנק",
+          "amount": 20.0,
+          "capex": false
+        },
+        {
+          "category": "שרטוט נשר",
+          "amount": 300.0,
+          "capex": false
+        },
+        {
+          "category": "משכורת לאה",
+          "amount": 9392.0,
+          "capex": false
+        },
+        {
+          "category": "מטר לייזר בוש",
+          "amount": 814.0,
+          "capex": true
+        },
+        {
+          "category": "פלאפון",
+          "amount": 39.9,
+          "capex": false
+        },
+        {
+          "category": "צילומים אדריכליים",
+          "amount": 2360.0,
+          "capex": false
+        },
+        {
+          "category": "מעמ",
+          "amount": 13018.0,
+          "capex": false
+        },
+        {
+          "category": "מס הכנסה מקדמה",
+          "amount": 1264.0,
+          "capex": false
+        },
+        {
+          "category": "פנס לרכב",
+          "amount": 2184.0,
+          "capex": true
+        },
+        {
+          "category": "פייפדרייב CRM",
+          "amount": 303.03,
+          "capex": false
+        },
+        {
+          "category": "משה אסרף",
+          "amount": 2360.0,
+          "capex": false
+        },
+        {
+          "category": "תיקון פנס",
+          "amount": 1200.0,
+          "capex": false
+        },
+        {
+          "category": "כביש 6",
+          "amount": 430.37,
+          "capex": false
+        },
+        {
+          "category": "שרטוט קרית חיים",
+          "amount": 1700.0,
+          "capex": false
+        },
+        {
+          "category": "טאבלט",
+          "amount": 3448.0,
+          "capex": true
+        },
+        {
+          "category": "6 חוצה צפון",
+          "amount": 15.53,
+          "capex": false
+        },
+        {
+          "category": "פנגו",
+          "amount": 52.97,
+          "capex": false
+        },
+        {
+          "category": "פועלים דמי כרטיס",
+          "amount": 15.4,
+          "capex": false
+        },
+        {
+          "category": "דלק",
+          "amount": 299.0,
+          "capex": false
+        },
+        {
+          "category": "תיק",
+          "amount": 204.5,
+          "capex": false
+        },
+        {
+          "category": "עכברים",
+          "amount": 45.06,
+          "capex": false
+        },
+        {
+          "category": "מטר",
+          "amount": 37.67,
+          "capex": false
+        },
+        {
+          "category": "עפרונות סימון",
+          "amount": 25.08,
+          "capex": false
+        },
+        {
+          "category": "אוטומציות",
+          "amount": 40.0,
+          "capex": false
+        }
+      ],
+      "draws": [
+        {
+          "name": "סוליין",
+          "amount": 40023.08
+        },
+        {
+          "name": "מיכאל",
+          "amount": 312.31
+        }
+      ]
+    }
+  ]
+}

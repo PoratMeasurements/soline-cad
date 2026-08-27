@@ -1,0 +1,46 @@
+[Header]
+Version=4
+Unit=1
+Name="allelem_showcase"
+Comment="Measure-only export - no catalog"
+
+[Walls]
+0,0,0,16700,2650,100,1
+16700,0,-90,11600,2650,100,2
+16700,11600,-180,16700,2650,100,3
+0,11600,90,11600,2650,100,4
+
+[Windows]
+1200,1200,"Window",3,8800,900
+1600,1400,"Window",3,11200,850
+
+[Doors]
+900,2050,"Doorway w/o Frame",3,700
+900,2100,"Doorway with Frame",3,2650
+1100,2100,"Passage",3,4600
+900,2050,"Hinged Right In",3,6850
+800,2000,"Safety Room Entrance",3,14200
+
+[Appliances]
+10,500,200,500,"",2,2630,850,,,0,,N
+
+[Fixtures]
+1,645,400,0,1,"Single Socket",,N
+1,1670,400,0,1,"Duplex Socket",,N
+1,2695,1100,0,1,"SocketEx",,N
+1,3685,1300,0,2,"Switch",,N
+1,4705,1300,0,2,"Duplex Switch",,N
+1,5710,300,0,1,"Power Line",,N
+1,6890,1500,0,1,"Power Box",,N
+1,8340,2200,0,1,"Junction Box",,N
+1,9320,400,0,3,"Phone",,N
+1,10280,400,0,3,"TV",,N
+2,630,300,0,4,"Water Supply",,N
+2,1645,1000,0,4,"Faucet",,N
+2,4135,0,0,4,"Sewer drainage",,N
+2,5195,150,0,4,"Sewage",,N
+2,6230,700,0,4,"Gas",,N
+2,7390,0,0,4,"",,N
+
+[Floors]
+0,0,16700,0,16700,11600,0,11600

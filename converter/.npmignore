@@ -1,0 +1,30 @@
+# Soline converter — packaging exclusions (mirrors SHIPPING_MANIFEST.md).
+# Applied by `npm pack` / `npm publish`. Any other packaging step (zip, installer,
+# `git archive`) MUST apply the same list. Files are excluded from the PACKAGE only —
+# they stay in the working tree for the licensed dev seat.
+#
+# COMPLIANCE (docs/INTEROP_COMPLIANCE.md): Soline redistributes NO InnoDraw/Raumplan
+# vendor files. The PDP base comes from the customer's own install at convert time.
+
+# --- Vendor-origin PDP bases + extracted element records (PRIMARY exposure) ---
+templates/dr/base/
+templates/dr/native/
+templates/dr/items/
+templates/dr/wall*.pdp
+
+# --- Dev corpus + generated outputs (owner's real vendor exports + our test output) ---
+analysis/out/
+out/
+out_test/
+out_health/
+inbox/
+research/
+_LATEST/
+_baseline_preview.html
+
+# --- Standard non-ship ---
+node_modules/
+.claude/
+desktop.ini
+**/desktop.ini
+_*.js

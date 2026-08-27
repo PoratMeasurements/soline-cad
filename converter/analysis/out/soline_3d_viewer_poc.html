@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Soline — מציג 3D מוחשי (POC)</title>
+<!--
+  ============================================================================
+  Soline 3D Viewer — Proof of Concept
+  ============================================================================
+  מטרה: להוכיח את "המסלול המהיר למוחשי" — טעינת סצנת Soline (אותו חוזה של
+  export_dxf_pro.js: walls[]/items[]/openings[]) והצגתה *מוצללת* (shaded) עם
+  נפחים מלאים, רצפה, חומרי PBR, תאורה, ומצלמת-מסלול אינטראקטיבית.
+
+  ההמרה מהחוזה: Soline ב-מ"מ, ציר Y של התכנית = עומק. כאן ממירים:
+      worldX =  x / 1000            (מ"מ -> מ')
+      worldY =  height / 1000       (גובה = ציר Y-up של three.js)
+      worldZ = -y / 1000            (Y של התכנית -> עומק, הפוך כמו placement.js)
+
+  הערה על offline-first: ה-POC טוען three.js מ-CDN לשם הדגמה מהירה. לפרודקשן
+  ב-Soline יש לשמור (vendor) את three.js מקומית — עֵקרון ה-offline של Soline.
+  ============================================================================
+-->
+<style>
+  :root{
+    --bg:#eceef1; --panel:rgba(255,255,255,.86); --ink:#1b2733; --muted:#5b6b7a;
+    --line:#d5dbe2; --accent:#3f7cae;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0f141a; --panel:rgba(24,31,39,.86); --ink:#e7edf3; --muted:#93a3b2;
+      --line:#2a3540; --accent:#6fa8d6; }
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+    font-family:"Segoe UI",Arial,Helvetica,sans-serif}
+  #app{position:fixed;inset:0}
+  canvas{display:block}
+  .panel{position:absolute;top:14px;right:14px;background:var(--panel);
+    backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;max-width:290px;box-shadow:0 6px 24px rgba(0,0,0,.14)}
+  .panel h1{font-size:15px;margin:0 0 4px}
+  .panel p{font-size:12px;color:var(--muted);margin:0 0 10px;line-height:1.5}
+  .row{display:flex;align-items:center;gap:8px;font-size:13px;margin:6px 0}
+  .row input{accent-color:var(--accent)}
+  .legend{margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
+  .legend div{display:flex;align-items:center;gap:8px;font-size:12px;margin:4px 0}
+  .sw{width:14px;height:14px;border-radius:3px;border:1px solid rgba(0,0,0,.2)}
+  .hint{position:absolute;bottom:12px;left:0;right:0;text-align:center;
+    font-size:12px;color:var(--muted);pointer-events:none}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<div class="panel">
+  <h1>Soline · מציג 3D מוחשי</h1>
+  <p>POC: אותה סצנה של המייצא (קירות + אביזרים + פתחים) כנפחים מלאים, מוצללת בזמן אמת. גרור לסובב · גלגלת לזום.</p>
+  <div class="row"><input type="checkbox" id="tgWire"><label for="tgWire">מצב קווי (wireframe)</label></div>
+  <div class="row"><input type="checkbox" id="tgShadow" checked><label for="tgShadow">צללים</label></div>
+  <div class="row"><input type="checkbox" id="tgCab" checked><label for="tgCab">ארונות + משטח (מדגם PDP)</label></div>
+  <div class="row"><input type="checkbox" id="tgIso"><label for="tgIso">מבט איזומטרי</label></div>
+  <div class="legend" id="legend"></div>
+</div>
+<div class="hint">מסמך התכנון המלא: docs/rendering_design.md</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+}}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+/* ---------------------------------------------------------------------------
+ * 1) SCENE CONTRACT — identical to export_dxf_pro.js (mm, plan-Y = depth).
+ *    This is the synthetic kitchen from that file's selfTest.
+ * ------------------------------------------------------------------------- */
+const SOLINE_SCENE = {
+  walls: [
+    { x1:0,    y1:0,    x2:4000, y2:0,    thick:100, height:2700, exterior:true  },
+    { x1:4000, y1:0,    x2:4000, y2:3000, thick:100, height:2700, exterior:true  },
+    { x1:4000, y1:3000, x2:0,    y2:3000, thick:100, height:2700, exterior:false },
+    { x1:0,    y1:3000, x2:0,    y2:0,    thick:100, height:2700, exterior:false },
+  ],
+  items: [
+    { name:'Socket',        category:'חשמל',      x:800,  y:50,   z:350,  rotation_deg:0,   width:80,  depth:15, height:80 },
+    { name:'Duplex Socket', category:'חשמל',      x:1600, y:50,   z:350,  rotation_deg:0,   width:160, depth:15, height:80 },
+    { name:'Switch',        category:'מפסק',      x:3900, y:1000, z:1200, rotation_deg:90,  width:80,  depth:15, height:80 },
+    { name:'Faucet',        category:'אינסטלציה', x:2000, y:2950, z:1000, rotation_deg:180, width:50,  depth:25, height:180 },
+    { name:'Gas',           category:'גז',        x:2500, y:2950, z:600,  rotation_deg:180, width:60,  depth:30, height:60 },
+  ],
+  openings: [
+    { layer:'Const_Windows', name:'Window', x:2000, y:0, z:900, rotation_deg:0, width:1200, height:1200, depth:100 },
+  ],
+  // Representative cabinet run + countertop — in production these come from the
+  // PDP designer model (QUADER / HALBKREIS primitives, per STATUS.md). Shown here
+  // to demonstrate the "tangible" target: volumes + wood/stone materials.
+  cabinets: [
+    { kind:'base', x:1900, y:2830, w:3600, d:600, z0:100, h:800  }, // base run along back wall
+    { kind:'top',  x:1900, y:2830, w:3600, d:620, z0:900, h:40   }, // stone countertop
+    { kind:'tall', x:3650, y:2760, w:600,  d:600, z0:0,   h:2200 }, // tall unit (fridge/oven column)
+  ],
+};
+
+/* ---------------------------------------------------------------------------
+ * 2) MATERIAL LIBRARY — a compact PBR set keyed like materials.blend (HOLZ_*,
+ *    MetallChrom, GLAS_FENSTERGLAS, MATT_STUMPF...). Procedural colors here; in
+ *    production swap baseColor for a texture map (albedo/roughness/normal).
+ * ------------------------------------------------------------------------- */
+const MAT = {
+  plaster : new THREE.MeshStandardMaterial({ color:0xe9e6df, roughness:.95, metalness:0 }),
+  plasterExt:new THREE.MeshStandardMaterial({ color:0xd9d5cc, roughness:.95, metalness:0 }),
+  floor   : new THREE.MeshStandardMaterial({ color:0xb8a88f, roughness:.7,  metalness:0 }),
+  wood    : new THREE.MeshStandardMaterial({ color:0x9c6b3f, roughness:.55, metalness:0 }),
+  stone   : new THREE.MeshStandardMaterial({ color:0x2f3237, roughness:.35, metalness:.05 }),
+  metal   : new THREE.MeshStandardMaterial({ color:0xc9ccd1, roughness:.28, metalness:.9 }),
+  plastic : new THREE.MeshStandardMaterial({ color:0xf3f3f0, roughness:.5,  metalness:0 }),
+  brass   : new THREE.MeshStandardMaterial({ color:0xb8985a, roughness:.3,  metalness:.85 }),
+  glass   : new THREE.MeshStandardMaterial({ color:0xbfe0ea, roughness:.05, metalness:0,
+              transparent:true, opacity:.28 }),
+};
+// fixture category (Hebrew) -> material
+function fixtureMat(it){
+  const c = it.category || '';
+  if (/גז/.test(c)) return MAT.brass;
+  if (/אינסטל|מים|ברז/.test(c)) return MAT.metal;
+  return MAT.plastic; // electrical faceplates
+}
+
+/* ---------------------------------------------------------------------------
+ * 3) COORD MAP — mm -> m, plan-Y -> depth (-z), height -> +y (three.js Y-up).
+ * ------------------------------------------------------------------------- */
+const S = 0.001;
+const wx = mm => mm * S;
+const wz = mm => -mm * S;
+const wy = mm => mm * S;
+
+/* ---------------------------------------------------------------------------
+ * 4) RENDERER / SCENE / CAMERA / LIGHTS
+ * ------------------------------------------------------------------------- */
+const app = document.getElementById('app');
+const renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+app.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(getComputedStyle(document.documentElement)
+  .getPropertyValue('--bg').trim() || '#eceef1');
+
+const camera = new THREE.PerspectiveCamera(50, innerWidth/innerHeight, 0.01, 100);
+camera.position.set(4.6, 3.4, 4.8);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.target.set(2.0, 0.9, -1.5);
+
+// Lighting: hemisphere fill (sky/ground, like the SkyDome env) + directional key.
+const hemi = new THREE.HemisphereLight(0xdfeaf5, 0x9a8f7d, 0.9);
+scene.add(hemi);
+const key = new THREE.DirectionalLight(0xfff4e6, 2.1);
+key.position.set(5, 8, 4);
+key.castShadow = true;
+key.shadow.mapSize.set(2048, 2048);
+Object.assign(key.shadow.camera, { left:-8, right:8, top:8, bottom:-8, near:.5, far:30 });
+key.shadow.bias = -0.0004;
+scene.add(key);
+scene.add(new THREE.AmbientLight(0xffffff, 0.15));
+
+/* ---------------------------------------------------------------------------
+ * 5) BUILDERS — turn the scene contract into meshes.
+ * ------------------------------------------------------------------------- */
+const world = new THREE.Group();
+scene.add(world);
+const solids = [];            // meshes that toggle wireframe
+function addBox(w, h, d, mat){ // dims in meters, returns mesh (origin = center)
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+  m.castShadow = m.receiveShadow = true;
+  solids.push(m); world.add(m); return m;
+}
+
+// 5a) Floor + ceiling from the wall bounding box.
+const bb = { minX:Infinity, maxX:-Infinity, minY:Infinity, maxY:-Infinity };
+for (const w of SOLINE_SCENE.walls){
+  bb.minX=Math.min(bb.minX,w.x1,w.x2); bb.maxX=Math.max(bb.maxX,w.x1,w.x2);
+  bb.minY=Math.min(bb.minY,w.y1,w.y2); bb.maxY=Math.max(bb.maxY,w.y1,w.y2);
+}
+const roomW = wx(bb.maxX-bb.minX), roomD = wx(bb.maxY-bb.minY);
+const cx = wx((bb.minX+bb.maxX)/2), cz = wz((bb.minY+bb.maxY)/2);
+const floor = addBox(roomW, 0.02, roomD, MAT.floor);
+floor.position.set(cx, -0.01, cz);
+controls.target.set(cx, 0.9, cz);
+
+// 5b) Walls as full prisms (centerline + thickness + height).
+for (const w of SOLINE_SCENE.walls){
+  const dx = w.x2-w.x1, dy = w.y2-w.y1;
+  const L  = Math.hypot(dx, dy);
+  const mesh = addBox(wx(L), wy(w.height), wx(w.thick),
+                      w.exterior ? MAT.plasterExt : MAT.plaster);
+  const midX = wx((w.x1+w.x2)/2), midZ = wz((w.y1+w.y2)/2);
+  mesh.position.set(midX, wy(w.height)/2, midZ);
+  mesh.rotation.y = -Math.atan2(dy, dx);   // plan-Y flipped -> negate angle
+}
+
+// 5c) Openings — punch a lighter glass panel where windows are (visual proxy).
+for (const op of SOLINE_SCENE.openings||[]){
+  const g = addBox(wx(op.width), wy(op.height), wx(op.depth*0.5), MAT.glass);
+  g.position.set(wx(op.x), wy(op.z + op.height/2), wz(op.y));
+  g.rotation.y = -(op.rotation_deg||0)*Math.PI/180;
+}
+
+// 5d) Cabinets + countertop (representative volumes; PDP QUADER in production).
+const cabGroup = new THREE.Group(); world.add(cabGroup);
+for (const c of SOLINE_SCENE.cabinets||[]){
+  const mat = c.kind==='top' ? MAT.stone : MAT.wood;
+  const m = new THREE.Mesh(new THREE.BoxGeometry(wx(c.w), wy(c.h), wx(c.d)), mat);
+  m.castShadow = m.receiveShadow = true;
+  m.position.set(wx(c.x), wy(c.z0 + c.h/2), wz(c.y));
+  cabGroup.add(m); solids.push(m);
+}
+
+// 5e) Fixtures — small device volumes on the walls, via placement (x,y,z,rot).
+for (const it of SOLINE_SCENE.items){
+  const m = addBox(wx(it.width), wy(it.height), wx(Math.max(it.depth,30)),
+                   fixtureMat(it));
+  m.position.set(wx(it.x), wy(it.z + it.height/2), wz(it.y));
+  m.rotation.y = -(it.rotation_deg||0)*Math.PI/180;
+}
+
+/* ---------------------------------------------------------------------------
+ * 6) UI wiring
+ * ------------------------------------------------------------------------- */
+const $ = id => document.getElementById(id);
+$('tgWire').onchange  = e => solids.forEach(m => { m.material.wireframe = e.target.checked; });
+$('tgShadow').onchange= e => { renderer.shadowMap.enabled = e.target.checked;
+  solids.forEach(m => m.material.needsUpdate = true); };
+$('tgCab').onchange   = e => { cabGroup.visible = e.target.checked; };
+$('tgIso').onchange   = e => {
+  if (e.target.checked){ camera.position.set(cx+5, 5, cz+5); }
+  else { camera.position.set(4.6,3.4,4.8); }
+  controls.update();
+};
+// legend
+const legendItems = [
+  ['#e9e6df','קיר פנים'],['#d9d5cc','קיר חוץ'],['#9c6b3f','ארון (עץ)'],
+  ['#2f3237','משטח (שיש)'],['#c9ccd1','מתכת (ברז)'],['#f3f3f0','אביזר חשמל'],
+  ['#bfe0ea','זיגוג (חלון)'],
+];
+$('legend').innerHTML = legendItems.map(([c,t])=>
+  `<div><span class="sw" style="background:${c}"></span>${t}</div>`).join('');
+
+/* ---------------------------------------------------------------------------
+ * 7) Loop
+ * ------------------------------------------------------------------------- */
+addEventListener('resize', ()=>{
+  camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+(function tick(){ requestAnimationFrame(tick); controls.update(); renderer.render(scene,camera); })();
+</script>
+</body>
+</html>

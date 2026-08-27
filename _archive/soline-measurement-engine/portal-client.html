@@ -1,0 +1,242 @@
+<title>Soline · פורטל לקוח</title>
+<style>
+  :root {
+    --bg:#eef2f7; --grid:rgba(20,60,110,0.05); --panel:#ffffff; --panel-2:#f1f5fa;
+    --line:rgba(24,52,92,0.16); --line-strong:rgba(24,52,92,0.30);
+    --ink:#0e1f36; --ink-2:#3d5273; --muted:#6a7a95;
+    --accent:#0d6fbf; --accent-soft:rgba(13,111,191,0.10);
+    --go:#0a9d63; --go-soft:rgba(10,157,99,0.12); --nogo:#d23a3f; --flag:#c67c10; --flag-soft:rgba(198,124,16,0.14);
+    --seal:#b4923c; --seal-soft:rgba(180,146,60,0.12);
+    --mono:ui-monospace,"SF Mono","Menlo","Consolas",monospace;
+    --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI","Arial Hebrew",Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){ :root{
+    --bg:#080f1a; --grid:rgba(120,165,225,0.05); --panel:#0f1a2b; --panel-2:#152134;
+    --line:rgba(130,165,220,0.16); --line-strong:rgba(130,165,220,0.30); --ink:#e6eefb; --ink-2:#aebfdc; --muted:#8296b6;
+    --accent:#5cc8ff; --accent-soft:rgba(92,200,255,0.12); --go:#2fce8f; --go-soft:rgba(47,206,143,0.14);
+    --nogo:#ff6b70; --flag:#f5b544; --flag-soft:rgba(245,181,68,0.16); --seal:#d9b768; --seal-soft:rgba(217,183,104,0.14); } }
+  :root[data-theme="light"]{ --bg:#eef2f7; --grid:rgba(20,60,110,0.05); --panel:#fff; --panel-2:#f1f5fa;
+    --line:rgba(24,52,92,0.16); --line-strong:rgba(24,52,92,0.30); --ink:#0e1f36; --ink-2:#3d5273; --muted:#6a7a95;
+    --accent:#0d6fbf; --accent-soft:rgba(13,111,191,0.10); --go:#0a9d63; --go-soft:rgba(10,157,99,0.12);
+    --nogo:#d23a3f; --flag:#c67c10; --flag-soft:rgba(198,124,16,0.14); --seal:#b4923c; --seal-soft:rgba(180,146,60,0.12); }
+  :root[data-theme="dark"]{ --bg:#080f1a; --grid:rgba(120,165,225,0.05); --panel:#0f1a2b; --panel-2:#152134;
+    --line:rgba(130,165,220,0.16); --line-strong:rgba(130,165,220,0.30); --ink:#e6eefb; --ink-2:#aebfdc; --muted:#8296b6;
+    --accent:#5cc8ff; --accent-soft:rgba(92,200,255,0.12); --go:#2fce8f; --go-soft:rgba(47,206,143,0.14);
+    --nogo:#ff6b70; --flag:#f5b544; --flag-soft:rgba(245,181,68,0.16); --seal:#d9b768; --seal-soft:rgba(217,183,104,0.14); }
+
+  * { box-sizing:border-box; }
+  body { margin:0; direction:rtl; background:var(--bg); color:var(--ink); font-family:var(--sans); line-height:1.6;
+    background-image: linear-gradient(var(--grid) 1px,transparent 1px), linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:26px 26px; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:880px; margin:0 auto; padding: clamp(16px,4vw,40px) clamp(14px,4vw,32px) 72px; }
+  .ltr { direction:ltr; unicode-bidi:isolate; }
+  .mono { font-family:var(--mono); font-variant-numeric:tabular-nums; }
+  h1,h2,h3 { margin:0; text-wrap:balance; }
+
+  .brand { display:flex; align-items:center; gap:12px; padding-bottom:18px; border-bottom:1px solid var(--line); }
+  .brand .mk { width:34px; height:34px; border-radius:10px; background:var(--accent); color:#fff; display:grid; place-items:center; font-weight:800; }
+  .brand .nm { font-weight:800; letter-spacing:-.01em; } .brand .nm small { display:block; font-weight:500; font-size:11px; color:var(--muted); }
+  .brand .cust { margin-inline-start:auto; font-size:13px; color:var(--ink-2); }
+
+  .tabs { display:flex; flex-wrap:wrap; gap:6px; margin:22px 0 20px; }
+  .tabs button { font-family:var(--sans); font-size:13.5px; font-weight:600; padding:9px 15px; border-radius:10px;
+    border:1px solid var(--line); background:var(--panel); color:var(--ink-2); cursor:pointer; }
+  .tabs button[aria-current="true"]{ border-color:var(--accent); color:var(--ink); box-shadow: inset 0 0 0 1px var(--accent-soft); }
+  .tabs button:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  .panel[hidden]{ display:none !important; }
+
+  /* overview */
+  .hero { background:var(--panel); border:1px solid var(--line-strong); border-radius:20px; padding: clamp(24px,4vw,40px); }
+  .verified { display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:12px; color:var(--go); background:var(--go-soft); border:1px solid var(--go); border-radius:999px; padding:5px 12px; }
+  .hero h1 { font-size: clamp(24px,4vw,36px); font-weight:750; margin-top:14px; letter-spacing:-0.015em; }
+  .hero .meta { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:22px; }
+  .hero .meta .m .k { font-family:var(--mono); font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+  .hero .meta .m .v { font-weight:650; margin-top:3px; }
+  @media (max-width:560px){ .hero .meta{ grid-template-columns:1fr 1fr; } }
+
+  .timeline { display:flex; gap:0; margin-top:26px; }
+  .tl { flex:1; text-align:center; position:relative; }
+  .tl .dot { width:30px; height:30px; border-radius:50%; margin:0 auto; display:grid; place-items:center; font-weight:800; background:var(--go); color:#fff; position:relative; z-index:1; }
+  .tl .dot.now { background:var(--accent); }
+  .tl::before { content:""; position:absolute; top:15px; inset-inline-end:50%; width:100%; height:2px; background:var(--go); }
+  .tl:first-child::before { display:none; }
+  .tl .lb { font-size:12.5px; font-weight:600; margin-top:8px; } .tl .dt { font-size:11px; color:var(--muted); font-family:var(--mono); }
+
+  /* drawing */
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:20px; }
+  .card h3 { font-size:16px; font-weight:700; margin-bottom:4px; }
+  .card .sub { font-size:12.5px; color:var(--muted); font-family:var(--mono); }
+  .plan { margin-top:16px; border:1px solid var(--line); border-radius:14px; background:var(--panel-2); padding:14px; overflow-x:auto; }
+  .dlrow { display:flex; gap:12px; margin-top:16px; flex-wrap:wrap; }
+  .btn { border:none; border-radius:12px; padding:13px 20px; font-weight:700; font-size:14px; cursor:pointer; background:var(--accent); color:#fff; display:inline-flex; gap:9px; align-items:center; }
+  .btn.ghost { background:transparent; border:1px solid var(--line-strong); color:var(--ink); }
+  .btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  /* certificate */
+  .cert { background:var(--panel); border:1px double var(--seal); border-radius:8px; padding: clamp(26px,5vw,48px); position:relative; text-align:center;
+    box-shadow: inset 0 0 0 1px var(--seal-soft); }
+  .cert .seal { width:70px; height:70px; border-radius:50%; margin:0 auto 14px; display:grid; place-items:center; font-size:34px; background:var(--seal-soft); border:2px solid var(--seal); }
+  .cert .kicker { font-family:var(--mono); font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:var(--seal); }
+  .cert h2 { font-size: clamp(21px,3.4vw,30px); font-weight:750; margin-top:6px; }
+  .cert .body { max-width:56ch; margin:16px auto 0; font-size:15px; color:var(--ink-2); }
+  .cert .tbl { max-width:520px; margin:26px auto 0; text-align:start; border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .cert .tr { display:flex; justify-content:space-between; padding:11px 16px; border-bottom:1px solid var(--line); font-size:13.5px; }
+  .cert .tr:last-child { border-bottom:0; } .cert .tr .k { color:var(--muted); } .cert .tr .v { font-weight:650; }
+  .cert .tr .v.ok { color:var(--go); }
+  .cert .sign { display:flex; justify-content:space-between; align-items:end; max-width:520px; margin:28px auto 0; gap:20px; }
+  .cert .sign .s { flex:1; text-align:center; } .cert .sign .s .ln { border-top:1px solid var(--line-strong); padding-top:6px; font-size:11.5px; color:var(--muted); }
+  .cert .foot { margin-top:22px; font-family:var(--mono); font-size:10.5px; color:var(--muted); }
+
+  /* trust */
+  .steps { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:8px; }
+  .tstep { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:18px; }
+  .tstep .ic { width:38px; height:38px; border-radius:11px; background:var(--accent-soft); color:var(--accent); display:grid; place-items:center; font-size:19px; }
+  .tstep h3 { font-size:15px; font-weight:660; margin-top:10px; } .tstep p { font-size:13px; color:var(--muted); margin:6px 0 0; }
+  @media (max-width:560px){ .steps{ grid-template-columns:1fr; } }
+  .compare { display:flex; gap:12px; justify-content:center; margin-top:16px; flex-wrap:wrap; }
+  .cbox { border:1px solid var(--line); border-radius:14px; padding:14px 20px; text-align:center; background:var(--panel); }
+  .cbox .l { font-family:var(--mono); font-size:11px; color:var(--muted); } .cbox .n { font-family:var(--mono); font-size:24px; font-weight:700; margin-top:4px; }
+  .cbox.a .n { color:var(--accent); }
+  .okpill { display:inline-flex; align-items:center; gap:8px; margin-top:14px; font-family:var(--mono); font-size:13px; color:var(--go); background:var(--go-soft); border:1px solid var(--go); border-radius:999px; padding:7px 16px; }
+
+  .section-note { font-size:13px; color:var(--muted); margin-top:14px; }
+  footer { margin-top:44px; padding-top:18px; border-top:1px solid var(--line); font-family:var(--mono); font-size:11px; color:var(--muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+</style>
+
+<div class="wrap">
+  <div class="brand">
+    <div class="mk">S</div>
+    <div class="nm">Soline<small>פורטל לקוח</small></div>
+    <div class="cust">שלום, <b>אושרת ינקו</b></div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button data-tab="overview" aria-current="true" role="tab">סקירה</button>
+    <button data-tab="drawing" role="tab">התוצר</button>
+    <button data-tab="cert" role="tab">תעודת מדידה</button>
+    <button data-tab="trust" role="tab">איך זה אומת</button>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="panel" data-panel="overview">
+    <div class="hero">
+      <span class="verified">✓ מדידה מאומתת</span>
+      <h1>המדידה שלך מוכנה — ומאומתת.</h1>
+      <p style="color:var(--ink-2); font-size:15px; margin-top:8px; max-width:56ch">כל מידה נמדדה בשני מכשירי לייזר בלתי-תלויים והסכימו בתוך הטולרנס הנדרש. זו לא הערכה — זו ודאות מגובה.</p>
+      <div class="meta">
+        <div class="m"><div class="k">פרויקט</div><div class="v">משטח שיש · מטבח</div></div>
+        <div class="m"><div class="k">כתובת</div><div class="v">רוטשילד 22, קומה 13</div></div>
+        <div class="m"><div class="k">תאריך מדידה</div><div class="v mono">2026-02-26</div></div>
+      </div>
+      <div class="timeline">
+        <div class="tl"><div class="dot">✓</div><div class="lb">נמדד</div><div class="dt">26.02</div></div>
+        <div class="tl"><div class="dot">✓</div><div class="lb">אומת</div><div class="dt">26.02</div></div>
+        <div class="tl"><div class="dot">✓</div><div class="lb">שורטט</div><div class="dt">27.02</div></div>
+        <div class="tl"><div class="dot now">★</div><div class="lb">נמסר</div><div class="dt">27.02</div></div>
+      </div>
+    </div>
+    <p class="section-note">התוצר, תעודת המדידה ופירוט האימות זמינים בלשוניות למעלה.</p>
+  </div>
+
+  <!-- DRAWING -->
+  <div class="panel" data-panel="drawing" hidden>
+    <div class="card">
+      <h3>השרטוט המאומת</h3>
+      <div class="sub">רוויזיה 1 · מ״מ · checksum a1f9…c7</div>
+      <div class="plan">
+        <svg viewBox="0 0 520 300" width="100%" height="auto" role="img" aria-label="תרשים מטבח ממודד">
+          <defs><style>
+            .wall{stroke:var(--ink);stroke-width:2.5;fill:none}
+            .dim{stroke:var(--accent);stroke-width:1}
+            .dimt{fill:var(--accent);font:11px var(--mono);}
+            .lbl{fill:var(--muted);font:11px var(--sans);}
+            .op{stroke:var(--accent);stroke-width:2;fill:var(--accent-soft)}
+          </style></defs>
+          <!-- room outline -->
+          <path class="wall" d="M60 60 H420 V240 H60 Z"/>
+          <!-- counter -->
+          <rect class="op" x="60" y="60" width="360" height="34"/>
+          <text class="lbl" x="230" y="82" text-anchor="middle">משטח עבודה</text>
+          <!-- sink cutout -->
+          <rect x="180" y="64" width="70" height="26" fill="none" stroke="var(--accent)" stroke-dasharray="4"/>
+          <text class="lbl" x="215" y="112" text-anchor="middle">כיור</text>
+          <!-- top dimension -->
+          <line class="dim" x1="60" y1="40" x2="420" y2="40"/>
+          <line class="dim" x1="60" y1="34" x2="60" y2="46"/><line class="dim" x1="420" y1="34" x2="420" y2="46"/>
+          <text class="dimt" x="240" y="32" text-anchor="middle">3620 מ״מ</text>
+          <!-- side dimension -->
+          <line class="dim" x1="440" y1="60" x2="440" y2="240"/>
+          <line class="dim" x1="434" y1="60" x2="446" y2="60"/><line class="dim" x1="434" y1="240" x2="446" y2="240"/>
+          <text class="dimt" x="452" y="155" text-anchor="middle" transform="rotate(90 452 155)">2743 מ״מ</text>
+        </svg>
+      </div>
+      <div class="dlrow">
+        <button class="btn">⬇ הורד PDF</button>
+        <button class="btn ghost">⬇ קובץ DXF ליצרן</button>
+      </div>
+      <p class="section-note">ה-DXF נשלח ישירות ליצרן, מוכן לחיתוך — במ״מ, בשכבות לפי אלמנט.</p>
+    </div>
+  </div>
+
+  <!-- CERTIFICATE -->
+  <div class="panel" data-panel="cert" hidden>
+    <div class="cert">
+      <div class="seal">🎖</div>
+      <div class="kicker">תעודת מדידה מוסמכת</div>
+      <h2>Certificate of Verified Measurement</h2>
+      <p class="body">מסמך זה מאשר כי המדידות עבור הפרויקט שלהלן בוצעו בציוד לייזר Leica וא ומ ת ו באמצעות שני מכשירים בלתי-תלויים אשר הסכימו בתוך הטולרנס הנדרש לענף השיש (±1.5 מ״מ).</p>
+      <div class="tbl">
+        <div class="tr"><span class="k">פרויקט</span><span class="v">משטח שיש · אושרת ינקו · רוטשילד 22</span></div>
+        <div class="tr"><span class="k">מדידות מאומתות</span><span class="v ok">14 / 14</span></div>
+        <div class="tr"><span class="k">מכשירים</span><span class="v">Leica X6 + Leica D2</span></div>
+        <div class="tr"><span class="k">טולרנס שהושג</span><span class="v ok">בתוך ±1.5 מ״מ</span></div>
+        <div class="tr"><span class="k">תאריך</span><span class="v mono">2026-02-26</span></div>
+        <div class="tr"><span class="k">Checksum</span><span class="v mono">a1f9-4e02-c7</span></div>
+      </div>
+      <div class="sign">
+        <div class="s"><div class="ln">מודד מוסמך · Soline</div></div>
+        <div class="s"><div class="ln">חתימה דיגיטלית מאומתת</div></div>
+      </div>
+      <div class="foot">ניתן לאימות מול Soline · מזהה תעודה SOL-2026-0226-INK</div>
+    </div>
+    <p class="section-note">מתחרה עם מטר וסרט אינו יכול להנפיק מסמך כזה — זו ההוכחה שהמדידה נכונה.</p>
+  </div>
+
+  <!-- TRUST -->
+  <div class="panel" data-panel="trust" hidden>
+    <div class="card">
+      <h3>איך אנחנו יודעים שהמספר נכון</h3>
+      <div class="sub">אימות צולב · שני מקורות בלתי-תלויים</div>
+      <div class="compare">
+        <div class="cbox a"><div class="l">X6 · נגזר-גאומטריה</div><div class="n">2743</div></div>
+        <div class="cbox"><div class="l">D2 · מדידה ישירה</div><div class="n">2742</div></div>
+      </div>
+      <div style="text-align:center"><span class="okpill">✓ הסכמה בתוך 1 מ״מ — מאושר</span></div>
+    </div>
+    <div class="steps">
+      <div class="tstep"><div class="ic">◎</div><h3>שני מכשירים, לא אחד</h3><p>כל מידה קריטית נמדדת בשני מכשירים בלתי-תלויים. אם הם לא מסכימים — מודדים שוב.</p></div>
+      <div class="tstep"><div class="ic">⚙</div><h3>כיול בתוקף</h3><p>המדידה מתבצעת רק במכשירים שכיולם בתוקף. מכשיר לא-מכויל נחסם.</p></div>
+      <div class="tstep"><div class="ic">🔗</div><h3>שרשרת מקור מלאה</h3><p>לכל מידה מתועד מי מדד, במה, מתי, ובאיזה כיול — בלתי-ניתן לזיוף.</p></div>
+      <div class="tstep"><div class="ic">✓</div><h3>שער איכות</h3><p>העבודה לא נמסרת עד שכל מידה קריטית עברה אימות. אין קיצורי דרך.</p></div>
+    </div>
+  </div>
+
+  <footer>
+    <span class="ltr">SOLINE · CLIENT PORTAL</span>
+    <span>מוכרים ודאות, לא מדידה</span>
+  </footer>
+</div>
+
+<script>
+  (function(){
+    var tabs = document.querySelectorAll('.tabs button');
+    var panels = document.querySelectorAll('.panel[data-panel]');
+    function show(name){
+      panels.forEach(function(p){ p.hidden = (p.getAttribute('data-panel')!==name); });
+      tabs.forEach(function(b){ b.setAttribute('aria-current', b.getAttribute('data-tab')===name?'true':'false'); });
+    }
+    tabs.forEach(function(b){ b.addEventListener('click', function(){ show(b.getAttribute('data-tab')); }); });
+    show('overview');
+  })();
+</script>

@@ -1,0 +1,54 @@
+{
+ "_note": "PROVEN-LOADABLE symbol codes @+0x91 by type string, harvested ONLY from mimran-1..9 (the files the owner confirmed load clean in his Raumplan build). Codes from newer 2xxx kitchen corpus are DELIBERATELY EXCLUDED: they triggered E4214 'created with a more advanced version'. Any item whose (type,code) is not here is substituted with a mimran-safe same-discipline record (safe_substitutions.json).",
+ "source": "mimran-1..9 (סטים)",
+ "codes": {
+  "דלת": [
+   1
+  ],
+  "חלון": [
+   5
+  ],
+  "תאורה": [
+   7
+  ],
+  "שקע": [
+   3
+  ],
+  "חור.פ.ממד": [
+   1
+  ],
+  "ק.חשמל": [
+   3
+  ],
+  "צ.חשמל": [
+   1
+  ],
+  "תעלה": [
+   1
+  ],
+  "אדן חלון": [
+   1
+  ],
+  "ארגז תריס": [
+   1
+  ],
+  "פ.ביוב": [
+   1
+  ],
+  "ביוב קיר": [
+   1
+  ],
+  "מים משולב": [
+   15
+  ],
+  "ק.בקורת": [
+   2
+  ],
+  "ברז": [
+   5
+  ],
+  "מפסק": [
+   4
+  ]
+ }
+}

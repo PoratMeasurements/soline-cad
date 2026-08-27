@@ -1,0 +1,52 @@
+Transmittal Report:
+Created by AutoCAD LT eTransmit Thursday, January 1, 2026, 9:10 AM.
+
+Drawing:
+This is a transmittal based on קליל בלגי פלוס - טמפלייט דינאמי לתכנון ועיצוב.dwg.
+
+Files:
+
+Root Drawing:
+	קליל בלגי פלוס - טמפלייט דינאמי לתכנון ועיצוב.dwg
+
+AutoCAD LT Font Map References:
+	acadlt.fmp
+
+AutoCAD LT Compiled Shape References:
+	Fonts\simplex.shx
+	Fonts\techno.shx
+	Fonts\romans_s.shx
+
+TrueType font file References:
+	Fonts\arial.ttf
+
+AutoCAD LT Plotter Configuration File References:
+	PlotCfgs\DWG To PDF.pc3
+
+AutoCAD LT Color-dependent Plot Style Table File References:
+	PlotCfgs\Grayscale.ctb
+
+
+Notes for distribution:
+
+.SHX fonts:
+Please copy these fonts to the AutoCAD LT Fonts directory and check with the font manufacturer about distribution rights.  Fonts supplied with AutoCAD LT are freely distributable.
+
+.TTF fonts:
+TTF fonts must be registered with the Operating System.  To register,
+On Windows:
+Copy these files to the system fonts folder or use the fonts application in the Control Panel.
+On OS X:
+You may install fonts by double-clicking them and following the on screen prompts in the Font Book application, or by manually copying or dragging font files to any of the standard Fonts folders in Mac OS X.
+Check with the font manufacturer about distribution rights.  Fonts supplied with AutoCAD LT are freely distributable.
+
+.PC3 printer configuration files:
+Please copy these files to the AutoCAD LT Printer Configuration Search Path directory.
+
+.CTB/.STB plot style tables:
+Please copy these files to the AutoCAD LT Plot Style Table Search Path directory.
+
+The AutoCAD LT variable FONTALT was set to:
+C:\Users\The King\AppData\Roaming\Autodesk\AutoCAD LT 2023\R29\enu\Support\simplex.shx
+Please make sure that the FONTALT variable is set to this file or an equivalent before opening any drawings.  All text styles with missing fonts are automatically set to this font.
+

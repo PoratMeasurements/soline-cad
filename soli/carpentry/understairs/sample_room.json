@@ -1,0 +1,20 @@
+{
+  "name": "מתחת-מדרגות לדוגמה (מדרגה ישרה)",
+  "walls": [
+    {
+      "num": 0,
+      "sx": 0, "sy": 0, "ex": 4000, "ey": 0,
+      "length": 4000, "height": 2700, "thick": 100,
+      "fixtures": [
+        { "name": "Staircase", "desc": "straight stair — run along wall, total rise", "w": 3600, "h": 2600, "x": 1800, "y": 0 },
+        { "name": "שקע חשמל", "desc": "duplex socket", "w": 80, "h": 80, "x": 3400, "y": 300 }
+      ]
+    },
+    {
+      "num": 1,
+      "sx": 4000, "sy": 0, "ex": 4000, "ey": 2500,
+      "length": 2500, "height": 2700, "thick": 100,
+      "fixtures": []
+    }
+  ]
+}

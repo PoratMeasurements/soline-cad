@@ -1,0 +1,160 @@
+<title>דאשבורד ניהולי Soline</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Poppins:wght@600&display=swap">
+<style>
+  :root{
+    --bg:#FBF4E6; --surface:#FFFFFF; --surface2:#FAF3E2; --text:#2B2620; --muted:#6E6656;
+    --border:#EADFC7; --accent:#E8890B; --teal:#127C8C;
+    --dec:#C6532B; --hi:#D97A0B; --mid:#C9A227; --lo:#7C8B8F; --ok:#2E9E6B; --run:#E8A400;
+    --shadow:0 1px 2px rgba(74,58,20,.05),0 9px 24px rgba(74,58,20,.09);
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme=light]){
+    --bg:#15181A; --surface:#1E2427; --surface2:#232a2e; --text:#ECE7DB; --muted:#A7A093;
+    --border:#2E3439; --accent:#F7AC3A; --teal:#3BB6C7;
+    --dec:#E67A4E; --hi:#EFA13F; --mid:#D9BC55; --lo:#93A1A5; --ok:#54C08A; --run:#F0BF3F;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.4);
+  }}
+  :root[data-theme=dark]{
+    --bg:#15181A; --surface:#1E2427; --surface2:#232a2e; --text:#ECE7DB; --muted:#A7A093;
+    --border:#2E3439; --accent:#F7AC3A; --teal:#3BB6C7;
+    --dec:#E67A4E; --hi:#EFA13F; --mid:#D9BC55; --lo:#93A1A5; --ok:#54C08A; --run:#F0BF3F;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--text);direction:rtl;
+    font-family:Heebo,system-ui,sans-serif;line-height:1.5;
+    padding:max(15px,env(safe-area-inset-top)) 15px 70px}
+  .wrap{max-width:840px;margin:0 auto}
+  .top{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;
+    border-bottom:2px solid var(--border);padding-bottom:14px;margin-bottom:18px}
+  .wm{font-family:Poppins,sans-serif;font-size:25px;color:var(--accent);line-height:1}
+  .wm b{color:var(--teal)}
+  h1{font-size:19px;font-weight:800;margin:3px 0 0}
+  .meta{color:var(--muted);font-size:12px;text-align:left;white-space:nowrap}
+  .vitals{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}
+  @media(max-width:560px){.vitals{grid-template-columns:1fr 1fr}}
+  .v{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px 13px;box-shadow:var(--shadow)}
+  .v .n{font-size:24px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+  .v .l{font-size:12px;color:var(--muted);margin-top:5px;font-weight:600}
+  .v.dec .n{color:var(--dec)} .v.task .n{color:var(--accent)} .v.run .n{color:var(--run)} .v.ok .n{color:var(--ok)}
+  h2{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);font-weight:800;
+    margin:28px 0 12px;display:flex;align-items:center;gap:8px}
+  h2::after{content:"";flex:1;height:1px;background:var(--border)}
+  /* decision cards */
+  .dcard{background:var(--surface);border:1px solid var(--border);border-right:5px solid var(--dec);
+    border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);margin-bottom:12px}
+  .dcard .q{font-weight:800;font-size:15.5px;display:flex;gap:9px;align-items:flex-start}
+  .dcard .q .tag{flex:0 0 auto;font-size:10.5px;font-weight:800;color:#fff;background:var(--dec);
+    border-radius:6px;padding:2px 7px;margin-top:2px}
+  .dcard .opts{font-size:13.5px;color:var(--muted);margin:8px 0 0;line-height:1.65}
+  .dcard .rec{font-size:13.5px;margin-top:8px;background:var(--surface2);border:1px solid var(--border);
+    border-radius:9px;padding:8px 11px}
+  .dcard .rec b{color:var(--ok)}
+  /* task table */
+  .tw{overflow-x:auto;border:1px solid var(--border);border-radius:12px;margin-bottom:8px}
+  table{border-collapse:collapse;width:100%;font-size:13px;background:var(--surface);min-width:460px}
+  th,td{text-align:right;padding:9px 11px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{background:var(--surface2);font-weight:800;font-size:11.5px;color:var(--muted);white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  .pill{display:inline-block;font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:999px;color:#fff;white-space:nowrap}
+  .p-hi{background:var(--hi)} .p-mid{background:var(--mid);color:#2B2620} .p-lo{background:var(--lo)}
+  .p-run{background:var(--run);color:#2B2620} .p-ok{background:var(--ok)} .p-wait{background:var(--lo)}
+  .row{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:11px 14px;box-shadow:var(--shadow);margin-bottom:9px}
+  .rh{display:flex;align-items:center;gap:9px}.rt{flex:1;font-weight:700;font-size:14.5px}
+  .rd{font-size:13px;color:var(--muted);margin-top:4px}
+  .links{display:flex;flex-wrap:wrap;gap:9px}
+  .links a{font-size:13px;font-weight:700;text-decoration:none;color:var(--teal);
+    background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:9px 13px;box-shadow:var(--shadow)}
+  footer{margin-top:28px;color:var(--muted);font-size:12px;text-align:center;border-top:1px solid var(--border);padding-top:14px}
+  .tog{position:fixed;top:10px;left:10px;width:36px;height:36px;border-radius:999px;
+    background:var(--surface);border:1px solid var(--border);color:var(--text);box-shadow:var(--shadow);cursor:pointer}
+</style>
+<button class="tog" aria-label="מצב-תצוגה" onclick="var r=document.documentElement,d=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');r.setAttribute('data-theme',d==='dark'?'light':'dark')">◐</button>
+
+<div class="wrap">
+  <div class="top">
+    <div><div class="wm">soline<b>.</b></div><h1>דאשבורד ניהולי · קבלת-החלטות</h1></div>
+    <div class="meta">עודכן<br>26 אוג׳ 2026 · 22:15<br>מתעדכן חי</div>
+  </div>
+
+  <div class="vitals">
+    <div class="v dec"><div class="n">9</div><div class="l">החלטות ממתינות</div></div>
+    <div class="v task"><div class="n">7</div><div class="l">משימות פתוחות</div></div>
+    <div class="v run"><div class="n">1</div><div class="l">סוכנים בעבודה</div></div>
+    <div class="v ok"><div class="n">7</div><div class="l">פורמטי-ייצוא</div></div>
+  </div>
+
+  <h2>🔴 החלטות ממתינות ממך</h2>
+
+  <div class="dcard"><div class="q"><span class="tag">אסטרטגי</span><span>חיבור מדידה↔הזמנה (מנוע-הזמנות)</span></div>
+    <div class="opts">כמו Moraware — מדידה דוחפת עבודה→ייצור. הופך את Soline ממודד למערכת-שלמה.</div>
+    <div class="rec">💡 <b>המלצה:</b> לתכנן כשלב-הבא-הגדול. הבידול הכי-חזק מול המתחרים.</div></div>
+
+  <div class="dcard"><div class="q"><span class="tag">אסטרטגי</span><span>תמחור / מודל-עסקי</span></div>
+    <div class="opts">הענף מקבל SaaS ~$50-150/חודש (MeasureSquare/Moraware). InnoDraw = per-room ($36-40/חדר).</div>
+    <div class="rec">💡 <b>המלצה:</b> SaaS-חודשי-שטוח (מנצח את per-room של InnoDraw). להחליט מחיר-כניסה.</div></div>
+
+  <div class="dcard"><div class="q"><span class="tag">אירוח</span><span>אירוח עדכוני-OTA</span></div>
+    <div class="opts">GitHub Releases (gh מותקן, ממתין ל-auth) · Firebase · אחסון-וב · ידני.</div>
+    <div class="rec">💡 <b>הוכרע:</b> GitHub Releases דרך חשבון <b>פורת מדידות</b> (חברת-אם). פתח PowerShell → <code>gh auth login</code> → אקים Releases + עדכון-בתוך-האפליקציה.</div></div>
+
+  <div class="dcard"><div class="q"><span class="tag">X6 · P2P</span><span>הפעלת DST 360 (מ-CVSM)</span></div>
+    <div class="opts">גילינו ב-CVSM: כתיבת <code>raiseEvent 100\r\n</code> ל-<code>3ab10120</code> מפעילה P2P תוכנתית. אנחנו לא-עושים זאת → אזימוט אפס.</div>
+    <div class="rec">💡 <b>המלצה חמה:</b> להוסיף את פקודת-ההפעלה ל-LaserBle (batch-3, #0★). סיכון-נמוך, כנראה פותר את הזוויות אוטומטית.</div></div>
+
+  <div class="dcard"><div class="q"><span class="tag">ייצוא</span><span>בורר מינ/מקס</span></div>
+    <div class="opts">להפיק קובץ לפי גובה/רוחב מינימום או מקסימום.</div>
+    <div class="rec">💡 <b>הוכרע:</b> באפליקציה — ‎.sol נושא את הבחירה; רק גובה/רוחב מתעדכנים בלי-לדרוס. batch-3 (#6).</div></div>
+
+  <div class="dcard"><div class="q"><span class="tag">PDP</span><span>בסיס-אב Raumplan</span></div>
+    <div class="opts">לצייר חדר עם כל סוגי-האלמנטים ולייצא DR — פותר מיקום-סמלים על בסיס-לקוח-דל.</div>
+    <div class="rec">💡 <b>המלצה:</b> לצייר כשיהיה זמן. הצינור מוכן end-to-end.</div></div>
+
+  <div class="dcard"><div class="q"><span class="tag">PDP</span><span>דגימות ״+מזגן / +מפסק״</span></div>
+    <div class="opts">מצב-"+X" (מידות-שלנו+אייקון-נכון) אומת-לשקע; שאר-הטיפוסים ממתינים-לאימות.</div>
+    <div class="rec">💡 <b>המלצה:</b> צייר "+מזגן" במידה-לא-סטנדרטית וייצא — משלים את הפאזל.</div></div>
+
+  <div class="dcard"><div class="q"><span class="tag">Cabinet Vision</span><span>אימוץ ייצוא-ORD</span></div>
+    <div class="opts">ה-exporter מוכן ונבדק — ORD נפתח ב-Cabinet Vision. ORDX=כבר-CV-נייטיב.</div>
+    <div class="rec">💡 <b>המלצה:</b> כן — ערוץ ישיר ליצרני-הארונות. לאמת round-trip עם רישיון-CV.</div></div>
+
+  <div class="dcard"><div class="q"><span class="tag">מוצר</span><span>אימוץ-פונקציות ממחקר-המתחרים</span></div>
+    <div class="opts">SPEEDtemplate R1-R9 · תבניות-נעולות-יחידה · מיזוג-PDF · workspaces.</div>
+    <div class="rec">💡 <b>המלצה:</b> R1 מודל-מישורים · R2 פינה=חיתוך-מישורים · R4 פלס/אנך (הבידול-האמיתי).</div></div>
+
+  <div class="dcard"><div class="q"><span class="tag">סמלים</span><span>סימון גלריית-הסמלים</span></div>
+    <div class="opts">193 סמלים משודרגים — אילו עדיין לא-ברמה שאתה רוצה?</div>
+    <div class="rec">💡 <b>המלצה:</b> סרוק את גלריית-הסמלים וסמן 2-3 לשיפור.</div></div>
+
+  <div class="dcard"><div class="q"><span class="tag">מדידה</span><span>עדיפויות שדרוג-תהליך-המדידה</span></div>
+    <div class="opts">U1-U9 שדרוגים + S1-S8 ייעול (ב-MEASUREMENT_PROCESS_UPGRADE).</div>
+    <div class="rec">💡 <b>המלצה:</b> קודם U8 (לחשוף דגל-"נמדד") — impact-גבוה/effort-נמוך.</div></div>
+
+  <h2>📋 משימות פתוחות (Backlog)</h2>
+  <div class="tw"><table>
+    <tr><th>משימה</th><th>מסלול</th><th>עדיפות</th></tr>
+    <tr><td>סוכן-6: דגל-"נמדד" לשער-האיכות</td><td>אפליקציה</td><td><span class="pill p-hi">גבוה/קל</span></td></tr>
+    <tr><td>דוח-HTML באפליקציה (סוכן נעצר — להשלים)</td><td>אפליקציה</td><td><span class="pill p-hi">גבוה</span></td></tr>
+    <tr><td>כפתור-באג: העלאה-אוטו לתיקיית-Drive (SAF)</td><td>אפליקציה</td><td><span class="pill p-hi">גבוה</span></td></tr>
+    <tr><td>עדכון-גירסה OTA</td><td>אפליקציה</td><td><span class="pill p-mid">תלוי-אירוח</span></td></tr>
+    <tr><td>מדידה: מודל-מישורים / פלס-אנך (U1/U4)</td><td>אפליקציה</td><td><span class="pill p-mid">בינוני/כבד</span></td></tr>
+    <tr><td>DXF: layout_sheets CLI ל-v17</td><td>ממיר</td><td><span class="pill p-lo">נמוך</span></td></tr>
+    <tr><td>iCS50 דרייבר (WiFi/GeoCOM) — מוקפא</td><td>אפליקציה</td><td><span class="pill p-lo">מוקפא</span></td></tr>
+  </table></div>
+
+  <h2>🔄 בעבודה · ✅ הושלם</h2>
+  <div class="row"><div class="rh"><div class="rt">סוכן-בדיקות — סשנים לכל סוגי-החדרים</div><span class="pill p-run">רץ</span></div>
+    <div class="rd">מייצר סשן-בדיקה לכל סוג-חדר בנגרות → הצפת-באגים מסודרת. → דוח-HTML קבוע בדאשבורד.</div></div>
+  <div class="row"><div class="rh"><div class="rt">הושלם היום</div><span class="pill p-ok">✓</span></div>
+    <div class="rd">DXF v17 (ס"מ+בלוקים) · PDP 3-מצבים(🔒/🎚️/➕) · אפליקציה DB v18 (4-batches+HIGH/MED+44 בדיקות) · פורמט-7 ORD→CV · כפתור-דיווח-באגים(+תיקון-הערות) · חוברת-מודד אינטראקטיבית · 7 מחקרי-שוק/אינטרופ.</div></div>
+
+  <h2>🔗 קישורים</h2>
+  <div class="links">
+    <a href="https://claude.ai/code/artifact/2c0e2276-e4bc-4d61-8487-17fa8a40961e">📐 חוברת-מודד</a>
+    <a href="https://claude.ai/code/artifact/727aa78c-65c5-4eff-a6f3-f4c0dec32873">🟠 לוח-סטטוס</a>
+    <a href="#">🧪 סשני-בדיקה (בבנייה)</a>
+  </div>
+
+  <footer>Soline — דאשבורד ניהולי · קבלת-החלטות בפיתוח-המוצר · מתעדכן חי · לצפייה מהטאבלט</footer>
+</div>

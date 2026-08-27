@@ -1,0 +1,491 @@
+{
+  "source": "analysis/out/תשתיות.pdp",
+  "format": "native project (header ffff ff7f / u32 0x7fffffff)",
+  "note": "Native SUPP_FR records are 431 B (stride 431). Type-string @marker+9 and dims @marker+0x79 share the DR object-header layout, but @0x91 is NOT a DR symbol code here (all zero); symbol identity in native files lives in the 2D/3D geometry payloads, not an 11-byte {code+block} unit. The DR code/block/anchor shown per record is the CANONICAL value mapped from GT_CODES for the record's Soline type, i.e. what the item needs in the zero-header DR-export pipeline.",
+  "recordCount": 22,
+  "distinctSolineTypes": 9,
+  "distinctTypes": {
+    "מים משולב": [
+      0,
+      5
+    ],
+    "מפסק": [
+      1,
+      2,
+      3,
+      8,
+      9
+    ],
+    "ברז": [
+      4,
+      6
+    ],
+    "ביוב": [
+      7
+    ],
+    "אנטנה": [
+      10
+    ],
+    "גז": [
+      11
+    ],
+    "טלפון": [
+      12
+    ],
+    "שקע": [
+      13,
+      17,
+      18,
+      19,
+      20,
+      21
+    ],
+    "חור איורור": [
+      14,
+      15,
+      16
+    ]
+  },
+  "records": [
+    {
+      "index": 0,
+      "markerOffset": "0x261",
+      "nativeType": "מים משולב",
+      "solineType": "מים משולב",
+      "dims": {
+        "W": 200,
+        "D": 10,
+        "H": 205
+      },
+      "position": {
+        "X": 1400,
+        "Y": -1930
+      },
+      "gtCode": 15,
+      "gtBlock": "0f 00 12 00 00 00 00 3c 00 01 00",
+      "anchor": "OFFSET",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 1,
+      "markerOffset": "0x410",
+      "nativeType": "מפסק כפול",
+      "solineType": "מפסק",
+      "dims": {
+        "W": 144,
+        "D": 15,
+        "H": 80
+      },
+      "position": {
+        "X": 1200,
+        "Y": -1925
+      },
+      "gtCode": 4,
+      "gtBlock": "04 00 12 00 00 00 00 12 00 00 00",
+      "anchor": "CENTER",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 2,
+      "markerOffset": "0x5bf",
+      "nativeType": "מפסק בודד-סימון",
+      "solineType": "מפסק",
+      "dims": {
+        "W": 150,
+        "D": 10,
+        "H": 120
+      },
+      "position": {
+        "X": 1056,
+        "Y": -1930
+      },
+      "gtCode": 4,
+      "gtBlock": "04 00 12 00 00 00 00 12 00 00 00",
+      "anchor": "CENTER",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 3,
+      "markerOffset": "0x76e",
+      "nativeType": "מפסק כפןל-סימון1",
+      "solineType": "מפסק",
+      "dims": {
+        "W": 150,
+        "D": 10,
+        "H": 120
+      },
+      "position": {
+        "X": 906,
+        "Y": -1930
+      },
+      "gtCode": 4,
+      "gtBlock": "04 00 12 00 00 00 00 12 00 00 00",
+      "anchor": "CENTER",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 4,
+      "markerOffset": "0x91d",
+      "nativeType": "מים קרים",
+      "solineType": "ברז",
+      "dims": {
+        "W": 70,
+        "D": 10,
+        "H": 70
+      },
+      "position": {
+        "X": 756,
+        "Y": -1930
+      },
+      "gtCode": 5,
+      "gtBlock": "05 00 12 00 00 00 00 13 00 00 00",
+      "anchor": "CENTER",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 5,
+      "markerOffset": "0xacc",
+      "nativeType": "מים משולב",
+      "solineType": "מים משולב",
+      "dims": {
+        "W": 200,
+        "D": 10,
+        "H": 205
+      },
+      "position": {
+        "X": 686,
+        "Y": -1930
+      },
+      "gtCode": 15,
+      "gtBlock": "0f 00 12 00 00 00 00 3c 00 01 00",
+      "anchor": "OFFSET",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 6,
+      "markerOffset": "0xc7b",
+      "nativeType": "מים חמים",
+      "solineType": "ברז",
+      "dims": {
+        "W": 70,
+        "D": 10,
+        "H": 70
+      },
+      "position": {
+        "X": 486,
+        "Y": -1930
+      },
+      "gtCode": 5,
+      "gtBlock": "05 00 12 00 00 00 00 13 00 00 00",
+      "anchor": "CENTER",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 7,
+      "markerOffset": "0xe2a",
+      "nativeType": "ביוב",
+      "solineType": "ביוב",
+      "dims": {
+        "W": 60,
+        "D": 60,
+        "H": 300
+      },
+      "position": {
+        "X": 416,
+        "Y": -1880
+      },
+      "gtCode": 1,
+      "gtBlock": "01 00 00 1e 00 00 00 04 00 00 00",
+      "anchor": "OFFSET",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 8,
+      "markerOffset": "0xfd9",
+      "nativeType": "מפסק בודד",
+      "solineType": "מפסק",
+      "dims": {
+        "W": 80,
+        "D": 15,
+        "H": 80
+      },
+      "position": {
+        "X": 356,
+        "Y": -1925
+      },
+      "gtCode": 4,
+      "gtBlock": "04 00 12 00 00 00 00 12 00 00 00",
+      "anchor": "CENTER",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 9,
+      "markerOffset": "0x1188",
+      "nativeType": "מפסק משולב",
+      "solineType": "מפסק",
+      "dims": {
+        "W": 210,
+        "D": 16,
+        "H": 80
+      },
+      "position": {
+        "X": 276,
+        "Y": -1924
+      },
+      "gtCode": 4,
+      "gtBlock": "04 00 12 00 00 00 00 12 00 00 00",
+      "anchor": "CENTER",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 10,
+      "markerOffset": "0x1337",
+      "nativeType": "נקודת אנטנה",
+      "solineType": "אנטנה",
+      "dims": {
+        "W": 80,
+        "D": 10,
+        "H": 80
+      },
+      "position": {
+        "X": 66,
+        "Y": -1930
+      },
+      "gtCode": 3,
+      "gtBlock": "03 00 12 00 00 00 00 0d 00 00 00",
+      "anchor": "CENTER",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 11,
+      "markerOffset": "0x14e6",
+      "nativeType": "נקודת גז",
+      "solineType": "גז",
+      "dims": {
+        "W": 100,
+        "D": 10,
+        "H": 100
+      },
+      "position": {
+        "X": -14,
+        "Y": -1930
+      },
+      "gtCode": 6,
+      "gtBlock": "06 00 12 00 00 00 00 1a 00 00 00",
+      "anchor": "CENTER",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 12,
+      "markerOffset": "0x1695",
+      "nativeType": "נקודת טלפון",
+      "solineType": "טלפון",
+      "dims": {
+        "W": 60,
+        "D": 10,
+        "H": 80
+      },
+      "position": {
+        "X": -114,
+        "Y": -1930
+      },
+      "gtCode": 4,
+      "gtBlock": "04 00 12 00 00 00 00 10 00 00 00",
+      "anchor": "CENTER",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 13,
+      "markerOffset": "0x1844",
+      "nativeType": "שקע בודד",
+      "solineType": "שקע",
+      "dims": {
+        "W": 80,
+        "D": 17,
+        "H": 80
+      },
+      "position": {
+        "X": -174,
+        "Y": -1923
+      },
+      "gtCode": 3,
+      "gtBlock": "03 00 12 00 00 00 00 0e 00 00 00",
+      "anchor": "CENTER",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 14,
+      "markerOffset": "0x19f3",
+      "nativeType": "פתח יציאת אויר 15",
+      "solineType": "חור איורור",
+      "dims": {
+        "W": 150,
+        "D": 10,
+        "H": 150
+      },
+      "position": {
+        "X": -254,
+        "Y": -1930
+      },
+      "gtCode": 12,
+      "gtBlock": "0c 00 00 00 00 00 00 1d 00 00 00",
+      "anchor": "OFFSET",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 15,
+      "markerOffset": "0x1ba2",
+      "nativeType": "פתח יציאת אויר 12.5",
+      "solineType": "חור איורור",
+      "dims": {
+        "W": 125,
+        "D": 10,
+        "H": 125
+      },
+      "position": {
+        "X": -404,
+        "Y": -1930
+      },
+      "gtCode": 12,
+      "gtBlock": "0c 00 00 00 00 00 00 1d 00 00 00",
+      "anchor": "OFFSET",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 16,
+      "markerOffset": "0x1d51",
+      "nativeType": "פתח יציאת אויר 10",
+      "solineType": "חור איורור",
+      "dims": {
+        "W": 100,
+        "D": 10,
+        "H": 100
+      },
+      "position": {
+        "X": -529,
+        "Y": -1930
+      },
+      "gtCode": 12,
+      "gtBlock": "0c 00 00 00 00 00 00 1d 00 00 00",
+      "anchor": "OFFSET",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 17,
+      "markerOffset": "0x1f00",
+      "nativeType": "שקע בודד-סימון",
+      "solineType": "שקע",
+      "dims": {
+        "W": 150,
+        "D": 10,
+        "H": 120
+      },
+      "position": {
+        "X": -629,
+        "Y": -1930
+      },
+      "gtCode": 3,
+      "gtBlock": "03 00 12 00 00 00 00 0e 00 00 00",
+      "anchor": "CENTER",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 18,
+      "markerOffset": "0x20af",
+      "nativeType": "שקע כפול",
+      "solineType": "שקע",
+      "dims": {
+        "W": 144,
+        "D": 17,
+        "H": 80
+      },
+      "position": {
+        "X": -779,
+        "Y": -1923
+      },
+      "gtCode": 3,
+      "gtBlock": "03 00 12 00 00 00 00 0e 00 00 00",
+      "anchor": "CENTER",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 19,
+      "markerOffset": "0x225e",
+      "nativeType": "שקע כפול-סימון",
+      "solineType": "שקע",
+      "dims": {
+        "W": 250,
+        "D": 10,
+        "H": 120
+      },
+      "position": {
+        "X": -923,
+        "Y": -1930
+      },
+      "gtCode": 3,
+      "gtBlock": "03 00 12 00 00 00 00 0e 00 00 00",
+      "anchor": "CENTER",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 20,
+      "markerOffset": "0x240d",
+      "nativeType": "שקע משולש",
+      "solineType": "שקע",
+      "dims": {
+        "W": 210,
+        "D": 16,
+        "H": 80
+      },
+      "position": {
+        "X": -1173,
+        "Y": -1924
+      },
+      "gtCode": 3,
+      "gtBlock": "03 00 12 00 00 00 00 0e 00 00 00",
+      "anchor": "CENTER",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    },
+    {
+      "index": 21,
+      "markerOffset": "0x25bc",
+      "nativeType": "שקע משולש-סימון",
+      "solineType": "שקע",
+      "dims": {
+        "W": 350,
+        "D": 10,
+        "H": 120
+      },
+      "position": {
+        "X": -1383,
+        "Y": -1930
+      },
+      "gtCode": 3,
+      "gtBlock": "03 00 12 00 00 00 00 0e 00 00 00",
+      "anchor": "CENTER",
+      "nativeCodeAt0x91": 0,
+      "nativeBlockAt0x93Hex": "00 00 00 00 00 00 00 00 08 07 00"
+    }
+  ]
+}

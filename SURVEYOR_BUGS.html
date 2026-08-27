@@ -1,0 +1,99 @@
+<title>דו״ח מודד · באגים</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Poppins:wght@600&display=swap">
+<style>
+  :root{
+    --bg:#FBF4E6; --surface:#FFFFFF; --surface2:#FAF3E2; --text:#2B2620; --muted:#6E6656;
+    --border:#EADFC7; --accent:#E8890B; --teal:#127C8C;
+    --open:#C6392B; --fix:#D97A0B; --retest:#127C8C; --ok:#2E9E6B;
+    --shadow:0 1px 2px rgba(74,58,20,.05),0 9px 24px rgba(74,58,20,.09);
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme=light]){
+    --bg:#15181A; --surface:#1E2427; --surface2:#232a2e; --text:#ECE7DB; --muted:#A7A093;
+    --border:#2E3439; --accent:#F7AC3A; --teal:#3BB6C7;
+    --open:#E4685A; --fix:#EFA13F; --retest:#3BB6C7; --ok:#54C08A;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.4);
+  }}
+  :root[data-theme=dark]{
+    --bg:#15181A; --surface:#1E2427; --surface2:#232a2e; --text:#ECE7DB; --muted:#A7A093;
+    --border:#2E3439; --accent:#F7AC3A; --teal:#3BB6C7;
+    --open:#E4685A; --fix:#EFA13F; --retest:#3BB6C7; --ok:#54C08A;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--text);direction:rtl;font-family:Heebo,system-ui,sans-serif;
+    line-height:1.5;padding:max(15px,env(safe-area-inset-top)) 15px 70px}
+  .wrap{max-width:820px;margin:0 auto}
+  .top{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;border-bottom:2px solid var(--border);padding-bottom:14px;margin-bottom:16px}
+  .wm{font-family:Poppins,sans-serif;font-size:24px;color:var(--accent);line-height:1}.wm b{color:var(--teal)}
+  h1{font-size:18px;font-weight:800;margin:3px 0 0}
+  .meta{color:var(--muted);font-size:12px;text-align:left;white-space:nowrap}
+  .vitals{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:20px}
+  @media(max-width:560px){.vitals{grid-template-columns:1fr 1fr}}
+  .v{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:11px 12px;box-shadow:var(--shadow)}
+  .v .n{font-size:23px;font-weight:800;line-height:1}.v .l{font-size:11.5px;color:var(--muted);margin-top:4px;font-weight:600}
+  .v.o .n{color:var(--open)}.v.f .n{color:var(--fix)}.v.r .n{color:var(--retest)}.v.k .n{color:var(--ok)}
+  h2{font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--teal);font-weight:800;margin:26px 0 11px;display:flex;align-items:center;gap:8px}
+  h2::after{content:"";flex:1;height:1px;background:var(--border)}
+  .tw{overflow-x:auto;border:1px solid var(--border);border-radius:12px}
+  table{border-collapse:collapse;width:100%;font-size:13px;background:var(--surface);min-width:520px}
+  th,td{text-align:right;padding:9px 11px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{background:var(--surface2);font-weight:800;font-size:11.5px;color:var(--muted);white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  .st{display:inline-block;font-size:10.5px;font-weight:800;padding:2px 9px;border-radius:999px;color:#fff;white-space:nowrap}
+  .s-open{background:var(--open)}.s-fix{background:var(--fix)}.s-retest{background:var(--retest)}.s-ok{background:var(--ok)}
+  .sev{font-weight:800}.sc{color:var(--open)}.sh{color:var(--fix)}.sm{color:var(--teal)}
+  .retest{background:var(--surface);border:1px solid var(--border);border-right:4px solid var(--retest);
+    border-radius:12px;padding:11px 14px;margin:8px 0;box-shadow:var(--shadow)}
+  .retest b{color:var(--text)}
+  .note{background:var(--surface2);border:1px solid var(--border);border-radius:11px;padding:12px 14px;font-size:13px;color:var(--muted);margin-top:14px}
+  .note b{color:var(--text)}
+  footer{margin-top:26px;color:var(--muted);font-size:12px;text-align:center;border-top:1px solid var(--border);padding-top:14px}
+  .tog{position:fixed;top:10px;left:10px;width:36px;height:36px;border-radius:999px;background:var(--surface);border:1px solid var(--border);color:var(--text);box-shadow:var(--shadow);cursor:pointer}
+</style>
+<button class="tog" aria-label="מצב-תצוגה" onclick="var r=document.documentElement,d=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');r.setAttribute('data-theme',d==='dark'?'light':'dark')">◐</button>
+
+<div class="wrap">
+  <div class="top">
+    <div><div class="wm">soline<b>.</b></div><h1>דו״ח מודד · מעקב-באגים ובדיקה-חוזרת</h1></div>
+    <div class="meta">עודכן<br>26 אוג׳ · 22:15<br>מתעדכן חי</div>
+  </div>
+
+  <div class="vitals">
+    <div class="v o"><div class="n">0</div><div class="l">🔴 פתוח</div></div>
+    <div class="v f"><div class="n">1</div><div class="l">🔧 בתיקון</div></div>
+    <div class="v r"><div class="n">9</div><div class="l">✅ לבדיקה-חוזרת</div></div>
+    <div class="v k"><div class="n">1</div><div class="l">✔️ אושר</div></div>
+  </div>
+
+  <h2>🐞 באגים מהשטח</h2>
+  <div class="tw"><table>
+    <tr><th>#</th><th>מסך</th><th>מה קרה</th><th>חומרה</th><th>סטטוס</th></tr>
+    <tr><td>1</td><td>כפתור-באג</td><td>ההערות-התחתונות לא-נצרבו → <b>תוקן ואומת בשטח</b> (ההערה נצרבת בתחתית)</td><td class="sev sc">🔴 חוסם</td><td><span class="st s-ok">אושר ✔️</span></td></tr>
+    <tr><td>2</td><td>הזנת-גובה / לייזר</td><td>הזרקת-לייזר <b>שנייה</b> לא-נקלטת → re-arm רציף</td><td class="sev sc">🔴 חוסם</td><td><span class="st s-retest">לבדיקה-חוזרת</span></td></tr>
+    <tr><td>3</td><td>לייזר</td><td>אין "מדוד-שוב" → נפתר (ירי חוזר מעדכן)</td><td class="sev sc">🔴 חוסם</td><td><span class="st s-retest">לבדיקה-חוזרת</span></td></tr>
+    <tr><td>4</td><td>לייזר / BLE</td><td>העברה איטית → עדיפות-חיבור-גבוהה (מהיר-פי-כמה)</td><td class="sev sh">🟠 גבוה</td><td><span class="st s-retest">לבדיקה-חוזרת</span></td></tr>
+    <tr><td>5</td><td>מדידת P2P</td><td>לא-עבד (APK-ישן!) + כפתור-חסום-בשקט → תוקן + הכוונה-ידנית</td><td class="sev sc">🔴 חוסם</td><td><span class="st s-retest">לבדיקה-חוזרת</span></td></tr>
+    <tr><td>6</td><td>כיוון-כניסה</td><td>מעלות-מצפן → <b>חוגת-שעון</b> + היכן-ביחס-לחזית + מהיכן-מסתכל</td><td class="sev sm">🟡 בינוני</td><td><span class="st s-retest">לבדיקה-חוזרת</span></td></tr>
+    <tr><td>7</td><td>X6 / BLE</td><td>ה-X6 לא-מזרים → <b>מסך אבחון-לייזר חי הותקן</b> + poll-זווית-אופקית (DST). לבדוק במונים</td><td class="sev sc">🔴 חוסם</td><td><span class="st s-retest">לבדיקה-חוזרת</span></td></tr>
+    <tr><td>8</td><td>מתאר חצי-אוטומטי / P2P</td><td>נחסם כי זווית-אופקית לא-נקראה → <b>נוסף poll ל-DST 360-X</b></td><td class="sev sc">🔴 חוסם</td><td><span class="st s-retest">לבדיקה-חוזרת</span></td></tr>
+    <tr><td>9</td><td>מסך-בית</td><td>ידית-לייזר-צפה כיסתה את "כל הלו"ז" → <b>הוזזה לפינה</b> (ובקרוב: כפתור-כלים מאוחד)</td><td class="sev sh">🟠 גבוה</td><td><span class="st s-retest">לבדיקה-חוזרת</span></td></tr>
+    <tr><td>10</td><td>שינויים-עתידיים</td><td>תיאור לא-נשמר → <b>תוקן</b> (טקסט נצרב ב"שמור") + ריבוי פר-חדר/חזית</td><td class="sev sh">🟠 גבוה</td><td><span class="st s-retest">לבדיקה-חוזרת</span></td></tr>
+    <tr><td>11</td><td>מהלך-גבהים</td><td>קליטה-אוטומטית רציפה + חריגה >2ס"מ אדום/השאר-מחק</td><td class="sev sm">🟡 שיפור</td><td><span class="st s-retest">לבדיקה-חוזרת</span></td></tr>
+  </table></div>
+
+  <div class="note" style="border-right:4px solid var(--accent)"><b>📸 חובת-בדיקה-חוזרת (חדש):</b> על כל פריט למטה — פתח 🐞, <b>צלם מסך חדש</b>, סַמֵּן עם חצים/טקסט, וכתוב בהערות את ההערכה: <b>טוב</b> / <b>לשפר</b> / <b>לשדרג</b>. שלח — כך נסגור כל פריט עם תיעוד-שטח. (בקרוב: בורר טוב/לשפר/לשדרג מובנֶה בכלי-הסימון.)</div>
+
+  <h2>🔁 לבדיקה-חוזרת (מותקן עכשיו על הטאבלט)</h2>
+  <div class="retest"><b>#7 X6 מרחק — קריטי (גדר-poll):</b> חבר X6 → 🛠️ → 🔬 אבחון-לייזר → מדוד DIST. <b>"פוענחו" עולה והמרחק חוזר?</b> (ה-poll שהחניק כובה מחוץ ל-P2P.)</div>
+  <div class="retest"><b>#8 P2P — זוויות (רמז-מצב):</b> על ה-X6 בחר <b>Measure 3D / P2P + פַלֵּס</b>, ואז ירֵה. האזימוט (אופקית) מתעורר? מסך-P2P מציג את רמז-המצב כשאתה ב-DIST?</div>
+  <div class="retest"><b>#9 משגר-כלים 🛠️:</b> כפתור-אחד נפתח ל-🐞/📡/🔬? "כל הלו"ז" ויומן-העבודה לחיצים שוב (לא מכוסים)?</div>
+  <div class="retest"><b>#10 צירוף-לייזר לדיווח:</b> ב-🐞 → "📡 צרף נתוני-לייזר" → הנתונים נצרבים בהערות ובתמונה?</div>
+  <div class="retest"><b>#11 שינויים-עתידיים:</b> כתוב תיאור → "שמור" (בלי "הוסף") → נשמר? כמה הערות פר-חדר/פר-חזית.</div>
+  <div class="retest"><b>#12 מהלך-גבהים:</b> "📡 קלוט גבהים" → ירֵה שוב-ושוב (מדלג לבא). חריגה >2ס"מ → אדום + השאר/מחק.</div>
+
+  <div class="note"><b>איך זה עובד:</b> אתה (או המודד) מדווח באג דרך 🐞 באפליקציה → אני מקבל, מפרק, ומתקן <b>אחד-אחד</b> → מעדכן את הדו"ח הזה (פתוח→בתיקון→לבדיקה-חוזרת→אושר) → כשה-APK-הבא מוכן, המודד עובר על "לבדיקה-חוזרת" ומאשר. לולאה סגורה עד תיקון-מלא.</div>
+
+  <footer>Soline — דו״ח מודד · מעקב-באגים ובדיקה-חוזרת · מתעדכן חי</footer>
+</div>

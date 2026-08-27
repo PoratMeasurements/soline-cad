@@ -1,0 +1,1663 @@
+<title>Soline — ספריית סמלי-אלמנטים (בלוקים רב-פורמטיים)</title>
+<style>
+  :root{--cream:#f7f2e4;--ink:#1a1712;--line:#141210;--muted:#8a7f6a;--card:#fffef9;--border:#e4dac2;--accent:#7a5c2e;--new:#8a6d33}
+  *{box-sizing:border-box}
+  body{font-family:"Segoe UI","Assistant",Arial,sans-serif;background:var(--cream);color:var(--ink);margin:0;padding:34px 40px}
+  header,main{max-width:1480px;margin:0 auto}
+  h1{font-size:27px;margin:0 0 4px;letter-spacing:.2px}
+  .sub{color:#5c5443;font-size:13.5px;margin:0 0 4px;line-height:1.55;max-width:1040px}
+  .legend{font-size:12px;color:var(--muted);margin-top:6px;border-top:1px dashed var(--border);padding-top:8px}
+  .legend b{color:var(--accent)}
+  .pill{display:inline-block;background:#ece3cd;border-radius:20px;padding:2px 10px;margin:2px 4px 0 0;font-size:11.5px;color:#5c5443}
+  .pill.n{background:#efe6cf;color:var(--new)}
+  section{margin:26px 0}
+  h2{font-size:16px;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid var(--border);color:var(--accent);
+     display:flex;align-items:center;gap:10px;font-weight:700}
+  .cnt{font-size:11px;font-weight:700;color:var(--muted);background:#ece3cd;border-radius:20px;padding:2px 9px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:15px}
+  .cell{margin:0;border:1px solid var(--border);border-radius:11px;padding:12px 11px 11px;text-align:center;
+        background:var(--card);box-shadow:0 1px 3px rgba(120,100,60,.06);display:flex;flex-direction:column;gap:2px}
+  .cell.isnew{border-style:dashed;border-color:#d8c7a0;background:#fffdf4}
+  svg{width:100%;height:118px;display:block;background:
+      linear-gradient(0deg,transparent 96%,#efe7d3 96%) ,linear-gradient(90deg,transparent 96%,#efe7d3 96%);
+      background-size:14px 14px;border-radius:7px}
+  .wall{stroke:#c2b491;stroke-width:5;stroke-linecap:round}
+  svg line,svg polyline,svg polygon,svg ellipse,svg rect{fill:none;stroke:var(--line);stroke-width:1.7;
+      stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+  svg .fil{fill:var(--line)}
+  svg text{fill:var(--line);stroke:none;font-family:"Segoe UI",Arial,sans-serif}
+  figcaption{margin-top:8px;display:flex;flex-direction:column;gap:2px}
+  .he{font-size:13px;font-weight:650;line-height:1.25}
+  .key{font-size:10.5px;color:var(--accent);direction:ltr;font-family:"Consolas",monospace;opacity:.9}
+  .meta{font-size:10px;color:var(--muted);direction:ltr}
+  .lnk{font-size:10.5px;color:#4a6b3a;line-height:1.35;margin-top:2px}
+  .lnk.new{color:#6b5330}
+  .lnk code{background:#eef2e6;border-radius:4px;padding:0 3px;font-size:9.5px;color:#3a5230}
+  .lnk.new code{background:#f0e7d2;color:#6b5330}
+  .fwd{font-size:9.5px;color:var(--new);font-style:italic;margin-top:1px}
+</style>
+
+<header>
+  <h1>ספריית סמלי-אלמנטים — Soline</h1>
+  <p class="sub">כל סמל הוא <b>בלוק רב-פורמטי</b>: סמל-DXF-2D + גוף-DXF-3D + זהות-ORDX + מיפוי-PDP + שדות-מודד-לעריכה.
+  שפת-סמל מנורמלת [0..1], y כלפי-מטה, קיר על הקצה-התחתון. גאומטריה <b>מקורית ל-Soline</b>, מעוגנת בקונבנציות-תכנית
+  ישראליות (IEC 60617 · פנדור/רב-בריח · קליל · תדיראן/אלקטרה · פיקוד-העורף ת״י 4910). לימוד-שיטה בלבד מטמפלייט סיוון — ללא העתקת גאומטריה/בלוק.</p>
+  <p class="legend">כל תא: <b>שם עברי</b> · <b>symbol key</b> · תלייה+מידות ·
+  <span style="color:#4a6b3a">↔ טיפוס-אלמנט מקושר</span> או <span style="color:var(--new)">↔ אלמנט חדש בתור-app</span>.
+  <br><span class="pill">סה״כ סמלים: 193</span>
+  <span class="pill">מקושר לטיפוס קיים: 67</span>
+  <span class="pill n">אלמנט חדש — בתור app: 126</span></p>
+</header>
+<main>
+<section><h2>חשמל — שקעים<span class="cnt">11</span></h2><div class="grid"><figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="54"/><polyline points="18,54 18.18,50.66 18.7,47.35 19.57,44.11 20.77,40.98 22.29,38 24.11,35.19 26.22,32.59 28.59,30.22 31.19,28.11 34,26.29 36.98,24.77 40.11,23.57 43.35,22.7 46.66,22.18 50,22 53.34,22.18 56.65,22.7 59.89,23.57 63.02,24.77 66,26.29 68.81,28.11 71.41,30.22 73.78,32.59 75.89,35.19 77.71,38 79.23,40.98 80.43,44.11 81.3,47.35 81.82,50.66 82,54" stroke-width="2.21"/><line x1="18" y1="54" x2="82" y2="54" stroke-width="2.21"/></svg>
+      <figcaption>
+        <span class="he">שקע בודד</span>
+        <span class="key">socket_single</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+        <span class="lnk">↔ שקע בודד <code>SOCKET_SINGLE</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="54"/><polyline points="0.56,54 0.69,51.49 1.08,49.01 1.73,46.58 2.63,44.24 3.78,42 5.14,39.89 6.72,37.94 8.5,36.16 10.45,34.58 12.56,33.22 14.8,32.07 17.14,31.17 19.57,30.52 22.05,30.13 24.56,30 27.07,30.13 29.55,30.52 31.98,31.17 34.32,32.07 36.56,33.22 38.67,34.58 40.62,36.16 42.4,37.94 43.98,39.89 45.34,42 46.49,44.24 47.39,46.58 48.04,49.01 48.43,51.49 48.56,54" stroke-width="2.21"/><line x1="0.56" y1="54" x2="48.56" y2="54" stroke-width="2.21"/><polyline points="51.44,54 51.57,51.49 51.96,49.01 52.61,46.58 53.51,44.24 54.66,42 56.02,39.89 57.6,37.94 59.38,36.16 61.33,34.58 63.44,33.22 65.68,32.07 68.02,31.17 70.45,30.52 72.93,30.13 75.44,30 77.95,30.13 80.43,30.52 82.86,31.17 85.2,32.07 87.44,33.22 89.55,34.58 91.5,36.16 93.28,37.94 94.86,39.89 96.22,42 97.37,44.24 98.27,46.58 98.92,49.01 99.31,51.49 99.44,54" stroke-width="2.21"/><line x1="51.44" y1="54" x2="99.44" y2="54" stroke-width="2.21"/></svg>
+      <figcaption>
+        <span class="he">שקע מרובע</span>
+        <span class="key">socket_duplex</span>
+        <span class="meta">wall · 160×80 מ״מ</span>
+        <span class="lnk">↔ שקע מרובע <code>SOCKET_MULTI</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="54"/><polyline points="0.08,54 0.17,52.33 0.43,50.67 0.86,49.06 1.46,47.49 2.22,46 3.14,44.6 4.19,43.29 5.37,42.11 6.68,41.06 8.08,40.14 9.57,39.38 11.14,38.78 12.75,38.35 14.41,38.09 16.08,38 17.75,38.09 19.41,38.35 21.02,38.78 22.59,39.38 24.08,40.14 25.48,41.06 26.79,42.11 27.97,43.29 29.02,44.6 29.94,46 30.7,47.49 31.3,49.06 31.73,50.67 31.99,52.33 32.08,54" stroke-width="2.21"/><line x1="0.08" y1="54" x2="32.08" y2="54" stroke-width="2.21"/><polyline points="34,54 34.09,52.33 34.35,50.67 34.78,49.06 35.38,47.49 36.14,46 37.06,44.6 38.11,43.29 39.29,42.11 40.6,41.06 42,40.14 43.49,39.38 45.06,38.78 46.67,38.35 48.33,38.09 50,38 51.67,38.09 53.33,38.35 54.94,38.78 56.51,39.38 58,40.14 59.4,41.06 60.71,42.11 61.89,43.29 62.94,44.6 63.86,46 64.62,47.49 65.22,49.06 65.65,50.67 65.91,52.33 66,54" stroke-width="2.21"/><line x1="34" y1="54" x2="66" y2="54" stroke-width="2.21"/><polyline points="67.92,54 68.01,52.33 68.27,50.67 68.7,49.06 69.3,47.49 70.06,46 70.98,44.6 72.03,43.29 73.21,42.11 74.52,41.06 75.92,40.14 77.41,39.38 78.98,38.78 80.59,38.35 82.25,38.09 83.92,38 85.59,38.09 87.25,38.35 88.86,38.78 90.43,39.38 91.92,40.14 93.32,41.06 94.63,42.11 95.81,43.29 96.86,44.6 97.78,46 98.54,47.49 99.14,49.06 99.57,50.67 99.83,52.33 99.92,54" stroke-width="2.21"/><line x1="67.92" y1="54" x2="99.92" y2="54" stroke-width="2.21"/></svg>
+      <figcaption>
+        <span class="he">שקע משולש</span>
+        <span class="key">socket_triple</span>
+        <span class="meta">wall · 240×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="62"/><polyline points="6.74,62 6.86,59.8 7.2,57.63 7.77,55.51 8.56,53.46 9.55,51.5 10.75,49.66 12.13,47.95 13.69,46.39 15.4,45.01 17.24,43.81 19.2,42.82 21.25,42.03 23.37,41.46 25.54,41.12 27.74,41 29.94,41.12 32.11,41.46 34.23,42.03 36.28,42.82 38.24,43.81 40.08,45.01 41.79,46.39 43.35,47.95 44.73,49.66 45.93,51.5 46.92,53.46 47.71,55.51 48.28,57.63 48.62,59.8 48.74,62" stroke-width="2.21"/><line x1="6.74" y1="62" x2="48.74" y2="62" stroke-width="2.21"/><polyline points="51.26,62 51.38,59.8 51.72,57.63 52.29,55.51 53.08,53.46 54.07,51.5 55.27,49.66 56.65,47.95 58.21,46.39 59.92,45.01 61.76,43.81 63.72,42.82 65.77,42.03 67.89,41.46 70.06,41.12 72.26,41 74.46,41.12 76.63,41.46 78.75,42.03 80.8,42.82 82.76,43.81 84.6,45.01 86.31,46.39 87.87,47.95 89.25,49.66 90.45,51.5 91.44,53.46 92.23,55.51 92.8,57.63 93.14,59.8 93.26,62" stroke-width="2.21"/><line x1="51.26" y1="62" x2="93.26" y2="62" stroke-width="2.21"/><text x="50" y="25.8" font-size="20" text-anchor="middle">שיש</text></svg>
+      <figcaption>
+        <span class="he">שקע מעל שיש</span>
+        <span class="key">socket_counter</span>
+        <span class="meta">wall · 160×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="62"/><polyline points="6.74,62 6.86,59.8 7.2,57.63 7.77,55.51 8.56,53.46 9.55,51.5 10.75,49.66 12.13,47.95 13.69,46.39 15.4,45.01 17.24,43.81 19.2,42.82 21.25,42.03 23.37,41.46 25.54,41.12 27.74,41 29.94,41.12 32.11,41.46 34.23,42.03 36.28,42.82 38.24,43.81 40.08,45.01 41.79,46.39 43.35,47.95 44.73,49.66 45.93,51.5 46.92,53.46 47.71,55.51 48.28,57.63 48.62,59.8 48.74,62" stroke-width="2.21"/><line x1="6.74" y1="62" x2="48.74" y2="62" stroke-width="2.21"/><polyline points="51.26,62 51.38,59.8 51.72,57.63 52.29,55.51 53.08,53.46 54.07,51.5 55.27,49.66 56.65,47.95 58.21,46.39 59.92,45.01 61.76,43.81 63.72,42.82 65.77,42.03 67.89,41.46 70.06,41.12 72.26,41 74.46,41.12 76.63,41.46 78.75,42.03 80.8,42.82 82.76,43.81 84.6,45.01 86.31,46.39 87.87,47.95 89.25,49.66 90.45,51.5 91.44,53.46 92.23,55.51 92.8,57.63 93.14,59.8 93.26,62" stroke-width="2.21"/><line x1="51.26" y1="62" x2="93.26" y2="62" stroke-width="2.21"/><text x="50" y="24.44" font-size="16" text-anchor="middle">שירות</text></svg>
+      <figcaption>
+        <span class="he">שקע שירות</span>
+        <span class="key">socket_service</span>
+        <span class="meta">wall · 160×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="18" y="18" width="64" height="64" stroke-width="2.21"/><line x1="18" y1="18" x2="82" y2="82" stroke-width="1.36"/><line x1="82" y1="18" x2="18" y2="82" stroke-width="1.36"/><polyline points="28,62 28.12,59.7 28.48,57.43 29.08,55.2 29.9,53.05 30.95,51 32.2,49.07 33.65,47.28 35.28,45.65 37.07,44.2 39,42.95 41.05,41.9 43.2,41.08 45.43,40.48 47.7,40.12 50,40 52.3,40.12 54.57,40.48 56.8,41.08 58.95,41.9 61,42.95 62.93,44.2 64.72,45.65 66.35,47.28 67.8,49.07 69.05,51 70.1,53.05 70.92,55.2 71.52,57.43 71.88,59.7 72,62" stroke-width="2.21"/><line x1="28" y1="62" x2="72" y2="62" stroke-width="2.21"/><line x1="50" y1="40" x2="50" y2="26"/><polyline points="41,33 50,24 59,33"/></svg>
+      <figcaption>
+        <span class="he">שקע פופאפ (רצפה נשלף)</span>
+        <span class="key">socket_popup</span>
+        <span class="meta">floor · 100×100 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="62"/><polyline points="29,62 29.12,59.8 29.46,57.63 30.03,55.51 30.82,53.46 31.81,51.5 33.01,49.66 34.39,47.95 35.95,46.39 37.66,45.01 39.5,43.81 41.46,42.82 43.51,42.03 45.63,41.46 47.8,41.12 50,41 52.2,41.12 54.37,41.46 56.49,42.03 58.54,42.82 60.5,43.81 62.34,45.01 64.05,46.39 65.61,47.95 66.99,49.66 68.19,51.5 69.18,53.46 69.97,55.51 70.54,57.63 70.88,59.8 71,62" stroke-width="2.21"/><line x1="29" y1="62" x2="71" y2="62" stroke-width="2.21"/><text x="50" y="25.8" font-size="20" text-anchor="middle">IP44</text><polyline points="16,40 50,30 84,40" stroke-width="2.04"/></svg>
+      <figcaption>
+        <span class="he">שקע מוגן-מים IP44</span>
+        <span class="key">socket_waterproof</span>
+        <span class="meta">wall · 175×70 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="82"/><ellipse cx="50" cy="52" rx="30" ry="30" stroke-width="2.21"/><line x1="50" y1="52" x2="50" y2="24"/><line x1="50" y1="52" x2="27.6" y2="70"/><line x1="50" y1="52" x2="72.4" y2="70"/><text x="50" y="16.8" font-size="20" text-anchor="middle">3~</text></svg>
+      <figcaption>
+        <span class="he">שקע תלת-פאזי</span>
+        <span class="key">socket_3phase</span>
+        <span class="meta">wall · 100×100 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="62"/><polyline points="29,62 29.12,59.8 29.46,57.63 30.03,55.51 30.82,53.46 31.81,51.5 33.01,49.66 34.39,47.95 35.95,46.39 37.66,45.01 39.5,43.81 41.46,42.82 43.51,42.03 45.63,41.46 47.8,41.12 50,41 52.2,41.12 54.37,41.46 56.49,42.03 58.54,42.82 60.5,43.81 62.34,45.01 64.05,46.39 65.61,47.95 66.99,49.66 68.19,51.5 69.18,53.46 69.97,55.51 70.54,57.63 70.88,59.8 71,62" stroke-width="2.21"/><line x1="29" y1="62" x2="71" y2="62" stroke-width="2.21"/><text x="50" y="25.8" font-size="20" text-anchor="middle">USB</text></svg>
+      <figcaption>
+        <span class="he">שקע USB</span>
+        <span class="key">socket_usb</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="62"/><polyline points="6.74,62 6.86,59.8 7.2,57.63 7.77,55.51 8.56,53.46 9.55,51.5 10.75,49.66 12.13,47.95 13.69,46.39 15.4,45.01 17.24,43.81 19.2,42.82 21.25,42.03 23.37,41.46 25.54,41.12 27.74,41 29.94,41.12 32.11,41.46 34.23,42.03 36.28,42.82 38.24,43.81 40.08,45.01 41.79,46.39 43.35,47.95 44.73,49.66 45.93,51.5 46.92,53.46 47.71,55.51 48.28,57.63 48.62,59.8 48.74,62" stroke-width="2.21"/><line x1="6.74" y1="62" x2="48.74" y2="62" stroke-width="2.21"/><polyline points="51.26,62 51.38,59.8 51.72,57.63 52.29,55.51 53.08,53.46 54.07,51.5 55.27,49.66 56.65,47.95 58.21,46.39 59.92,45.01 61.76,43.81 63.72,42.82 65.77,42.03 67.89,41.46 70.06,41.12 72.26,41 74.46,41.12 76.63,41.46 78.75,42.03 80.8,42.82 82.76,43.81 84.6,45.01 86.31,46.39 87.87,47.95 89.25,49.66 90.45,51.5 91.44,53.46 92.23,55.51 92.8,57.63 93.14,59.8 93.26,62" stroke-width="2.21"/><line x1="51.26" y1="62" x2="93.26" y2="62" stroke-width="2.21"/><text x="50" y="25.8" font-size="20" text-anchor="middle">USB</text></svg>
+      <figcaption>
+        <span class="he">שקע כפול + USB</span>
+        <span class="key">socket_usb_combo</span>
+        <span class="meta">wall · 160×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="40" y1="100" x2="40" y2="56"/><polyline points="14,56 14.14,53.28 14.57,50.59 15.27,47.97 16.25,45.42 17.48,43 18.97,40.72 20.68,38.6 22.6,36.68 24.72,34.97 27,33.48 29.42,32.25 31.97,31.27 34.59,30.57 37.28,30.14 40,30 42.72,30.14 45.41,30.57 48.03,31.27 50.58,32.25 53,33.48 55.28,34.97 57.4,36.68 59.32,38.6 61.03,40.72 62.52,43 63.75,45.42 64.73,47.97 65.43,50.59 65.86,53.28 66,56" stroke-width="2.21"/><line x1="14" y1="56" x2="66" y2="56" stroke-width="2.21"/><ellipse cx="82" cy="66" rx="4.5" ry="4.5" class="fil"/><line x1="82" y1="66" x2="95" y2="42" stroke-width="2.21"/></svg>
+      <figcaption>
+        <span class="he">שקע ממותג</span>
+        <span class="key">socket_switched</span>
+        <span class="meta">wall · 120×80 מ״מ</span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>חשמל — מפסקים<span class="cnt">8</span></h2><div class="grid"><figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="70"/><ellipse cx="50" cy="70" rx="5" ry="5" class="fil"/><line x1="50" y1="70" x2="76.38" y2="32.32" stroke-width="2.21"/></svg>
+      <figcaption>
+        <span class="he">מתג</span>
+        <span class="key">switch_single</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+        <span class="lnk">↔ מתג <code>SWITCH</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="70"/><ellipse cx="50" cy="70" rx="5" ry="5" class="fil"/><line x1="50" y1="70" x2="68.71" y2="27.98" stroke-width="2.21"/><line x1="50" y1="70" x2="83.09" y2="38.05" stroke-width="2.21"/></svg>
+      <figcaption>
+        <span class="he">מפסק כפול</span>
+        <span class="key">switch_double</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="70"/><ellipse cx="50" cy="70" rx="5" ry="5" class="fil"/><line x1="50" y1="70" x2="60.35" y2="25.18" stroke-width="2.21"/><line x1="50" y1="70" x2="76.38" y2="32.32" stroke-width="2.21"/><line x1="50" y1="70" x2="88.58" y2="44.95" stroke-width="2.21"/></svg>
+      <figcaption>
+        <span class="he">מפסק משולש</span>
+        <span class="key">switch_triple</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="70"/><ellipse cx="50" cy="70" rx="5" ry="5" class="fil"/><line x1="50" y1="70" x2="76.38" y2="32.32" stroke-width="2.21"/><line x1="50" y1="70" x2="32" y2="42" stroke-width="1.7"/></svg>
+      <figcaption>
+        <span class="he">מחליף (דו-דרכי)</span>
+        <span class="key">switch_2way</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="70"/><ellipse cx="50" cy="70" rx="5" ry="5" class="fil"/><line x1="34" y1="52" x2="66" y2="24" stroke-width="2.21"/><line x1="34" y1="24" x2="66" y2="52" stroke-width="2.21"/></svg>
+      <figcaption>
+        <span class="he">מפסק צלב</span>
+        <span class="key">switch_cross</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="70"/><ellipse cx="50" cy="70" rx="5" ry="5" class="fil"/><line x1="50" y1="70" x2="76.38" y2="32.32" stroke-width="2.21"/><polygon points="60,66 86,66 86,40" class="fil"/></svg>
+      <figcaption>
+        <span class="he">דימר (עמעם)</span>
+        <span class="key">switch_dimmer</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="54"/><ellipse cx="50" cy="44" rx="17" ry="17" stroke-width="2.21"/><ellipse cx="50" cy="44" rx="5" ry="5" class="fil"/></svg>
+      <figcaption>
+        <span class="he">לחצן</span>
+        <span class="key">switch_button</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="44"/><ellipse cx="50" cy="35" rx="15" ry="15" stroke-width="2.21"/><line x1="63" y1="42" x2="63" y2="90" stroke-dasharray="3.2 2.4"/><ellipse cx="63" cy="92" rx="3" ry="3" class="fil"/></svg>
+      <figcaption>
+        <span class="he">מפסק חבל-משיכה</span>
+        <span class="key">switch_pullcord</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>חשמל — יציאות מכשירים<span class="cnt">15</span></h2><div class="grid"><figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="62"/><polyline points="29,62 29.12,59.8 29.46,57.63 30.03,55.51 30.82,53.46 31.81,51.5 33.01,49.66 34.39,47.95 35.95,46.39 37.66,45.01 39.5,43.81 41.46,42.82 43.51,42.03 45.63,41.46 47.8,41.12 50,41 52.2,41.12 54.37,41.46 56.49,42.03 58.54,42.82 60.5,43.81 62.34,45.01 64.05,46.39 65.61,47.95 66.99,49.66 68.19,51.5 69.18,53.46 69.97,55.51 70.54,57.63 70.88,59.8 71,62" stroke-width="2.21"/><line x1="29" y1="62" x2="71" y2="62" stroke-width="2.21"/><text x="50" y="25.8" font-size="20" text-anchor="middle">תנור</text></svg>
+      <figcaption>
+        <span class="he">תנור</span>
+        <span class="key">outlet_oven</span>
+        <span class="meta">wall · 100×100 מ״מ</span>
+        <span class="lnk">↔ תנור <code>OVEN</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="62"/><polyline points="29,62 29.12,59.8 29.46,57.63 30.03,55.51 30.82,53.46 31.81,51.5 33.01,49.66 34.39,47.95 35.95,46.39 37.66,45.01 39.5,43.81 41.46,42.82 43.51,42.03 45.63,41.46 47.8,41.12 50,41 52.2,41.12 54.37,41.46 56.49,42.03 58.54,42.82 60.5,43.81 62.34,45.01 64.05,46.39 65.61,47.95 66.99,49.66 68.19,51.5 69.18,53.46 69.97,55.51 70.54,57.63 70.88,59.8 71,62" stroke-width="2.21"/><line x1="29" y1="62" x2="71" y2="62" stroke-width="2.21"/><text x="50" y="24.44" font-size="16" text-anchor="middle">כיריים</text></svg>
+      <figcaption>
+        <span class="he">יציאת חשמל לכיריים</span>
+        <span class="key">outlet_cooktop</span>
+        <span class="meta">wall · 100×100 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="62"/><polyline points="29,62 29.12,59.8 29.46,57.63 30.03,55.51 30.82,53.46 31.81,51.5 33.01,49.66 34.39,47.95 35.95,46.39 37.66,45.01 39.5,43.81 41.46,42.82 43.51,42.03 45.63,41.46 47.8,41.12 50,41 52.2,41.12 54.37,41.46 56.49,42.03 58.54,42.82 60.5,43.81 62.34,45.01 64.05,46.39 65.61,47.95 66.99,49.66 68.19,51.5 69.18,53.46 69.97,55.51 70.54,57.63 70.88,59.8 71,62" stroke-width="2.21"/><line x1="29" y1="62" x2="71" y2="62" stroke-width="2.21"/><text x="50" y="25.8" font-size="20" text-anchor="middle">מדיח</text></svg>
+      <figcaption>
+        <span class="he">מדיח</span>
+        <span class="key">outlet_dishwasher</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+        <span class="lnk">↔ מדיח <code>DISHWASHER</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="62"/><polyline points="29,62 29.12,59.8 29.46,57.63 30.03,55.51 30.82,53.46 31.81,51.5 33.01,49.66 34.39,47.95 35.95,46.39 37.66,45.01 39.5,43.81 41.46,42.82 43.51,42.03 45.63,41.46 47.8,41.12 50,41 52.2,41.12 54.37,41.46 56.49,42.03 58.54,42.82 60.5,43.81 62.34,45.01 64.05,46.39 65.61,47.95 66.99,49.66 68.19,51.5 69.18,53.46 69.97,55.51 70.54,57.63 70.88,59.8 71,62" stroke-width="2.21"/><line x1="29" y1="62" x2="71" y2="62" stroke-width="2.21"/><text x="50" y="25.8" font-size="20" text-anchor="middle">מקרר</text></svg>
+      <figcaption>
+        <span class="he">מקרר</span>
+        <span class="key">outlet_fridge</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+        <span class="lnk">↔ מקרר · מקרר חוץ · מקפיא <code>REFRIGERATOR</code> <code>OK_FRIDGE</code> <code>OK_FREEZER</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="62"/><polyline points="29,62 29.12,59.8 29.46,57.63 30.03,55.51 30.82,53.46 31.81,51.5 33.01,49.66 34.39,47.95 35.95,46.39 37.66,45.01 39.5,43.81 41.46,42.82 43.51,42.03 45.63,41.46 47.8,41.12 50,41 52.2,41.12 54.37,41.46 56.49,42.03 58.54,42.82 60.5,43.81 62.34,45.01 64.05,46.39 65.61,47.95 66.99,49.66 68.19,51.5 69.18,53.46 69.97,55.51 70.54,57.63 70.88,59.8 71,62" stroke-width="2.21"/><line x1="29" y1="62" x2="71" y2="62" stroke-width="2.21"/><text x="50" y="24.44" font-size="16" text-anchor="middle">מיקרו</text></svg>
+      <figcaption>
+        <span class="he">מיקרוגל</span>
+        <span class="key">outlet_microwave</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+        <span class="lnk">↔ מיקרוגל <code>MICROWAVE</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="62"/><polyline points="29,62 29.12,59.8 29.46,57.63 30.03,55.51 30.82,53.46 31.81,51.5 33.01,49.66 34.39,47.95 35.95,46.39 37.66,45.01 39.5,43.81 41.46,42.82 43.51,42.03 45.63,41.46 47.8,41.12 50,41 52.2,41.12 54.37,41.46 56.49,42.03 58.54,42.82 60.5,43.81 62.34,45.01 64.05,46.39 65.61,47.95 66.99,49.66 68.19,51.5 69.18,53.46 69.97,55.51 70.54,57.63 70.88,59.8 71,62" stroke-width="2.21"/><line x1="29" y1="62" x2="71" y2="62" stroke-width="2.21"/><text x="50" y="23.42" font-size="13" text-anchor="middle">קולט אדים</text></svg>
+      <figcaption>
+        <span class="he">יציאת חשמל לקולט-אדים</span>
+        <span class="key">outlet_hood</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="62"/><polyline points="29,62 29.12,59.8 29.46,57.63 30.03,55.51 30.82,53.46 31.81,51.5 33.01,49.66 34.39,47.95 35.95,46.39 37.66,45.01 39.5,43.81 41.46,42.82 43.51,42.03 45.63,41.46 47.8,41.12 50,41 52.2,41.12 54.37,41.46 56.49,42.03 58.54,42.82 60.5,43.81 62.34,45.01 64.05,46.39 65.61,47.95 66.99,49.66 68.19,51.5 69.18,53.46 69.97,55.51 70.54,57.63 70.88,59.8 71,62" stroke-width="2.21"/><line x1="29" y1="62" x2="71" y2="62" stroke-width="2.21"/><text x="50" y="23.42" font-size="13" text-anchor="middle">מכ׳ כביסה</text></svg>
+      <figcaption>
+        <span class="he">יציאת חשמל למכונת-כביסה</span>
+        <span class="key">outlet_washer</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="62"/><polyline points="29,62 29.12,59.8 29.46,57.63 30.03,55.51 30.82,53.46 31.81,51.5 33.01,49.66 34.39,47.95 35.95,46.39 37.66,45.01 39.5,43.81 41.46,42.82 43.51,42.03 45.63,41.46 47.8,41.12 50,41 52.2,41.12 54.37,41.46 56.49,42.03 58.54,42.82 60.5,43.81 62.34,45.01 64.05,46.39 65.61,47.95 66.99,49.66 68.19,51.5 69.18,53.46 69.97,55.51 70.54,57.63 70.88,59.8 71,62" stroke-width="2.21"/><line x1="29" y1="62" x2="71" y2="62" stroke-width="2.21"/><text x="50" y="24.44" font-size="16" text-anchor="middle">מייבש</text></svg>
+      <figcaption>
+        <span class="he">יציאת חשמל למייבש</span>
+        <span class="key">outlet_dryer</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="62"/><polyline points="29,62 29.12,59.8 29.46,57.63 30.03,55.51 30.82,53.46 31.81,51.5 33.01,49.66 34.39,47.95 35.95,46.39 37.66,45.01 39.5,43.81 41.46,42.82 43.51,42.03 45.63,41.46 47.8,41.12 50,41 52.2,41.12 54.37,41.46 56.49,42.03 58.54,42.82 60.5,43.81 62.34,45.01 64.05,46.39 65.61,47.95 66.99,49.66 68.19,51.5 69.18,53.46 69.97,55.51 70.54,57.63 70.88,59.8 71,62" stroke-width="2.21"/><line x1="29" y1="62" x2="71" y2="62" stroke-width="2.21"/><text x="50" y="25.8" font-size="20" text-anchor="middle">דוד</text></svg>
+      <figcaption>
+        <span class="he">יציאת חשמל לדוד</span>
+        <span class="key">outlet_boiler</span>
+        <span class="meta">wall · 100×100 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="62"/><polyline points="29,62 29.12,59.8 29.46,57.63 30.03,55.51 30.82,53.46 31.81,51.5 33.01,49.66 34.39,47.95 35.95,46.39 37.66,45.01 39.5,43.81 41.46,42.82 43.51,42.03 45.63,41.46 47.8,41.12 50,41 52.2,41.12 54.37,41.46 56.49,42.03 58.54,42.82 60.5,43.81 62.34,45.01 64.05,46.39 65.61,47.95 66.99,49.66 68.19,51.5 69.18,53.46 69.97,55.51 70.54,57.63 70.88,59.8 71,62" stroke-width="2.21"/><line x1="29" y1="62" x2="71" y2="62" stroke-width="2.21"/><text x="50" y="25.8" font-size="20" text-anchor="middle">מזגן</text></svg>
+      <figcaption>
+        <span class="he">יציאת חשמל למזגן</span>
+        <span class="key">outlet_ac_indoor</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="62"/><polyline points="29,62 29.12,59.8 29.46,57.63 30.03,55.51 30.82,53.46 31.81,51.5 33.01,49.66 34.39,47.95 35.95,46.39 37.66,45.01 39.5,43.81 41.46,42.82 43.51,42.03 45.63,41.46 47.8,41.12 50,41 52.2,41.12 54.37,41.46 56.49,42.03 58.54,42.82 60.5,43.81 62.34,45.01 64.05,46.39 65.61,47.95 66.99,49.66 68.19,51.5 69.18,53.46 69.97,55.51 70.54,57.63 70.88,59.8 71,62" stroke-width="2.21"/><line x1="29" y1="62" x2="71" y2="62" stroke-width="2.21"/><text x="50" y="25.8" font-size="20" text-anchor="middle">מעבה</text></svg>
+      <figcaption>
+        <span class="he">יציאת כוח למעבה</span>
+        <span class="key">outlet_ac_condenser</span>
+        <span class="meta">wall · 100×100 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="62"/><polyline points="29,62 29.12,59.8 29.46,57.63 30.03,55.51 30.82,53.46 31.81,51.5 33.01,49.66 34.39,47.95 35.95,46.39 37.66,45.01 39.5,43.81 41.46,42.82 43.51,42.03 45.63,41.46 47.8,41.12 50,41 52.2,41.12 54.37,41.46 56.49,42.03 58.54,42.82 60.5,43.81 62.34,45.01 64.05,46.39 65.61,47.95 66.99,49.66 68.19,51.5 69.18,53.46 69.97,55.51 70.54,57.63 70.88,59.8 71,62" stroke-width="2.21"/><line x1="29" y1="62" x2="71" y2="62" stroke-width="2.21"/><text x="50" y="23.42" font-size="13" text-anchor="middle">אייסמייקר</text></svg>
+      <figcaption>
+        <span class="he">מכונת קרח / אייס מייקר</span>
+        <span class="key">outlet_icemaker</span>
+        <span class="meta">wall · 120×120 מ״מ</span>
+        <span class="lnk">↔ מכונת קרח / אייס מייקר <code>OK_ICE_MAKER</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><ellipse cx="50" cy="50" rx="10" ry="10" class="fil"/><polyline points="50,50 50,12" stroke-width="2.38"/><polyline points="50,50 83,68" stroke-width="2.38"/><polyline points="50,50 17,68" stroke-width="2.38"/></svg>
+      <figcaption>
+        <span class="he">מאוורר תקרה</span>
+        <span class="key">fan_ceiling</span>
+        <span class="meta">ceiling · 100×100 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="22"/><ellipse cx="50" cy="52" rx="32" ry="32"/><line x1="50" y1="52" x2="28" y2="30"/><line x1="50" y1="52" x2="72" y2="30"/><line x1="50" y1="52" x2="28" y2="74"/><line x1="50" y1="52" x2="72" y2="74"/></svg>
+      <figcaption>
+        <span class="he">תשתית חשמל -קיר</span>
+        <span class="key">junction_cable</span>
+        <span class="meta">wall · 120×120 מ״מ</span>
+        <span class="lnk">↔ תשתית חשמל -קיר · תשתית חשמל · נקודת מוצר חשמל · גריל בנוי · גריל חופשי / עגלה · קמאדו / ביצה · מעשנת · מגירת חימום · קגרייטור · מצנן יין <code>ELECTRICAL_WALL</code> <code>ELECTRICAL_LINE</code> <code>ELECTRIC_APPLIANCE</code> <code>OK_GRILL_BUILTIN</code> <code>OK_GRILL_CART</code> <code>OK_KAMADO</code> <code>OK_SMOKER</code> <code>OK_WARMING_DRAWER</code> <code>OK_KEGERATOR</code> <code>OK_WINE_COOLER</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="24" y="14" width="52" height="72" rx="8" ry="8"/><ellipse cx="50" cy="42" rx="14" ry="14"/><line x1="44" y1="36" x2="44" y2="30"/><line x1="56" y1="36" x2="56" y2="30"/><text x="50" y="80.16" font-size="24" text-anchor="middle" font-weight="700">EV</text></svg>
+      <figcaption>
+        <span class="he">עמדת טעינת רכב חשמלי</span>
+        <span class="key">ev_wallbox</span>
+        <span class="meta">wall · 350×450 מ״מ</span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>חשמל — לוחות והגנה<span class="cnt">5</span></h2><div class="grid"><figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="30"/><ellipse cx="50" cy="50" rx="18" ry="18"/><ellipse cx="50" cy="50" rx="5" ry="5" class="fil"/></svg>
+      <figcaption>
+        <span class="he">קופסת חיבורים</span>
+        <span class="key">junction_box</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="12" y="10" width="76" height="80" stroke-width="2.55"/><line x1="12" y1="34" x2="88" y2="34"/><line x1="24" y1="10" x2="10" y2="34" stroke-width="1.36"/><line x1="40" y1="10" x2="26" y2="34" stroke-width="1.36"/><line x1="56" y1="10" x2="42" y2="34" stroke-width="1.36"/><line x1="72" y1="10" x2="58" y2="34" stroke-width="1.36"/><line x1="24" y1="44" x2="24" y2="58"/><line x1="36" y1="44" x2="36" y2="58"/><line x1="48" y1="44" x2="48" y2="58"/><line x1="60" y1="44" x2="60" y2="58"/><line x1="72" y1="44" x2="72" y2="58"/><text x="50" y="82.8" font-size="20" text-anchor="middle">לוח</text></svg>
+      <figcaption>
+        <span class="he">לוח חשמל</span>
+        <span class="key">distribution_board</span>
+        <span class="meta">wall · 400×600 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="82"/><rect x="17" y="26" width="66" height="56" rx="6" ry="6"/><text x="50" y="64.2" font-size="30" text-anchor="middle">ΔI</text></svg>
+      <figcaption>
+        <span class="he">מפסק פחת (ΔI)</span>
+        <span class="key">rcd</span>
+        <span class="meta">wall · 70×120 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="28"/><line x1="50" y1="26.6" x2="50" y2="50"/><line x1="24" y1="50" x2="76" y2="50"/><line x1="34.4" y1="63" x2="65.6" y2="63"/><line x1="43.5" y1="74.7" x2="56.5" y2="74.7"/></svg>
+      <figcaption>
+        <span class="he">פס השוואת-פוטנציאלים</span>
+        <span class="key">bonding_bar</span>
+        <span class="meta">wall · 120×60 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="30"/><line x1="50" y1="26.8" x2="50" y2="52"/><line x1="22" y1="52" x2="78" y2="52"/><line x1="33.2" y1="66" x2="66.8" y2="66"/><line x1="43" y1="78.6" x2="57" y2="78.6"/></svg>
+      <figcaption>
+        <span class="he">נקודת הארקה</span>
+        <span class="key">grounding</span>
+        <span class="meta">wall · 40×40 מ״מ</span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>תאורה<span class="cnt">11</span></h2><div class="grid"><figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><ellipse cx="50" cy="50" rx="30" ry="30"/><line x1="29" y1="29" x2="71" y2="71"/><line x1="71" y1="29" x2="29" y2="71"/></svg>
+      <figcaption>
+        <span class="he">מנורת תקרה</span>
+        <span class="key">light_downlight</span>
+        <span class="meta">ceiling · 100×100 מ״מ</span>
+        <span class="lnk">↔ מנורת תקרה · גשר תאורה <code>CEILING_LIGHT</code> <code>OK_LIGHTING_BRIDGE</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><ellipse cx="50" cy="50" rx="34" ry="34"/><line x1="26" y1="26" x2="74" y2="74"/><line x1="74" y1="26" x2="26" y2="74"/><line x1="50" y1="16" x2="50" y2="84"/><line x1="16" y1="50" x2="84" y2="50"/></svg>
+      <figcaption>
+        <span class="he">גוף-תאורה צמוד-תקרה</span>
+        <span class="key">light_ceiling</span>
+        <span class="meta">ceiling · 300×300 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="5" x2="50" y2="42"/><ellipse cx="50" cy="60" rx="24" ry="24"/><ellipse cx="50" cy="60" rx="5" ry="5" class="fil"/></svg>
+      <figcaption>
+        <span class="he">מנורה תלויה (פנדנט)</span>
+        <span class="key">light_pendant</span>
+        <span class="meta">ceiling · 250×250 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><ellipse cx="50" cy="42" rx="20" ry="20"/><polyline points="38,74 50,86 62,74"/><line x1="50" y1="62" x2="50" y2="80"/></svg>
+      <figcaption>
+        <span class="he">זרקור / ספוט</span>
+        <span class="key">light_spot</span>
+        <span class="meta">ceiling · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><polyline points="28,50 28.12,47.7 28.48,45.43 29.08,43.2 29.9,41.05 30.95,39 32.2,37.07 33.65,35.28 35.28,33.65 37.07,32.2 39,30.95 41.05,29.9 43.2,29.08 45.43,28.48 47.7,28.12 50,28 52.3,28.12 54.57,28.48 56.8,29.08 58.95,29.9 61,30.95 62.93,32.2 64.72,33.65 66.35,35.28 67.8,37.07 69.05,39 70.1,41.05 70.92,43.2 71.52,45.43 71.88,47.7 72,50"/><line x1="28" y1="50" x2="72" y2="50"/><line x1="50" y1="50" x2="50" y2="16"/><line x1="32" y1="50" x2="22" y2="36"/><line x1="68" y1="50" x2="78" y2="36"/></svg>
+      <figcaption>
+        <span class="he">אפליק (תאורת-קיר)</span>
+        <span class="key">light_sconce</span>
+        <span class="meta">wall · 120×200 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="4" y="42" width="92" height="16" rx="2" ry="2"/><line x1="11.67" y1="42" x2="11.67" y2="58"/><line x1="19.33" y1="42" x2="19.33" y2="58"/><line x1="27" y1="42" x2="27" y2="58"/><line x1="34.67" y1="42" x2="34.67" y2="58"/><line x1="42.33" y1="42" x2="42.33" y2="58"/><line x1="50" y1="42" x2="50" y2="58"/><line x1="57.67" y1="42" x2="57.67" y2="58"/><line x1="65.33" y1="42" x2="65.33" y2="58"/><line x1="73" y1="42" x2="73" y2="58"/><line x1="80.67" y1="42" x2="80.67" y2="58"/><line x1="88.33" y1="42" x2="88.33" y2="58"/></svg>
+      <figcaption>
+        <span class="he">פס תאורת LED</span>
+        <span class="key">light_led_strip</span>
+        <span class="meta">ceiling · 1000×10 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="4" y="34" width="92" height="16" rx="2" ry="2"/><line x1="15.5" y1="34" x2="15.5" y2="50"/><line x1="27" y1="34" x2="27" y2="50"/><line x1="38.5" y1="34" x2="38.5" y2="50"/><line x1="50" y1="34" x2="50" y2="50"/><line x1="61.5" y1="34" x2="61.5" y2="50"/><line x1="73" y1="34" x2="73" y2="50"/><line x1="84.5" y1="34" x2="84.5" y2="50"/><line x1="50" y1="50" x2="50" y2="72"/><polyline points="43,67 50,74 57,67"/></svg>
+      <figcaption>
+        <span class="he">תאורת תחתית-ארון</span>
+        <span class="key">light_undercab</span>
+        <span class="meta">wall · 600×15 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="4" y="42" width="92" height="16" rx="2" ry="2" stroke-dasharray="3.2 2.4"/><line x1="15.5" y1="42" x2="15.5" y2="58"/><line x1="27" y1="42" x2="27" y2="58"/><line x1="38.5" y1="42" x2="38.5" y2="58"/><line x1="50" y1="42" x2="50" y2="58"/><line x1="61.5" y1="42" x2="61.5" y2="58"/><line x1="73" y1="42" x2="73" y2="58"/><line x1="84.5" y1="42" x2="84.5" y2="58"/></svg>
+      <figcaption>
+        <span class="he">תאורת סוקל/קורניץ</span>
+        <span class="key">light_toekick</span>
+        <span class="meta">floor · 600×10 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="82"/><rect x="17" y="26" width="66" height="56" rx="6" ry="6"/><text x="50" y="62.16" font-size="24" text-anchor="middle">שנאי</text></svg>
+      <figcaption>
+        <span class="he">שנאי/דרייבר לתאורה</span>
+        <span class="key">light_driver</span>
+        <span class="meta">freestanding · 200×60 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="16" y="16" width="68" height="68"/><ellipse cx="50" cy="50" rx="20" ry="20"/><line x1="50" y1="30" x2="50" y2="20"/><line x1="70" y1="50" x2="80" y2="50"/><line x1="50" y1="70" x2="50" y2="80"/><line x1="30" y1="50" x2="20" y2="50"/></svg>
+      <figcaption>
+        <span class="he">גוף-תאורה חיצוני</span>
+        <span class="key">light_exterior</span>
+        <span class="meta">wall · 150×200 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="82"/><rect x="17" y="26" width="66" height="56" rx="6" ry="6"/><text x="50" y="67.6" font-size="40" text-anchor="middle" font-weight="700">E</text></svg>
+      <figcaption>
+        <span class="he">תאורת חירום</span>
+        <span class="key">light_emergency</span>
+        <span class="meta">wall · 250×120 מ״מ</span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>תקשורת ומולטימדיה<span class="cnt">10</span></h2><div class="grid"><figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="72"/><ellipse cx="50" cy="50" rx="28" ry="28" stroke-width="2.21"/><polygon points="36,62 50,36 64,62" class="fil"/></svg>
+      <figcaption>
+        <span class="he">שקע רשת (RJ45)</span>
+        <span class="key">data_rj45</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="72"/><ellipse cx="50" cy="46" rx="26" ry="26" stroke-width="2.21"/><polygon points="37,58 50,34 63,58" class="fil"/><text x="50" y="86.8" font-size="20" text-anchor="middle">Cat</text></svg>
+      <figcaption>
+        <span class="he">נקודת רשת (Cat6/7)</span>
+        <span class="key">data_cat</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="72"/><ellipse cx="50" cy="46" rx="26" ry="26" stroke-width="2.21"/><polygon points="37,58 50,34 63,58" class="fil"/><text x="50" y="86.8" font-size="20" text-anchor="middle">סיב</text></svg>
+      <figcaption>
+        <span class="he">נקודת סיב-אופטי</span>
+        <span class="key">data_fiber</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="72"/><polygon points="50,24 74,72 26,72" stroke-width="2.21"/><text x="50" y="66.16" font-size="24" text-anchor="middle">T</text></svg>
+      <figcaption>
+        <span class="he">שקע טלפון</span>
+        <span class="key">data_phone</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="78"/><ellipse cx="50" cy="50" rx="28" ry="28" stroke-width="2.21"/><text x="50" y="58.84" font-size="26" text-anchor="middle">TV</text></svg>
+      <figcaption>
+        <span class="he">שקע טלוויזיה (קואקס)</span>
+        <span class="key">data_tv</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="72"/><ellipse cx="50" cy="46" rx="26" ry="26" stroke-width="2.21"/><polygon points="37,58 50,34 63,58" class="fil"/><text x="50" y="86.8" font-size="20" text-anchor="middle">HDMI</text></svg>
+      <figcaption>
+        <span class="he">שקע HDMI / מולטימדיה</span>
+        <span class="key">data_hdmi</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="34" y="32" width="16" height="36"/><polygon points="50,32 50,68 74,86 74,14"/></svg>
+      <figcaption>
+        <span class="he">רמקול שקוע</span>
+        <span class="key">speaker_ceiling</span>
+        <span class="meta">ceiling · 180×180 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="82"/><rect x="17" y="26" width="66" height="56" rx="6" ry="6"/><text x="50" y="60.8" font-size="20" text-anchor="middle">דלתון</text></svg>
+      <figcaption>
+        <span class="he">אינטרקום (דלתון) אודיו</span>
+        <span class="key">intercom_audio</span>
+        <span class="meta">wall · 120×180 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="20" y="20" width="60" height="60" rx="5" ry="5"/><rect x="28" y="30" width="44" height="36"/><ellipse cx="50" cy="74" rx="5" ry="5" class="fil"/></svg>
+      <figcaption>
+        <span class="he">אינטרקום וידאו</span>
+        <span class="key">intercom_video</span>
+        <span class="meta">wall · 150×200 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="82"/><rect x="17" y="26" width="66" height="56" rx="6" ry="6"/><text x="50" y="60.12" font-size="18" text-anchor="middle">תקשורת</text></svg>
+      <figcaption>
+        <span class="he">ארון תקשורת מרכזי</span>
+        <span class="key">router_hub</span>
+        <span class="meta">freestanding · 160×120 מ״מ</span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>בית חכם ובקרה<span class="cnt">7</span></h2><div class="grid"><figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="20" y="20" width="60" height="60" rx="6" ry="6"/><rect x="30" y="30" width="40" height="32"/><text x="50" y="80.8" font-size="20" text-anchor="middle" font-weight="700">S</text></svg>
+      <figcaption>
+        <span class="he">בקר בית-חכם</span>
+        <span class="key">smart_controller</span>
+        <span class="meta">wall · 120×120 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="80"/><ellipse cx="50" cy="50" rx="30" ry="30" stroke-width="2.21"/><text x="50" y="60.2" font-size="30" text-anchor="middle">T°</text></svg>
+      <figcaption>
+        <span class="he">תרמוסטט</span>
+        <span class="key">thermostat</span>
+        <span class="meta">wall · 90×90 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><ellipse cx="50" cy="32" rx="14" ry="14" class="fil"/><polyline points="63.16,36.79 62.57,38.16 61.85,39.45 60.99,40.67 60.01,41.79 58.92,42.79 57.72,43.68 56.44,44.43 55.09,45.04 53.67,45.51 52.22,45.82 50.74,45.98 49.26,45.98 47.78,45.82 46.33,45.51 44.91,45.04 43.56,44.43 42.28,43.68 41.08,42.79 39.99,41.79 39.01,40.67 38.15,39.45 37.43,38.16 36.84,36.79"/><polyline points="76.31,41.58 75.15,44.31 73.7,46.91 71.99,49.34 70.02,51.57 67.83,53.59 65.45,55.35 62.88,56.86 60.17,58.09 57.35,59.02 54.44,59.65 51.49,59.96 48.51,59.96 45.56,59.65 42.65,59.02 39.83,58.09 37.12,56.86 34.55,55.35 32.17,53.59 29.98,51.57 28.01,49.34 26.3,46.91 24.85,44.31 23.69,41.58"/><polyline points="89.47,46.36 87.72,50.47 85.55,54.36 82.98,58.01 80.03,61.36 76.75,64.38 73.17,67.03 69.32,69.29 65.26,71.13 61.02,72.53 56.66,73.47 52.23,73.94 47.77,73.94 43.34,73.47 38.98,72.53 34.74,71.13 30.68,69.29 26.83,67.03 23.25,64.38 19.97,61.36 17.02,58.01 14.45,54.36 12.28,50.47 10.53,46.36"/></svg>
+      <figcaption>
+        <span class="he">גלאי תנועה/נוכחות</span>
+        <span class="key">sensor_motion</span>
+        <span class="meta">ceiling · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="24" y="40" width="22" height="20"/><rect x="54" y="40" width="22" height="20"/></svg>
+      <figcaption>
+        <span class="he">חיישן מגנטי (חלון/דלת)</span>
+        <span class="key">sensor_contact</span>
+        <span class="meta">wall · 60×20 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><ellipse cx="50" cy="50" rx="24" ry="24"/><text x="50" y="65.2" font-size="30" text-anchor="middle">M</text><polyline points="67,20.56 69.98,22.49 72.75,24.73 75.27,27.25 77.51,30.02 79.44,33 81.06,36.17 82.34,39.49 83.26,42.93 83.81,46.45 84,50 83.81,53.55 83.26,57.07 82.34,60.51 81.06,63.83 79.44,67 77.51,69.98 75.27,72.75 72.75,75.27 69.98,77.51 67,79.44"/></svg>
+      <figcaption>
+        <span class="he">מנוע תריס</span>
+        <span class="key">shutter_motor</span>
+        <span class="meta">wall · 60×60 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="24"/><rect x="28" y="24" width="44" height="58"/><polyline points="40,46 50,36 60,46"/><polyline points="40,60 50,70 60,60"/></svg>
+      <figcaption>
+        <span class="he">מפסק/בקר תריס</span>
+        <span class="key">shutter_switch</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="10" y1="70" x2="90" y2="70"/><ellipse cx="82" cy="50" rx="14" ry="14"/><text x="82" y="61.8" font-size="20" text-anchor="middle">M</text></svg>
+      <figcaption>
+        <span class="he">מנוע וילון</span>
+        <span class="key">curtain_motor</span>
+        <span class="meta">ceiling · 60×60 מ״מ</span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>בטיחות ואבטחה<span class="cnt">10</span></h2><div class="grid"><figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><ellipse cx="50" cy="50" rx="32" ry="32"/><text x="50" y="66.56" font-size="34" text-anchor="middle" font-weight="700">S</text></svg>
+      <figcaption>
+        <span class="he">גלאי עשן</span>
+        <span class="key">smoke_detector</span>
+        <span class="meta">ceiling · 120×120 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="82"/><ellipse cx="50" cy="50" rx="32" ry="32"/><text x="50" y="60.2" font-size="30" text-anchor="middle">גז</text></svg>
+      <figcaption>
+        <span class="he">גלאי גז</span>
+        <span class="key">gas_detector</span>
+        <span class="meta">wall · 100×100 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="82"/><ellipse cx="50" cy="50" rx="32" ry="32"/><text x="50" y="59.52" font-size="28" text-anchor="middle">CO</text></svg>
+      <figcaption>
+        <span class="he">גלאי CO (פחמן חד-חמצני)</span>
+        <span class="key">co_detector</span>
+        <span class="meta">wall · 100×100 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="24" y="36" width="52" height="38"/><polygon points="50,14 62,36 38,36" class="fil"/></svg>
+      <figcaption>
+        <span class="he">גלאי הצפה</span>
+        <span class="key">leak_detector</span>
+        <span class="meta">floor · 60×40 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="28"/><ellipse cx="50" cy="50" rx="20" ry="20"/><polyline points="36,56 36.08,54.54 36.31,53.09 36.69,51.67 37.21,50.31 37.88,49 38.67,47.77 39.6,46.63 40.63,45.6 41.77,44.67 43,43.88 44.31,43.21 45.67,42.69 47.09,42.31 48.54,42.08 50,42 51.46,42.08 52.91,42.31 54.33,42.69 55.69,43.21 57,43.88 58.23,44.67 59.37,45.6 60.4,46.63 61.33,47.77 62.12,49 62.79,50.31 63.31,51.67 63.69,53.09 63.92,54.54 64,56"/><ellipse cx="50" cy="62" rx="3" ry="3" class="fil"/></svg>
+      <figcaption>
+        <span class="he">פעמון דלת</span>
+        <span class="key">doorbell</span>
+        <span class="meta">wall · 60×60 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><polyline points="26,60 26.13,57.49 26.52,55.01 27.17,52.58 28.07,50.24 29.22,48 30.58,45.89 32.16,43.94 33.94,42.16 35.89,40.58 38,39.22 40.24,38.07 42.58,37.17 45.01,36.52 47.49,36.13 50,36 52.51,36.13 54.99,36.52 57.42,37.17 59.76,38.07 62,39.22 64.11,40.58 66.06,42.16 67.84,43.94 69.42,45.89 70.78,48 71.93,50.24 72.83,52.58 73.48,55.01 73.87,57.49 74,60"/><line x1="26" y1="60" x2="74" y2="60"/><polyline points="31.21,53.16 32.04,51.21 33.07,49.35 34.3,47.62 35.7,46.02 37.26,44.58 38.97,43.32 40.8,42.24 42.73,41.37 44.75,40.7 46.83,40.25 48.94,40.03 51.06,40.03 53.17,40.25 55.25,40.7 57.27,41.37 59.2,42.24 61.03,43.32 62.74,44.58 64.3,46.02 65.7,47.62 66.93,49.35 67.96,51.21 68.79,53.16"/><polyline points="12.41,46.32 14.07,42.41 16.14,38.7 18.59,35.23 21.4,32.04 24.52,29.16 27.94,26.64 31.6,24.48 35.47,22.73 39.5,21.4 43.65,20.51 47.88,20.06 52.12,20.06 56.35,20.51 60.5,21.4 64.53,22.73 68.4,24.48 72.06,26.64 75.48,29.16 78.6,32.04 81.41,35.23 83.86,38.7 85.93,42.41 87.59,46.32"/></svg>
+      <figcaption>
+        <span class="he">גונג/זמזם</span>
+        <span class="key">chime</span>
+        <span class="meta">wall · 120×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="16" y="14" width="44" height="28" rx="4" ry="4"/><ellipse cx="44" cy="28" rx="8" ry="8" class="fil"/><polygon points="44,28 90,70 50,92" stroke-dasharray="3.2 2.4"/></svg>
+      <figcaption>
+        <span class="he">מצלמת אבטחה</span>
+        <span class="key">camera</span>
+        <span class="meta">wall · 100×100 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="18" y="16" width="64" height="68" rx="5" ry="5"/><rect x="28" y="24" width="44" height="20"/><ellipse cx="36" cy="56" rx="2" ry="2" class="fil"/><ellipse cx="50" cy="56" rx="2" ry="2" class="fil"/><ellipse cx="64" cy="56" rx="2" ry="2" class="fil"/><ellipse cx="36" cy="66" rx="2" ry="2" class="fil"/><ellipse cx="50" cy="66" rx="2" ry="2" class="fil"/><ellipse cx="64" cy="66" rx="2" ry="2" class="fil"/><ellipse cx="36" cy="76" rx="2" ry="2" class="fil"/><ellipse cx="50" cy="76" rx="2" ry="2" class="fil"/><ellipse cx="64" cy="76" rx="2" ry="2" class="fil"/></svg>
+      <figcaption>
+        <span class="he">לוח בקרת אזעקה</span>
+        <span class="key">alarm_panel</span>
+        <span class="meta">wall · 250×200 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="16" y="28" width="34" height="44"/><polygon points="50,28 50,72 76,90 76,10"/><polyline points="84.5,42.21 85.29,42.72 86.02,43.31 86.69,43.98 87.28,44.71 87.79,45.5 88.22,46.34 88.56,47.22 88.8,48.13 88.95,49.06 89,50 88.95,50.94 88.8,51.87 88.56,52.78 88.22,53.66 87.79,54.5 87.28,55.29 86.69,56.02 86.02,56.69 85.29,57.28 84.5,57.79"/><polyline points="89,34.41 90.58,35.44 92.04,36.62 93.38,37.96 94.56,39.42 95.59,41 96.44,42.68 97.12,44.44 97.61,46.26 97.9,48.12 98,50 97.9,51.88 97.61,53.74 97.12,55.56 96.44,57.32 95.59,59 94.56,60.58 93.38,62.04 92.04,63.38 90.58,64.56 89,65.59"/></svg>
+      <figcaption>
+        <span class="he">סירנה</span>
+        <span class="key">alarm_siren</span>
+        <span class="meta">wall · 200×250 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><ellipse cx="50" cy="50" rx="18" ry="18"/><line x1="70" y1="50" x2="92" y2="50"/><line x1="64.14" y1="64.14" x2="79.7" y2="79.7"/><line x1="50" y1="70" x2="50" y2="92"/><line x1="35.86" y1="64.14" x2="20.3" y2="79.7"/><line x1="30" y1="50" x2="8" y2="50"/><line x1="35.86" y1="35.86" x2="20.3" y2="20.3"/><line x1="50" y1="30" x2="50" y2="8"/><line x1="64.14" y1="35.86" x2="79.7" y2="20.3"/></svg>
+      <figcaption>
+        <span class="he">מתז (ספרינקלר)</span>
+        <span class="key">sprinkler</span>
+        <span class="meta">ceiling · 80×80 מ״מ</span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>אינסטלציה — מים<span class="cnt">14</span></h2><div class="grid"><figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="73"/><ellipse cx="50" cy="50" rx="27" ry="27" stroke-width="2.21"/><text x="50" y="60.2" font-size="30" text-anchor="middle">C</text></svg>
+      <figcaption>
+        <span class="he">נקודת מים קרים</span>
+        <span class="key">water_cold</span>
+        <span class="meta">wall · 20×20 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="73"/><ellipse cx="50" cy="50" rx="27" ry="27" stroke-width="2.21"/><text x="50" y="60.2" font-size="30" text-anchor="middle">H</text></svg>
+      <figcaption>
+        <span class="he">נקודת מים חמים</span>
+        <span class="key">water_hot</span>
+        <span class="meta">wall · 20×20 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="72"/><polygon points="28,28 72,28 50,50" stroke-width="2.04"/><polygon points="28,72 72,72 50,50" stroke-width="2.04"/><ellipse cx="50" cy="50" rx="4.5" ry="4.5" class="fil"/></svg>
+      <figcaption>
+        <span class="he">ברז / ברז נשלף</span>
+        <span class="key">water_faucet</span>
+        <span class="meta">wall · 20×20 מ״מ</span>
+        <span class="lnk">↔ ברז / ברז נשלף <code>OK_FAUCET</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="77"/><ellipse cx="50" cy="50" rx="28" ry="28" stroke-width="2.21"/><line x1="26" y1="50" x2="74" y2="50"/><line x1="50" y1="26" x2="50" y2="74"/></svg>
+      <figcaption>
+        <span class="he">מים</span>
+        <span class="key">water_point</span>
+        <span class="meta">wall · 20×20 מ״מ</span>
+        <span class="lnk">↔ מים · צינור מים עגול · אמבטיה · כיור · מקלחת · כיור חוץ <code>WATER_PIPE</code> <code>WATER_PIPE_ROUND</code> <code>BATH</code> <code>SINK</code> <code>SHOWER</code> <code>OK_SINK</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="28" y1="42" x2="72" y2="42" stroke-width="2.04"/><ellipse cx="28" cy="42" rx="17" ry="17" stroke-width="2.04"/><text x="28" y="48.8" font-size="20" text-anchor="middle">C</text><ellipse cx="72" cy="42" rx="17" ry="17" stroke-width="2.04"/><text x="72" y="48.8" font-size="20" text-anchor="middle">H</text><line x1="50" y1="100" x2="50" y2="42"/><ellipse cx="50" cy="42" rx="5" ry="5" class="fil"/></svg>
+      <figcaption>
+        <span class="he">מערבל (חם+קר)</span>
+        <span class="key">water_mixer</span>
+        <span class="meta">wall · 150×60 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="70"/><polygon points="30,30 70,30 50,50" stroke-width="2.21"/><polygon points="30,70 70,70 50,50" stroke-width="2.21"/><ellipse cx="50" cy="50" rx="4" ry="4" class="fil"/><line x1="50" y1="50" x2="50" y2="28" stroke-width="1.7"/><line x1="38" y1="28" x2="62" y2="28" stroke-width="2.04"/></svg>
+      <figcaption>
+        <span class="he">ברז-ניתוק מים</span>
+        <span class="key">water_shutoff</span>
+        <span class="meta">wall · 50×50 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="77"/><ellipse cx="50" cy="55" rx="22" ry="22" stroke-width="2.21"/><line x1="32" y1="55" x2="68" y2="55"/><line x1="50" y1="37" x2="50" y2="73"/><text x="50" y="21.12" font-size="18" text-anchor="middle">מדיח</text></svg>
+      <figcaption>
+        <span class="he">נקודת מים למדיח</span>
+        <span class="key">water_dishwasher</span>
+        <span class="meta">wall · 20×20 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="77"/><ellipse cx="50" cy="55" rx="22" ry="22" stroke-width="2.21"/><line x1="32" y1="55" x2="68" y2="55"/><line x1="50" y1="37" x2="50" y2="73"/><text x="50" y="19.76" font-size="14" text-anchor="middle">מכ׳ כביסה</text></svg>
+      <figcaption>
+        <span class="he">נקודת מים למכונת-כביסה</span>
+        <span class="key">water_washer</span>
+        <span class="meta">wall · 20×20 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="77"/><ellipse cx="50" cy="55" rx="22" ry="22" stroke-width="2.21"/><line x1="50" y1="33" x2="50" y2="77"/><line x1="33" y1="55" x2="67" y2="55"/><text x="50" y="21.12" font-size="18" text-anchor="middle">מקרר</text></svg>
+      <figcaption>
+        <span class="he">נקודת מים למקרר</span>
+        <span class="key">water_fridge</span>
+        <span class="meta">wall · 20×20 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="72"/><polygon points="32,37 68,37 50,55" stroke-width="2.04"/><polygon points="32,73 68,73 50,55" stroke-width="2.04"/><ellipse cx="50" cy="55" rx="4" ry="4" class="fil"/><text x="50" y="21.12" font-size="18" text-anchor="middle">גינה</text></svg>
+      <figcaption>
+        <span class="he">ברז גינה</span>
+        <span class="key">water_garden</span>
+        <span class="meta">wall · 40×40 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="72"/><ellipse cx="50" cy="50" rx="26" ry="26" stroke-width="2.21"/><text x="50" y="60.2" font-size="30" text-anchor="middle">4</text></svg>
+      <figcaption>
+        <span class="he">תמי4</span>
+        <span class="key">water_bar</span>
+        <span class="meta">wall · 20×20 מ״מ</span>
+        <span class="lnk">↔ תמי4 <code>WATER_BAR</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="82"/><rect x="17" y="26" width="66" height="56" rx="6" ry="6"/><text x="50" y="60.8" font-size="20" text-anchor="middle">השקיה</text></svg>
+      <figcaption>
+        <span class="he">בקר השקיה</span>
+        <span class="key">irrigation_ctrl</span>
+        <span class="meta">wall · 150×200 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><ellipse cx="50" cy="50" rx="36" ry="36"/><text x="50" y="61.8" font-size="20" text-anchor="middle">דוד</text><line x1="36" y1="86" x2="36" y2="96"/><line x1="64" y1="86" x2="64" y2="96"/></svg>
+      <figcaption>
+        <span class="he">דוד מים</span>
+        <span class="key">water_heater</span>
+        <span class="meta">freestanding · 600×1200 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="82"/><ellipse cx="50" cy="50" rx="32" ry="32"/><text x="50" y="56.8" font-size="20" text-anchor="middle">סולרי</text></svg>
+      <figcaption>
+        <span class="he">קולט שמש (סולרי)</span>
+        <span class="key">solar_collector</span>
+        <span class="meta">ceiling · 20×20 מ״מ</span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>אינסטלציה — ניקוז<span class="cnt">5</span></h2><div class="grid"><figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="22"/><ellipse cx="50" cy="50" rx="30" ry="30" stroke-width="2.21"/><polyline points="32,56 42,44 50,56 58,44 68,56" stroke-width="2.04"/></svg>
+      <figcaption>
+        <span class="he">נקודת ביוב (קיר)</span>
+        <span class="key">sewage_point</span>
+        <span class="meta">wall · 50×50 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="16" y="16" width="68" height="68" stroke-width="2.38"/><line x1="28" y1="20" x2="28" y2="80" stroke-width="1.36"/><line x1="40" y1="20" x2="40" y2="80" stroke-width="1.36"/><line x1="52" y1="20" x2="52" y2="80" stroke-width="1.36"/><line x1="64" y1="20" x2="64" y2="80" stroke-width="1.36"/><line x1="76" y1="20" x2="76" y2="80" stroke-width="1.36"/><ellipse cx="50" cy="50" rx="13" ry="13" stroke-width="2.04"/><ellipse cx="50" cy="50" rx="4.5" ry="4.5" class="fil"/></svg>
+      <figcaption>
+        <span class="he">ניקוז רצפתי</span>
+        <span class="key">floor_drain</span>
+        <span class="meta">floor · 120×120 מ״מ</span>
+        <span class="lnk">↔ ניקוז רצפתי <code>FLOOR_DRAIN</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><ellipse cx="50" cy="46" rx="38" ry="38" stroke-width="2.21"/><ellipse cx="50" cy="46" rx="8" ry="8" class="fil"/><text x="50" y="96.76" font-size="14" text-anchor="middle">אסלה</text></svg>
+      <figcaption>
+        <span class="he">אסלה</span>
+        <span class="key">toilet_waste</span>
+        <span class="meta">floor · 110×110 מ״מ</span>
+        <span class="lnk">↔ אסלה <code>TOILET</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="30" y="10" width="40" height="80" stroke-dasharray="3.2 2.4"/><rect x="40" y="20" width="20" height="14"/><line x1="40" y1="90" x2="60" y2="90" stroke-width="2.38"/></svg>
+      <figcaption>
+        <span class="he">מיכל הדחה סמוי (ניאגרה)</span>
+        <span class="key">cistern_concealed</span>
+        <span class="meta">wall · 500×1120 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="62"/><ellipse cx="50" cy="50" rx="14" ry="14" stroke-width="2.21"/><ellipse cx="50" cy="50" rx="5" ry="5" class="fil"/><text x="50" y="20.12" font-size="18" text-anchor="middle">ניקוז</text></svg>
+      <figcaption>
+        <span class="he">נקודת ניקוז מזגן</span>
+        <span class="key">condensate_drain</span>
+        <span class="meta">wall · 20×20 מ״מ</span>
+        <span class="lnk">↔ נקודת ניקוז מזגן <code>CONDENSATE_DRAIN</code></span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>גז<span class="cnt">8</span></h2><div class="grid"><figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="80"/><polygon points="50,20 76,35 76,65 50,80 24,65 24,35" stroke-width="2.21"/><text x="50" y="59.52" font-size="28" text-anchor="middle">G</text></svg>
+      <figcaption>
+        <span class="he">גז</span>
+        <span class="key">gas_point</span>
+        <span class="meta">wall · 20×20 מ״מ</span>
+        <span class="lnk">↔ גז · כירת גז חוץ · מבער צד <code>GAS_PIPE</code> <code>OK_GAS_COOKTOP</code> <code>OK_SIDE_BURNER</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="80"/><polygon points="50,20 76,35 76,65 50,80 24,65 24,35" stroke-width="2.04" stroke-dasharray="3.2 2.4"/><text x="50" y="59.52" font-size="28" text-anchor="middle">G</text></svg>
+      <figcaption>
+        <span class="he">הכנת גז</span>
+        <span class="key">gas_prep</span>
+        <span class="meta">wall · 40×40 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="14" y="40" width="72" height="22"/><line x1="5" y1="51" x2="14" y2="51"/><line x1="28" y1="62" x2="28" y2="86"/><line x1="46" y1="62" x2="46" y2="86"/><line x1="64" y1="62" x2="64" y2="86"/><line x1="82" y1="62" x2="82" y2="86"/></svg>
+      <figcaption>
+        <span class="he">מפצל/חנוכיית גז</span>
+        <span class="key">gas_manifold</span>
+        <span class="meta">wall · 200×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="18" y="20" width="64" height="62" rx="4" ry="4"/><ellipse cx="50" cy="42" rx="16" ry="16"/><text x="50" y="77.44" font-size="16" text-anchor="middle">מרכזיה</text></svg>
+      <figcaption>
+        <span class="he">מרכזיית/וסת גז</span>
+        <span class="key">gas_regulator</span>
+        <span class="meta">wall · 300×400 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><polyline points="28,24 28.12,22.33 28.48,20.67 29.08,19.06 29.9,17.49 30.95,16 32.2,14.6 33.65,13.29 35.28,12.11 37.07,11.06 39,10.14 41.05,9.38 43.2,8.78 45.43,8.35 47.7,8.09 50,8 52.3,8.09 54.57,8.35 56.8,8.78 58.95,9.38 61,10.14 62.93,11.06 64.72,12.11 66.35,13.29 67.8,14.6 69.05,16 70.1,17.49 70.92,19.06 71.52,20.67 71.88,22.33 72,24"/><line x1="28" y1="24" x2="28" y2="90"/><line x1="72" y1="24" x2="72" y2="90"/><line x1="28" y1="90" x2="72" y2="90"/><text x="50" y="68.12" font-size="18" text-anchor="middle">בלון</text></svg>
+      <figcaption>
+        <span class="he">בלון גז</span>
+        <span class="key">gas_cylinder</span>
+        <span class="meta">floor · 300×600 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="74"/><ellipse cx="50" cy="50" rx="24" ry="24"/><line x1="36" y1="64" x2="64" y2="36"/><text x="50" y="19.44" font-size="16" text-anchor="middle">טאבון</text></svg>
+      <figcaption>
+        <span class="he">טאבון / תנור פיצה</span>
+        <span class="key">gas_taboon</span>
+        <span class="meta">wall · 40×40 מ״מ</span>
+        <span class="lnk">↔ טאבון / תנור פיצה <code>OK_PIZZA_OVEN</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="18" y="20" width="64" height="62"/><text x="34" y="50.16" font-size="24" text-anchor="middle" font-weight="700">G</text><rect x="30" y="56" width="40" height="16"/></svg>
+      <figcaption>
+        <span class="he">מונה גז</span>
+        <span class="key">gas_meter</span>
+        <span class="meta">wall · 250×300 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="72"/><polygon points="31,35 69,35 50,54" stroke-width="2.21"/><polygon points="31,73 69,73 50,54" stroke-width="2.21"/><ellipse cx="50" cy="54" rx="4" ry="4" class="fil"/><text x="50" y="20.8" font-size="20" text-anchor="middle">גז</text></svg>
+      <figcaption>
+        <span class="he">ברז גז חיצוני</span>
+        <span class="key">gas_valve</span>
+        <span class="meta">wall · 40×40 מ״מ</span>
+        <span class="lnk">↔ ברז גז חיצוני <code>OK_GAS_TAP</code></span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>מיזוג ואוורור<span class="cnt">21</span></h2><div class="grid"><figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="4" y="56" width="92" height="36" rx="9" ry="9"/><line x1="4" y1="67" x2="96" y2="67"/><line x1="16" y1="67" x2="11" y2="79"/><line x1="30" y1="67" x2="25" y2="79"/><line x1="44" y1="67" x2="39" y2="79"/><line x1="58" y1="67" x2="53" y2="79"/><line x1="72" y1="67" x2="67" y2="79"/><line x1="86" y1="67" x2="81" y2="79"/><polyline points="30.06,38.39 31.12,36.75 32.39,35.21 33.84,33.79 35.46,32.49 37.24,31.34 39.15,30.34 41.18,29.51 43.3,28.85 45.49,28.38 47.74,28.1 50,28 52.26,28.1 54.51,28.38 56.7,28.85 58.82,29.51 60.85,30.34 62.76,31.34 64.54,32.49 66.16,33.79 67.61,35.21 68.88,36.75 69.94,38.39" stroke-width="1.36"/></svg>
+      <figcaption>
+        <span class="he">מזגן</span>
+        <span class="key">ac_indoor</span>
+        <span class="meta">wall · 900×300 מ״מ</span>
+        <span class="lnk">↔ מזגן · מזגן עילי (יחידה פנימית) <code>AC_UNIT</code> <code>AC_INDOOR</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="12" y="12" width="76" height="76"/><ellipse cx="50" cy="50" rx="30" ry="30"/><ellipse cx="50" cy="50" rx="5" ry="5" class="fil"/><line x1="50" y1="55" x2="35.62" y2="76.33" stroke-width="2.04"/><line x1="45.67" y1="47.5" x2="34.39" y2="24.38" stroke-width="2.04"/><line x1="54.33" y1="47.5" x2="79.99" y2="49.29" stroke-width="2.04"/></svg>
+      <figcaption>
+        <span class="he">מעבה (יחידה חיצונית)</span>
+        <span class="key">ac_condenser</span>
+        <span class="meta">freestanding · 800×550 מ״מ</span>
+        <span class="lnk">↔ מעבה (יחידה חיצונית) <code>AC_CONDENSER</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="10" y="10" width="80" height="80"/><rect x="24" y="24" width="52" height="52"/><rect x="38" y="38" width="24" height="24"/><line x1="10" y1="10" x2="38" y2="38"/><line x1="90" y1="10" x2="62" y2="38"/><line x1="10" y1="90" x2="38" y2="62"/><line x1="90" y1="90" x2="62" y2="62"/></svg>
+      <figcaption>
+        <span class="he">מפזר-תקרה (דיפיוזר)</span>
+        <span class="key">ac_diffuser</span>
+        <span class="meta">ceiling · 600×600 מ״מ</span>
+        <span class="lnk">↔ מפזר-תקרה (דיפיוזר) <code>AC_DIFFUSER</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="14" y="22" width="72" height="56" stroke-width="2.38"/><line x1="17" y1="35.5" x2="83" y2="30"/><line x1="17" y1="44.5" x2="83" y2="39"/><line x1="17" y1="53.5" x2="83" y2="48"/><line x1="17" y1="62.5" x2="83" y2="57"/><line x1="17" y1="71.5" x2="83" y2="66"/></svg>
+      <figcaption>
+        <span class="he">שבכת איוורור</span>
+        <span class="key">vent_grille</span>
+        <span class="meta">wall · 200×200 מ״מ</span>
+        <span class="lnk">↔ שבכת איוורור <code>VENT_GRILLE</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="10" y="10" width="80" height="80" stroke-width="2.38"/><ellipse cx="50" cy="50" rx="30" ry="30"/><ellipse cx="50" cy="50" rx="5" ry="5" class="fil"/><line x1="53.54" y1="53.54" x2="59.22" y2="76.44" stroke-width="1.87"/><line x1="46.46" y1="53.54" x2="23.56" y2="59.22" stroke-width="1.87"/><line x1="46.46" y1="46.46" x2="40.78" y2="23.56" stroke-width="1.87"/><line x1="53.54" y1="46.46" x2="76.44" y2="40.78" stroke-width="1.87"/><line x1="70" y1="30" x2="86" y2="14" stroke-width="1.53"/><polyline points="86,14 78.5,15.5 84.5,21.5" stroke-width="1.53"/></svg>
+      <figcaption>
+        <span class="he">מאוורר-יניקה (ונטה)</span>
+        <span class="key">exhaust_fan</span>
+        <span class="meta">wall · 250×250 מ״מ</span>
+        <span class="lnk">↔ מאוורר-יניקה (ונטה) <code>EXHAUST_FAN</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><polygon points="10,80 30,30 70,30 90,80"/><polyline points="42.48,27.26 42.81,26.48 43.23,25.74 43.72,25.05 44.28,24.41 44.9,23.83 45.59,23.33 46.32,22.9 47.09,22.55 47.9,22.28 48.73,22.1 49.58,22.01 50.42,22.01 51.27,22.1 52.1,22.28 52.91,22.55 53.68,22.9 54.41,23.33 55.1,23.83 55.72,24.41 56.28,25.05 56.77,25.74 57.19,26.48 57.52,27.26"/><polyline points="34.96,24.53 35.63,22.96 36.46,21.48 37.44,20.09 38.56,18.82 39.81,17.67 41.17,16.65 42.64,15.79 44.19,15.09 45.8,14.56 47.46,14.2 49.15,14.02 50.85,14.02 52.54,14.2 54.2,14.56 55.81,15.09 57.36,15.79 58.83,16.65 60.19,17.67 61.44,18.82 62.56,20.09 63.54,21.48 64.37,22.96 65.04,24.53"/></svg>
+      <figcaption>
+        <span class="he">קולט אדים חוץ</span>
+        <span class="key">range_hood</span>
+        <span class="meta">wall · 900×600 מ״מ</span>
+        <span class="lnk">↔ קולט אדים חוץ <code>OK_RANGE_HOOD</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><ellipse cx="50" cy="50" rx="30" ry="30"/><polyline points="40,40 50,30 60,40"/><line x1="50" y1="50" x2="50" y2="34"/></svg>
+      <figcaption>
+        <span class="he">יציאת תעלת-מיזוג</span>
+        <span class="key">duct_outlet</span>
+        <span class="meta">wall · 150×150 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="14" y="14" width="72" height="72" stroke-dasharray="3.2 2.4"/><text x="50" y="61.12" font-size="18" text-anchor="middle">שירות</text></svg>
+      <figcaption>
+        <span class="he">פתח-שירות / תקרה-פריקה</span>
+        <span class="key">service_hatch</span>
+        <span class="meta">ceiling · 500×500 מ״מ</span>
+        <span class="lnk">↔ פתח-שירות / תקרה-פריקה <code>SERVICE_HATCH</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="14" y="20" width="72" height="60"/><line x1="24" y1="36" x2="76" y2="64"/><line x1="24" y1="64" x2="76" y2="36"/><polyline points="70,58 76,64 70,70"/><polyline points="30,58 24,64 30,70"/></svg>
+      <figcaption>
+        <span class="he">אוורור מבוקר (HRV/ERV)</span>
+        <span class="key">hrv</span>
+        <span class="meta">ceiling · 700×400 מ״מ</span>
+        <span class="lnk">↔ אוורור מבוקר (HRV/ERV) <code>HRV</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><ellipse cx="50" cy="52" rx="28" ry="28"/><ellipse cx="50" cy="52" rx="12" ry="12"/><line x1="50" y1="100" x2="50" y2="80"/><text x="50" y="17.1" font-size="15" text-anchor="middle">שרוול</text></svg>
+      <figcaption>
+        <span class="he">שרוול מעבר-צנרת מזגן</span>
+        <span class="key">ac_sleeve</span>
+        <span class="meta">wall · 110×110 מ״מ</span>
+        <span class="lnk">↔ שרוול מעבר-צנרת מזגן <code>AC_SLEEVE</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="16" y="16" width="68" height="68" rx="5" ry="5" stroke-dasharray="3.2 2.4"/><ellipse cx="36" cy="40" rx="11" ry="11"/><ellipse cx="62" cy="40" rx="9" ry="9"/><line x1="16" y1="62" x2="84" y2="62"/><text x="50" y="79.44" font-size="16" text-anchor="middle">מזגן</text></svg>
+      <figcaption>
+        <span class="he">נישת-קיר למזגן</span>
+        <span class="key">ac_wall_box</span>
+        <span class="meta">wall · 450×450 מ״מ</span>
+        <span class="lnk">↔ נישת-קיר למזגן <code>AC_WALL_BOX</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="10" y="10" width="80" height="80"/><rect x="32" y="32" width="36" height="36"/><polyline points="44,20 50,14 56,20"/><polyline points="44,80 50,86 56,80"/><polyline points="20,44 14,50 20,56"/><polyline points="80,44 86,50 80,56"/></svg>
+      <figcaption>
+        <span class="he">מזגן קסטה תקרתי</span>
+        <span class="key">ac_cassette</span>
+        <span class="meta">ceiling · 840×840 מ״מ</span>
+        <span class="lnk">↔ מזגן קסטה תקרתי <code>AC_CASSETTE</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="8" y="34" width="84" height="32"/><ellipse cx="30" cy="50" rx="12" ry="12"/><line x1="60" y1="42" x2="86" y2="42"/><line x1="60" y1="50" x2="86" y2="50"/><line x1="60" y1="58" x2="86" y2="58"/><polyline points="81,45 86,50 81,55"/></svg>
+      <figcaption>
+        <span class="he">מזגן מיני-מרכזי נסתר</span>
+        <span class="key">ac_concealed</span>
+        <span class="meta">ceiling · 1200×300 מ״מ</span>
+        <span class="lnk">↔ מזגן מיני-מרכזי נסתר <code>AC_CONCEALED</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="18" y="14" width="64" height="42"/><ellipse cx="50" cy="35" rx="15" ry="15"/><polyline points="20,56 20,86 50,56"/><polyline points="80,56 80,86 50,56"/><line x1="50" y1="56" x2="50" y2="86"/></svg>
+      <figcaption>
+        <span class="he">קונזול-קיר למזגן</span>
+        <span class="key">ac_bracket</span>
+        <span class="meta">wall · 600×400 מ״מ</span>
+        <span class="lnk">↔ קונזול-קיר למזגן <code>AC_BRACKET</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="8" y="6" width="84" height="76" stroke-width="3.06"/><ellipse cx="50" cy="44" rx="30" ry="30" stroke-width="2.04"/><ellipse cx="50" cy="44" rx="17" ry="17"/><ellipse cx="50" cy="44" rx="5" ry="5" class="fil"/><line x1="50" y1="14" x2="50" y2="74" stroke-width="1.19"/><text x="50" y="98.08" font-size="12" text-anchor="middle">ממ״ד</text></svg>
+      <figcaption>
+        <span class="he">פתח-אוויר ממ"ד + שסתום-הדף</span>
+        <span class="key">mamad_air_valve</span>
+        <span class="meta">wall · 250×250 מ״מ</span>
+        <span class="lnk">↔ פתח-אוויר ממ"ד + שסתום-הדף <code>MAMAD_AIR_VALVE</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><ellipse cx="50" cy="50" rx="30" ry="30"/><polyline points="40,38 50,28 60,38"/><line x1="50" y1="62" x2="50" y2="34"/><text x="50" y="97.76" font-size="14" text-anchor="middle">מנדף</text></svg>
+      <figcaption>
+        <span class="he">תעלת-מנדף (קולט-אדים)</span>
+        <span class="key">range_hood_duct</span>
+        <span class="meta">wall · 150×150 מ״מ</span>
+        <span class="lnk">↔ תעלת-מנדף (קולט-אדים) <code>RANGE_HOOD_DUCT</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><ellipse cx="50" cy="50" rx="28" ry="28"/><polyline points="41,39 50,30 59,39"/><polyline points="74.43,55.47 73.35,57.04 72.01,58.52 70.42,59.91 68.59,61.18 66.56,62.33 64.34,63.35 61.96,64.21 59.45,64.91 56.82,65.44 54.13,65.8 51.38,65.98 48.62,65.98 45.87,65.8 43.18,65.44 40.55,64.91 38.04,64.21 35.66,63.35 33.44,62.33 31.41,61.18 29.58,59.91 27.99,58.52 26.65,57.04 25.57,55.47" stroke-dasharray="3.2 2.4"/><text x="50" y="97.76" font-size="14" text-anchor="middle">מייבש</text></svg>
+      <figcaption>
+        <span class="he">פתח מייבש-כביסה</span>
+        <span class="key">dryer_vent</span>
+        <span class="meta">wall · 110×110 מ״מ</span>
+        <span class="lnk">↔ פתח מייבש-כביסה <code>DRYER_VENT</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><ellipse cx="50" cy="52" rx="28" ry="28"/><ellipse cx="50" cy="52" rx="13" ry="13"/><line x1="50" y1="100" x2="50" y2="80"/><text x="50" y="16.76" font-size="14" text-anchor="middle">ארובה</text></svg>
+      <figcaption>
+        <span class="he">ארובת-דוד גז</span>
+        <span class="key">boiler_flue</span>
+        <span class="meta">wall · 130×130 מ״מ</span>
+        <span class="lnk">↔ ארובת-דוד גז <code>BOILER_FLUE</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="20" y="20" width="60" height="60"/><ellipse cx="50" cy="50" rx="20" ry="20"/><polyline points="44.37,46.75 44.74,46.18 45.17,45.65 45.65,45.17 46.18,44.74 46.75,44.37 47.36,44.06 47.99,43.82 48.65,43.64 49.32,43.54 50,43.5 50.68,43.54 51.35,43.64 52.01,43.82 52.64,44.06 53.25,44.37 53.82,44.74 54.35,45.17 54.83,45.65 55.26,46.18 55.63,46.75"/><polyline points="38.74,43.5 39.48,42.36 40.34,41.3 41.3,40.34 42.36,39.48 43.5,38.74 44.71,38.12 45.98,37.64 47.3,37.28 48.64,37.07 50,37 51.36,37.07 52.7,37.28 54.02,37.64 55.29,38.12 56.5,38.74 57.64,39.48 58.7,40.34 59.66,41.3 60.52,42.36 61.26,43.5"/></svg>
+      <figcaption>
+        <span class="he">ארובת-עשן (קמין)</span>
+        <span class="key">chimney_flue</span>
+        <span class="meta">ceiling · 200×200 מ״מ</span>
+        <span class="lnk">↔ ארובת-עשן (קמין) <code>CHIMNEY_FLUE</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="16" y="28" width="68" height="44"/><line x1="16" y1="40" x2="84" y2="40" stroke-dasharray="3.2 2.4"/><line x1="16" y1="55" x2="84" y2="55" stroke-dasharray="3.2 2.4"/><text x="50" y="97.42" font-size="13" text-anchor="middle">אוויר-צח</text></svg>
+      <figcaption>
+        <span class="he">פתח אוויר-צח / מסנן</span>
+        <span class="key">fresh_air_intake</span>
+        <span class="meta">wall · 200×200 מ״מ</span>
+        <span class="lnk">↔ פתח אוויר-צח / מסנן <code>FRESH_AIR_INTAKE</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="16" y="20" width="68" height="60"/><line x1="16" y1="30" x2="84" y2="36"/><line x1="16" y1="42" x2="84" y2="48"/><line x1="16" y1="54" x2="84" y2="60"/><line x1="16" y1="66" x2="84" y2="72"/></svg>
+      <figcaption>
+        <span class="he">תריס-איוורור חיצוני (ז'לוזי)</span>
+        <span class="key">wall_louver</span>
+        <span class="meta">wall · 300×300 מ״מ</span>
+        <span class="lnk">↔ תריס-איוורור חיצוני (ז'לוזי) <code>WALL_LOUVER</code></span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>חימום ומערכות תרמיות<span class="cnt">3</span></h2><div class="grid"><figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="14" y="16" width="72" height="68"/><ellipse cx="42" cy="50" rx="24" ry="24"/><line x1="42" y1="50" x2="42" y2="28"/><line x1="42" y1="50" x2="60" y2="62"/><line x1="42" y1="50" x2="24" y2="62"/><text x="78" y="56.8" font-size="20" text-anchor="middle">↑°</text></svg>
+      <figcaption>
+        <span class="he">משאבת חום</span>
+        <span class="key">heat_pump</span>
+        <span class="meta">freestanding · 1000×700 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="14" y="34" width="72" height="16"/><line x1="24" y1="50" x2="24" y2="86"/><polyline points="29,85 28.97,85.52 28.89,86.04 28.76,86.55 28.57,87.03 28.33,87.5 28.05,87.94 27.72,88.35 27.35,88.72 26.94,89.05 26.5,89.33 26.03,89.57 25.55,89.76 25.04,89.89 24.52,89.97 24,90 23.48,89.97 22.96,89.89 22.45,89.76 21.97,89.57 21.5,89.33 21.06,89.05 20.65,88.72 20.28,88.35 19.95,87.94 19.67,87.5 19.43,87.03 19.24,86.55 19.11,86.04 19.03,85.52 19,85"/><line x1="38" y1="50" x2="38" y2="86"/><polyline points="43,85 42.97,85.52 42.89,86.04 42.76,86.55 42.57,87.03 42.33,87.5 42.05,87.94 41.72,88.35 41.35,88.72 40.94,89.05 40.5,89.33 40.03,89.57 39.55,89.76 39.04,89.89 38.52,89.97 38,90 37.48,89.97 36.96,89.89 36.45,89.76 35.97,89.57 35.5,89.33 35.06,89.05 34.65,88.72 34.28,88.35 33.95,87.94 33.67,87.5 33.43,87.03 33.24,86.55 33.11,86.04 33.03,85.52 33,85"/><line x1="52" y1="50" x2="52" y2="86"/><polyline points="57,85 56.97,85.52 56.89,86.04 56.76,86.55 56.57,87.03 56.33,87.5 56.05,87.94 55.72,88.35 55.35,88.72 54.94,89.05 54.5,89.33 54.03,89.57 53.55,89.76 53.04,89.89 52.52,89.97 52,90 51.48,89.97 50.96,89.89 50.45,89.76 49.97,89.57 49.5,89.33 49.06,89.05 48.65,88.72 48.28,88.35 47.95,87.94 47.67,87.5 47.43,87.03 47.24,86.55 47.11,86.04 47.03,85.52 47,85"/><line x1="66" y1="50" x2="66" y2="86"/><polyline points="71,85 70.97,85.52 70.89,86.04 70.76,86.55 70.57,87.03 70.33,87.5 70.05,87.94 69.72,88.35 69.35,88.72 68.94,89.05 68.5,89.33 68.03,89.57 67.55,89.76 67.04,89.89 66.52,89.97 66,90 65.48,89.97 64.96,89.89 64.45,89.76 63.97,89.57 63.5,89.33 63.06,89.05 62.65,88.72 62.28,88.35 61.95,87.94 61.67,87.5 61.43,87.03 61.24,86.55 61.11,86.04 61.03,85.52 61,85"/><line x1="80" y1="50" x2="80" y2="86"/><polyline points="85,85 84.97,85.52 84.89,86.04 84.76,86.55 84.57,87.03 84.33,87.5 84.05,87.94 83.72,88.35 83.35,88.72 82.94,89.05 82.5,89.33 82.03,89.57 81.55,89.76 81.04,89.89 80.52,89.97 80,90 79.48,89.97 78.96,89.89 78.45,89.76 77.97,89.57 77.5,89.33 77.06,89.05 76.65,88.72 76.28,88.35 75.95,87.94 75.67,87.5 75.43,87.03 75.24,86.55 75.11,86.04 75.03,85.52 75,85"/></svg>
+      <figcaption>
+        <span class="he">קולקטור חימום תת-רצפתי</span>
+        <span class="key">ufh_manifold</span>
+        <span class="meta">wall · 600×500 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="20" y="18" width="60" height="54" rx="6" ry="6"/><text x="50" y="54.52" font-size="28" text-anchor="middle">T°</text><polyline points="43.89,87.78 44.16,87.14 44.5,86.54 44.9,85.97 45.35,85.46 45.86,84.99 46.41,84.58 47.01,84.23 47.64,83.94 48.29,83.73 48.97,83.58 49.65,83.51 50.35,83.51 51.03,83.58 51.71,83.73 52.36,83.94 52.99,84.23 53.59,84.58 54.14,84.99 54.65,85.46 55.1,85.97 55.5,86.54 55.84,87.14 56.11,87.78"/><polyline points="37.78,85.55 38.32,84.28 39,83.08 39.79,81.95 40.7,80.91 41.72,79.98 42.83,79.16 44.02,78.46 45.28,77.89 46.59,77.46 47.94,77.16 49.31,77.02 50.69,77.02 52.06,77.16 53.41,77.46 54.72,77.89 55.98,78.46 57.17,79.16 58.28,79.98 59.3,80.91 60.21,81.95 61,83.08 61.68,84.28 62.22,85.55"/></svg>
+      <figcaption>
+        <span class="he">תרמוסטט רצפה</span>
+        <span class="key">ufh_thermostat</span>
+        <span class="meta">wall · 90×90 מ״מ</span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>אנרגיה מתחדשת ואגירה<span class="cnt">5</span></h2><div class="grid"><figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="12" y="12" width="76" height="76"/><line x1="31" y1="12" x2="31" y2="88"/><line x1="50" y1="12" x2="50" y2="88"/><line x1="69" y1="12" x2="69" y2="88"/><line x1="12" y1="31" x2="88" y2="31"/><line x1="12" y1="50" x2="88" y2="50"/><line x1="12" y1="69" x2="88" y2="69"/></svg>
+      <figcaption>
+        <span class="he">פאנל סולארי (PV)</span>
+        <span class="key">pv_panel</span>
+        <span class="meta">ceiling · 1130×1760 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="82"/><rect x="17" y="26" width="66" height="56" rx="6" ry="6"/><text x="50" y="59.44" font-size="16" text-anchor="middle">אינוברטר</text></svg>
+      <figcaption>
+        <span class="he">ממיר (אינוורטר) PV</span>
+        <span class="key">pv_inverter</span>
+        <span class="meta">wall · 450×650 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="82"/><ellipse cx="50" cy="50" rx="32" ry="32"/><text x="50" y="60.2" font-size="30" text-anchor="middle">PV</text></svg>
+      <figcaption>
+        <span class="he">נקודת חיבור PV (DC)</span>
+        <span class="key">pv_dc_point</span>
+        <span class="meta">wall · 80×80 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="20" y="16" width="60" height="68" rx="4" ry="4"/><rect x="42" y="8" width="16" height="8"/><text x="40" y="60.2" font-size="30" text-anchor="middle">+</text><text x="60" y="60.2" font-size="30" text-anchor="middle">–</text></svg>
+      <figcaption>
+        <span class="he">סוללת אגירה</span>
+        <span class="key">battery_storage</span>
+        <span class="meta">freestanding · 600×900 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="18" y="20" width="64" height="62"/><polyline points="42,36 34,44 42,52"/><polyline points="58,52 66,60 58,68"/><line x1="34" y1="44" x2="66" y2="44"/><line x1="34" y1="60" x2="66" y2="60"/></svg>
+      <figcaption>
+        <span class="he">מונה דו-כיווני (נטו)</span>
+        <span class="key">net_meter</span>
+        <span class="meta">wall · 200×300 מ״מ</span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>אדריכלי — דלתות<span class="cnt">10</span></h2><div class="grid"><figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="5" y1="100" x2="5" y2="88" stroke-width="2.72"/><line x1="95" y1="100" x2="95" y2="88" stroke-width="2.72"/><rect x="5" y="10" width="5.5" height="90" stroke-width="2.21"/><ellipse cx="5" cy="100" rx="2" ry="2" class="fil"/><polyline points="5,10 14.41,10.49 23.71,11.97 32.81,14.4 41.61,17.78 50,22.06 57.9,27.19 65.22,33.12 71.88,39.78 77.81,47.1 82.94,55 87.22,63.39 90.6,72.19 93.03,81.29 94.51,90.59 95,100" stroke-width="1.19"/></svg>
+      <figcaption>
+        <span class="he">דלת פנימה שמאל</span>
+        <span class="key">door_hinged_l</span>
+        <span class="meta">wall · 800×2050 מ״מ</span>
+        <span class="lnk">↔ דלת פנימה שמאל · דלת החוצה שמאל <code>DOOR_IN_LEFT</code> <code>DOOR_OUT_LEFT</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="95" y1="100" x2="95" y2="88" stroke-width="2.72"/><line x1="5" y1="100" x2="5" y2="88" stroke-width="2.72"/><rect x="89.5" y="10" width="5.5" height="90" stroke-width="2.21"/><ellipse cx="95" cy="100" rx="2" ry="2" class="fil"/><polyline points="5,100 5.49,90.59 6.97,81.29 9.4,72.19 12.78,63.39 17.06,55 22.19,47.1 28.12,39.78 34.78,33.12 42.1,27.19 50,22.06 58.39,17.78 67.19,14.4 76.29,11.97 85.59,10.49 95,10" stroke-width="1.19"/></svg>
+      <figcaption>
+        <span class="he">דלת פנימה ימין</span>
+        <span class="key">door_hinged_r</span>
+        <span class="meta">wall · 800×2050 מ״מ</span>
+        <span class="lnk">↔ דלת פנימה ימין · דלת החוצה ימין <code>DOOR_IN_RIGHT</code> <code>DOOR_OUT_RIGHT</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="0" y1="100" x2="100" y2="100" stroke-width="2.89"/><line x1="95" y1="100" x2="95" y2="88" stroke-width="2.72"/><line x1="5" y1="100" x2="5" y2="88" stroke-width="2.72"/><rect x="86.5" y="10" width="8.5" height="90" stroke-width="3.23"/><ellipse cx="95" cy="100" rx="2" ry="2" class="fil"/><polyline points="5,100 5.49,90.59 6.97,81.29 9.4,72.19 12.78,63.39 17.06,55 22.19,47.1 28.12,39.78 34.78,33.12 42.1,27.19 50,22.06 58.39,17.78 67.19,14.4 76.29,11.97 85.59,10.49 95,10" stroke-width="1.19"/></svg>
+      <figcaption>
+        <span class="he">דלת כניסה / פלדלת</span>
+        <span class="key">door_entrance</span>
+        <span class="meta">wall · 1000×2100 מ״מ</span>
+        <span class="lnk">↔ דלת כניסה / פלדלת <code>DOOR_ENTRANCE</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="0" y1="84" x2="100" y2="84" stroke-dasharray="3.2 2.4"/><rect x="5" y="76" width="49" height="16" stroke-width="2.21"/><rect x="50" y="79" width="47" height="16" stroke-dasharray="3.2 2.4"/><polyline points="64,78 70,84 64,90"/></svg>
+      <figcaption>
+        <span class="he">דלת הזזה</span>
+        <span class="key">door_sliding</span>
+        <span class="meta">wall · 900×2100 מ״מ</span>
+        <span class="lnk">↔ דלת הזזה · דלת מרפסת (הזזה) <code>DOOR_SLIDING</code> <code>DOOR_PATIO</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="4" y1="100" x2="4" y2="88" stroke-width="2.72"/><line x1="96" y1="100" x2="96" y2="88" stroke-width="2.72"/><rect x="4" y="56" width="5.5" height="44" stroke-width="2.21"/><ellipse cx="4" cy="100" rx="2" ry="2" class="fil"/><polyline points="4,56 8.6,56.24 13.15,56.96 17.6,58.15 21.9,59.8 26,61.89 29.86,64.4 33.44,67.3 36.7,70.56 39.6,74.14 42.11,78 44.2,82.1 45.85,86.4 47.04,90.85 47.76,95.4 48,100" stroke-width="1.19"/><rect x="90.5" y="56" width="5.5" height="44" stroke-width="2.21"/><ellipse cx="96" cy="100" rx="2" ry="2" class="fil"/><polyline points="52,100 52.24,95.4 52.96,90.85 54.15,86.4 55.8,82.1 57.89,78 60.4,74.14 63.3,70.56 66.56,67.3 70.14,64.4 74,61.89 78.1,59.8 82.4,58.15 86.85,56.96 91.4,56.24 96,56" stroke-width="1.19"/></svg>
+      <figcaption>
+        <span class="he">דלת דו-כנפית</span>
+        <span class="key">door_double</span>
+        <span class="meta">wall · 1600×2100 מ״מ</span>
+        <span class="lnk">↔ דלת דו-כנפית <code>DOOR_DOUBLE</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="3" y1="100" x2="3" y2="88" stroke-width="2.72"/><line x1="97" y1="100" x2="97" y2="88" stroke-width="2.72"/><line x1="0" y1="68" x2="100" y2="68" stroke-width="1.19" stroke-dasharray="3.2 2.4"/><polyline points="4,100 20,68 36,100 52,68 68,100 84,68 96,100" stroke-width="2.04"/></svg>
+      <figcaption>
+        <span class="he">דלת מתקפלת (אקורדיון)</span>
+        <span class="key">door_folding</span>
+        <span class="meta">wall · 900×2050 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="5" y1="100" x2="5" y2="88" stroke-width="2.72"/><line x1="95" y1="100" x2="95" y2="88" stroke-width="2.72"/><rect x="5" y="10" width="5.5" height="90" stroke-width="1.7"/><ellipse cx="5" cy="100" rx="2" ry="2" class="fil"/><polyline points="5,10 14.41,10.49 23.71,11.97 32.81,14.4 41.61,17.78 50,22.06 57.9,27.19 65.22,33.12 71.88,39.78 77.81,47.1 82.94,55 87.22,63.39 90.6,72.19 93.03,81.29 94.51,90.59 95,100" stroke-width="1.19" stroke-dasharray="3.2 2.4"/></svg>
+      <figcaption>
+        <span class="he">דלת נסתרת</span>
+        <span class="key">door_concealed</span>
+        <span class="meta">wall · 800×2100 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="95" y1="100" x2="95" y2="88" stroke-width="2.72"/><line x1="5" y1="100" x2="5" y2="88" stroke-width="2.72"/><rect x="85" y="10" width="10" height="90" stroke-width="3.57"/><ellipse cx="95" cy="100" rx="2" ry="2" class="fil"/><polyline points="5,100 5.49,90.59 6.97,81.29 9.4,72.19 12.78,63.39 17.06,55 22.19,47.1 28.12,39.78 34.78,33.12 42.1,27.19 50,22.06 58.39,17.78 67.19,14.4 76.29,11.97 85.59,10.49 95,10" stroke-width="1.19"/><text x="38" y="55.44" font-size="16" text-anchor="middle">ממ״ד</text></svg>
+      <figcaption>
+        <span class="he">דלת ממ"ד (הדף)</span>
+        <span class="key">door_mamad</span>
+        <span class="meta">wall · 800×2000 מ״מ</span>
+        <span class="lnk">↔ דלת ממ"ד (הדף) <code>DOOR_MAMAD</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="3" y1="100" x2="3" y2="86" stroke-width="2.21"/><line x1="97" y1="100" x2="97" y2="86" stroke-width="2.21"/><line x1="3" y1="86" x2="97" y2="86" stroke-width="2.21"/></svg>
+      <figcaption>
+        <span class="he">מפתח עם משקוף</span>
+        <span class="key">door_frame</span>
+        <span class="meta">wall · 900×2100 מ״מ</span>
+        <span class="lnk">↔ מפתח עם משקוף <code>OPENING_FRAME</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="0" y1="86" x2="100" y2="86" stroke-dasharray="3.2 2.4"/><rect x="6" y="78" width="44" height="16"/><rect x="50" y="78" width="46" height="16" stroke-dasharray="3.2 2.4"/><polyline points="55,81 60,86 55,91"/></svg>
+      <figcaption>
+        <span class="he">דלת כיס</span>
+        <span class="key">door_pocket</span>
+        <span class="meta">wall · 900×2100 מ״מ</span>
+        <span class="lnk">↔ דלת כיס <code>DOOR_POCKET</code></span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>אדריכלי — פתחים ומעברים<span class="cnt">7</span></h2><div class="grid"><figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="4" y1="100" x2="4" y2="70"/><line x1="96" y1="100" x2="96" y2="70"/></svg>
+      <figcaption>
+        <span class="he">מעבר</span>
+        <span class="key">passage</span>
+        <span class="meta">wall · 1000×2100 מ״מ</span>
+        <span class="lnk">↔ מעבר · פתח עד הרצפה <code>PASSAGE</code> <code>OPENING_TO_FLOOR</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="4" y1="100" x2="4" y2="50"/><line x1="96" y1="100" x2="96" y2="50"/><polyline points="4,50 4.25,44.77 5.01,39.6 6.25,34.55 7.98,29.66 10.16,25 12.79,20.61 15.82,16.54 19.22,12.84 22.96,9.55 27,6.7 31.29,4.32 35.79,2.45 40.44,1.09 45.19,0.27 50,0 54.81,0.27 59.56,1.09 64.21,2.45 68.71,4.32 73,6.7 77.04,9.55 80.78,12.84 84.18,16.54 87.21,20.61 89.84,25 92.02,29.66 93.75,34.55 94.99,39.6 95.75,44.77 96,50"/></svg>
+      <figcaption>
+        <span class="he">פתח קשתי</span>
+        <span class="key">arch</span>
+        <span class="meta">wall · 1000×2200 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="4" y1="100" x2="4" y2="40"/><line x1="96" y1="100" x2="96" y2="6"/><polyline points="50,6 54.81,6.19 59.56,6.74 64.21,7.66 68.71,8.94 73,10.56 77.04,12.49 80.78,14.73 84.18,17.25 87.21,20.02 89.84,23 92.02,26.17 93.75,29.49 94.99,32.93 95.75,36.45 96,40"/></svg>
+      <figcaption>
+        <span class="he">פתח חצי-קשת</span>
+        <span class="key">half_arch</span>
+        <span class="meta">wall · 1000×2200 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="4" y1="100" x2="4" y2="70"/><line x1="96" y1="100" x2="96" y2="70"/><line x1="4" y1="70" x2="96" y2="70" stroke-dasharray="3.2 2.4"/></svg>
+      <figcaption>
+        <span class="he">מעבר מונמך</span>
+        <span class="key">lowered_passage</span>
+        <span class="meta">wall · 900×1950 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="10" y="30" width="80" height="56"/></svg>
+      <figcaption>
+        <span class="he">אשנב-העברה</span>
+        <span class="key">pass_through</span>
+        <span class="meta">wall · 600×500 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="6" y="32" width="88" height="36"/><line x1="6" y1="50" x2="94" y2="50"/></svg>
+      <figcaption>
+        <span class="he">חלון פנימי</span>
+        <span class="key">interior_window</span>
+        <span class="meta">wall · 800×600 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="4" y1="100" x2="4" y2="70"/><line x1="96" y1="100" x2="96" y2="70"/><line x1="0" y1="70" x2="100" y2="70" stroke-width="2.38"/></svg>
+      <figcaption>
+        <span class="he">דלפק-מעבר / בר</span>
+        <span class="key">bar_counter</span>
+        <span class="meta">wall · 1200×1200 מ״מ</span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>אדריכלי — חלונות<span class="cnt">12</span></h2><div class="grid"><figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="0" y="36" width="100" height="28" stroke-width="2.04"/><line x1="0" y1="45.52" x2="100" y2="45.52"/><line x1="0" y1="54.48" x2="100" y2="54.48"/></svg>
+      <figcaption>
+        <span class="he">חלון</span>
+        <span class="key">window</span>
+        <span class="meta">wall · 1200×1440 מ״מ</span>
+        <span class="lnk">↔ חלון <code>WINDOW</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="0" y1="36" x2="100" y2="36"/><line x1="0" y1="64" x2="100" y2="64"/><rect x="2" y="38" width="52" height="11" stroke-width="2.04"/><rect x="46" y="51" width="52" height="11" stroke-width="2.04"/><polyline points="24.5,39 20,43.5 24.5,48"/><polyline points="75.5,52 80,56.5 75.5,61"/></svg>
+      <figcaption>
+        <span class="he">חלון הזזה</span>
+        <span class="key">window_sliding</span>
+        <span class="meta">wall · 1500×1200 מ״מ</span>
+        <span class="lnk">↔ חלון הזזה · חלון מטבח <code>WINDOW_SLIDING</code> <code>WINDOW_KITCHEN</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="0" y="36" width="100" height="28" stroke-width="2.04"/><line x1="0" y1="45.52" x2="100" y2="45.52"/><line x1="0" y1="54.48" x2="100" y2="54.48"/><polyline points="10,63 50,40 90,63" stroke-dasharray="3.2 2.4"/></svg>
+      <figcaption>
+        <span class="he">חלון מדף (אוונינג)</span>
+        <span class="key">window_tilt</span>
+        <span class="meta">wall · 800×600 מ״מ</span>
+        <span class="lnk">↔ חלון מדף (אוונינג) <code>WINDOW_TILT</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="0" y="36" width="100" height="28" stroke-width="2.04"/><line x1="0" y1="45.52" x2="100" y2="45.52"/><line x1="0" y1="54.48" x2="100" y2="54.48"/><line x1="4" y1="64" x2="4" y2="14" stroke-width="2.04"/><polyline points="4,14 13.62,14.27 23.13,15.09 32.43,16.45 41.42,18.32 50,20.7 58.08,23.55 65.56,26.84 72.37,30.54 78.43,34.61 83.67,39 88.05,43.66 91.5,48.55 93.99,53.6 95.5,58.77 96,64" stroke-width="1.36" stroke-dasharray="3.2 2.4"/></svg>
+      <figcaption>
+        <span class="he">חלון ציר</span>
+        <span class="key">window_casement</span>
+        <span class="meta">wall · 800×1200 מ״מ</span>
+        <span class="lnk">↔ חלון ציר <code>WINDOW_CASEMENT</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="0" y="36" width="100" height="28" stroke-width="2.04"/><line x1="0" y1="45.52" x2="100" y2="45.52"/><line x1="0" y1="54.48" x2="100" y2="54.48"/><polyline points="14,63 50,42 86,63" stroke-dasharray="3.2 2.4"/><line x1="4" y1="64" x2="4" y2="18" stroke-width="1.7"/><polyline points="4,18 13.62,18.25 23.13,19.01 32.43,20.25 41.42,21.98 50,24.16 58.08,26.79 65.56,29.82 72.37,33.22 78.43,36.96 83.67,41 88.05,45.29 91.5,49.79 93.99,54.44 95.5,59.19 96,64" stroke-width="1.36" stroke-dasharray="3.2 2.4"/></svg>
+      <figcaption>
+        <span class="he">חלון קיפ (דריי-קיפ)</span>
+        <span class="key">window_kip</span>
+        <span class="meta">wall · 800×1400 מ״מ</span>
+        <span class="lnk">↔ חלון קיפ (דריי-קיפ) <code>WINDOW_KIP</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="0" y="36" width="100" height="28" stroke-width="2.04"/><line x1="0" y1="45.52" x2="100" y2="45.52"/><line x1="0" y1="54.48" x2="100" y2="54.48"/><line x1="50" y1="40" x2="50" y2="60"/><polyline points="45,45 50,40 55,45"/><polyline points="45,55 50,60 55,55"/></svg>
+      <figcaption>
+        <span class="he">חלון גיליון</span>
+        <span class="key">window_hung</span>
+        <span class="meta">wall · 900×1400 מ״מ</span>
+        <span class="lnk">↔ חלון גיליון <code>WINDOW_HUNG</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="0" y="28" width="100" height="44" stroke-width="3.4"/><rect x="10" y="38" width="80" height="24" stroke-width="2.21"/><line x1="10" y1="50" x2="90" y2="50"/><text x="50" y="90.1" font-size="15" text-anchor="middle">ממ״ד</text></svg>
+      <figcaption>
+        <span class="he">חלון ממ"ד (הדף)</span>
+        <span class="key">window_mamad</span>
+        <span class="meta">wall · 1000×1000 מ״מ</span>
+        <span class="lnk">↔ חלון ממ"ד (הדף) <code>WINDOW_MAMAD</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="0" y="36" width="100" height="28" stroke-width="2.04"/><line x1="0" y1="45.52" x2="100" y2="45.52"/><line x1="0" y1="54.48" x2="100" y2="54.48"/><line x1="34" y1="36" x2="34" y2="64" stroke-width="1.87"/><line x1="67" y1="36" x2="67" y2="64" stroke-width="1.87"/></svg>
+      <figcaption>
+        <span class="he">ויטרינה</span>
+        <span class="key">window_storefront</span>
+        <span class="meta">wall · 2000×2400 מ״מ</span>
+        <span class="lnk">↔ ויטרינה <code>VITRINE</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="0" y="36" width="58" height="28" stroke-width="2.04"/><line x1="0" y1="45.52" x2="58" y2="45.52"/><line x1="0" y1="54.48" x2="58" y2="54.48"/><rect x="58" y="36" width="42" height="56" stroke-width="2.04"/><line x1="58" y1="50" x2="100" y2="50"/></svg>
+      <figcaption>
+        <span class="he">חלון פינתי</span>
+        <span class="key">window_corner</span>
+        <span class="meta">wall · 1500×1200 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="22" y="36" width="56" height="28" stroke-width="2.04"/><line x1="22" y1="45.52" x2="78" y2="45.52"/><line x1="22" y1="54.48" x2="78" y2="54.48"/></svg>
+      <figcaption>
+        <span class="he">חלונית רחצה</span>
+        <span class="key">window_small</span>
+        <span class="meta">wall · 500×500 מ״מ</span>
+        <span class="lnk">↔ חלונית רחצה <code>WINDOW_BATH</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><ellipse cx="50" cy="50" rx="34" ry="34"/><ellipse cx="50" cy="50" rx="27" ry="27"/><line x1="16" y1="50" x2="84" y2="50"/><line x1="50" y1="16" x2="50" y2="84"/></svg>
+      <figcaption>
+        <span class="he">צוהר עגול</span>
+        <span class="key">window_porthole</span>
+        <span class="meta">wall · 500×500 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="4" y="30" width="92" height="40" stroke-width="2.04"/><line x1="27" y1="30" x2="27" y2="70"/><line x1="50" y1="30" x2="50" y2="70"/><line x1="73" y1="30" x2="73" y2="70"/><line x1="4" y1="50" x2="96" y2="50"/></svg>
+      <figcaption>
+        <span class="he">קיר בלוקי-זכוכית</span>
+        <span class="key">window_glassblock</span>
+        <span class="meta">wall · 1000×1000 מ״מ</span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>אדריכלי — פתחים ומבנה<span class="cnt">10</span></h2><div class="grid"><figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="0" y1="50" x2="100" y2="50" stroke-width="2.38"/></svg>
+      <figcaption>
+        <span class="he">אדן חלון</span>
+        <span class="key">window_sill</span>
+        <span class="meta">wall · 1200×40 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="0" y="34" width="100" height="32"/></svg>
+      <figcaption>
+        <span class="he">ארגז תריס</span>
+        <span class="key">shutter_box</span>
+        <span class="meta">wall · 2316×245 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="18" y="18" width="64" height="64" stroke-dasharray="3.2 2.4"/><line x1="18" y1="18" x2="82" y2="82"/><line x1="82" y1="18" x2="18" y2="82"/></svg>
+      <figcaption>
+        <span class="he">פתח ביקורת</span>
+        <span class="key">inspection_hatch</span>
+        <span class="meta">wall · 300×300 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="10" y1="20" x2="90" y2="20"/><line x1="10" y1="36" x2="90" y2="36"/><line x1="10" y1="52" x2="90" y2="52"/><line x1="10" y1="68" x2="90" y2="68"/><line x1="10" y1="84" x2="90" y2="84"/><line x1="50" y1="90" x2="50" y2="16"/><polyline points="44,22 50,16 56,22"/></svg>
+      <figcaption>
+        <span class="he">מדרגות</span>
+        <span class="key">stair</span>
+        <span class="meta">floor · 1000×175 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="10" y="30" width="80" height="40"/><line x1="10" y1="50" x2="90" y2="50"/><polyline points="84,44 90,50 84,56"/><text x="50" y="96.8" font-size="20" text-anchor="middle">רמפה</text></svg>
+      <figcaption>
+        <span class="he">רמפה</span>
+        <span class="key">ramp</span>
+        <span class="meta">floor · 1200×0 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="0" y="38" width="100" height="24" stroke-dasharray="3.2 2.4"/></svg>
+      <figcaption>
+        <span class="he">קורה</span>
+        <span class="key">beam</span>
+        <span class="meta">ceiling · 200×400 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="20" y="20" width="60" height="60"/><line x1="20" y1="20" x2="80" y2="80"/><line x1="80" y1="20" x2="20" y2="80"/></svg>
+      <figcaption>
+        <span class="he">עמוד</span>
+        <span class="key">column_rect</span>
+        <span class="meta">freestanding · 300×0 מ״מ</span>
+        <span class="lnk">↔ עמוד · עמוד סוכך / עוגן פרגולה <code>COLUMN</code> <code>OK_UMBRELLA_ANCHOR</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="0" y1="42" x2="100" y2="42"/><line x1="0" y1="58" x2="100" y2="58"/></svg>
+      <figcaption>
+        <span class="he">קיר גבס</span>
+        <span class="key">drywall</span>
+        <span class="meta">wall · 0×0 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="5" y="30" width="90" height="40" stroke-dasharray="3.2 2.4"/></svg>
+      <figcaption>
+        <span class="he">הנמכת תקרה</span>
+        <span class="key">dropped_ceiling</span>
+        <span class="meta">ceiling · 0×250 מ״מ</span>
+        <span class="lnk">↔ הנמכת תקרה · הנמכת תקרה עם מזגן <code>CEILING_DROP</code> <code>CEILING_DROP_AC</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="14" y="14" width="72" height="72" stroke-dasharray="3.2 2.4"/><polyline points="80,44 86,50 80,56"/></svg>
+      <figcaption>
+        <span class="he">פאנל</span>
+        <span class="key">concealment_panel</span>
+        <span class="meta">wall · 600×700 מ״מ</span>
+        <span class="lnk">↔ פאנל <code>PANEL</code></span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>אדריכלי — אלמנטים עגולים<span class="cnt">5</span></h2><div class="grid"><figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><ellipse cx="50" cy="50" rx="40" ry="40"/></svg>
+      <figcaption>
+        <span class="he">עמוד עגול</span>
+        <span class="key">column_round</span>
+        <span class="meta">freestanding · 300×0 מ״מ</span>
+        <span class="lnk">↔ עמוד עגול · אובייקט עגול <code>COLUMN_ROUND</code> <code>ROUND_OBJECT</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><polyline points="10,100 10.22,90.59 10.87,81.29 11.96,72.19 13.46,63.39 15.36,55 17.64,47.1 20.27,39.78 23.23,33.12 26.49,27.19 30,22.06 33.73,17.78 37.64,14.4 41.68,11.97 45.82,10.49 50,10 54.18,10.49 58.32,11.97 62.36,14.4 66.27,17.78 70,22.06 73.51,27.19 76.77,33.12 79.73,39.78 82.36,47.1 84.64,55 86.54,63.39 88.04,72.19 89.13,81.29 89.78,90.59 90,100"/><line x1="10" y1="100" x2="90" y2="100"/></svg>
+      <figcaption>
+        <span class="he">חצי-עמוד</span>
+        <span class="key">half_column</span>
+        <span class="meta">wall · 300×0 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><polyline points="0,100 0.55,89.55 2.19,79.21 4.89,69.1 8.65,59.33 13.4,50 19.1,41.22 25.69,33.09 33.09,25.69 41.22,19.1 50,13.4 59.33,8.65 69.1,4.89 79.21,2.19 89.55,0.55 100,0"/></svg>
+      <figcaption>
+        <span class="he">פינה מעוגלת</span>
+        <span class="key">rounded_corner</span>
+        <span class="meta">wall · 0×0 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><polyline points="-15.78,112.38 -12.87,101.63 -9.25,91.43 -4.96,81.88 -0.06,73.11 5.41,65.2 11.39,58.25 17.8,52.33 24.57,47.52 31.63,43.86 38.89,41.39 46.28,40.16 53.72,40.16 61.11,41.39 68.37,43.86 75.43,47.52 82.2,52.33 88.61,58.25 94.59,65.2 100.06,73.11 104.96,81.88 109.25,91.43 112.87,101.63 115.78,112.38"/></svg>
+      <figcaption>
+        <span class="he">קיר קשתי (קמור)</span>
+        <span class="key">curved_wall</span>
+        <span class="meta">wall · 0×0 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><ellipse cx="50" cy="50" rx="42" ry="42"/><ellipse cx="50" cy="50" rx="28" ry="28"/><ellipse cx="50" cy="50" rx="14" ry="14"/></svg>
+      <figcaption>
+        <span class="he">כיפה (תקרה)</span>
+        <span class="key">dome_ceiling</span>
+        <span class="meta">ceiling · 2000×500 מ״מ</span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>אדריכלי — מקטעי קיר<span class="cnt">10</span></h2><div class="grid"><figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="10" y1="50" x2="90" y2="50" stroke-width="3.4"/><line x1="90" y1="44" x2="90" y2="56"/></svg>
+      <figcaption>
+        <span class="he">מחיצת חצי-גובה</span>
+        <span class="key">partition_half</span>
+        <span class="meta">wall · 0×1100 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="0" y1="36" x2="100" y2="36"/><line x1="0" y1="44" x2="100" y2="44"/><line x1="0" y1="56" x2="100" y2="56"/><line x1="0" y1="64" x2="100" y2="64"/></svg>
+      <figcaption>
+        <span class="he">קיר כפול (חלל)</span>
+        <span class="key">cavity_wall</span>
+        <span class="meta">wall · 0×250 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="0" y1="40" x2="100" y2="40"/><line x1="0" y1="60" x2="100" y2="60"/><line x1="15" y1="40" x2="5" y2="60"/><line x1="40" y1="40" x2="30" y2="60"/><line x1="65" y1="40" x2="55" y2="60"/><line x1="90" y1="40" x2="80" y2="60"/></svg>
+      <figcaption>
+        <span class="he">קיר בלוקים</span>
+        <span class="key">block_wall</span>
+        <span class="meta">wall · 0×100 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="10" y1="100" x2="10" y2="40"/><line x1="90" y1="100" x2="90" y2="40"/><line x1="10" y1="40" x2="90" y2="40"/></svg>
+      <figcaption>
+        <span class="he">נישה / כוך</span>
+        <span class="key">niche</span>
+        <span class="meta">wall · 600×900 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="10" y1="100" x2="10" y2="50"/><line x1="90" y1="100" x2="90" y2="50"/><line x1="10" y1="50" x2="90" y2="50"/></svg>
+      <figcaption>
+        <span class="he">בליטת/בוקסת קיר</span>
+        <span class="key">wall_boxing</span>
+        <span class="meta">wall · 400×0 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="0" y1="60" x2="100" y2="100"/></svg>
+      <figcaption>
+        <span class="he">פינה קטומה</span>
+        <span class="key">chamfer</span>
+        <span class="meta">wall · 200×0 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><polyline points="3.02,99.48 5.09,93.62 7.68,88.05 10.74,82.85 14.24,78.06 18.15,73.75 22.42,69.95 27,66.73 31.83,64.1 36.88,62.1 42.07,60.76 47.35,60.08 52.65,60.08 57.93,60.76 63.12,62.1 68.17,64.1 73,66.73 77.58,69.95 81.85,73.75 85.76,78.06 89.26,82.85 92.32,88.05 94.91,93.62 96.98,99.48"/></svg>
+      <figcaption>
+        <span class="he">קיר קמור/קעור</span>
+        <span class="key">convex_wall</span>
+        <span class="meta">wall · 0×0 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><polyline points="0,100 50,100 50,60 100,60"/></svg>
+      <figcaption>
+        <span class="he">מדרגת קיר</span>
+        <span class="key">wall_step</span>
+        <span class="meta">wall · 100×0 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="20" y1="100" x2="20" y2="70"/><line x1="80" y1="100" x2="80" y2="70"/><line x1="20" y1="70" x2="80" y2="70"/></svg>
+      <figcaption>
+        <span class="he">פילסטר</span>
+        <span class="key">pilaster</span>
+        <span class="meta">wall · 400×0 מ״מ</span>
+      </figcaption>
+    </figure>
+<figure class="cell isnew">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="0" y1="50" x2="100" y2="50" stroke-dasharray="3.2 2.4"/></svg>
+      <figcaption>
+        <span class="he">חיפוי קיר</span>
+        <span class="key">wall_cladding</span>
+        <span class="meta">wall · 0×0 מ״מ</span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>הערות וסימון<span class="cnt">5</span></h2><div class="grid"><figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="20" y="22" width="62" height="42" rx="6" ry="6"/><line x1="30" y1="34" x2="72" y2="34"/><line x1="30" y1="44" x2="72" y2="44"/><line x1="30" y1="54" x2="72" y2="54"/><polyline points="20,64 28,90 40,64"/></svg>
+      <figcaption>
+        <span class="he">הערה</span>
+        <span class="key">note</span>
+        <span class="meta">freestanding · 0×0 מ״מ</span>
+        <span class="lnk">↔ הערה <code>NOTE</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="16" y="20" width="68" height="46" rx="6" ry="6"/><text x="50" y="50.8" font-size="20" text-anchor="middle">מפעל</text><polyline points="16,66 26,92 38,66"/></svg>
+      <figcaption>
+        <span class="he">הערה למפעל</span>
+        <span class="key">note_factory</span>
+        <span class="meta">freestanding · 0×0 מ״מ</span>
+        <span class="lnk">↔ הערה למפעל <code>NOTE_FACTORY</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><ellipse cx="50" cy="50" rx="32" ry="32"/><line x1="18" y1="50" x2="82" y2="50"/><line x1="50" y1="18" x2="50" y2="82"/><polygon points="50,50 50,20 79,35" class="fil"/><polygon points="50,50 50,80 21,65" class="fil"/></svg>
+      <figcaption>
+        <span class="he">שטיכמוס (סימן ייחוס)</span>
+        <span class="key">datum_mark</span>
+        <span class="meta">freestanding · 0×0 מ״מ</span>
+        <span class="lnk">↔ שטיכמוס (סימן ייחוס) <code>STICHMASS</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="0" y1="50" x2="100" y2="50" stroke-width="2.04" stroke-dasharray="3.2 2.4"/></svg>
+      <figcaption>
+        <span class="he">קו-תקרה עתידי</span>
+        <span class="key">future_ceiling_line</span>
+        <span class="meta">ceiling · 0×0 מ״מ</span>
+        <span class="lnk">↔ קו-תקרה עתידי <code>FUTURE_CEILING_LINE</code></span>
+      </figcaption>
+    </figure>
+<figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><rect x="8" y="18" width="84" height="64" stroke-dasharray="3.2 2.4"/><rect x="20" y="32" width="60" height="36" stroke-dasharray="3.2 2.4"/></svg>
+      <figcaption>
+        <span class="he">תקרה עתידית</span>
+        <span class="key">future_ceiling</span>
+        <span class="meta">ceiling · 0×0 מ״מ</span>
+        <span class="lnk">↔ תקרה עתידית <code>FUTURE_CEILING</code></span>
+      </figcaption>
+    </figure></div></section>
+<section><h2>שונות<span class="cnt">1</span></h2><div class="grid"><figure class="cell">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><line class="wall" x1="0" y1="100" x2="100" y2="100"/><line x1="50" y1="100" x2="50" y2="30"/><polygon points="50,22 78,50 50,78 22,50"/></svg>
+      <figcaption>
+        <span class="he">מגירת אשפה</span>
+        <span class="key">generic</span>
+        <span class="meta">wall · 100×100 מ״מ</span>
+        <span class="lnk">↔ מגירת אשפה · מגירות אחסון · עציץ מובנה <code>OK_TRASH_DRAWER</code> <code>OK_STORAGE_DRAWERS</code> <code>OK_PLANTER</code></span>
+      </figcaption>
+    </figure></div></section>
+</main>

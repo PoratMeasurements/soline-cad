@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- שיתוף-מיקום-בהסכמה (Ops-Metrics · GPS · לשיפור-השירות · בהסכמת-המודד בלבד).
+         נאסף אך-ורק לאחר OPT-IN מפורש (LocationConsentScreen); בלי הסכמה — לא-נדרש
+         ולא-מבוקש. FINE/COARSE (נדרש ל-GPS); BACKGROUND לרציפות בזמן-העבודה;
+         FOREGROUND_SERVICE(+_LOCATION) חובה מ-Android 10/14 + מחייב התראה גלויה. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+
+    <!-- מצלמה: צילום-תמונות-שדה פר-חזית (פיצ'ר-תמונות). ACTION_IMAGE_CAPTURE דרך
+         ה-FileProvider הקיים; בקשת-runtime לפני-הצילום. המצלמה אינה חובה-חומרתית
+         (required=false) — טאבלט ללא-מצלמה עדיין מריץ את שאר-האפליקציה. -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
+
+    <application
+        android:name=".data.SolineApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="soline"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.SolineMeasure">
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="il.co.soline.measure.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- שיתוף-מיקום-בהסכמה: Foreground-Service מסוג location. פועל רק לאחר
+             הסכמה-מפורשת; מציג התראה קבועה וגלויה עם מתג-כיבוי (ראה OpsMetricsService). -->
+        <service
+            android:name=".ops.metrics.OpsMetricsService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
+    </application>
+
+</manifest>

@@ -1,0 +1,276 @@
+/* [HTML EXPORT 2026-08-18] Interactive room-measurement report.
+   Adapted from the owner's desktop kitchen app's interactive export
+   (kitchen_app/src/kitchen_app/templates/interactive_export/styles.css) -
+   same visual language (teal accent, paper cards), extended with the
+   schedule tables and the 3D canvas pane this export adds. */
+
+:root {
+  --ink: #1f2937;
+  --ink-soft: #5b6472;
+  --line: #d7dce3;
+  --paper: #ffffff;
+  --paper-soft: #f4f6f9;
+  --accent: #2e7d6a;
+  --accent-dark: #1e4d40;
+  --accent-soft: #e6f3ef;
+  --warn: #e6982e;
+  --radius: 10px;
+  --shadow: 0 2px 10px rgba(20, 30, 40, 0.08);
+  /* Drawing palette. stroke-width values are bare numbers on purpose:
+     SVG user units == millimetres in this export's viewBoxes. */
+  --cab-fill: #e7d9c3;
+  --cab-stroke: #9c8760;
+  --wall-fill: #b9c2cd;
+  --wall-stroke: #6b7684;
+  --acc-stroke: #333333;
+  --opening-fill: #eaf2f8;
+  --opening-stroke: #4c8fb0;
+  --door-fill: #f6eee2;
+  --door-stroke: #96652a;
+  --dim-line-color: #465065;
+  --cad-dim-color: #1565c0;   /* user-placed CAD dimensions - blue, like the app canvas */
+  --note-fill: #fff5c8;
+  --note-stroke: #b49638;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--paper-soft);
+  color: var(--ink);
+  font-family: "Segoe UI", "Arial Hebrew", Arial, sans-serif;
+}
+
+body { direction: ltr; }
+html[dir="rtl"] body { direction: rtl; }
+
+#app { min-height: 100%; display: flex; flex-direction: column; }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 14px;
+}
+button:hover { border-color: var(--accent); color: var(--accent-dark); }
+button.ghost { background: transparent; border-color: transparent; }
+button.toggle.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-dark); }
+
+/* ---------- top bar ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.topbar .title { font-size: 16px; font-weight: 600; margin-inline-end: auto; }
+.topbar .crumb { color: var(--ink-soft); font-size: 13px; }
+
+.subbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 22px;
+  background: var(--paper-soft);
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+/* ---------- layers dropdown ---------- */
+.layers-control { position: relative; margin-inline-start: auto; }
+.layers-panel {
+  display: none;
+  position: absolute;
+  inset-inline-end: 0;
+  top: calc(100% + 6px);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 10px 14px;
+  z-index: 25;
+  min-width: 200px;
+  max-height: 60vh;
+  overflow: auto;
+}
+.layers-control.open .layers-panel { display: block; }
+.layer-row { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 4px 0; cursor: pointer; white-space: nowrap; }
+.layer-row input { margin: 0; }
+.layer-sep { height: 1px; background: var(--line); margin: 6px 0; }
+@media (max-width: 699px) {
+  .layers-panel { position: fixed; inset-inline: 10px; top: auto; }
+}
+
+/* ---------- welcome ---------- */
+.welcome { max-width: 1100px; margin: 0 auto; padding: 40px 24px 60px; width: 100%; }
+.welcome .hero {
+  background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 28px 30px;
+  box-shadow: var(--shadow);
+}
+.welcome .hero h1 { margin: 0 0 6px; font-size: 26px; }
+.welcome .hero p { margin: 0; opacity: 0.9; font-size: 14px; }
+
+.stat-row { display: flex; gap: 14px; margin-top: 18px; flex-wrap: wrap; }
+.stat-tile {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  min-width: 110px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+.stat-tile .n { font-size: 22px; font-weight: 700; color: var(--accent-dark); }
+.stat-tile .l { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+
+.field-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px 20px; margin: 14px 0 0; }
+.field-grid .field { font-size: 13px; }
+.field-grid .field .k { color: var(--ink-soft); margin-inline-end: 6px; }
+
+.section-title { font-size: 15px; font-weight: 700; margin: 28px 0 12px; color: var(--accent-dark); }
+
+.room-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+.room-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform .08s ease, border-color .08s ease;
+}
+.room-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.room-card h3 { margin: 0 0 8px; font-size: 16px; }
+.room-card .meta { display: flex; gap: 12px; font-size: 12px; color: var(--ink-soft); flex-wrap: wrap; }
+.room-card-thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  background: var(--paper-soft);
+  border: 1px solid var(--line);
+}
+.room-card-thumb svg { width: 100%; height: 100%; display: block; }
+
+/* ---------- room view ---------- */
+.room-view, .elev-view { flex: 1; display: flex; flex-direction: column; max-width: 1800px; width: 100%; margin: 0 auto; min-height: 0; }
+.room-body { display: grid; grid-template-columns: 1.2fr 1fr; gap: 0; min-height: 62vh; }
+@media (max-width: 900px) { .room-body { grid-template-columns: 1fr; } }
+
+.pane { position: relative; border-inline-end: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: column; min-height: 0; }
+.pane:last-child { border-inline-end: none; }
+.pane .pane-title {
+  font-size: 12px; font-weight: 700; color: var(--ink-soft);
+  padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--paper);
+}
+.pane .pane-body { flex: 1; overflow: hidden; background: var(--paper-soft); display: flex; align-items: center; justify-content: center; min-height: 200px; }
+.pane-split { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.pane-split .pane-body { flex: 1.4; min-height: 160px; }
+.pane-split .detail-section { flex: 1; min-height: 140px; }
+
+canvas.view3d { width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+canvas.view3d:active { cursor: grabbing; }
+.view3d-hint { position: absolute; bottom: 8px; inset-inline-start: 12px; font-size: 11px; color: var(--ink-soft); pointer-events: none; }
+
+svg.plan-svg, svg.elev-svg { background: var(--paper); width: 100%; height: 100%; cursor: grab; touch-action: none; }
+svg.plan-svg:active, svg.elev-svg:active { cursor: grabbing; }
+
+/* ---------- drawing element styles ---------- */
+.wall-shape { fill: var(--wall-fill); stroke: var(--wall-stroke); stroke-width: 1; cursor: pointer; }
+.wall-shape:hover { fill: var(--accent); }
+.wall-shape.peninsula { fill: none; stroke-dasharray: 40 25; stroke-width: 8; }
+.wall-line { stroke: var(--wall-stroke); stroke-width: 2; }
+.cab-shape { fill: var(--cab-fill); stroke: var(--cab-stroke); stroke-width: 1.4; cursor: pointer; }
+.cab-shape:hover .box, .cab-shape.selected .box { fill: var(--accent); }
+.cab-shape text { pointer-events: none; }
+.acc-shape { cursor: pointer; }
+.acc-shape .box { stroke: var(--acc-stroke); stroke-width: 1.6; }
+.acc-shape:hover .box, .acc-shape.selected .box { fill: var(--accent); }
+.acc-shape text { fill: #fff; font-size: 8px; font-weight: 700; text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
+.opening-shape { fill: var(--opening-fill); stroke: var(--opening-stroke); stroke-width: 1.6; cursor: pointer; }
+.opening-shape.door { fill: var(--door-fill); stroke: var(--door-stroke); }
+.opening-shape:hover { fill: var(--accent); }
+.door-swing line, .door-swing path { stroke: var(--door-stroke); stroke-width: 2; fill: none; pointer-events: none; }
+.door-swing.assumed line, .door-swing.assumed path { stroke-dasharray: 30 20; opacity: 0.55; }
+.label-text { fill: #2a323d; font-size: 10px; text-anchor: middle; pointer-events: none; }
+.corner-angle text { fill: #b3541e; font-weight: 700; text-anchor: middle; pointer-events: none; }
+.corner-angle path { stroke: #b3541e; fill: none; }
+
+/* auto (tiered) dimensions - colors come per-element from data */
+.dim-group line { stroke: var(--dim-line-color); stroke-width: 1; }
+.dim-group text { fill: #2c3542; font-size: 10px; text-anchor: middle; pointer-events: none; }
+.dim-total text { font-weight: 700; }
+svg.dims-hidden .dim-group { display: none; }
+
+/* user-placed CAD dimensions */
+.cad-dim line { stroke: var(--cad-dim-color); stroke-width: 1.2; }
+.cad-dim text { fill: var(--cad-dim-color); font-size: 10px; text-anchor: middle; pointer-events: none; }
+svg.caddims-hidden .cad-dim { display: none; }
+
+/* height-band readings (dashed, inside the elevation wall body) */
+.height-band line { stroke: #7a6db0; stroke-width: 0.8; stroke-dasharray: 40 25; }
+.height-band text { fill: #7a6db0; font-size: 9px; text-anchor: start; pointer-events: none; }
+
+/* CAD notes + symbols */
+.text-note { cursor: pointer; }
+.text-note-box { fill: var(--note-fill); stroke: var(--note-stroke); stroke-width: 1.5; }
+.text-note:hover .text-note-box { fill: #ffedb0; stroke: var(--warn); }
+.text-note-label { fill: #3c2d0a; font-size: 9px; text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
+.note-leader { stroke: var(--note-stroke); stroke-width: 1; stroke-dasharray: 20 14; fill: none; }
+.cad-symbol { cursor: pointer; }
+.cad-symbol .prim { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.cad-symbol .prim.filled { fill-opacity: 0.15; }
+.cad-symbol text.sym-label { font-size: 9px; text-anchor: middle; pointer-events: none; }
+.cad-symbol .placeholder { stroke-dasharray: 20 14; fill: none; }
+
+/* ---------- elevation view ---------- */
+.elev-body { flex: 1; display: grid; grid-template-columns: 1fr 260px; gap: 0; min-height: 62vh; }
+@media (max-width: 900px) { .elev-body { grid-template-columns: 1fr; } }
+.elev-main { display: flex; flex-direction: column; min-height: 0; border-inline-end: 1px solid var(--line); }
+@media (max-width: 900px) { .elev-main { border-inline-end: none; } }
+.elev-svg-area { flex: 1.6; min-height: 200px; overflow: hidden; background: var(--paper-soft); display: flex; align-items: center; justify-content: center; }
+.elev-main .detail-section { flex: 1; min-height: 140px; }
+.plan-corner { display: flex; flex-direction: column; background: var(--paper); min-height: 200px; }
+.plan-corner .cap { font-size: 11px; padding: 6px 10px; color: var(--ink-soft); border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+.plan-corner svg { width: 100%; flex: 1; min-height: 0; }
+.plan-corner .wall-shape.current { fill: var(--accent); }
+
+/* ---------- detail section ---------- */
+.detail-section { display: flex; flex-direction: column; background: var(--paper); border-top: 1px solid var(--line); min-height: 0; }
+.detail-head { padding: 10px 16px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+.detail-head h4 { margin: 0; font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+.detail-section.filled .detail-head h4 { color: var(--ink); font-size: 15px; }
+.detail-body { padding: 12px 16px; overflow: auto; flex: 1; min-height: 0; }
+.detail-body .row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 13px; }
+.detail-body .row .k { color: var(--ink-soft); }
+.detail-body .row .v { font-weight: 600; }
+.detail-body .badge { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #fff; margin-inline-end: 6px; }
+
+/* ---------- schedules ---------- */
+.schedules { padding: 18px 22px 40px; }
+.schedule-block { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 18px; overflow: hidden; }
+.schedule-block h3 { margin: 0; padding: 12px 16px; font-size: 14px; color: var(--accent-dark); border-bottom: 1px solid var(--line); background: var(--accent-soft); }
+.schedule-scroll { overflow-x: auto; }
+table.schedule { border-collapse: collapse; width: 100%; font-size: 13px; }
+table.schedule th, table.schedule td { padding: 7px 12px; border-bottom: 1px solid var(--line); text-align: start; white-space: nowrap; }
+table.schedule th { background: var(--paper-soft); color: var(--ink-soft); font-weight: 600; font-size: 12px; }
+table.schedule tr:hover td { background: var(--accent-soft); }
+
+.empty-note { color: var(--ink-soft); font-size: 13px; padding: 30px; text-align: center; }
+.footer-note { color: var(--ink-soft); font-size: 12px; padding: 16px 22px; text-align: center; }

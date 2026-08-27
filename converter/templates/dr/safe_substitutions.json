@@ -1,0 +1,12 @@
+{
+ "_note": "Substitute a mimran-safe (proven-loadable) record for types absent from the mimran corpus. Correctness (loads without E4214) beats exact symbol. Each target's code is mimran-proven (see safe_symbol_codes.json).",
+ "map": {
+  "גז": "ק.בקורת",
+  "צ.מים": "מים משולב",
+  "מים": "מים משולב",
+  "ביוב": "ביוב קיר",
+  "פ.ביוב": "פ.ביוב",
+  "אסלה": "מים משולב",
+  "+שקע": "שקע"
+ }
+}

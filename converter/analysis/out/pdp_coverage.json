@@ -1,0 +1,534 @@
+{
+  "note": "PDP injectability = the item type has a canonical GT code AND that code is in the target DR base's native code-set (the 921-membership rule). תשתיות.pdp is a native library, NOT a DR base: its records carry code 0 @0x91, so it contributes NOTHING to any DR base's membership set (inTashtiot only flags that the owner's library visually contains that element type).",
+  "pdpUniverse": {
+    "ordxEmittedTypes": 19,
+    "gtLibraryTypes": 35,
+    "clarification": "The 189 figure is the DXF-2D symbol library (separate lane). The app's ORDX->PDP pipeline emits 19 distinct PDP types; all have a GT canonical code."
+  },
+  "neededCodesForOrdxTypes": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    15
+  ],
+  "baseNativeCodeSets": {
+    "wall4_oc40 (Rosetta, owner DR export)": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      11,
+      12,
+      15,
+      20
+    ],
+    "wall4_oc17 (mimran, thin base)": [
+      1,
+      3,
+      5,
+      7
+    ]
+  },
+  "onRosettaBase": {
+    "injectableNow": 19,
+    "needsRicherBase": 0,
+    "injectableList": [
+      "שקע",
+      "מפסק",
+      "דלת",
+      "חלון",
+      "ארגז תריס",
+      "אדן חלון",
+      "צ.חשמל",
+      "ק.חשמל",
+      "ק.בקורת",
+      "תאורה",
+      "תעלה",
+      "צ.מים",
+      "ברז",
+      "גז",
+      "פ.ביוב",
+      "ביוב קיר",
+      "מים משולב",
+      "אסלה",
+      "חור.פ.ממד"
+    ],
+    "blockedList": []
+  },
+  "onMimranBase": {
+    "injectableNow": 15,
+    "needsMasterBase": 4,
+    "injectableList": [
+      "שקע",
+      "דלת",
+      "חלון",
+      "ארגז תריס",
+      "אדן חלון",
+      "צ.חשמל",
+      "ק.חשמל",
+      "תאורה",
+      "תעלה",
+      "צ.מים",
+      "ברז",
+      "פ.ביוב",
+      "ביוב קיר",
+      "אסלה",
+      "חור.פ.ממד"
+    ],
+    "blockedList": [
+      "מפסק",
+      "ק.בקורת",
+      "גז",
+      "מים משולב"
+    ],
+    "blockedCodes": [
+      2,
+      4,
+      6,
+      15
+    ]
+  },
+  "ordxRows": [
+    {
+      "type": "שקע",
+      "gtCode": 3,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": true
+    },
+    {
+      "type": "מפסק",
+      "gtCode": 4,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": false,
+      "inTashtiot": true
+    },
+    {
+      "type": "דלת",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "חלון",
+      "gtCode": 5,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "ארגז תריס",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "אדן חלון",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "צ.חשמל",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "ק.חשמל",
+      "gtCode": 3,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "ק.בקורת",
+      "gtCode": 2,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": false,
+      "inTashtiot": false
+    },
+    {
+      "type": "תאורה",
+      "gtCode": 7,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "תעלה",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "צ.מים",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "ברז",
+      "gtCode": 5,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": true
+    },
+    {
+      "type": "גז",
+      "gtCode": 6,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": false,
+      "inTashtiot": true
+    },
+    {
+      "type": "פ.ביוב",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "ביוב קיר",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "מים משולב",
+      "gtCode": 15,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": false,
+      "inTashtiot": true
+    },
+    {
+      "type": "אסלה",
+      "gtCode": 7,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "חור.פ.ממד",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    }
+  ],
+  "gtRows": [
+    {
+      "type": "דלת",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "חלון",
+      "gtCode": 5,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "אדן חלון",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "ארגז תריס",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "פתח איוורור תקרה",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "רדיאטור",
+      "gtCode": 11,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": false,
+      "inTashtiot": false
+    },
+    {
+      "type": "חור איורור",
+      "gtCode": 12,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": false,
+      "inTashtiot": true
+    },
+    {
+      "type": "מזגן",
+      "gtCode": 20,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": false,
+      "inTashtiot": false
+    },
+    {
+      "type": "צ.מים",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "מקלחת",
+      "gtCode": 20,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": false,
+      "inTashtiot": false
+    },
+    {
+      "type": "פ.ביוב",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "ביוב",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": true
+    },
+    {
+      "type": "גז",
+      "gtCode": 6,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": false,
+      "inTashtiot": true
+    },
+    {
+      "type": "מים משולב",
+      "gtCode": 15,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": false,
+      "inTashtiot": true
+    },
+    {
+      "type": "ברז",
+      "gtCode": 5,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": true
+    },
+    {
+      "type": "בידה",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "אמבט",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "חור.פ.ממד",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "אנטנה",
+      "gtCode": 3,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": true
+    },
+    {
+      "type": "+מפסק",
+      "gtCode": 4,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": false,
+      "inTashtiot": false
+    },
+    {
+      "type": "מפסק",
+      "gtCode": 4,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": false,
+      "inTashtiot": true
+    },
+    {
+      "type": "+שקע",
+      "gtCode": 3,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "שקע",
+      "gtCode": 3,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": true
+    },
+    {
+      "type": "ק.חשמל",
+      "gtCode": 3,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "צ.חשמל",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "+טלפון",
+      "gtCode": 4,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": false,
+      "inTashtiot": false
+    },
+    {
+      "type": "טלפון",
+      "gtCode": 4,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": false,
+      "inTashtiot": true
+    },
+    {
+      "type": "תאורה",
+      "gtCode": 7,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "אינטרקום",
+      "gtCode": 4,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": false,
+      "inTashtiot": false
+    },
+    {
+      "type": "ק.בקורת",
+      "gtCode": 2,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": false,
+      "inTashtiot": false
+    },
+    {
+      "type": "עמוד",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "עמוד עגול",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "ביוב קיר",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "תעלה",
+      "gtCode": 1,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    },
+    {
+      "type": "אסלה",
+      "gtCode": 7,
+      "hasGtEntry": true,
+      "inRosetta": true,
+      "inMimran": true,
+      "inTashtiot": false
+    }
+  ]
+}

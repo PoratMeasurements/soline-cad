@@ -1,0 +1,7 @@
+# build artifacts — לעולם לא ב-Drive/git (כבדים, שוברים סנכרון)
+build/
+.gradle/
+local.properties
+*.apk
+.idea/
+captures/

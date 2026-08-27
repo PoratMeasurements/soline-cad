@@ -1,0 +1,203 @@
+<title>Soline · חזון החברה</title>
+<style>
+  :root{
+    --bg:#080d17; --bg2:#0d1524; --surface:#121d31; --surface2:#16233b; --line:#213150;
+    --ink:#eaf1fb; --ink2:#b7c7e2; --muted:#7f93b6;
+    --cyan:#5cc8ff; --violet:#a78bfa; --gold:#f5c451; --green:#39d98a; --amber:#f5b544;
+    --mono:ui-monospace,"Consolas",monospace; --sans:system-ui,"Segoe UI","Arial Hebrew",Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 clamp(16px,4vw,32px)}
+  section{padding:clamp(40px,7vw,88px) 0;border-bottom:1px solid var(--line)}
+  .eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:.16em;color:var(--cyan);margin:0 0 16px;text-transform:uppercase}
+  h1{font-size:clamp(34px,7vw,68px);font-weight:850;line-height:1.05;letter-spacing:-.02em;margin:0;text-wrap:balance}
+  h2{font-size:clamp(24px,3.6vw,38px);font-weight:820;letter-spacing:-.01em;margin:0 0 8px;text-wrap:balance}
+  .sub{font-size:clamp(16px,2.2vw,21px);color:var(--ink2);margin:20px 0 0;max-width:62ch}
+  p{font-size:clamp(15px,1.8vw,17px);color:var(--ink2)}
+  .grad{background:linear-gradient(110deg,var(--cyan),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  /* hero */
+  .hero{padding-top:clamp(56px,10vw,120px);background:radial-gradient(1100px 500px at 78% -10%,rgba(92,200,255,.16),transparent 60%),radial-gradient(900px 500px at 10% 0%,rgba(167,139,250,.13),transparent 55%)}
+  .brandrow{display:flex;align-items:center;gap:12px;margin-bottom:36px}
+  .logo{font-weight:850;font-size:22px;letter-spacing:.02em}
+  .logo b{color:var(--cyan)}
+  .tagchip{font-family:var(--mono);font-size:11.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+  .heroline{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+  .heroline span{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:8px 15px;font-size:13.5px;font-weight:700;color:var(--ink2)}
+
+  .flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;margin-top:8px}
+  .step{flex:1;min-width:150px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 16px;position:relative}
+  .step .k{font-family:var(--mono);font-size:11px;color:var(--cyan);letter-spacing:.06em}
+  .step .t{font-weight:800;font-size:16px;margin-top:6px}
+  .step .d{font-size:12.5px;color:var(--muted);margin-top:5px}
+  .arrow{align-self:center;color:var(--muted);font-size:22px;padding:0 6px}
+  @media(max-width:720px){.arrow{transform:rotate(90deg);padding:6px 0}.step{min-width:0;flex-basis:100%}}
+  .allin{margin-top:20px;display:inline-flex;gap:9px;align-items:center;background:rgba(57,217,138,.1);border:1px solid rgba(57,217,138,.35);color:var(--green);border-radius:999px;padding:9px 16px;font-weight:800;font-size:14px}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  @media(max-width:720px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .stat .num{font-size:clamp(30px,5vw,52px);font-weight:850;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
+  .stat .num.g{color:var(--gold)} .stat .num.c{color:var(--cyan)} .stat .num.v{color:var(--violet)} .stat .num.e{color:var(--green)}
+  .stat .lbl{color:var(--ink2);font-size:13.5px;margin-top:10px;font-weight:600}
+  .stat .sub{color:var(--muted);font-size:12px;margin-top:3px}
+
+  .pillars{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:8px}
+  @media(max-width:720px){.pillars{grid-template-columns:1fr}}
+  .pillar{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .pillar h3{margin:0 0 8px;font-size:17px;font-weight:820;color:var(--cyan)}
+  .pillar p{margin:0;font-size:14px;color:var(--ink2)}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+  @media(max-width:720px){.two{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card h3{margin:0 0 10px;font-size:15px;font-weight:820}
+  .card.acq{border-color:rgba(245,181,68,.35)} .card.acq h3{color:var(--amber)}
+  .card.profit{border-color:rgba(57,217,138,.35)} .card.profit h3{color:var(--green)}
+  .card ul{margin:0;padding-inline-start:20px} .card li{font-size:14px;color:var(--ink2);margin:6px 0}
+
+  .horizons{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+  .hz{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  @media(max-width:620px){.hz{grid-template-columns:1fr;gap:6px}}
+  .hz .when{font-family:var(--mono);font-size:13px;color:var(--cyan);font-weight:700}
+  .hz .what{font-size:14px;color:var(--ink2)}
+  .hz .what b{color:var(--ink)}
+
+  .needs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
+  @media(max-width:720px){.needs{grid-template-columns:1fr 1fr}}
+  @media(max-width:460px){.needs{grid-template-columns:1fr}}
+  .need{background:var(--surface2);border:1px solid var(--line);border-radius:11px;padding:13px 15px;font-size:13.5px;color:var(--ink2);font-weight:600}
+
+  .closing{background:linear-gradient(110deg,rgba(92,200,255,.12),rgba(167,139,250,.12));border:0}
+  .closing .big{font-size:clamp(22px,3.4vw,34px);font-weight:850;line-height:1.25;text-wrap:balance}
+  .foot{color:var(--muted);font-size:12.5px;padding:24px 0 40px;text-align:center}
+</style>
+
+<div dir="rtl" lang="he">
+
+  <section class="hero">
+    <div class="wrap">
+      <div class="brandrow">
+        <span class="logo">Soline<b>.</b></span>
+        <span class="tagchip">חזון החברה · מצגת מנהלים</span>
+      </div>
+      <p class="eyebrow">מ-שירות מדידה ← ל-פלטפורמה</p>
+      <h1>מערכת ההפעלה של <span class="grad">הנגרות בישראל</span></h1>
+      <p class="sub">היום אנחנו מודדים מטבחים. מחר אנחנו הפלטפורמה שבה כל נגר <b>מעצב, מודד, מייצר ומנהל</b> — סביב פורמט קנייני אחד: <b>.sol</b>. המדידה היא הדלת; האקוסיסטם הוא העסק.</p>
+      <div class="heroline"><span>עיצוב</span><span>מדידה</span><span>התאמה למציאות</span><span>ייצור</span><span>פורמט .sol</span><span>דאטה</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">הלולאה הסגורה</p>
+      <h2>כל שרשרת הערך — בבית</h2>
+      <p class="sub" style="margin-bottom:26px">הנגר מתחיל אצלנו ולא יוצא: מעצב, אנחנו מודדים בכלי שלנו, מתאימים את התכנון למציאות, ומחזירים לו קובץ שהוא ממשיך לעבוד עליו — עד לייצור.</p>
+      <div class="flow">
+        <div class="step"><div class="k">01 · נגר</div><div class="t">מעצב</div><div class="d">תכנון ראשוני בתוכנת Soline</div></div>
+        <div class="arrow">←</div>
+        <div class="step"><div class="k">02 · מודד</div><div class="t">Soline Measure</div><div class="d">מדידה בתוכנה שלנו + DISTO — לא InnoDraw</div></div>
+        <div class="arrow">←</div>
+        <div class="step"><div class="k">03 · מנוע</div><div class="t">התאמה למציאות</div><div class="d">התכנון מוצמד לקירות שנמדדו</div></div>
+        <div class="arrow">←</div>
+        <div class="step"><div class="k">04 · נגר</div><div class="t">ייצור</div><div class="d">.sol להמשך עבודה ← CNC</div></div>
+      </div>
+      <div class="allin">✓ אינטגרציה אנכית מלאה — כולל תוכנת המדידה. אפס תלות בצד שלישי.</div>
+    </div>
+  </section>
+
+  <section style="background:var(--bg2)">
+    <div class="wrap">
+      <p class="eyebrow">הכלכלה</p>
+      <h2>אותה עבודה, כפול רווח</h2>
+      <p class="sub" style="margin-bottom:30px">שליטה בניצולת, בדאטה ובפורמט משנה את המשוואה הכלכלית. (מספרים להמחשת השיטה.)</p>
+      <div class="stats">
+        <div class="stat"><div class="num g">×3.4</div><div class="lbl">תרומה לעבודה</div><div class="sub">שיבוץ גאוגרפי: 13% ← 44% שוליים</div></div>
+        <div class="stat"><div class="num c">80–90%</div><div class="lbl">שולי SaaS</div><div class="sub">מול 13–44% בשירות מדידה</div></div>
+        <div class="stat"><div class="num v">+55%</div><div class="lbl">תפוקת מודד</div><div class="sub">יותר מדידות ביום, פחות נסיעה</div></div>
+        <div class="stat"><div class="num e">1</div><div class="lbl">פורמט לכל האקוסיסטם</div><div class="sub">.sol — הסטנדרט של הענף</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">החפיר</p>
+      <h2>למה קשה להעתיק אותנו</h2>
+      <div class="pillars">
+        <div class="pillar"><h3>פורמט .sol כסטנדרט</h3><p>מי ששולט בפורמט שבו חיים כל הפרויקטים — שולט בענף. כמו DWG של Autodesk. פורמט סגור ומאובטח.</p></div>
+        <div class="pillar"><h3>IP הממיר</h3><p>פענוח פורמט PDP + ספריית אלמנטים עצמאית — ידע שאיש לא מציע, ושנצבר בשנות עבודה.</p></div>
+        <div class="pillar"><h3>גלגל-תנופה של דאטה</h3><p>כל מדידה מדייקת את ההערכה והתמחור. מתחרה חדש מתחיל מאפס דאטה — אנחנו מתחזקים עם הזמן.</p></div>
+        <div class="pillar"><h3>יתרון צפיפות גאוגרפי</h3><p>יותר עבודות באזור ← ניצולת גבוהה ← מחיר טוב יותר ← עוד נגרים. מעגל שמזין את עצמו.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">מפת התחרות</p>
+      <h2>אנחנו יודעים מול מי אנחנו משחקים</h2>
+      <p class="sub" style="margin-bottom:26px">השוק בוגר — ולא ננצח כ"עוד שירות מדידה" או "עוד CAD". ננצח בצומת שאף אחד לא מחזיק. (מבוסס 17 מקורות מאומתים.)</p>
+      <div class="pillars">
+        <div class="pillar"><h3>לכידה · שכבה A</h3><p>DISTO, magicplan, Polycam — גלובלי, סחורה. <b>לא מתחרים — ספקי ה-input שלנו.</b></p></div>
+        <div class="pillar"><h3>שירות מדידה · שכבה B</h3><p>מילימטר, ACRE, לייזר-טק. בוגר. <b>ACRE הכי קרוב — מוסר קבצים, אך לא מחזיק את הלולאה.</b></p></div>
+        <div class="pillar"><h3>תרגום לייצור · שכבה C</h3><p>3D_OrdX — המתחרה האמיתי היחיד בשכבה שבה ה-IP שלנו חי.</p></div>
+        <div class="pillar"><h3>תכנון · שכבה D</h3><p>Raumplan ו-2020 (דסקטופ יקר). <b>CabiAI</b> — SaaS-עברית עולה = אות אזהרה, החלון נסגר.</p></div>
+      </div>
+      <div class="allin">✓ אף שחקן לא מחזיק את כל השרשרת בפורמט-ידע אחד — ואף אחד לא מודל את ה-as-built reconciliation (הקיר-כפרופיל, R1–R10). זה החפיר.</div>
+    </div>
+  </section>
+
+  <section style="background:var(--bg2)">
+    <div class="wrap">
+      <p class="eyebrow">המודל העסקי</p>
+      <h2>המדידה היא ערוץ הרכישה — לא העסק</h2>
+      <div class="two">
+        <div class="card acq"><h3>המדידה = דלת הכניסה</h3><ul><li>מוצר ראשון שהנגר קונה</li><li>מייצר אמון וזרימת עבודה</li><li>שוליים נמוכים — אבל זול לרכוש לקוח</li></ul></div>
+        <div class="card profit"><h3>האקוסיסטם = הרווח</h3><ul><li>מנוי SaaS (עיצוב + ניהול)</li><li>Marketplace חומרה/חומרים (עמלה)</li><li>כלי מכירה של הנגר ללקוח-הקצה שלו</li><li>שוליים גבוהים, הכנסה חוזרת</li></ul></div>
+      </div>
+      <p style="margin-top:18px;font-weight:700;color:var(--ink)">Land with measurement, expand across the stack.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">מפת הדרכים</p>
+      <h2>מכאן לשליטה בשוק</h2>
+      <div class="horizons">
+        <div class="hz"><div class="when">H1 · 0–3 ח׳</div><div class="what"><b>ליבה ואמת:</b> פלטפורמת התפעול, צ'קליסט שטח, דאשבורד רווחיות, גבייה. מריצים עבודות אמיתיות ומודדים שוליים אמיתיים.</div></div>
+        <div class="hz"><div class="when">H2 · 3–9 ח׳</div><div class="what"><b>יעילות ושימור:</b> שיבוץ גאוגרפי, התראות וואטסאפ, iCount, Soline Measure.</div></div>
+        <div class="hz"><div class="when">H3 · 9–18 ח׳</div><div class="what"><b>עיצוב וחפיר:</b> תוכנת העיצוב + .sol מלא, כלי אקוסיסטם, תמחור מונחה-דאטה.</div></div>
+        <div class="hz"><div class="when">H4–H5</div><div class="what"><b>חברה נסחרת:</b> marketplace ספקים, BI, הרחבה גאוגרפית, SaaS לחברות מדידה אחרות.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:var(--bg2)">
+    <div class="wrap">
+      <p class="eyebrow">מה נדרש כדי לשחק בגובה</p>
+      <h2>לבנות מהיום כחברה נסחרת</h2>
+      <p class="sub" style="margin-bottom:24px">לא סטארטאפ שמאלתר — תשתית ברמת NASDAQ מהיסוד.</p>
+      <div class="needs">
+        <div class="need">SaaS ענן רב-דיירת</div>
+        <div class="need">אבטחה: SOC2 / ISO 27001</div>
+        <div class="need">SLA ו-uptime</div>
+        <div class="need">בקרות פיננסיות ואודיט</div>
+        <div class="need">ממשל דאטה ופרטיות</div>
+        <div class="need">הגנת IP (פורמט + ממיר)</div>
+        <div class="need">CI/CD ו-observability</div>
+        <div class="need">ארגון הנדסה / מכירות / הצלחת-לקוח</div>
+        <div class="need">מדדי SaaS (ARR / NRR)</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="closing">
+    <div class="wrap">
+      <p class="eyebrow">שורה תחתונה</p>
+      <p class="big">Soline אינה חברת מדידות.<br>היא <span class="grad">פלטפורמת ניצולת-ודאטה</span> שהמדידה היא ערוץ הכניסה שלה — ו-<b>.sol</b> הוא הסטנדרט שמחזיק את כל הענף.</p>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="foot">Soline · מצגת מנהלים · 2026 · האפיון הטכני המלא זמין בנפרד לצוות הפיתוח</div></div>
+</div>

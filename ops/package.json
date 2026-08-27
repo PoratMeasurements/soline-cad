@@ -1,0 +1,19 @@
+{
+  "name": "soline-ops-app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Soline Ops — ניהול מערך תפעול מדידות (offline-first, Capacitor)",
+  "scripts": {
+    "dev": "node tools/serve.js",
+    "cap:add": "npx cap add android",
+    "cap:sync": "npx cap sync",
+    "cap:open": "npx cap open android"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.0.0"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/android": "^6.0.0"
+  }
+}

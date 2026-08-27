@@ -1,0 +1,9 @@
+{
+  "//": "Soline converter — customer configuration EXAMPLE. Copy this file to 'soline.config.json' (same folder, or point $SOLINE_CONFIG at it) and edit the paths. See docs/PDP_CUSTOMER_BASE.md.",
+
+  "//drBaseDir": "REQUIRED for PDP export. A folder holding ONE OR MORE of YOUR OWN licensed InnoDraw/Raumplan .pdp base files (an empty room you drew once, or a file exported from your El_Cad install). Soline ships no vendor base — the PDP is built on your file. May be absolute or relative to this config file. A single base is fine; the converter reads its wall/slot counts from the file and pads/logs as needed.",
+  "drBaseDir": "C:/Program Files (x86)/InnoDraw/El_Cad--1/bases",
+
+  "//drItemsDir": "OPTIONAL (advanced / dev only). A folder of extracted per-type {code+property-block} .bin element records used only by the varied-symbol (editSymbol) export path. Leave unset in normal use: the symbol units are harvested from your own base's slots at runtime. Not part of the shippable product.",
+  "drItemsDir": null
+}

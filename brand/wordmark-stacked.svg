@@ -1,0 +1,25 @@
+<svg width="520" height="360" viewBox="0 0 520 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Soline mark with wordmark and tagline">
+  <!-- Icon + wordmark lockup for splash/cover. Mark on top, wordmark below. -->
+  <!-- MARK: dot + spatial corner (icon B concept) -->
+  <g transform="translate(210,20)">
+    <path d="M 20 30 L 20 78 Q 20 90 32 90 L 80 90"
+          fill="none" stroke="#1596A8" stroke-width="20"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="80" cy="30" r="18" fill="#F49A1A"/>
+  </g>
+  <!-- WORDMARK "soline" (scaled 0.62 of master) -->
+  <g transform="translate(72,150) scale(0.62)" fill="none" stroke="#F49A1A" stroke-width="30" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 103 62 C 96 50 62 50 56 72 C 51 88 68 90 79 91 C 90 92 106 96 100 112 C 94 130 62 132 56 116"/>
+    <circle cx="182" cy="90" r="35"/>
+    <path d="M 261 23 L 261 125"/>
+    <path d="M 305 55 L 305 125"/>
+    <path d="M 357 125 L 357 90 A 35 35 0 0 1 427 90 L 427 125"/>
+    <path d="M 471 90 L 541 90"/>
+    <path d="M 541 90 A 35 35 0 1 0 534.7 110"/>
+  </g>
+  <circle cx="261" cy="167" r="11.2" fill="#F49A1A"/>
+  <!-- tagline -->
+  <text x="260" y="300" text-anchor="middle"
+        font-family="Poppins, Nunito, 'Segoe UI', Verdana, sans-serif"
+        font-size="21" font-weight="600" letter-spacing="5.5" fill="#1596A8">SMART SPATIAL SOLUTIONS</text>
+</svg>

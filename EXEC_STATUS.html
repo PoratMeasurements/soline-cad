@@ -1,0 +1,112 @@
+<title>Soline — סטטוס למנכ"ל</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=Poppins:wght@600&display=swap">
+<style>
+  :root{--bg:#FBF4E6;--surface:#fff;--text:#2B2B2B;--muted:#6E6656;--border:#EAE0CB;--accent:#E8890B;--teal:#127C8C;--ok:#2E9E6B;--run:#E8A400;--next:#8A7F6B;--shadow:0 1px 2px rgba(74,58,20,.05),0 8px 22px rgba(74,58,20,.08)}
+  @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#17191B;--surface:#202427;--text:#ECE7DB;--muted:#A7A093;--border:#2E3338;--accent:#F7AC3A;--teal:#3BB6C7;--ok:#54c08a;--run:#f0bf3f;--next:#9a8f79}}
+  :root[data-theme=dark]{--bg:#17191B;--surface:#202427;--text:#ECE7DB;--muted:#A7A093;--border:#2E3338;--accent:#F7AC3A;--teal:#3BB6C7;--ok:#54c08a;--run:#f0bf3f;--next:#9a8f79}
+  *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Heebo,system-ui,sans-serif;direction:rtl;line-height:1.5}
+  .wrap{max-width:880px;margin:0 auto;padding:26px 20px 70px}
+  .top{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;border-bottom:2px solid var(--border);padding-bottom:14px;margin-bottom:22px}
+  .wm{font-family:Poppins,sans-serif;font-weight:600;font-size:26px;color:#F49A1A}.wm b{color:#1596A8;font-weight:600}
+  h1{font-size:20px;font-weight:800;margin:2px 0 0}
+  .meta{color:var(--muted);font-size:13px;text-align:left}
+  /* vitals */
+  .vitals{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:26px}
+  @media(max-width:640px){.vitals{grid-template-columns:1fr 1fr}}
+  .v{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:13px 15px;box-shadow:var(--shadow)}
+  .v .n{font-size:26px;font-weight:800;color:var(--accent);line-height:1}
+  .v .l{font-size:12.5px;color:var(--muted);margin-top:4px;font-weight:600}
+  /* waves */
+  h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);font-weight:800;margin:28px 0 14px}
+  .wave{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow);margin-bottom:13px}
+  .wh{display:flex;align-items:center;gap:11px;margin-bottom:7px}
+  .wnum{flex:0 0 auto;width:30px;height:30px;border-radius:9px;background:var(--teal);color:#fff;display:grid;place-items:center;font-weight:800;font-size:15px}
+  .wt{font-weight:800;font-size:17px;flex:1}
+  .badge{font-size:11.5px;font-weight:800;padding:3px 10px;border-radius:999px;white-space:nowrap;color:#fff}
+  .b-ok{background:var(--ok)}.b-run{background:var(--run)}.b-next{background:var(--next)}
+  .wd{font-size:14px;color:var(--muted);margin:0 0 10px}
+  .bar{height:9px;border-radius:999px;background:var(--border);overflow:hidden;margin-bottom:10px}
+  .fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),#f0b054)}
+  .pct{font-weight:800;color:var(--accent);font-size:13px;margin-right:6px}
+  .items{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-size:12px;padding:3px 9px;border-radius:8px;background:var(--bg);border:1px solid var(--border);color:var(--text)}
+  .chip.on{border-color:color-mix(in srgb,var(--ok) 45%,var(--border));color:var(--ok)}
+  /* next / legal */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:8px}
+  @media(max-width:640px){.split{grid-template-columns:1fr}}
+  .box{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:15px 17px;box-shadow:var(--shadow)}
+  .box h3{margin:0 0 9px;font-size:15px;font-weight:800}
+  .box ul{margin:0;padding-right:18px}.box li{margin-bottom:6px;font-size:14px}
+  .legal{border-right:4px solid var(--ok)}
+  .legal .v-ok{color:var(--ok);font-weight:800}
+  footer{margin-top:26px;color:var(--muted);font-size:12.5px;text-align:center}
+  .tog{position:fixed;top:12px;left:12px;background:var(--surface);border:1px solid var(--border);border-radius:999px;width:36px;height:36px;cursor:pointer;box-shadow:var(--shadow);color:var(--text)}
+</style>
+<button class="tog" onclick="var r=document.documentElement,d=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');r.setAttribute('data-theme',d==='dark'?'light':'dark')">◐</button>
+<div class="wrap">
+  <div class="top">
+    <div><div class="wm">soline<b>.</b></div><h1>סטטוס למנכ״ל · יותם</h1></div>
+    <div class="meta">אוגוסט 2026<br>עדכון-פיתוח</div>
+  </div>
+
+  <div class="vitals">
+    <div class="v"><div class="n">6/6</div><div class="l">פורמטי-ייצוא פעילים</div></div>
+    <div class="v"><div class="n">~80%</div><div class="l">התקדמות כוללת</div></div>
+    <div class="v"><div class="n">נקי</div><div class="l">מצב משפטי / IP</div></div>
+    <div class="v"><div class="n">בשטח</div><div class="l">אפליקציה על טאבלט</div></div>
+  </div>
+
+  <h2>גלי-העבודה — היכן אנחנו</h2>
+
+  <div class="wave">
+    <div class="wh"><div class="wnum">0</div><div class="wt">מנוע-הליבה — ממדידה ל-6 פורמטים</div><span class="badge b-run">כמעט סגור</span></div>
+    <p class="wd">שרשרת מלאה: המודד מודד חדר → קובץ → המרה אוטומטית ל-6 קבצים לנגר/אדריכל.</p>
+    <div class="bar"><div class="fill" style="width:95%"></div></div><span class="pct">95%</span>
+    <div class="items"><span class="chip on">ORDX ✓</span><span class="chip on">PDF ✓</span><span class="chip on">HTML ✓</span><span class="chip on">DXF-2D נפתח ב-AutoCAD ✓</span><span class="chip on">DXF-3D ✓</span><span class="chip">PDP נטען · דיוק-סמלים מתקדם בעבודה</span></div>
+  </div>
+
+  <div class="wave">
+    <div class="wh"><div class="wnum">1</div><div class="wt">רמה מקצועית — תקנים, סמלים, פתחים</div><span class="badge b-run">בעבודה</span></div>
+    <p class="wd">שרטוט ברמת-אדריכל: תקן-קו ישראלי, שכבות בעברית, ספריית-סמלים, וקטלוג דלתות/חלונות/איוורור.</p>
+    <div class="bar"><div class="fill" style="width:80%"></div></div><span class="pct">80%</span>
+    <div class="items"><span class="chip on">CTB ישראלי + מותקן ✓</span><span class="chip on">71 שכבות עבריות ✓</span><span class="chip on">189 סמלים (IEC) ✓</span><span class="chip on">מודול-פתחים 28 סוגים ✓</span><span class="chip">החלטות-איכות ממתינות לאישור</span></div>
+  </div>
+
+  <div class="wave">
+    <div class="wh"><div class="wnum">2</div><div class="wt">כלי-המודד — אפליקציית-השדה</div><span class="badge b-run">בעבודה</span></div>
+    <p class="wd">אפליקציה עצמאית (offline) על טאבלט: מדידת-לייזר, קטלוג-אלמנטים, פתחים-נמדדים-בשטח, שיתוף-מיקום-בהסכמה.</p>
+    <div class="bar"><div class="fill" style="width:85%"></div></div><span class="pct">85%</span>
+    <div class="items"><span class="chip on">מותקנת על הטאבלט ✓</span><span class="chip on">לייזר + מדידה ✓</span><span class="chip on">פתחים בשטח ✓</span><span class="chip on">מיקום-בהסכמה (פרטיות-בעיצוב) ✓</span><span class="chip">תיקון באגי-זרימה — כעת</span></div>
+  </div>
+
+  <div class="wave">
+    <div class="wh"><div class="wnum">3</div><div class="wt">בינה ותכנון — "סולי" ומודולי-תכנון</div><span class="badge b-run">מתפתח</span></div>
+    <p class="wd">עוזרת-AI לנגר + מנועי-תכנון-נגרות שהופכים מדידה להצעת-תכנון אוטומטית.</p>
+    <div class="bar"><div class="fill" style="width:60%"></div></div><span class="pct">60%</span>
+    <div class="items"><span class="chip on">סולי — עוזרת-AI ✓</span><span class="chip on">מנוע-מטבחים ✓</span><span class="chip on">10 מודולי-נגרות ✓</span><span class="chip">ספריית-בלוקים + ארונות — בהמשך</span></div>
+  </div>
+
+  <div class="wave">
+    <div class="wh"><div class="wnum">4</div><div class="wt">עסקי, תפעול והגנה</div><span class="badge b-run">מתפתח</span></div>
+    <p class="wd">הגנת-הקניין של Soline, מדדי-תפעול-בהסכמה, ובקרת-איכות.</p>
+    <div class="bar"><div class="fill" style="width:70%"></div></div><span class="pct">70%</span>
+    <div class="items"><span class="chip on">מגן-IP (טביעת-אצבע+איתור) ✓</span><span class="chip on">מדדי-תפעול בהסכמה ✓</span><span class="chip on">QA + ביקורת-רישיון ✓</span></div>
+  </div>
+
+  <h2>מבט קדימה</h2>
+  <div class="split">
+    <div class="box"><h3>🎯 הצעדים הבאים</h3><ul>
+      <li>סגירת דיוק-סמלי-ה-PDP (פענוח טכני מתקדם).</li>
+      <li>אימוץ שיפורי-איכות מתקן-השרטוט (החלטות-בעלים).</li>
+      <li>סיום תיקוני-זרימת-המודד + עדכון-טאבלט.</li>
+      <li>אינטגרציית מודול-הפתחים + ספריית-הבלוקים.</li>
+    </ul></div>
+    <div class="box legal"><h3>⚖️ מצב משפטי</h3>
+      <p style="margin:0 0 8px"><span class="v-ok">נקי — אין הפרת-זכויות במוצר.</span> ביקורת-רישיון מלאה: אפס תוכן-מוגן-מוטמע.</p>
+      <ul><li>2–3 פריטים לאישור-עו״ד לפני-שיווק (נוסח-פרטיות).</li><li>אינטרופרביליות מול InnoDraw/CVSM — נבחנת.</li></ul>
+    </div>
+  </div>
+
+  <footer>Soline — מדידה חכמה → ייצור · דוח-סטטוס פנימי</footer>
+</div>

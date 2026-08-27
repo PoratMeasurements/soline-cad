@@ -1,0 +1,87 @@
+<title>דלתות וחלונות — לאישור</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap">
+<style>
+  :root{--bg:#FBF4E6;--surface:#fff;--text:#2B2B2B;--muted:#6E6656;--border:#EAE0CB;--accent:#E8890B;--teal:#127C8C;--shadow:0 1px 2px rgba(74,58,20,.05),0 6px 18px rgba(74,58,20,.07)}
+  @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#17191B;--surface:#202427;--text:#ECE7DB;--muted:#A7A093;--border:#2E3338;--accent:#F7AC3A;--teal:#3BB6C7}}
+  :root[data-theme=dark]{--bg:#17191B;--surface:#202427;--text:#ECE7DB;--muted:#A7A093;--border:#2E3338;--accent:#F7AC3A;--teal:#3BB6C7}
+  *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Heebo,system-ui,sans-serif;direction:rtl;font-size:16px;line-height:1.5}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 18px 70px}
+  h1{font-size:30px;font-weight:800;color:var(--accent);margin:0 0 2px}
+  .sub{color:var(--muted);margin:0 0 8px;font-weight:500}
+  .note{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:11px 15px;font-size:14px;color:var(--muted);box-shadow:var(--shadow);margin:14px 0 26px}
+  h2{font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);font-weight:700;margin:30px 0 12px;display:flex;align-items:center;gap:10px}
+  h2 .c{background:var(--accent);color:#fff;border-radius:999px;font-size:12px;padding:1px 9px;letter-spacing:0}
+  h2::after{content:"";flex:1;height:1px;background:var(--border)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  @media(max-width:620px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:11px 14px;box-shadow:var(--shadow);display:flex;align-items:baseline;gap:10px}
+  .card .n{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted);flex:0 0 auto;min-width:20px}
+  .card .name{font-weight:700;flex:1}
+  .card .dim{font-family:ui-monospace,monospace;font-size:12.5px;color:var(--accent);font-weight:700;white-space:nowrap}
+  .card .mech{display:block;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:1px}
+  footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--border);color:var(--muted);font-size:14px}
+  .tog{position:fixed;top:12px;left:12px;background:var(--surface);border:1px solid var(--border);border-radius:999px;width:36px;height:36px;cursor:pointer;box-shadow:var(--shadow);color:var(--text)}
+</style>
+<button class="tog" onclick="var r=document.documentElement,d=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');r.setAttribute('data-theme',d==='dark'?'light':'dark')">◐</button>
+<div class="wrap">
+  <h1>דלתות וחלונות</h1>
+  <p class="sub">רשימת-הסוגים לאישור · Soline</p>
+  <div class="note">עבור על הרשימה וסמן מה <b>להוסיף · להסיר · לתקן</b> (שם/מידה/מנגנון). המידות כאן הן ברירת-מחדל — <b>מידות-האמת לפי יצרנים (קליל/אתאל/רב-בריח) מתעדכנות כעת</b> ע״י סוכן, וגם בלוק-DXF ייחודי לכל סוג בקנה-מידה נכון.</div>
+
+  <h2>🚪 דלתות ופתחים <span class="c">20</span></h2>
+  <div class="grid" id="doors"></div>
+
+  <h2>🪟 חלונות <span class="c">20</span></h2>
+  <div class="grid" id="wins"></div>
+
+  <h2>🌀 מיזוג ואיוורור <span class="c">17</span></h2>
+  <div class="grid" id="hvac"></div>
+
+  <footer>אחרי אישורך — נכנס לקוד (קטלוג-האלמנטים באפליקציה + סמלי-DXF). · Soline</footer>
+</div>
+<script>
+  var D=[
+  ["1","דלת פנימה שמאל","800×2050","ציר + קשת-פתיחה"],["2","דלת פנימה ימין","800×2050","ציר + קשת"],
+  ["3","דלת החוצה שמאל","800×2050","ציר החוצה"],["4","דלת החוצה ימין","800×2050","ציר החוצה"],
+  ["5","דלת פנים (רגילה)","800×2050","ציר · כנף 60/70/80/90"],["6","דלת כניסה","1000×2100","פתח-בנייה (רב-בריח)"],
+  ["7","דלת פלדלת (ביטחונית)","1000×2100","ציר + תווית"],["8","דלת ממ״ד (הדף)","800×2000","תקן פיקוד-העורף"],
+  ["9","דלת דו-כנפית","1600×2100","2 כנפיים"],["10","דלת צרפתית (זכוכית)","1500×2100","2 כנפיים"],
+  ["11","דלת הזזה","900×2100","הזזה"],["12","הזזה למרפסת","1800×2100","הזזה רחב"],
+  ["13","דלת כיס","900×2100","הזזה לתוך-קיר"],["14","מתקפלת (אקורדיון)","900×2050","קיפול"],
+  ["15","דו-מתקפלת (Bi-fold)","1200×2050","קיפול"],["16","דלת נסתרת","800×2100","ציר (מקווקו)"],
+  ["17","דלת אסם (הזזה חיצונית)","1000×2100","הזזה על-קיר"],["18","מפתח עם משקוף","800×2050","פתח (בלי כנף)"],
+  ["19","פתח עד הרצפה","900×2400","פתח"],["20","פתח מקושת","1000×2200","פתח קשתי"]];
+  var W=[
+  ["1","חלון (כללי)","1200×1200","קבוע"],["2","חלון קבוע","1000×1000","קבוע"],
+  ["3","חלון ציר (מדף)","800×1200","ציר L/R, פנים/חוץ"],["4","חלון הזזה","1500×1200","הזזה (קליל 7000)"],
+  ["5","חלון קיפ (Tilt-Turn)","800×1400","קיפ — נפוץ בשוק החדש"],["6","מדף-עליון (Awning)","1000×600","ציר עליון"],
+  ["7","מדף-תחתון (Hopper)","1000×600","ציר תחתון"],["8","חלון גיליון (Double-hung)","900×1400","הזזה אנכית"],
+  ["9","חלון עם תריס משולב","1500×1400","הזזה + תריס"],["10","חלון פינתי","1500×1200","2 פאות"],
+  ["11","ויטרינה/ראווה","2000×2400","קבוע גדול"],["12","צוהר (עגול)","500×500","עגול"],
+  ["13","חלון לבני-זכוכית","1000×1000","קבוע"],["14","חלון קטן","600×600","קבוע"],
+  ["15","חלון-גג (סקיילייט)","800×1200","תקרה"],["16","חלון פנימי (בין-חדרים)","800×600","קבוע"],
+  ["17","אדן-חלון","1200 · עומק 250","אלמנט-משנה"],["18","ארגז-תריס","2316×245","אלמנט-משנה"],
+  ["19","פתח-אוויר (תקרה)","200×200","סורג"],
+  ["20","חלון ממ״ד (הדף) ⭐","1000×1000","תקן — חובה בכל דירה חדשה"]];
+  var H=[
+  ["1","מזגן — יחידה פנימית עילית","900×300×200","מעטפת-אמת אלקטרה/תדיראן ~800–1200 רוחב"],
+  ["2","מזגן קסטה תקרתי","840×840","4-כיווני · קומפקטי 570×570 (רשת 600)"],
+  ["3","מזגן מיני-מרכזי (נסתר)","1200×300×600","מפוח בחלל-תקרה (ducted)"],
+  ["4","שרוול-קיר / מעבר-צנרת מזגן ⭐","Ø110","תקן Ø70/100/150 · חובה בכל התקנה"],
+  ["5","קופסת/נישת-קיר למזגן","450×450","צנרת+ניקוז+חשמל מאחורי היחידה"],
+  ["6","מעבה (יחידה חיצונית)","800×550×300","עומד על משטח/מרפסת"],
+  ["7","קונזול-קיר למעבה","600×400","זרועות-פלדה נושאות"],
+  ["8","נקודת ניקוז-מזגן","Ø16–20","קונדנס — שיפוע/משאבה"],
+  ["9","פתח-אוויר ממ״ד + שסתום-הדף ⭐","200×200","חובה — ת״י 4910 · מסנן-על NBC"],
+  ["10","שבכת-איוורור","200×200","שבכה קבועה יניקה/הזרמה"],
+  ["11","תריס-איוורור חיצוני (ז׳לוזי)","300×300","להבי-אלומיניום נטויים"],
+  ["12","מאוורר-יניקה (ונטה) שירותים","250×250","חשמלי · חור Ø100–120"],
+  ["13","תעלת-מנדף (קולט-אדים)","Ø120–150","יניקת-אדים מהמטבח החוצה"],
+  ["14","פתח מייבש-כביסה","Ø100–110","דש-סגירה · תקן 4″=102"],
+  ["15","ארובת-דוד / מפלט-גז","Ø60/100–130","קואקסיאלי · מפלט-בעירה"],
+  ["16","ארובה / מפלט-עשן (קמין)","Ø150–200","מעבר-תקרה/גג"],
+  ["17","פתח אוויר-צח / מסנן","200×200","אוויר-צח דרך מסנן"]];
+  function fill(id,arr){document.getElementById(id).innerHTML=arr.map(function(x){return '<div class="card"><span class="n">'+x[0]+'</span><span class="name">'+x[1]+'<span class="mech">'+x[3]+'</span></span><span class="dim">'+x[2]+'</span></div>'}).join('')}
+  fill("doors",D);fill("wins",W);fill("hvac",H);
+</script>

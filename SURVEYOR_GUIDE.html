@@ -1,0 +1,155 @@
+<title>משימות מודד Soline</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Poppins:wght@600&display=swap">
+<style>
+  :root{
+    --bg:#FBF4E6; --surface:#FFFFFF; --surface2:#FAF3E2; --text:#2B2620; --muted:#6E6656;
+    --border:#EADFC7; --accent:#E8890B; --teal:#127C8C; --ok:#2E9E6B;
+    --shadow:0 1px 2px rgba(74,58,20,.05),0 8px 22px rgba(74,58,20,.08);
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme=light]){
+    --bg:#16181A; --surface:#1F2427; --surface2:#232a2e; --text:#ECE7DB; --muted:#A7A093;
+    --border:#2E3439; --accent:#F7AC3A; --teal:#3BB6C7; --ok:#54C08A;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.35);
+  }}
+  :root[data-theme=dark]{
+    --bg:#16181A; --surface:#1F2427; --surface2:#232a2e; --text:#ECE7DB; --muted:#A7A093;
+    --border:#2E3439; --accent:#F7AC3A; --teal:#3BB6C7; --ok:#54C08A;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--text);direction:rtl;
+    font-family:Heebo,system-ui,-apple-system,sans-serif;line-height:1.55;
+    padding:max(14px,env(safe-area-inset-top)) 14px 80px}
+  .wrap{max-width:640px;margin:0 auto}
+  .top{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;padding-bottom:12px}
+  .wm{font-family:Poppins,sans-serif;font-size:23px;color:var(--accent);line-height:1}
+  .wm b{color:var(--teal)}
+  h1{font-size:18px;font-weight:800;margin:3px 0 0}
+  .lead{color:var(--muted);font-size:13.5px;margin:6px 0 0}
+  /* progress */
+  .prog{position:sticky;top:0;z-index:10;background:linear-gradient(var(--bg) 78%,transparent);
+    padding:12px 0 8px;margin-bottom:6px}
+  .pbar{height:12px;border-radius:999px;background:var(--border);overflow:hidden}
+  .pfill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--accent),#f0b055);transition:width .35s ease}
+  .pmeta{display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:13px;font-weight:700}
+  .pmeta .done{color:var(--accent);font-variant-numeric:tabular-nums}
+  .pmeta button{font-family:inherit;font-size:12px;font-weight:700;color:var(--muted);
+    background:none;border:1px solid var(--border);border-radius:999px;padding:4px 11px;cursor:pointer}
+  .celebrate{display:none;background:var(--ok);color:#fff;border-radius:12px;padding:12px 14px;
+    font-weight:800;text-align:center;margin:10px 0;font-size:15px}
+  /* task cards */
+  .task{background:var(--surface);border:1px solid var(--border);border-radius:15px;
+    box-shadow:var(--shadow);margin:11px 0;overflow:hidden;transition:opacity .2s}
+  .task.done{opacity:.62}
+  .thead{display:flex;gap:12px;align-items:flex-start;padding:14px 15px;cursor:pointer;user-select:none}
+  .num{flex:0 0 auto;width:34px;height:34px;border-radius:10px;background:var(--surface2);
+    border:1px solid var(--border);color:var(--teal);display:grid;place-items:center;
+    font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+  .task.done .num{background:var(--ok);border-color:var(--ok);color:#fff}
+  .task.done .num::after{content:"✓"} .task.done .num .d{display:none}
+  .tt{flex:1}
+  .tt .measure{font-weight:800;font-size:15.5px;line-height:1.35}
+  .tt .what{font-size:12.5px;color:var(--accent);font-weight:700;margin-top:2px}
+  .chev{flex:0 0 auto;color:var(--muted);font-size:18px;transition:transform .2s;margin-top:4px}
+  .task.open .chev{transform:rotate(180deg)}
+  .body{display:none;padding:0 15px 15px 15px}
+  .task.open .body{display:block}
+  .how{background:var(--surface2);border:1px solid var(--border);border-radius:11px;padding:11px 13px;margin:2px 0 12px}
+  .how b{color:var(--text)} .how ol{margin:0;padding-right:18px} .how li{margin:5px 0;font-size:13.5px}
+  .tip{font-size:12.5px;color:var(--muted);margin:8px 0 12px}
+  .tip b{color:var(--teal)}
+  .btn-done{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;
+    min-height:52px;border:2px solid var(--accent);background:transparent;color:var(--accent);
+    border-radius:12px;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer}
+  .task.done .btn-done{background:var(--ok);border-color:var(--ok);color:#fff}
+  .btn-done:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .note{background:var(--surface2);border:1px solid var(--border);border-right:4px solid var(--teal);
+    border-radius:11px;padding:12px 14px;font-size:13px;color:var(--muted);margin:14px 0}
+  .note b{color:var(--text)}
+  footer{margin-top:26px;color:var(--muted);font-size:12px;text-align:center;border-top:1px solid var(--border);padding-top:14px}
+  .tog{position:fixed;top:10px;left:10px;width:36px;height:36px;border-radius:999px;
+    background:var(--surface);border:1px solid var(--border);color:var(--text);box-shadow:var(--shadow);cursor:pointer}
+</style>
+
+<button class="tog" aria-label="מצב-תצוגה" onclick="var r=document.documentElement,d=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');r.setAttribute('data-theme',d==='dark'?'light':'dark')">◐</button>
+
+<div class="wrap">
+  <div class="top">
+    <div><div class="wm">soline<b>.</b></div><h1>משימות מודד · מדידת חדר</h1></div>
+  </div>
+  <p class="lead">עבור משימה-אחר-משימה. כל משימה = <b>מה למדוד</b> + <b>איך</b>. לחץ על הכרטיס לפתיחה, ובסוף "✓ ביצעתי". ההתקדמות נשמרת בטלפון.</p>
+
+  <div class="prog">
+    <div class="pbar"><div class="pfill" id="pfill"></div></div>
+    <div class="pmeta"><span class="done"><span id="pdone">0</span>/<span id="ptot">0</span> משימות</span>
+      <button onclick="resetAll()">איפוס</button></div>
+    <div class="celebrate" id="celebrate">🎉 סיימת את מדידת-החדר! מוכן לחדר הבא.</div>
+  </div>
+
+  <div id="tasks"></div>
+
+  <div class="note"><b>נתקלת בבעיה או שחסר לך משהו?</b> לחץ על כפתור-הבאג 🐞 באפליקציה (בכל מסך) — צלם, סמן בחץ, וכתוב מה קרה. זה מגיע ישר לבעלים.</div>
+
+  <footer>Soline Measure — משימות-מדידה למודד · עבור לפי-הסדר, מדוד חדר-אמיתי</footer>
+</div>
+
+<script>
+  const TASKS = [
+    {what:"חיבור", measure:"חבר את מד-הלייזר", how:["מסך-הבית → הקש על <b>סטטוס-הלייזר</b> (למעלה) → <b>חבר</b>.","הקש <b>סרוק</b> והפעל את ה-Leica DISTO X6.","המתן ל-<b>\"מחובר: X6\"</b> בירוק."], tip:"אם לא-מוצא: ודא שהמכשיר דלוק ולא-מחובר לאפליקציה אחרת."},
+    {what:"פרויקט", measure:"פתח פרויקט וחדר", how:["מסך-הבית → <b>＋ פרויקט מהיר</b> (או \"פתיחת עבודה\").","בתוך הפרויקט → <b>＋</b> → צור חדר (למשל \"מטבח\")."], tip:"אפשר כמה חדרים באותו פרויקט."},
+    {what:"הכנה", measure:"הגדר את פתיחת-המדידה", how:["בכרטיס העליון (הכתום): <b>כיוון-כניסה</b> (רוח/מעלות) — קובע את חץ-הכניסה בשרטוט.","<b>מהלך-גבהים</b>: הוסף מדידות-תקרה (הגובה-המחייב = המינימום).","<b>שינויים-עתידיים</b>: הערות אם קיר ייהרס וכו'."], tip:"אין מצפן — כיוון-הכניסה מוזן ידנית."},
+    {what:"מתאר", measure:"מדוד את מתאר-הקירות (כל הקירות)", how:["בחר מסלול: <b>▭ אשף-תבניות</b> (חדר מלבן/L — הכי-מהיר), <b>📐 מדידה-חיה</b> (יורה אורך-קיר בזה-אחר-זה), או <b>📐 P2P</b> (חצובה+DST — יורה כל פינה).","מדוד את <b>כל</b> הקירות עד סגירת-המתאר (⭕).","בדוק שרשימת-הקירות מלאה: \"קיר N · אורך · גובה\"."], tip:"P2P: אל תזיז את החצובה עד סוף-הסקר. אם התוכנית \"מראה-הפוכה\" — החלף ↺/↻."},
+    {what:"גבהים", measure:"מדוד גובה-חדר (מינ'/מקס') + גובה לכל חזית בנפרד", how:["<b>מהלך-גבהים</b> (בכרטיס פתיחת-המדידה): מדוד את התקרה ב<b>כמה נקודות</b> — האפליקציה שומרת <b>מינימום ומקסימום</b>, וה<b>גובה-המחייב = המינימום</b>.","<b>גובה פר-חזית:</b> הקש על כל קיר ברשימה בנפרד → הזן/ערוך את ה<b>גובה</b> שלו (כל קיר גובה משלו).","כוון את הלייזר לתקרה ולחץ — הגובה נכנס לבד (<b>📡 מדוד פעם-אחת</b>)."], tip:"בחדר לא-ישר — מדוד מינ'/מקס' ואל תסתמך על גובה-אחד. גובה פר-קיר שנמדד מסומן \"נמדד\" ולא-נדרס ע\"י מהלך-הגבהים."},
+    {what:"אלמנט", measure:"הוסף אלמנט ראשון (שקע) עם מידות-אמת", how:["במסך-הקיר → <b>＋</b> → בורר-הקטלוג → <b>שקע</b>.","מצב <b>מרכז</b> (מיקום-מרכז) או <b>היסטים</b> (שמאל+ימין, רוחב-מחושב).","מלא <b>גובה-מהרצפה</b> — מדוד בלייזר.","<b>שמור</b> (הכפתור נדלק רק כשהמידות תקינות)."], tip:"עומק-D ממולא מהקטלוג — עדכן אם שונה בשטח."},
+    {what:"פתח", measure:"הוסף פתח (דלת/חלון)", how:["<b>＋</b> → <b>דלת</b> או <b>חלון</b>.","הטופס בא עם מידות-יצרן — <b>עדכן למידות-האמת שמדדת</b>: רוחב-פתח, גובה-פתח, גובה-סף (חלון), עובי-קיר.","הגדר צד-ציר / כיוון-פתיחה / זיגוג. <b>שמור</b>."], tip:"מידות-אמת מהשטח — לא לסמוך על ברירת-המחדל."},
+    {what:"חזית", measure:"מדוד חזית + גובה-אלמנט מהלייזר", how:["במסך-הקיר → <b>⬜ מצב-חזית מאוחד</b>.","טאב <b>▦ מסגרת</b>: <b>➕ קלוט נקודה</b> לאורך החזית → <b>✓ סיום-מסגרת</b>.","טאב <b>אלמנטים</b>: <b>קלוט גובה מהלייזר</b> לכל אלמנט."], tip:"ודא ש\"קלוט גובה\" נותן גובה-מהרצפה הגיוני — לא מספר-ענק."},
+    {what:"מפלס", measure:"מדוד מפלס-רצפה (5 נקודות)", how:["במסך-הקיר → <b>▦ מדידת רצפה</b>.","<b>🎯 קבע 0</b> בנקודת-ייחוס → <b>➕ מדוד נקודה</b> ×5 ברחבי-הרצפה.","כל נקודה מציגה סטייה בצבע: ירוק≤3 · כתום≤10 · אדום&gt;10."], tip:"ל-0 חייבים זווית-אנכית (כוון מעט למטה) — אחרת נחסם. חזור גם על ▤ תקרה."},
+    {what:"מדיה", measure:"צלם תמונות-חובה", how:["<b>📷 צלם חזית · &lt;סוג&gt;</b> — צלם כל קיר (חזית), פרטים (תקריב), ומבט-כללי (רחוק).","הוסף כיתוב אם צריך.","וידאו: 🎥 גישה + הסבר."], tip:"תמונות הן חובה כדי לסגור חדר."},
+    {what:"סגירה", measure:"סגור חדר וייצא", how:["<b>🔒 סגירת-חדר</b> → השלם את משימות-החובה (או \"דלג עם-סיבה\").","חזור לפרויקט → <b>🔒 סגירת-פרויקט</b> (גישה + כל-החדרים).","<b>⬇ ייצא .sol לממיר</b> — שתף את הקובץ."], tip:"זהו — החדר מוכן ונשלח."},
+    {what:"דוח-בדיקה", measure:"הורד את דוח-הבדיקה (HTML) של הסשן", how:["באפליקציה → <b>צפה בדוח (HTML)</b> → <b>הורד/שתף</b> — זהו דוח-הבדיקה של הסשן הזה.","הדוח נפתח בכל טלפון (Chrome) בלי-תוכנה. אתה רואה <b>רק HTML</b> — קבצי-ה-CAD הולכים למשרד.","שמור דוח-בדיקה אחד <b>לכל סשן</b>."], tip:"בדוח תשווה מיד את המספרים למה שתמדוד ידנית בשלב הבא."},
+    {what:"בדיקה-עצמית", measure:"בדוק את עצמך — מטר-ידני מול האפליקציה (5 מידות)", how:["קח <b>מטר רגיל</b> ומדוד ידנית את 5 המידות הבאות, והשווה לערך שבדוח/באפליקציה. רשום בדוח-הבדיקה: <b>ידני · אפליקציה · הפרש</b>.","<b>1) אורך הקיר-הארוך</b> — פינה-לפינה.","<b>2) גובה-החדר</b> — רצפה-לתקרה בנקודה אחת.","<b>3) רוחב פתח</b> — דלת או חלון (בין המשקופים).","<b>4) גובה שקע מהרצפה</b> — מהרצפה למרכז-השקע.","<b>5) אלכסון-החדר</b> — פינה-לפינה נגדית (בודק שהמתאר נסגר נכון)."], tip:"סבילות ±5 מ\"מ. הפרש גדול מזה = 🐞 (דווח עם צילום-הדוח + המספר-הידני). זו הבדיקה הכי-חשובה — היא מוכיחה שהמכשיר מדייק."}
+  ];
+
+  const KEY = "soline_surveyor_tasks_v1";
+  let done = {};
+  try { done = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e){ done = {}; }
+  function persist(){ try { localStorage.setItem(KEY, JSON.stringify(done)); } catch(e){} }
+
+  const host = document.getElementById('tasks');
+  TASKS.forEach((t,i)=>{
+    const el = document.createElement('div');
+    el.className = 'task' + (done[i] ? ' done' : '');
+    el.innerHTML =
+      '<div class="thead" onclick="toggle('+i+')">'+
+        '<div class="num"><span class="d">'+(i+1)+'</span></div>'+
+        '<div class="tt"><div class="measure">'+t.measure+'</div><div class="what">'+t.what+'</div></div>'+
+        '<div class="chev">▾</div>'+
+      '</div>'+
+      '<div class="body">'+
+        '<div class="how"><b>איך:</b><ol>'+t.how.map(h=>'<li>'+h+'</li>').join('')+'</ol></div>'+
+        (t.tip?'<div class="tip">💡 <b>טיפ:</b> '+t.tip+'</div>':'')+
+        '<button class="btn-done" onclick="mark('+i+',event)">'+(done[i]?'✓ בוצע':'✓ סימנתי שביצעתי')+'</button>'+
+      '</div>';
+    host.appendChild(el);
+  });
+
+  function toggle(i){ host.children[i].classList.toggle('open'); }
+  function mark(i,e){ e.stopPropagation(); done[i]=!done[i]; persist();
+    const el=host.children[i]; el.classList.toggle('done', !!done[i]);
+    el.querySelector('.btn-done').textContent = done[i]?'✓ בוצע':'✓ סימנתי שביצעתי';
+    if(!done[i]) el.classList.add('open'); update(); }
+  function resetAll(){ done={}; persist();
+    [...host.children].forEach((el,i)=>{ el.classList.remove('done'); el.querySelector('.btn-done').textContent='✓ סימנתי שביצעתי'; });
+    update(); }
+  function update(){ const n=TASKS.filter((_,i)=>done[i]).length;
+    document.getElementById('pdone').textContent=n;
+    document.getElementById('ptot').textContent=TASKS.length;
+    document.getElementById('pfill').style.width=(n/TASKS.length*100)+'%';
+    document.getElementById('celebrate').style.display = n===TASKS.length?'block':'none'; }
+  // open the first not-done task
+  const first = TASKS.findIndex((_,i)=>!done[i]);
+  if(first>=0) host.children[first].classList.add('open');
+  update();
+</script>

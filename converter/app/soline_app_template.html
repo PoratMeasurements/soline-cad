@@ -1,0 +1,211 @@
+<title>Soline — ממיר מדידות</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  :root{
+    --ground:#eef1f5; --panel:#fff; --panel-2:#f5f8fc; --ink:#141b26; --muted:#5b6675;
+    --line:#dbe2ec; --accent:#1e5fff; --accent-2:#12855f; --accent-soft:#e6eeff;
+    --sans:"Segoe UI",system-ui,-apple-system,"Noto Sans Hebrew",Arial,sans-serif;
+    --mono:ui-monospace,Menlo,Consolas,monospace;
+  }
+  @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --ground:#0c1017;--panel:#141b25;--panel-2:#1a2330;--ink:#e9edf3;--muted:#93a0b0;
+    --line:#26303d;--accent:#5b8cff;--accent-2:#4bd6a0;--accent-soft:#1a2740;}}
+  :root[data-theme="dark"]{--ground:#0c1017;--panel:#141b25;--panel-2:#1a2330;--ink:#e9edf3;--muted:#93a0b0;--line:#26303d;--accent:#5b8cff;--accent-2:#4bd6a0;--accent-soft:#1a2740;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.55}
+  .wrap{max-width:1000px;margin:0 auto;padding:20px 16px 40px}
+  header{display:flex;align-items:center;gap:12px;padding:8px 0 18px;border-bottom:1px solid var(--line);margin-bottom:20px}
+  .logo{width:38px;height:38px;border-radius:10px;background:var(--accent);display:grid;place-items:center;color:#fff;font-weight:800;font-size:20px}
+  h1{font-size:26px;margin:0;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:14px;margin:0}
+  .drop{border:2px dashed var(--line);border-radius:16px;background:var(--panel);padding:34px 20px;text-align:center;cursor:pointer;transition:.15s}
+  .drop:hover,.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+  .drop .big{font-size:19px;font-weight:600}
+  .drop .small{color:var(--muted);font-size:14px;margin-top:6px}
+  .drop input{display:none}
+  .row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px;flex:1;min-width:120px}
+  .stat .n{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
+  .stat .l{font-size:13px;color:var(--muted)}
+  .preview{margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .preview .bar{padding:10px 16px;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted);font-family:var(--mono);display:flex;justify-content:space-between}
+  .preview svg{display:block;width:100%;height:auto;max-height:60vh;background:var(--panel-2)}
+  .downloads{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:16px}
+  .dl{display:flex;flex-direction:column;gap:2px;padding:14px 16px;border-radius:12px;border:1px solid var(--line);background:var(--panel);text-align:right;cursor:pointer;font:inherit;color:inherit}
+  .dl:enabled:hover{border-color:var(--accent)}
+  .dl b{font-size:15px}.dl span{font-size:12px;color:var(--muted)}
+  .dl:disabled{opacity:.5;cursor:default}
+  .dl .st{font-family:var(--mono);font-size:11px;color:var(--accent-2)}
+  .dl .soon{color:var(--muted)}
+  .empty{color:var(--muted);text-align:center;padding:40px 0;font-size:14px}
+  footer{margin-top:26px;color:var(--muted);font-size:12px;text-align:center;font-family:var(--mono)}
+</style>
+
+<div class="wrap" dir="rtl">
+  <header>
+    <div class="logo">S</div>
+    <div>
+      <h1>Soline</h1>
+      <p class="sub">העלה קובץ מדידה (ORDX) — וקבל את כל ההמרות</p>
+    </div>
+  </header>
+
+  <label class="drop" id="drop">
+    <div class="big">גרור לכאן קובץ ORDX, או הקש לבחירה</div>
+    <div class="small">הקובץ נשאר במכשיר — ההמרה רצה מקומית</div>
+    <input type="file" id="file" accept=".ordx,.xml">
+  </label>
+
+  <div id="result" style="display:none">
+    <div class="row" id="stats"></div>
+    <div class="preview">
+      <div class="bar"><span id="pvtitle">תצוגת תכנית</span><span id="pvmeta"></span></div>
+      <div id="svg"></div>
+    </div>
+    <div class="downloads" id="downloads"></div>
+  </div>
+  <div class="empty" id="empty">אין קובץ עדיין. העלה ORDX כדי להתחיל.</div>
+
+  <footer>Soline · ORDX → DXF · DXF-3D · ORDX · PDP</footer>
+</div>
+
+<script id="symbols-data" type="application/json">/*__SYMBOLS__*/</script>
+<script id="names-data" type="application/json">/*__NAMES__*/</script>
+<script>
+const SYMBOLS = JSON.parse(document.getElementById('symbols-data').textContent);
+const HENAME = JSON.parse(document.getElementById('names-data').textContent);
+const NAME_MAP = {
+  'Socket':'Single Socket','Duplex Socket':'Duplex Socket','Junction Box':'Junction Box',
+  'Gas':'Gas Point','Can Light':'Recessed Downlight (Can Light)','Window':'Window',
+  'Faucet':'Faucet / Tap Point','Sewage':'Sewage / Waste Point'
+};
+const symFor = n => SYMBOLS[n] || SYMBOLS[NAME_MAP[n]] || null;
+// resolve an ORDX item name to its Hebrew name (via the catalog map)
+const heNm = n => HENAME[n] || HENAME[NAME_MAP[n]] || n;
+
+// ---- ORDX parsing (browser DOMParser) ----
+function num(s){ if(s==null||s==='')return null; const v=parseFloat(String(s).replace(',','.')); return isFinite(v)?v:null; }
+function txt(el,tag){ const n=el&&el.getElementsByTagName(tag)[0]; return n?n.textContent.trim():''; }
+function parseORDX(xml){
+  const doc=new DOMParser().parseFromString(xml,'application/xml');
+  const walls=[];
+  for(const w of doc.getElementsByTagName('Wall')){
+    const pos=w.getElementsByTagName('Position')[0]; if(!pos)continue;
+    const wall={ startX:num(txt(pos,'StartX')),startY:num(txt(pos,'StartY')),endX:num(txt(pos,'EndX')),endY:num(txt(pos,'EndY')), items:[] };
+    for(const cont of ['Fixtures','Furnishings']){
+      const c=w.getElementsByTagName(cont)[0]; if(!c)continue;
+      for(const it of c.children){
+        const gen=it.getElementsByTagName('General')[0];
+        const p=it.getElementsByTagName('Position')[0];
+        const size=gen&&gen.getElementsByTagName('Size')[0];
+        const pick=t=>{ let v=gen?num(txt(gen,t)):null; if(v==null&&size)v=num(txt(size,t)); return v; };
+        wall.items.push({ name:gen?txt(gen,'Name'):'', cls:gen?txt(gen,'Class'):'',
+          W:pick('Width')||100, D:pick('Depth')||10, H:pick('Height')||100,
+          x:p?num(txt(p,'X')):0, y:p?num(txt(p,'Y')):0 });
+      }
+    }
+    walls.push(wall);
+  }
+  return walls;
+}
+
+// ---- symbol placement: FIXED readable size, centred on the point, rotated to wall.
+// No per-item text on the plan (names live in the side LEGEND, drafting-standard).
+const DISP = 300; // fixed schematic symbol size on the plan (mm)
+function itemSegs(it, wall){
+  const dx=wall.endX-wall.startX, dy=wall.endY-wall.startY, L=Math.hypot(dx,dy)||1;
+  const ux=dx/L, uy=dy/L, ang=Math.atan2(dy,dx), cos=Math.cos(ang), sin=Math.sin(ang);
+  const along=(it.x||0)+(it.cls==='Decorative'?0:it.W/2);
+  const cx=wall.startX+along*ux, cy=wall.startY+along*uy;
+  const s=symFor(it.name); if(!s) return null;
+  return s.polylines.map(pl=>pl.map(([nx,ny])=>{
+    const lx=nx*DISP/1000-DISP/2, ly=ny*DISP/1000-DISP/2; // centre the symbol on the point
+    return [cx+lx*cos-ly*sin, cy+lx*sin+ly*cos];
+  }));
+}
+function usedNames(walls){ const set=new Set(); walls.forEach(w=>w.items.forEach(it=>{ if(symFor(it.name)) set.add(it.name); })); return [...set]; }
+
+// ---- DXF 2D ----
+function heU(str){ return String(str).split('').map(c=>{const cp=c.codePointAt(0);return cp>127?'\\U+'+cp.toString(16).toUpperCase().padStart(4,'0'):c;}).join(''); }
+function planBBox(walls){ let a=1e9,b=1e9,c=-1e9,d=-1e9; const p=(x,y)=>{a=Math.min(a,x);b=Math.min(b,y);c=Math.max(c,x);d=Math.max(d,y);};
+  walls.forEach(w=>{p(w.startX,w.startY);p(w.endX,w.endY); w.items.forEach(it=>{const sg=itemSegs(it,w); if(sg)sg.forEach(pl=>pl.forEach(([x,y])=>p(x,y)));});}); return {minX:a,minY:b,maxX:c,maxY:d}; }
+function toDXF(walls){
+  const g=(c,v)=>c+'\n'+v+'\n'; let b='';
+  const L=(x1,y1,x2,y2,ly)=>g(0,'LINE')+g(8,ly)+g(10,x1.toFixed(2))+g(20,y1.toFixed(2))+g(30,'0')+g(11,x2.toFixed(2))+g(21,y2.toFixed(2))+g(31,'0');
+  const T=(x,y,h,s,ly)=>g(0,'TEXT')+g(8,ly)+g(7,'HEB')+g(10,x.toFixed(2))+g(20,y.toFixed(2))+g(30,'0')+g(40,h.toFixed(1))+g(1,heU(s));
+  for(const w of walls){ b+=L(w.startX,w.startY,w.endX,w.endY,'KIROT');
+    for(const it of w.items){ const sg=itemSegs(it,w); if(!sg)continue;
+      for(const pl of sg) for(let i=0;i<pl.length-1;i++) b+=L(pl[i][0],pl[i][1],pl[i+1][0],pl[i+1][1],'SEMEL'); } }
+  // legend on the side
+  const bb=planBBox(walls), names=usedNames(walls), x0=bb.maxX+800, sz=400, gap=650;
+  b+=T(x0, bb.maxY+400, 120, heU('מקרא'),'MIQRA'); // "מקרא"
+  names.forEach((name,i)=>{ const y0=bb.maxY - i*gap; const s=symFor(name);
+    for(const pl of s.polylines){ for(let j=0;j<pl.length-1;j++){
+      const A=[x0+pl[j][0]*sz/1000, y0-sz+pl[j][1]*sz/1000], B=[x0+pl[j+1][0]*sz/1000, y0-sz+pl[j+1][1]*sz/1000];
+      b+=L(A[0],A[1],B[0],B[1],'MIQRA'); } }
+    b+=T(x0+sz+160, y0-sz/2-40, 90, heNm(name),'MIQRA'); });
+  const hdr=g(0,'SECTION')+g(2,'TABLES')+g(0,'TABLE')+g(2,'STYLE')+g(70,'1')+g(0,'STYLE')+g(2,'HEB')+g(70,'0')+g(40,'0')+g(41,'1')+g(50,'0')+g(71,'0')+g(42,'2.5')+g(3,'Arial.ttf')+g(4,'')+g(0,'ENDTAB')+g(0,'ENDSEC')+g(0,'SECTION')+g(2,'ENTITIES');
+  return hdr+b+g(0,'ENDSEC')+g(0,'EOF');
+}
+
+// ---- SVG preview (plan + side legend) ----
+function esc(s){ return String(s).replace(/[<&]/g,c=>c==='<'?'&lt;':'&amp;'); }
+function toSVG(walls){
+  const bb=planBBox(walls); const els=[];
+  for(const w of walls){ els.push(`<line x1="${w.startX}" y1="${w.startY}" x2="${w.endX}" y2="${w.endY}" stroke="var(--ink)" stroke-width="40"/>`);
+    for(const it of w.items){ const sg=itemSegs(it,w); if(!sg)continue;
+      for(const pl of sg){ const d=pl.map(([x,y],i)=>(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1)).join(' ');
+        els.push(`<path d="${d}" fill="none" stroke="var(--ink)" stroke-width="14"/>`); } } }
+  // legend to the right (text drawn upright by counter-flipping Y)
+  const names=usedNames(walls), x0=bb.maxX+800, sz=430, gap=680; let legMaxX=x0+sz;
+  els.push(legText(x0, bb.maxY+300, 'מקרא', 150));
+  names.forEach((name,i)=>{ const y0=bb.maxY-i*gap; const s=symFor(name);
+    for(const pl of s.polylines){ const d=pl.map(([nx,ny],k)=>(k?'L':'M')+(x0+nx*sz/1000).toFixed(1)+' '+(y0-sz+ny*sz/1000).toFixed(1)).join(' ');
+      els.push(`<path d="${d}" fill="none" stroke="var(--accent)" stroke-width="12"/>`); }
+    const tx=x0+sz+180; els.push(legText(tx, y0-sz/2, heNm(name), 130)); legMaxX=Math.max(legMaxX,tx+3000); });
+  const pad=300, minX=bb.minX-pad, maxX=Math.max(bb.maxX,legMaxX)+pad, minY=bb.minY-pad, maxY=bb.maxY+pad+400;
+  return `<svg viewBox="${minX} ${-maxY} ${maxX-minX} ${maxY-minY}" xmlns="http://www.w3.org/2000/svg"><g transform="scale(1,-1)">${els.join('')}</g></svg>`;
+}
+// legend text: SVG is Y-flipped, so counter-flip the text glyphs to read upright, RTL anchored end
+function legText(x,y,s,size){ return `<text x="${x}" y="${-y}" transform="scale(1,-1)" font-size="${size}" fill="var(--ink)" font-family="var(--sans)" dominant-baseline="middle" direction="rtl">${esc(s)}</text>`; }
+
+// ---- download ----
+function download(name,text){ const blob=new Blob([text],{type:'application/octet-stream'}); const u=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=u; a.download=name; a.click(); URL.revokeObjectURL(u); }
+
+// ---- wire up ----
+let currentWalls=null, baseName='plan';
+function handleFile(file){
+  baseName=file.name.replace(/\.(ordx|xml)$/i,'');
+  const rd=new FileReader();
+  rd.onload=()=>{ try{ render(parseORDX(rd.result)); }catch(e){ alert('שגיאה בקריאת הקובץ: '+e.message); } };
+  rd.readAsText(file);
+}
+function render(walls){
+  currentWalls=walls;
+  const items=walls.reduce((n,w)=>n+w.items.length,0);
+  const withSym=walls.reduce((n,w)=>n+w.items.filter(it=>symFor(it.name)).length,0);
+  document.getElementById('empty').style.display='none';
+  document.getElementById('result').style.display='block';
+  document.getElementById('stats').innerHTML=
+    stat(walls.length,'קירות')+stat(items,'אביזרים')+stat(withSym+'/'+items,'עם סמל');
+  document.getElementById('pvmeta').textContent=baseName+'.ordx';
+  document.getElementById('svg').innerHTML=toSVG(walls);
+  const dls=[
+    {id:'dxf2d',t:'DXF 2D',s:'תכנית קווית',ok:true,fn:()=>download(baseName+'.dxf',toDXF(walls))},
+    {id:'dxf3d',t:'DXF 3D',s:'תיבות W×D×H',ok:false},
+    {id:'ordx',t:'ORDX',s:'ייצוא חוזר',ok:false},
+    {id:'pdp',t:'PDP',s:'Raumplan',ok:false},
+  ];
+  document.getElementById('downloads').innerHTML=dls.map(d=>
+    `<button class="dl" ${d.ok?'':'disabled'} data-id="${d.id}"><b>${d.t}</b><span>${d.s}</span><span class="st ${d.ok?'':'soon'}">${d.ok?'הורד ▼':'בקרוב'}</span></button>`).join('');
+  document.querySelectorAll('.dl').forEach(btn=>{ const d=dls.find(x=>x.id===btn.dataset.id); if(d&&d.ok)btn.onclick=d.fn; });
+}
+const stat=(n,l)=>`<div class="stat"><div class="n">${n}</div><div class="l">${l}</div></div>`;
+
+const drop=document.getElementById('drop'), input=document.getElementById('file');
+input.addEventListener('change',e=>{ if(e.target.files[0])handleFile(e.target.files[0]); });
+['dragover','dragenter'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over');}));
+drop.addEventListener('drop',e=>{ const f=e.dataTransfer.files[0]; if(f)handleFile(f); });
+</script>

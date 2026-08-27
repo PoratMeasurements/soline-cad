@@ -1,0 +1,1731 @@
+{
+ "tracks": [
+  {
+   "key": "",
+   "title": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+   "summary": "היום הקוד מחזיק שני managers נפרדים וכמעט-זהים במבנה (LeicaDistoManager 3D, BluetoothLeManager Bosch 2D) עם LaserDeviceType כ-enum בלבד — ההפשטה אינה חוזה-קוד אחד. שני הפרוטוקולים כבר פוענחו חי מקצה-לקצה (DISTO_PROTOCOL.md), אין צורך ב-SDK חיצוני; הכול BLE סטנדרטי. הציר מחלץ interface LaserDevice יחיד ששני המימושים ממלאים, עם מודל-יכולות (capabilities) שמבדיל 2D/3D בלי בדיקות-סוג, מודל מדידה גולמי אחיד (RawMeasurement במ\"מ+רדיאנים, מקרה Infinity=null), ו-API מבוסס Flow/StateFlow. העיקרון: לא נוגעים בלוגיקת-ה-BLE הבדוקה (crown jewel) אלא עוטפים אותה. ההיטל ל-3D והגאומטריה נשארים מחוץ לשכבה; ה-USB Encoder מוסר לחלוטין. המסמך המלא: G:/My Drive/claude/soline-ops-app/docs/build/06-device-layer.md",
+   "count": 10
+  },
+  {
+   "key": "",
+   "title": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+   "summary": "13 הבאגים שנמצאו ב-CVSM מתכנסים ל-4 שורשים בלבד: (א) אין שער-אימות ב-Plan — קירות נוצרים ללא auto-connect וחדר-פתוח יוצא לייצור בלי אזהרה (B1/B4/B5); (ב) snap דורס מידות-לייזר בשקט עד 660 מ\"מ (B2); (ג) פלט לא-עברי ולא-עקבי — PDF ב-LTR ושם-ORDX מאבד עברית (B3/B10); (ד) לכידה-חלקית וברירות-מחדל-אימפריאליות (B6-B9,B11-B13). שורשים א+ב הם רוצח-הרווח (מטבח-לא-נכנס+חזרה-לשטח). הפתרון: RoomValidator יחיד עם שער-יציאה חוסם בשני-מקומות, חיבור-קירות-אוטומטי, סף-T-join, ופלט-עברי-RTL — הכול adapt-על-בסיס-בוגר פרט לשכבת-האימות ומיגרציית-המודל, שגם-משרתות את הבידול העתידי. המסמך המלא: G:/My Drive/claude/soline-ops-app/docs/build/04-bug-hardening.md",
+   "count": 11
+  },
+  {
+   "key": "",
+   "title": "ארכיטקטורה וסטאק — Soline Measure (התאמת CVSM)",
+   "summary": "ההכרעה המרכזית: להתאים (adapt) את CVSM הבשל (Kotlin/Compose/Room/single-activity-MVVM, שני מדי-לייזר BLE שפוענחו חי, offline-first, מודל-קיר עשיר) ולא לבנות-מחדש או לשכתב ל-web. ההשקעה הארכיטקטונית האמיתית היא מודולריזציה של המונוליט הקיים למבנה רב-מודולי (core/data/hardware/feature + fit-engine), כך שהבידול נכנס כשכבות-Kotlin-טהורות נקיות. Room נשאר מנוע-האחסון-החי; .sol הוא פורמט-החילוף שנכתב native ל-measured/ בגמר-מדידה ובסנכרון (מודול core:sol טהור). השיתוף עם תוכנת-העיצוב (שהיא web/React) מושג דרך חוזה — סכמת .sol + מפרט R1-R10 — ולא דרך KMP, אך הליבה נכתבת Kotlin-טהור כדי להשאיר את דלת ה-KMP פתוחה בעלות-אפס. יש לחתוך את התלות ב-bravh (רישוי+עדכונים) ולעבור ל-multi-tenant מול שרת-Soline.",
+   "count": 9
+  },
+  {
+   "key": "",
+   "title": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+   "summary": "מנוע-ההתאמה הוא הבידול מס' 1 של Soline: הוא מניח את תכנון-הנגר (שכבה A) על המדידה בשטח (שכבה B) ומפעיל את 10 חוקי R1–R10 מ-kitchen_layout_fitting §4, ומפיק את שכבת fit/ (deltas/derived/measure_status) לפי הסכמה הקיימת ב-SOL_FORMAT. ההחלטה המכוננת: המנוע אינו חלק מאפליקציה אלא חבילה טהורה משותפת (@soline/fit-engine, TS ללא DOM), הנצרכת גם ע\"י אפליקציית-המדידה (offline, תת-קבוצה חיה) וגם ע\"י תוכנת-העיצוב (סט מלא במשרד) — מימוש-אחד, פרופיל-הפעלה שונה. R4 (בליטה-מול-עומק) נבנה ראשון: הכאב-הכי-צפוף בקורפוס, הפיצ'ר-היחיד-בשוק, וה-vertical-slice שמוכיח את כל הצינור (לכידת-D→רמז-חי→פתרון). תנאי-קדם P0: שדרוג מודל-האובייקט לקיר-כפרופיל+בליטה-כשדה — המנוע טוב-כמו-הקלט. המימוש מדורג בשישה שלבים: תשתית→R4→עקביות-עצמית→reconcile-עם-A→מנוע-משרד-מלא+auto-fit→הקשחה. המסמך המלא נכתב ל-G:/My Drive/claude/soline-ops-app/docs/build/03-fit-engine.md.",
+   "count": 10
+  },
+  {
+   "key": "",
+   "title": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+   "summary": "הלכידה הגיאומטרית ב-CVSM כמעט-מלאה (26/45 צרכים קיימים), אך המודד עדיין מאלתר בשלושה מקומות שמזליגים דאטה בין השטח למשרד: סומך-על-העין שהחדר סגר (B1/B2/B4/B5), רושם-בצד עומק-בליטה וסטטוס-מידה (B9 + אין שדה status), ובודק-בראש אם הארון ייכנס (אין רקע-תכנון/R1–R10). ליבת הציר היא שער-איכות חוסם-יציאה: צ'קליסט שלמות פר-סוג-עבודה, ולידציית-סגירה + חיבור-קירות אוטומטי, עומק-בליטה נמדד בפועל עם אזהרת-R4, וסטטוס-מידה כשדה-חובה. התוכנית מדורגת ל-4 גלים: גל-1 חוסם-הטעות-היקרה (P0, זול, פותר 4/5 הבאגים הקריטיים), גל-2 האינטליגנציה הנגרותית (עומק/מפלס/סטטוס), גל-3 הצלבה חיה מול תכנון (הבידול), גל-4 ארגונומיה ומקרי-קצה. פלט-עברי-תקין ושכבת-Ops מתואמים מחוץ לציר.",
+   "count": 11
+  },
+  {
+   "key": "",
+   "title": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+   "summary": "‎.sol‎ הוא קונטיינר-מחזור-חיים (ZIP+JSON, 8 שכבות, סגור-ומוצפן קשור-רישיון) — אך המידע כבר קיים ב-Room של CVSM (טבלת projects יחידה, גאומטריה כ-JSON בעמודת rooms). לכן עקרון-המימוש: Room נשאר ה-working store החי; ‎.sol‎ הוא artifact ממומש שנכתב מתוכו ב-4 נקודות בלבד (סיום-מדידה, סנכרון, ייצוא, מעבר-שלב) — בלי לגעת ב-offline-first הבשל. v1 מממש תת-קבוצה מינימלית (manifest+meta+measured+annotations+revisions); השאר present:false ומתמלא בשלבים. עקרון-הזהב: lossless מ-Room (בניגוד ל-ORDX ה-lossy). הצפנה = envelope + Tink + Android Keystore + license-lease לשמירת offline-first; ORDX הופך לייצוא-בלבד עם בלוק Ext. מדורג M0→M4, כאשר הצפנה+שרת-רישוי הם פרויקט-תשתית אחד שמחליף את רישוי-ה-GitHub של bravh. המסמך המלא: G:/My Drive/claude/soline-ops-app/docs/build/02-sol-format.md",
+   "count": 11
+  },
+  {
+   "key": "",
+   "title": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+   "summary": "ציר-התכנון קובע את סדר-הבנייה, הצוות, הזמן/עלות והסיכונים לניתוק התלות ב-bravh. התלות כפולה: אפליקציית-המדידה CVSM וגם כלי-העיצוב OrdX. האסטרטגיה: ניתוק דו-שלבי — קודם שליטה על המדידה דרך adapt של CVSM (H1–H3, 0–18 ח׳), אחר-כך החלפת OrdX בתוכנת-עיצוב עצמית סביב פורמט .sol (H4, 18–36 ח׳). ההכרעה המחייבת מהמסמכים: adapt ולא rewrite, לא לגעת בשכבת ה-BLE/USB, מנוע-משותף דרך חוזה-נתונים .sol ולא kernel-קוד. סדר-העדיפויות נגזר מכסף (מניעת חזרות ₪310, הגנת-תזרים) לא מטכנולוגיה. הסיכון החוסם-על: סטטוס-הרישוי של CVSM מול bravh — חייב להיסגר ב-H0 לפני כתיבת קוד. המסמך המלא: G:/My Drive/claude/soline-ops-app/docs/build/10-roadmap-risk.md",
+   "count": 10
+  },
+  {
+   "key": "",
+   "title": "גשר ORDX והחלפת bravh / 3D OrdX — הבעלות על השרשרת מדידה→עיצוב→ייצור סביב .sol",
+   "summary": "הצינור בפועל הוא CVSM(מדידה)→ORDX→3D_OrdX.exe(bravh, Python, רישיון-ניסיון)→.abv/דו\"ח/ORDX-מועשר→Cabinet Vision(לא מותקן). שתי נקודות-תלות: (א) הארונות אינם עוברים ב-ORDX — <Cabinet> נשאר ריק גם מהמדידה וגם מ-3D OrdX, ושכבת-העיצוב כלואה ב-.abv הסגור; (ב) 3D OrdX הוא כלי של bravh על רישיון-ניסיון ו-Soline הוא licensee בלבד. הנכסים של Soline כבר מכסים כמעט הכל: מודל-אובייקט קנוני, parseOrdx (round-trip מאומת), export_ordx (כותב <Furnishing>), נתיב PDP-native, ו-soline-cad-engine (DXF+דו\"ח). הפער היחיד הוא ערוץ-הארונות. המהלך: .sol כמקור-אמת, ORDX כפורמט-חילוף יוצא-בלבד; פיצוח ordx_templates למילוי <Cabinet> ב-ORDX (מייתר את 3D OrdX מול CV); בלוק הרחבה <Ext sol> לסגירת אובדן-המידע; ובניית BOM/CNC ישיר מ-.sol שמייתר גם את Cabinet Vision. המסמך המלא ב-G:/My Drive/claude/soline-ops-app/docs/build/07-ordx-bridge.md",
+   "count": 9
+  },
+  {
+   "key": "",
+   "title": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+   "summary": "היום אין ל-Soline שרת: הרישוי יושב כקבצי-טקסט ב-repo פרטי של הספק bravh, והעדכונים נשלפים מאותו repo — כך שהתלות ב-bravh מוטמעת בקוד והמנגנון חלש אבטחתית (בלי חתימה, בלי קשירת-מכשיר, single-tenant). הציר מחליף את שני הצינורות (רישוי+עדכונים) בתשתית-Soline ומוסיף את שלוש השכבות החסרות לרמת-פלטפורמה: שרת-רישוי אמיתי, אימות פר-משתמש, ובידוד-דייר בין נגרים. ההכרעה המרכזית: Backend על Postgres מנוהל עם Row-Level-Security (מומלץ Supabase) — RLS נותן בידוד-דייר בשכבת-הנתונים, phone-OTP תואם את מציאות-השדה, והכול self-host-able כדי לא להחליף תלות ב-bravh בתלות בספק-ענן חדש. הסנכרון offline-first דלתאי (outbox+cursor) מעל WorkManager/okhttp הקיימים, ה-.sol נקשר-רישיון דרך עטיפת-מפתח, וההפצה עוברת ל-Google-Play. חוסם-העל: שלב-A שמוציא את bravh מהצינורות. המסמך המלא: G:/My Drive/claude/soline-ops-app/docs/build/08-backend-licensing.md",
+   "count": 10
+  },
+  {
+   "key": "",
+   "title": "חיבור Soline Measure לפלטפורמת התפעול ולפורטל הנגר — שבעת התפרים של המדידה באקוסיסטם",
+   "summary": "Soline Measure אינה אפליקציה עצמאית אלא חוליה אחת מארבע התצוגות; כל ערכה נובע מהתפרים אליהן. המסמך (build/09-platform-integration.md) מגדיר שבעה תפרים: (1) קליטת-עבודה offline במורד בזמן-שיבוץ, (2) שכבת-design כרקע + רמזי-R1–R10 חיים, (3) החזרת measured native עם oplog דלתאי, (4) קידום job.stage server-authoritative, (5) מסירה-לממיר עם ORDX כגישור-מעבר, (6) events.json למנוע-המדדים הנסתר, (7) התפר-החוצה לעיצוב/מסירה/אקוסיסטם. המדידה ממופה גם ל-11 שלבי WORKFLOW וגם למסע-הנגר בן-11-השלבים. הפער-המאחד הוא backend משותף שעדיין לא קיים (MASTER_SPEC §10) — ההחלטה הארכיטקטונית הראשית. תוכנית-מימוש בשלושה גלים מיושרת ל-Horizons: קודם לולאה-סוגרת עם עבודה-אחת (backend-מינימלי + תפרים 1/3/4/5-dual-write), אז הבידול (design→רמזים + fit-engine), אז העומק (אקוסיסטם + שיבוץ-גאוגרפי).",
+   "count": 8
+  }
+ ],
+ "decisions": [
+  {
+   "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+   "key": "",
+   "title": "הפשטת LaserDevice אחת מול שני managers נפרדים",
+   "question": "האם לחלץ interface LaserDevice יחיד ששני המכשירים מממשים, או להשאיר שני managers נפרדים?",
+   "options": [
+    "חילוץ interface LaserDevice יחיד + factory לפי LaserDeviceType",
+    "השארת LeicaDistoManager ו-BluetoothLeManager נפרדים",
+    "איחוד חלקי — בסיס משותף אבסטרקטי בלבד"
+   ],
+   "recommendation": "לחלץ interface LaserDevice יחיד; שני ה-managers הופכים למימושים שלו. ההבדל האמיתי בין המכשירים מצטמצם ל-4 צירים (UUID/handshake/frame/ממדיות) — כל השאר משותף, וזה המקרה הקלאסי להפשטה מאחורי חוזה אחד. הוספת מכשיר עתידי = מחלקה אחת.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "סיכון עיקרי: פגיעה בלוגיקת-ה-BLE הבדוקה (crown jewel) תוך כדי החילוץ. הפחתה: עטיפה מעל הקוד הקיים בלי לשכתב את ה-decode/handshake.",
+   "priority": "P0",
+   "dependsOn": ""
+  },
+  {
+   "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+   "key": "",
+   "title": "מודל-יכולות (capabilities) מול בדיקות-סוג",
+   "question": "כיצד מבדילים מכשיר-2D ממכשיר-3D בקוד הצרכן — לפי capabilities מפורש או לפי בדיקת-סוג (if isLeica)?",
+   "options": [
+    "DeviceCapabilities מפורש (hasVerticalAngle/hasHorizontalAngle/...)",
+    "בדיקות-סוג לפי LaserDeviceType בכל צרכן",
+    "דגל 3D בוליאני יחיד"
+   ],
+   "recommendation": "DeviceCapabilities מפורש; הצרכנים בודקים יכולת ולא סוג. '3D' אינו תכונה-של-Leica אלא תכונה-של-DST360-מחובר; בדיקות-סוג מתפזרות ומשבירות, capabilities ממרכז את ההבדל בנקודה אחת ומאפשר capabilities דינמי (DST360 מחובר/לא).",
+   "effort": "S",
+   "impact": "high",
+   "risk": "נמוך. סיכון קל: capabilities סטטי מול דינמי — עדיף דינמי כדי לזהות DST360 חסר.",
+   "priority": "P0",
+   "dependsOn": "הפשטת LaserDevice אחת מול שני managers נפרדים"
+  },
+  {
+   "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+   "key": "",
+   "title": "מדידה גולמית נאמנה; ההיטל ל-3D מחוץ לשכבה",
+   "question": "האם שכבת-המכשיר תפלוט מדידה גולמית (מרחק+זוויות) בלבד, או גם תבצע את ההיטל לנקודת X/Y/Z?",
+   "options": [
+    "RawMeasurement גולמי (יחידות מנורמלות בלבד); היטל בשכבת-הגאומטריה",
+    "המכשיר מחזיר נקודת-חדר X/Y/Z מוכנה",
+    "היברידי — המכשיר מציע היטל אופציונלי"
+   ],
+   "recommendation": "RawMeasurement גולמי במ\"מ+רדיאנים, מקרה Infinity של DISTO מקודד כ-null; ההיטל והסיבוב לפי originPoint נשארים בשכבת-הקליטה. מפריד את ה-crown-jewel מהגאומטריה, מבטיח שהמדידה נכנסת ללוג/ל-.sol כפי-שנמדדה (תנאי לאבחון B2 snap-דורס), ושומר rawFrame לדיאגנוסטיקה.",
+   "effort": "S",
+   "impact": "high",
+   "risk": "נמוך. יש לוודא נרמול-יחידות אחיד (Leica m→mm, Bosch כבר mm) כדי שהצרכן לא יטעה.",
+   "priority": "P0",
+   "dependsOn": "הפשטת LaserDevice אחת מול שני managers נפרדים"
+  },
+  {
+   "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+   "key": "",
+   "title": "הסרת ה-USB Encoder משכבת-המכשירים",
+   "question": "האם למחוק לחלוטין את ה-USB Encoder (EncoderViewModel/usb.host/device_filter) משכבת-המכשירים?",
+   "options": [
+    "מחיקה מלאה — רק BLE",
+    "השארה כקופסה-שחורה מושבתת",
+    "דגל-קונפיגורציה להפעלה עתידית"
+   ],
+   "recommendation": "מחיקה מלאה. החלטת Michael המתועדת — ה-Encoder אינו חלק מ-Soline. הסרתו מפשטת הרשאות, מודל-מכשירים ותלות-אנדרואיד (USB host), ומצמצמת את השכבה ל-BLE בלבד.",
+   "effort": "S",
+   "impact": "medium",
+   "risk": "נמוך. לוודא שאין קוד-משותף שנשבר עם הסרת EncoderViewModel.",
+   "priority": "P0",
+   "dependsOn": ""
+  },
+  {
+   "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+   "key": "",
+   "title": "API מבוסס Kotlin Flow / StateFlow",
+   "question": "באיזה חוזה חושפת השכבה מדידות וסטטוס — Flow/StateFlow או callbacks?",
+   "options": [
+    "Flow<RawMeasurement> + StateFlow<ConnectionState/battery>",
+    "callbacks/listeners כמו GATT הגולמי",
+    "LiveData"
+   ],
+   "recommendation": "Flow למדידות + StateFlow לסטטוס/סוללה. מתלבש טבעית על Compose+MVVM הקיים, נותן backpressure וניהול-מחזור-חיים מובנים, וממיר את ה-callbacks של GATT לזרם נקי (callbackFlow סטנדרטי, עלות-המרה נמוכה).",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "נמוך. יש לוודא ניתוק-נכון של callbackFlow ב-onCleared כדי לא לדלוף חיבורי-GATT.",
+   "priority": "P1",
+   "dependsOn": "הפשטת LaserDevice אחת מול שני managers נפרדים"
+  },
+  {
+   "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+   "key": "",
+   "title": "DST360 polling — כימוס פנימי + gate צריכת-סוללה",
+   "question": "כיצד לנהל את הפולינג הרציף (~150ms) של הזווית-האופקית מ-DST360 שצורך סוללה מתמדת (B13)?",
+   "options": [
+    "כימוס במימוש Leica + הפעלה רק ב-setCaptureActive(true)",
+    "פולינג רציף תמיד (כמו היום)",
+    "חשיפת שליטת-פולינג ישירה לצרכן"
+   ],
+   "recommendation": "לכמס את הפולינג בתוך LeicaDistoX6Device ולהפעילו רק במצב-לכידה (setCaptureActive). מטפל ב-B13 בלי לחשוף פרט-מכשירי; ScanSession מדליק capture בכניסה למצב-לכידה ומכבה ביציאה; Bosch מתעלם (no-op).",
+   "effort": "S",
+   "impact": "medium",
+   "risk": "נמוך. לוודא שהזווית-האופקית האחרונה עדיין זמינה למדידה הראשונה אחרי הפעלת-capture.",
+   "priority": "P1",
+   "dependsOn": "הפשטת LaserDevice אחת מול שני managers נפרדים"
+  },
+  {
+   "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+   "key": "",
+   "title": "dedup (מונה/isNew) בתוך המימוש",
+   "question": "היכן מתבצע סינון-הכפילויות של מדידות — במימוש-המכשיר או בצרכן?",
+   "options": [
+    "בתוך כל מימוש; ה-Flow פולט רק מדידה חדשה",
+    "בצרכן (ScanSession)",
+    "ללא dedup ייעודי"
+   ],
+   "recommendation": "סינון בכל מימוש לפני הפליטה. Leica מספק מונה native + isNew (חובה לשמר); Bosch דורש מונה-פנימי + סינון לפי ערך+חלון-זמן. הצרכן לא צריך להתמודד עם כפילויות; sequence נחשף ב-RawMeasurement למעקב.",
+   "effort": "S",
+   "impact": "medium",
+   "risk": "נמוך. עבור Bosch, כיול חלון-הזמן/הסף כדי לא לבלוע מדידות-אמת חוזרות זהות בכוונה.",
+   "priority": "P1",
+   "dependsOn": "הפשטת LaserDevice אחת מול שני managers נפרדים"
+  },
+  {
+   "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+   "key": "",
+   "title": "מחזור-חיים + reconnect אוטומטי אחיד",
+   "question": "האם לאחד את מצב-החיבור ל-sealed state אחד ולהוסיף reconnect אוטומטי לפי מכשיר-אחרון?",
+   "options": [
+    "DeviceConnectionState אחיד + reconnect אוטומטי מ-datastore",
+    "סטטוס נפרד לכל מכשיר, reconnect ידני",
+    "reconnect אוטומטי בלבד בלי איחוד-סטטוס"
+   ],
+   "recommendation": "DeviceConnectionState sealed אחד לשני המכשירים + reconnect אוטומטי לפי מכשיר-אחרון-שנשמר. UX-שטח דורש חיבור-מחדש שקוף אחרי נפילת-BLE; ה-MAC האחרון כבר נשמר היום. מפשט את BluetoothScreen/ViewModel.",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "בינוני: backoff/retry לא-נכון עלול לרוקן סוללה או להיתקע בלולאת-חיבור. הפחתה: מגבלת-נסיונות + backoff מדורג.",
+   "priority": "P1",
+   "dependsOn": "מודל-יכולות (capabilities) מול בדיקות-סוג"
+  },
+  {
+   "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+   "key": "",
+   "title": "FakeLaserDevice לפיתוח ובדיקות ללא חומרה",
+   "question": "האם להוסיף מימוש-מדומה שלישי מאחורי אותו interface?",
+   "options": [
+    "FakeLaserDevice עם מדידות סינתטיות",
+    "ללא מימוש-מדומה (בדיקות רק על חומרה)",
+    "mock ברמת-הבדיקה בלבד"
+   ],
+   "recommendation": "FakeLaserDevice כמימוש-שלישי מלא. מאפשר פיתוח מקבילי של ScanSession/fit-engine בלי טאבלט+לייזר, ובדיקות-אוטומציה דטרמיניסטיות. עלות-נמוכה, תשואה גבוהה לקצב-הפיתוח.",
+   "effort": "S",
+   "impact": "medium",
+   "risk": "נמוך. סיכון: התנהגות-מדומה שסוטה מהחומרה האמיתית — לעגן את הרצף הסינתטי במדידות-אמת שנלכדו.",
+   "priority": "P2",
+   "dependsOn": "הפשטת LaserDevice אחת מול שני managers נפרדים"
+  },
+  {
+   "track": "שכבת מכשירי המדידה (Device Layer) — הפשטת LaserDevice עם מימושי Leica DISTO X6 (3D) ו-Bosch GLM 50C (2D)",
+   "key": "",
+   "title": "הפשטת-transport (BLE) נפרדת — עכשיו או דחייה",
+   "question": "האם להוסיף כעת שכבת-transport מופשטת מעל Android-GATT (לקראת Web Bluetooth עתידי)?",
+   "options": [
+    "לדחות — לשמור Android-GATT בתוך המימושים",
+    "להפשיט transport עכשיו",
+    "תפר-transport מינימלי בלבד"
+   ],
+   "recommendation": "לדחות. אין דרישה קונקרטית ל-web (התוכנית נעולה על Kotlin-native); הפשטה מוקדמת = over-engineering. ה-interface LaserDevice ממילא מספק את תפר-ההחלפה אם יידרש בעתיד.",
+   "effort": "M",
+   "impact": "low",
+   "risk": "נמוך. אם web ייכנס לתמונה בעתיד תידרש רפקטור — אך ה-interface מגביל את ההשפעה.",
+   "priority": "P2",
+   "dependsOn": "הפשטת LaserDevice אחת מול שני managers נפרדים"
+  },
+  {
+   "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+   "key": "",
+   "title": "מיקום שער-האימות החוסם",
+   "question": "האם האימות חוסם ברגע 'סיימתי-חדר', ברגע-הייצוא, או בשני-המקומות?",
+   "options": [
+    "חוסם רק בייצוא (exportToOrdx/exportToPdf)",
+    "חוסם רק ב'סיימתי-חדר' (מעבר-מסך)",
+    "שכבת-אימות אחת (RoomValidator) בשני-השערים: התראה-חיה ב'סיימתי' + חסימה-קשיחה בייצוא"
+   ],
+   "recommendation": "שכבת RoomValidator יחידה בשני-השערים — מקור-אמת-אחד לחוקים, שתי נקודות-אכיפה. חוסם-רק-בייצוא מאחר את-התיקון (המודד עזב); חוסם-רק-במעבר ניתן-לעקיפה דרך ייצוא-ישיר. מקיים MEASURE_TOOL_SPEC §4+§8 בלי כפילות.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "שער-חוסם-מדי עלול לתסכל מודדים על חדרים-לגיטימיים-לא-רגילים; מרוכך ע\"י הבחנה blocker/warning ואפשרות-נימוק-מודע",
+   "priority": "P0"
+  },
+  {
+   "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+   "key": "",
+   "title": "טולרנס סגירת-פוליגון",
+   "question": "מאיזה פער בין נקודת-סיום לנקודת-התחלה החדר נחשב 'לא-סגור'?",
+   "options": [
+    "5 מ\"מ (מדויק-CAD)",
+    "20 מ\"מ אזהרה",
+    "50 מ\"מ חוסם",
+    "שתי-מדרגות: <20מ\"מ סגירה-אוטומטית, 20-50מ\"מ אזהרה, >50מ\"מ חוסם"
+   ],
+   "recommendation": "שתי-מדרגות (אזהרה 20מ\"מ, חוסם 50מ\"מ). טולרנס נגזר-נגרות לפי MEASURE_TOOL_SPEC §4: 20מ\"מ מתחת לרוחב-פוגה, 50מ\"מ הגבול שמעליו כל תכנון-ארון מושפע. הפער-בדגימה (2626מ\"מ) חורג בסדר-גודל.",
+   "effort": "S",
+   "impact": "high",
+   "risk": "טולרנס-נמוך-מדי יחסום חדרים-תקינים; שתי-המדרגות מאזנות בין תפיסה-מוקדמת לחסימה-רק-כשצריך",
+   "priority": "P0",
+   "dependsOn": "אין"
+  },
+  {
+   "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+   "key": "",
+   "title": "חיבור-קירות אוטומטי בזמן-מדידה",
+   "question": "האם לבנות את גרף-החיבוריות (startConnectedWallId/endConnectedWallId) חי בעת יצירת-קיר, או להשאיר ידני?",
+   "options": [
+    "להשאיר ידני + לחזק רק אזהרות",
+    "snap-to-endpoint אוטומטי בטולרנס-קצה + ידני כ-override",
+    "auto-connect + סגירה-אוטומטית של קיר-אחרון-לראשון"
+   ],
+   "recommendation": "snap-to-endpoint אוטומטי (טולרנס 20מ\"מ) עם סגירה-אוטומטית מוצעת בסוף-החדר. B4 הוא השורש של B1 — כל עוד 'no auto-connect' הוא ברירת-המחדל, פוליגון-פתוח הוא הכלל. המודל כבר מכיל שדות-חיבור ו-maxConnectionDistance.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "snap-שגוי בקירות-קרובים; מרוכך ע\"י טולרנס-הדוק (20מ\"מ) + חיווי-חזותי + undo",
+   "priority": "P0",
+   "dependsOn": "טולרנס סגירת-פוליגון (D2)"
+  },
+  {
+   "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+   "key": "",
+   "title": "סף T-join ואישור-מודד",
+   "question": "מעל איזו הזזה של snap חייב לבקש אישור במקום לדרוס מידת-לייזר בשקט?",
+   "options": [
+    "אין סף (מצב-קיים, דורס עד 660מ\"מ)",
+    "סף קבוע 50מ\"מ עם דיאלוג אישור/ביטול/עריכה",
+    "סף מוגדר-משתמש בהגדרות"
+   ],
+   "recommendation": "סף-קבוע 50מ\"מ בקוד (עם חשיפה-בהגדרות בעתיד). הזזת-660מ\"מ דורסת מדידת-DISTO — ההפך ממדידה-מדויקת. 50מ\"מ הוא הגבול שמעליו טעות-מיקום משפיעה על ארון; כל הדריסות-בלוג (660/396/383/156/155/123) היו נחסמות/מבקשות-אישור.",
+   "effort": "S",
+   "impact": "high",
+   "risk": "סף-שרירותי לא-מתאים-לכל-מקרה; מתחילים בקבוע וחושפים-בהגדרות אם יידרש",
+   "priority": "P0",
+   "dependsOn": "טולרנס סגירת-פוליגון (D2) — אותו סף-50מ\"מ לעקביות מנטלית"
+  },
+  {
+   "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+   "key": "",
+   "title": "פלט PDF עברי-RTL תקין",
+   "question": "איך מתקנים PDF שנוצר locale=en_US rtl=false על פרויקט-עברי?",
+   "options": [
+    "כפיית locale=he_IL rtl=true + הטמעת-פונט-עברי",
+    "זיהוי-שפה-אוטומטי לפי תוכן-הפרויקט",
+    "זיהוי-אוטומטי + עיבוד-BiDi נכון + פונט-עברי-מוטמע + יישור-RTL של פריסת-העמוד"
+   ],
+   "recommendation": "פתרון-מלא: לא רק locale אלא גם פונט-עברי-מוטמע (הדיפולטי חסר גליפים-עבריים), אלגוריתם-BiDi על מחרוזות-מעורבות (מספר+עברית), ויישור-RTL של טבלאות-המידות. FR-MEAS-15 מסמן זאת 'דחוף' — תנאי-סף להגעה-ללקוח.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "BiDi שבור על מחרוזות-מעורבות; להישען על ספריית-BiDi בדוקה + בדיקות-רגרסיה על הדגימה",
+   "priority": "P0"
+  },
+  {
+   "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+   "key": "",
+   "title": "סניטציית-שם-קובץ אחידה",
+   "question": "למה ORDX מאבד עברית ('לטכןטכ'→'_') בעוד PDF שומר, ואיך מאחדים?",
+   "options": [
+    "פונקציית-סניטציה אחת משותפת (SafeFilename) ששומרת-עברית",
+    "transliteration לאנגלית (עברית→לטינית)"
+   ],
+   "recommendation": "SafeFilename יחיד לכל המייצאים — מחליף רק תווים-אסורים-במערכת-קבצים ושומר-עברית. ה-PDF כבר מוכיח שעברית-בשם עובדת; ה-ORDX פשוט משתמש בסניטציה-אגרסיבית. עם fallback ל-transliteration אם מערכת-קבצים לא-תומכת-UTF8.",
+   "effort": "S",
+   "impact": "medium",
+   "risk": "נמוך — נדיר שמערכת-קבצים-אנדרואיד לא-תומכת-UTF8",
+   "priority": "P0",
+   "dependsOn": "אין"
+  },
+  {
+   "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+   "key": "",
+   "title": "לכידת גובה דו-קצה + מפלס-רצפה",
+   "question": "האם להחליף גובה-חדר-יחיד במודל גבהים-דו-קצה לכל קיר?",
+   "options": [
+    "להשאיר גובה-יחיד + תיעוד-log כשיש היסט",
+    "height_left/right + floor_level_start/end לכל קיר, גובה-חדר כ-fallback",
+    "מודל-HeightBands מלא (רוחב@גובה) לכל קיר"
+   ],
+   "recommendation": "height_left/right + floor_level_start/end (המודל כבר תוכנן לזה ב-REBUILD_PLAN §2.2). תקרה-משופעת ורצפה-לא-מפלסת שגרה בבנייה-ישראלית; ההיסט-38מ\"מ שנזרק (applog:279) הוא הראיה שהמידע קיים אך לא-נשמר. HeightBands-מלא עשיר-מדי לציר-הבאגים.",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "הרחבת-UI-לכידה עלולה להאט את-המדידה-בשטח; מרוכך ע\"י שוט-מהיר-בכל-קצה במקום טופס",
+   "priority": "P1",
+   "dependsOn": "הרחבת-מודל-הנתונים המרוכזת (D9)"
+  },
+  {
+   "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+   "key": "",
+   "title": "ולידציית-מיקום-אביזר + כפיית-עומק",
+   "question": "איך תופסים מיקום-אביזר בלתי-אפשרי (fromLeft+width+fromRight≠אורך-קיר) ועומק-ברירת-מחדל אימפריאלי?",
+   "options": [
+    "ולידציה-חוסמת בלבד על סכום-המיקומים",
+    "ולידציה + widthInputMode שמונע קלט-כפול-סותר",
+    "ולידציה + widthInputMode + דגל depth_measured שמסמן עומק-לא-נמדד"
+   ],
+   "recommendation": "ולידציה + widthInputMode + דגל depth_measured. B7 סתירה-מתמטית (סכום 8184≫4152) שוולידציה תופסת מיד; B9 חמור-יותר — depth=114.3(=4.5\") חושף ברירת-מחדל-אימפריאלית ולא-מדידה, ועומק-בליטה הוא אויב-מס'1. הדגל הוא תנאי-מקדים ל-R4 בבידול.",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "אזהרת-עומק-לא-נמדד עלולה להרעיש אם כל-אביזר מסומן; לכייל רק לאביזרים-בולטים (חלון/שקע)",
+   "priority": "P1",
+   "dependsOn": "הרחבת-מודל-הנתונים המרוכזת (D9)"
+  },
+  {
+   "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+   "key": "",
+   "title": "הרחבת-מודל-הנתונים (תשתית משותפת)",
+   "question": "אילו שדות להוסיף למודל-ה-Room עכשיו ואיך מטפלים במיגרציית-סכמה?",
+   "options": [
+    "הוספת-שדות אד-הוק לפי-צורך בכל באג",
+    "מיגרציה-אחת מרוכזת: height_left/right, floor_level, angleToNext, measure_status, depth_measured, protrusion_mm, measure_ref (nullable, backward-compatible)"
+   ],
+   "recommendation": "מיגרציה-מרוכזת-אחת. הגאומטריה נשמרת כ-JSON בעמודת-rooms, כך שהוספת-שדות אינה דורשת ALTER-TABLE — רק deserializer-סובלני (שדה-חסר→ברירת-מחדל). מרכוז מונע שבע-מיגרציות ומיישר-קו עם REBUILD_PLAN §2.2 — משרת גם את הבידול.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "מיגרציית-סכמה שוברת-פרויקטים-קיימים; מרוכך ע\"י שדות-nullable + deserializer-סובלני, לא ALTER-TABLE",
+   "priority": "P1",
+   "dependsOn": "אין"
+  },
+  {
+   "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+   "key": "",
+   "title": "לוקליזציה-מטרית + ניקוי ברירות-מחדל אימפריאליות",
+   "question": "מה לעשות עם studSpacing=406.4(16\"), thickness=100 default, vaultHeight=1, wallTopStyle=VAULT?",
+   "options": [
+    "הסתרה-בלבד ב-UI",
+    "ברירות-מחדל-מטריות + הסרת-studSpacing + wallTopStyle=STANDARD default + guard על vaultHeight (≤5מ\"מ = ללא-קמרון)",
+    "מנוע-לוקליזציה מלא עם נהלי-התקנה-ישראליים"
+   ],
+   "recommendation": "ברירות-מחדל-מטריות + הסרת-studSpacing + guard-vault. בנייה-ישראלית=בלוק/בטון-מטרי בלי-סטדים; ברירות-המחדל-האמריקאיות מרעישות-פלט ומטעות. vault=1מ\"מ הוא ברירת-מחדל-שנשארה — guard מונע פרופיל-תקרה-מטעה. מנוע-לוקליזציה-מלא מעבר-לתחום-ציר-זה.",
+   "effort": "S",
+   "impact": "low",
+   "risk": "נמוך — חלק-מהעבודה חופף למיתוג (שלב-0 ב-REBUILD_PLAN)",
+   "priority": "P2",
+   "dependsOn": "אין"
+  },
+  {
+   "track": "תיקון 13 הבאגים של CVSM והקשחת-נכונות של מסלול המדידה→ייצוא ל-Soline Measure",
+   "key": "",
+   "title": "יציבות-ניווט (null) + פולינג-סוללה",
+   "question": "האם לטפל ברינדורי-null (Wall:null, Project:null) ובפולינג-DST360 הרציף בציר-זה?",
+   "options": [
+    "לדחות (לא-קריטי לנכונות)",
+    "הקשחה-קלה: guard על רכיבים עם דומיין-null + עצירת-פולינג-DST360 כשלא-במצב-לכידה"
+   ],
+   "recommendation": "הקשחה-קלה בעדיפות-נמוכה. B11 אינו-קריסה היום אך 'סיכון-NPE אם רכיב-בן עושה wall!!' — הקשחה-מונעת זולה. B13 הוא צריכת-סוללה בעבודת-שדה-offline-ארוכה — עצירת-פולינג-כשלא-לוכדים חוסכת-סוללה בלי-סיכון. לא-חוסמים שאר-הציר.",
+   "effort": "S",
+   "impact": "low",
+   "risk": "נמוך — הקשחה-מונעת בלבד, לא-משנה התנהגות-פונקציונלית",
+   "priority": "P2",
+   "dependsOn": "אין"
+  },
+  {
+   "track": "ארכיטקטורה וסטאק — Soline Measure (התאמת CVSM)",
+   "key": "",
+   "title": "התאמה מול בנייה-מחדש מול שכתוב-web",
+   "question": "האם להתאים את CVSM הקיים, לבנות מאפס, או לשכתב ל-web/Capacitor?",
+   "options": [
+    "התאמה (adapt) עם מודולריזציה",
+    "בנייה-מחדש native מאפס",
+    "שכתוב ל-web/Capacitor לשיתוף-קוד עם העיצוב"
+   ],
+   "recommendation": "התאמה. הליבה הקשה (BLE שפוענח חי, offline-first על Room, מודל-הקיר, ShapeSolver, ייצוא-ORDX) מאומתת ובשלה; שכתוב מקריב אותה עבור יתרון-קוד-משותף תיאורטי שמושג בזול דרך חוזה .sol+R1-R10. adapt כאן = refactor מבני מבוקר, לא 'לא-לגעת'.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "adapt עלול להתדרדר ל'טלאים על מונוליט' אם המודולריזציה (A2) לא נעשית; מיטיגציה: מפרקים מודול לפני כל שכבת-בידול חדשה",
+   "priority": "P0"
+  },
+  {
+   "track": "ארכיטקטורה וסטאק — Soline Measure (התאמת CVSM)",
+   "key": "",
+   "title": "מבנה-קוד רב-מודולי",
+   "question": "להשאיר מונוליט חבילתי או לעבור ל-Gradle multi-module?",
+   "options": [
+    "מונוליט חבילתי (כמו היום)",
+    "רב-מודולי: core/data/hardware/feature + fit-engine",
+    "רב-מודולי מלא כולל KMP מהיום"
+   ],
+   "recommendation": "רב-מודולי עם core (model/geometry/sol/common), data (local/repository/sync), hardware (laser/camera), feature-* , ו-fit-engine נפרד. הליבה (core:*, fit-engine) כמודולי-Kotlin-טהורים ללא תלות-אנדרואיד — ברי-בדיקה-מהירה ו-KMP-ready. תלות זורמת פנימה: feature→data→core.",
+   "effort": "L",
+   "impact": "high",
+   "risk": "הזזת-קוד מסיבית עלולה להכניס רגרסיות; מיטיגציה: refactor מכני בלי שינוי-לוגיקה, מודול-אחר-מודול, בניין-ירוק בכל שלב",
+   "priority": "P0",
+   "dependsOn": "התאמה מול בנייה-מחדש"
+  },
+  {
+   "track": "ארכיטקטורה וסטאק — Soline Measure (התאמת CVSM)",
+   "key": "",
+   "title": "ארכיטקטורת-האפליקציה",
+   "question": "לשמר single-activity/MVVM או לעבור לארכיטקטורה אחרת?",
+   "options": [
+    "שמירה+חידוד: single-activity + MVVM/UDF + Repository",
+    "החלפה לארכיטקטורה אחרת",
+    "שמירה as-is בלי שינוי"
+   ],
+   "recommendation": "לשמר single-activity + navigation-compose + undo-stack (הבחירה הנכונה, כבר מיושמת נכון) ולחדד ל-UDF: כל מסך חושף StateFlow<UiState> יחיד, תלוי ב-Repository ולא ב-DAO. לפצל את ProjectViewModel הענק לפי feature.",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "פיצול ה-ViewModel הענק נוגע בהרבה מסכים; מיטיגציה: העברת-מתודות למקומן, לא כתיבה-מחדש",
+   "priority": "P0",
+   "dependsOn": "מבנה-קוד רב-מודולי"
+  },
+  {
+   "track": "ארכיטקטורה וסטאק — Soline Measure (התאמת CVSM)",
+   "key": "",
+   "title": "מיקום שכבת ה-.sol",
+   "question": "לכתוב .sol כאחסון-פנימי-native, או להפריד בין Room לפורמט-חילוף?",
+   "options": [
+    "Room=אחסון-חי + core:sol טהור כפורמט-חילוף",
+    "החלפת Room ב-ZIP/.sol כאחסון-פנימי",
+    "היברידי SQLite בתוך ZIP"
+   ],
+   "recommendation": "Room נשאר מנוע-האחסון-החי (WAL, שמירה-אוטומטית); .sol נכתב native ל-measured/ רק בגמר-מדידה/סנכרון/שיתוף. הקוד ב-core:sol כמודול Kotlin-טהור (SolWriter/SolReader/SolCrypto) כדי שאותו מימוש-קנוני ירוץ גם בצד-המשרד/ממיר. כתיבת-ZIP על כל שמירה-אוטומטית = הרג-ביצועים.",
+   "effort": "L",
+   "impact": "high",
+   "risk": "סחף-סכמה בין המדידה למשרד; מיטיגציה: מימוש-קנוני-אחד ב-core:sol + round-trip tests ב-JVM",
+   "priority": "P0",
+   "dependsOn": "מבנה-קוד רב-מודולי"
+  },
+  {
+   "track": "ארכיטקטורה וסטאק — Soline Measure (התאמת CVSM)",
+   "key": "",
+   "title": "שיתוף עם תוכנת-העיצוב — KMP מול חוזה",
+   "question": "לשתף kernel-קוד עם תוכנת-העיצוב דרך KMP, או דרך חוזה-נתונים?",
+   "options": [
+    "חוזה: סכמת .sol + מפרט R1-R10 (הליבה Kotlin-טהור=KMP-ready)",
+    "KMP-JS מעכשיו לשיתוף-קוד עם ה-web",
+    "kernel-קוד משותף ישיר"
+   ],
+   "recommendation": "חוזה עכשיו, KMP-ready לעתיד. תוכנת-העיצוב היא web/React/three.js (DESIGN_TOOL_SPEC חד-משמעי) — KMP→JS מכפיל מורכבות עבור צד בשפה אחרת. החוזה (.sol+R1-R10) נותן 90% מהערך ב-10% מהמורכבות. כותבים fit-engine/core כ-Kotlin-טהור כך שהגירה ל-commonMain אפשרית בעלות-אפס אם העיצוב יעבור ל-Kotlin.",
+   "effort": "S",
+   "impact": "high",
+   "risk": "אם החוזה (.sol/R1-R10) לא יציב, שני-הצדדים נשברים; מיטיגציה: קיבוע-סכמה גרסאתי + מפרט-R1-R10 כמקור-אמת יחיד",
+   "priority": "P1",
+   "dependsOn": "מיקום שכבת ה-.sol"
+  },
+  {
+   "track": "ארכיטקטורה וסטאק — Soline Measure (התאמת CVSM)",
+   "key": "",
+   "title": "מנוע ה-fit (fit-engine)",
+   "question": "היכן ואיך לממש את מנוע R1-R10 החי?",
+   "options": [
+    "מודול Kotlin-טהור עצמאי, טהור-ודטרמיניסטי",
+    "בתוך feature:fit של האפליקציה",
+    "רק בצד-המשרד, לא על הטלפון"
+   ],
+   "recommendation": "מודול fit-engine נפרד, Kotlin-טהור, ZERO תלות-אנדרואיד, API טהור evaluate(design,measured)->List<FitDelta>. תת-קבוצה על הטלפון (R4/R1/R3/R9), סט-מלא במשרד — אותו מפרט. feature:fit (אנדרואיד) עוטף אותו ל-overlay ורמזים. זהו נכס-הבידול מס' 1 וה-KMP-candidate המובהק.",
+   "effort": "L",
+   "impact": "high",
+   "risk": "כמה חוקים ריאלי להריץ חי על טלפון; מיטיגציה: להתחיל בתת-קבוצה + dirty-tracking, המנוע-המלא במשרד",
+   "priority": "P1",
+   "dependsOn": "שיתוף עם תוכנת-העיצוב — KMP מול חוזה"
+  },
+  {
+   "track": "ארכיטקטורה וסטאק — Soline Measure (התאמת CVSM)",
+   "key": "",
+   "title": "שכבת-החומרה (BLE)",
+   "question": "איך למסד את החיבור לשני מדי-הלייזר?",
+   "options": [
+    "interface LaserDevice עוטף את המימושים המוכחים",
+    "כתיבה-מחדש של שכבת-ה-BLE",
+    "SDK חיצוני של היצרנים"
+   ],
+   "recommendation": "מודול hardware:laser חושף interface LaserDevice עם שני מימושים שעוטפים את LeicaDistoManager (3D) ו-BluetoothLeManager (2D) הקיימים — שניהם פוענחו מקצה-לקצה (DISTO_PROTOCOL). לא לגעת בלוגיקת-ה-BLE, רק לעטוף בגבול-מודול. USB Encoder מחוץ-לתחום — מסירים.",
+   "effort": "S",
+   "impact": "high",
+   "risk": "שינוי-דגם/פרוטוקול עלול לשבור; מיטיגציה: ההפשטה מבודדת features מהמימוש, והפרוטוקול מתועד חי",
+   "priority": "P0",
+   "dependsOn": "מבנה-קוד רב-מודולי"
+  },
+  {
+   "track": "ארכיטקטורה וסטאק — Soline Measure (התאמת CVSM)",
+   "key": "",
+   "title": "רישוי ו-multi-tenant",
+   "question": "להשאיר רישוי-קבצים-ב-GitHub של bravh או לעבור לשרת-Soline?",
+   "options": [
+    "שרת-Soline + multi-tenant + ניתוק-bravh",
+    "השארת רישוי-GitHub של bravh",
+    "רישוי מקומי בלבד"
+   ],
+   "recommendation": "מעבר ל-LicenseRepository מול שרת-Soline אמיתי (מחליף את רישוי-הקבצים-ב-repo של bravh, שהוא חלש-אבטחתית וגם תלות-ספק). multi-tenant פר-מודד/נגר + בידוד-דייר + תפקיד surveyor. קשירת-רישיון ל-.sol ב-SolCrypto עם cache-offline. גם AppUpdater מוסב לשרת-Soline.",
+   "effort": "L",
+   "impact": "medium",
+   "risk": "פתיחת-.sol דורשת אימות אך העבודה offline; מיטיגציה: אימות ראשוני מקוון + cache-רישיון-חתום לזמן-מוגבל",
+   "priority": "P1",
+   "dependsOn": "מיקום שכבת ה-.sol"
+  },
+  {
+   "track": "ארכיטקטורה וסטאק — Soline Measure (התאמת CVSM)",
+   "key": "",
+   "title": "applicationId ומיגרציית-נתונים",
+   "question": "האם להחליף את ה-applicationId (התקנה נפרדת) או לעדכן in-place?",
+   "options": [
+    "דו-שלבי: in-place קודם, החלפת-חבילה אחרי כלי-מיגרציה",
+    "החלפת applicationId מיידית",
+    "השארת com.roommeasure.app לצמיתות"
+   ],
+   "recommendation": "דו-שלבי. שלב-מיתוג עכשיו שומר את ה-applicationId הקיים (עדכון-in-place, אפס-מיגרציה, אפס-סיכון-דאטה); שינוי-החבילה נדחה עד שקיים כלי-מיגרציה מאומת שקורא את ה-Room מהנתיב-החיצוני-המותאם. אובדן-דאטה-בשטח הוא סיכון-מוניטין.",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "המסד בנתיב-חיצוני-מותאם לא ייראה אחרי שינוי-חבילה; מיטיגציה: דחיית-השינוי + כלי-מיגרציה חד-פעמי מאומת",
+   "priority": "P0",
+   "dependsOn": "התאמה מול בנייה-מחדש"
+  },
+  {
+   "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+   "key": "",
+   "title": "מיקום המנוע: חבילה טהורה משותפת",
+   "question": "היכן חי מנוע-ההתאמה — חבילה אחת משותפת, מימוש-כפול בכל אפליקציה, או שירות-שרת?",
+   "options": [
+    "חבילה טהורה משותפת @soline/fit-engine (TS, ללא DOM/תלויות) הנצרכת בשתי האפליקציות",
+    "מימוש נפרד בכל אפליקציה (מדידה + עיצוב)",
+    "שירות-שרת מרכזי שמריץ את המנוע"
+   ],
+   "recommendation": "חבילה טהורה משותפת עם פונקציה runFit(A,B,config). offline-first הוא עיקרון-על אז שרת נפסל; מימוש-כפול = חוק R4 שמתנהג שונה בשטח ובמשרד = מלכודת-אמון. מימוש-אחד מבטיח שהרמז-בשטח והבדיקה-במשרד מסכימים.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "צימוד שני מחזורי-שחרור — מנוהל ע\"י חוזה-I/O יציב וגרסות semver",
+   "priority": "P0"
+  },
+  {
+   "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+   "key": "",
+   "title": "מודל-הנתונים כתנאי-קדם: קיר-כפרופיל + בליטה-כשדה",
+   "question": "האם לשדרג את OBJECT_MODEL לקיר-כפרופיל+בליטה-כשדה+אזורים עכשיו, או לתקן מאוחר על מודל סקלרי קיים?",
+   "options": [
+    "לשדרג עכשיו: רוחב@גובה, זווית-לכל-קיר, מפלס-דו-קצה, בליטה D+טווח-גובה, אזורי-הנמכה/חיפוי, סטטוס-מידה",
+    "להשאיר thickness סקלרי + לתקן בהמשך",
+    "מודל-צל מקביל רק ל-fit"
+   ],
+   "recommendation": "לשדרג עכשיו, הדרגתי — פרופיל-קיר קודם (מזין R2/R4), אזורים אחר-כך (R5/R8). המנוע טוב-כמו-הקלט; בלי פרופיל אין R2/R3/R4/R5/R9. זה הסיכון-המבני שכל המתחרים חיים בו (עולם 90°-אנכי) ושבו Soline לבדה.",
+   "effort": "L",
+   "impact": "high",
+   "risk": "נוגע בכל השרשרת (קרנל→fit→.sol); ממותן ע\"י שדרוג-הדרגתי",
+   "priority": "P0"
+  },
+  {
+   "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+   "key": "",
+   "title": "סדר-בנייה: R4 בליטה-מול-עומק ראשון",
+   "question": "מאיזה חוק להתחיל את בניית המנוע?",
+   "options": [
+    "R4 מקצה-לקצה (לכידת-D + רמז-חי + בדיקה-במשרד) ראשון",
+    "חוקי עקביות-עצמית זולים (R2/R3/R9) ראשונים",
+    "בנייה רוחבית של כל 10 החוקים במקביל"
+   ],
+   "recommendation": "R4 ראשון מקצה-לקצה. ROI-מרבי (הכאב-הכי-צפוף בקורפוס 'בולט X ס\"מ מהקיר'), הפיצ'ר-היחיד-בשוק, והמסלול הפשוט-ביותר להוכיח את כל הצינור: קלט-אחד D, השוואה-אחת, דלתא-אחת, פתרון-אחד. הוא ה-vertical-slice שמניח את כל התשתית לשאר החוקים.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "דורש כלי-לכידת-D ומרווח-גב-מדוד — תלוי בשדרוג-המודל ובכלי-הלכידה",
+   "priority": "P0",
+   "dependsOn": "מודל-הנתונים כתנאי-קדם: קיר-כפרופיל + בליטה-כשדה"
+  },
+  {
+   "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+   "key": "",
+   "title": "לכידת עומק-בליטה D בשטח",
+   "question": "איך נלכד עומק-הבליטה D בפועל בשטח?",
+   "options": [
+    "כלי-DISTO ייעודי 'מדוד-D' (ירי-לפני-בליטה + ירי-לקיר → D נגזר)",
+    "הזנה-ידנית בלבד",
+    "גזירה משתי-קצוות של אלמנט קיים"
+   ],
+   "recommendation": "כלי-DISTO ייעודי 'מדוד-D' עם fallback-ידני תמיד. סוגר את האילתור מס' 1 בשטח (המודד היום רושם בצד 'גז בולט 20 ס\"מ'), וה-D הנוכחי הוא ברירת-מחדל-אימפריאלית (B9) — לא נמדד.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "ארגונומיית-שדה (שני-יריות) — ממותן ב-UX מודרך + ולידציית-שפיות",
+   "priority": "P0",
+   "dependsOn": "סדר-בנייה: R4 בליטה-מול-עומק ראשון"
+  },
+  {
+   "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+   "key": "",
+   "title": "פרופילי-הפעלה field מול office",
+   "question": "אילו חוקים רצים חי בשטח ואילו רק במשרד?",
+   "options": [
+    "כל 10 החוקים חיים בשטח",
+    "פרופיל-שדה {R4,R1,R2,R3,R5,R9} מול פרופיל-משרד {R1..R10}",
+    "רק R4 חי בשטח"
+   ],
+   "recommendation": "שני פרופילים דרך config: field {R4,R1,R2,R3,R5,R9} incremental, office מלא. נגזר מ-MEASURE_TOOL_SPEC §7 (תת-קבוצה בשטח, מלא במשרד). R6/R7/R10 דורשים תת-חלוקת-ארון ומעטפות-פתיחה שלא נלכדים בשטח.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "גבול-הפרופיל עלול לזוז — מנוהל ע\"י config ולא קוד-מסועף",
+   "priority": "P1",
+   "dependsOn": "מיקום המנוע: חבילה טהורה משותפת"
+  },
+  {
+   "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+   "key": "",
+   "title": "מצב-כפול: reconcile מול sanity",
+   "question": "מה עושה המנוע כשאין שכבת-תכנון A (עבודת-מדידה-בלבד)?",
+   "options": [
+    "המנוע מושבת בלי A",
+    "מצב-כפול: reconcile (A על B) כשיש תכנון, sanity (B בלבד + מודולים-נומינליים) כשאין",
+    "לדרוש A תמיד"
+   ],
+   "recommendation": "מצב-כפול. R2/R3/R9 והסגירה בעלי-ערך גם בלי A; בדיקת-מודול-נומינלי ('האם 60 סטנדרטי נכנס?') נותנת רמז גם בלי תכנון. לא כל עבודה מגיעה עם design/.",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "נמוך",
+   "priority": "P1",
+   "dependsOn": "מיקום המנוע: חבילה טהורה משותפת"
+  },
+  {
+   "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+   "key": "",
+   "title": "טולרנסים: config מעוגן-נגרות ומגורסן",
+   "question": "מהיכן מגיעים ערכי-הטולרנס שקובעים conflict מול warning?",
+   "options": [
+    "קבועים קשיחים בקוד",
+    "config גלובלי עם ברירות-מחדל נגזרות-נגרות",
+    "config ניתן-לדריסה פר-פרויקט ומגורסן ב-.sol"
+   ],
+   "recommendation": "אובייקט-config עם ברירות-מחדל נגזרות-מדרישות-הנגרות (לא שרירותיות), ניתנות-לדריסה פר-פרויקט, מגורסנות ב-.sol. מ\"מ אחד קובע אם משהו conflict או warning.",
+   "effort": "S",
+   "impact": "medium",
+   "risk": "טולרנס-שגוי = התראות-שווא ששוחקות-אמון-מודד",
+   "priority": "P1",
+   "dependsOn": "מיקום המנוע: חבילה טהורה משותפת"
+  },
+  {
+   "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+   "key": "",
+   "title": "פתרון ו-auto-fit: הצעה + אישור-אנושי",
+   "question": "מי מיישם את התיקון על הפער — המנוע אוטומטית, המנוע-מציע-אדם-מאשר, או סימון-בלבד?",
+   "options": [
+    "המנוע מיישם auto-fit אוטומטית",
+    "המנוע מציע resolution פרמטרי + האדם מאשר; auto-fit (retune) צד-משרד בלבד",
+    "סימון-בלבד בלי הצעות"
+   ],
+   "recommendation": "המנוע מציע resolution פרמטרי (רוחב-מילואה/עומק-פינוי/היסט), האדם מאשר. auto-fit ע\"י פותר-אילוצים הוא צד-משרד בלבד; צד-השטח מסתפק בסימון + הצעת-טיוטה. בטיחות (לא לשנות מידות-ייצור אוטומטית) + השטח לא מריץ solver כבד.",
+   "effort": "L",
+   "impact": "high",
+   "risk": "פותר-האילוצים הוא מאמץ-הנדסי משמעותי — דחוי לשלב מאוחר",
+   "priority": "P1",
+   "dependsOn": "פרופילי-הפעלה field מול office"
+  },
+  {
+   "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+   "key": "",
+   "title": "גשר טיוטה-שטח → משרד",
+   "question": "מה עושה השטח עם שכבת-ה-fit — כותב סמכותי, כותב-טיוטה, או לא-כותב?",
+   "options": [
+    "השטח כותב fit/ סמכותי",
+    "השטח כותב draft-deltas + הערות-מודד; מעבר-המשרד גובר אך משמר החלטות-מודד",
+    "השטח לא כותב, המשרד מחשב מחדש"
+   ],
+   "recommendation": "השטח כותב fit/ כטיוטה (רמזים כ-draft-deltas + הערות-החלטת-מודד); מעבר-המשרד המלא גובר אך משמר את החלטות-המודד. נגזר מ-MEASURE_TOOL_SPEC §7 ו-SOL_FORMAT §7.3 (merge סמנטי פר-id).",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "קונפליקט-מיזוג — נפתר פר-designRef/id",
+   "priority": "P1",
+   "dependsOn": "פרופילי-הפעלה field מול office"
+  },
+  {
+   "track": "מנוע ההתאמה (Fit Engine) R1–R10 + רמזי-שטח חיים",
+   "key": "",
+   "title": "incrementality: spatial-index + dirty-tracking",
+   "question": "איך המנוע עומד ביעד-ביצועים על טאבלט-בינוני בזמן-אמת?",
+   "options": [
+    "הרצה-מלאה של כל החוקים בכל ירי",
+    "spatial-index פר-קיר + dirty-tracking (incremental בשטח, full במשרד)",
+    "full-run עם debounce"
+   ],
+   "recommendation": "אינדקס-מרחבי פר-קיר + dirty-tracking; incremental בשטח (רק חוקי-הקיר-המושפע), full בטעינת-משרד. יעד <100ms/ירי-לייזר. דחוי ל-P2 אחרי שהחוקים עובדים — כדי להימנע מאופטימיזציה-מוקדמת.",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "אופטימיזציה-מוקדמת אם סצנות נשארות קטנות",
+   "priority": "P2",
+   "dependsOn": "פתרון ו-auto-fit: הצעה + אישור-אנושי"
+  },
+  {
+   "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+   "key": "",
+   "title": "שער-איכות חוסם-יציאה מול אזהרה-רכה",
+   "question": "האם לחסום פיזית 'סיימתי'/ייצוא כשהצ'קליסט לא-מלא, או רק להציג אזהרה שהמודד יכול להתעלם ממנה?",
+   "options": [
+    "חסימה-קשה עם override מנומק בלבד",
+    "אזהרה-רכה לא-חוסמת",
+    "חסימה רק על סעיפים קריטיים (C1/C2/C8), רכה על השאר"
+   ],
+   "recommendation": "חסימה-קשה עם override מנומק — זהו המנוף מס' 1 למניעת חזרה-לשטח (~80% מהחזרות). אזהרה-רכה כבר קיימת דה-פקטו (הסטייה מוצגת ולא חוסמת, B5) והיא מה שנכשל. ה-override המנומק שומר על גמישות-שדה בלי לאבד את התיעוד.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "חסימה נוקשה-מדי תעצבן מודדים במקרי-קצה לגיטימיים (אין-גישה לקיר) ותדחוף override-מזויף; מיטיגציה: רשימת-סיבות קצרה + טקסט-חופשי, וקונפיג פר-סוג-עבודה.",
+   "priority": "P0"
+  },
+  {
+   "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+   "key": "",
+   "title": "חיבור-קירות אוטומטי בזמן-המדידה",
+   "question": "האם להפוך snap-to-endpoint לאוטומטי בעת ציור-קיר (חיבור גרף מיידי), או להשאיר חיבור-ידני (T-join) כפי שהיום?",
+   "options": [
+    "auto-connect אוטומטי ברדיוס-snap",
+    "חיבור-ידני בלבד (מצב נוכחי)",
+    "auto-connect עם אישור-מודד לכל חיבור"
+   ],
+   "recommendation": "auto-connect אוטומטי ברדיוס-snap. היום כל קיר 'no auto-connect' (B4) וזה השורש של B1 — פוליגון-פתוח הוא ברירת-המחדל במקום החריג. הפיכת ברירת-המחדל לסגור היא התיקון הזול והמשמעותי-ביותר.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "snap-אגרסיבי עלול לחבר קצוות שלא-אמורים (חדר עם פתח-רחב); מיטיגציה: רדיוס-snap שמרני + סף T-join נפרד לאישור הזזות-גדולות.",
+   "priority": "P0"
+  },
+  {
+   "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+   "key": "",
+   "title": "עומק-בליטה — מדידה נכפית מול שדה-ידני",
+   "question": "כיצד לוודא ש-protrusion_mm נמדד בפועל ולא נשאר ברירת-מחדל אימפריאלית (B9)?",
+   "options": [
+    "מצב 2-shot DISTO ייעודי (פני-אלמנט + קיר) עם fallback ידני",
+    "שדה-ידני חובה בלבד",
+    "השארת default עם אזהרה"
+   ],
+   "recommendation": "2-shot DISTO ייעודי + fallback ידני, עם אכיפת-צ'קליסט (C6) וניקוי ברירות-המחדל (שדה ריק עד שנמדד). זו העדות-הצפופה-ביותר בקורפוס ('בולט X ס\"מ') וההשקעה-הכי-מחזירה; 2-shot מבטל הקלדה ומנצל את חיבור-ה-DISTO הקיים.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "מדידת-D איטית בשטח עלולה לפגוע בזרימה; מיטיגציה: fallback-ידני מהיר תמיד-זמין, ואכיפה רק על אלמנט המסומן 'בולט'.",
+   "priority": "P0"
+  },
+  {
+   "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+   "key": "",
+   "title": "סטטוס-מידה — היקף האכיפה",
+   "question": "על אילו מידות לחייב measure_status מפורש (סופי/לא-סופי/אחרי-ריצוף), וכיצד לקבוע ברירת-מחדל?",
+   "options": [
+    "חובה על כל מידה-קריטית (קיר/גובה/מפלס/פתח/תשתית) עם ברירת-מחדל חכמה לפי-הקשר",
+    "חובה רק על מידות שהמודד מסמן ידנית",
+    "שדה-אופציונלי בלי אכיפה"
+   ],
+   "recommendation": "חובה על כל מידה-קריטית עם ברירת-מחדל חכמה לפי-הקשר (קיר-גמור=final, רצפה-לפני-ריצוף=after_flooring) + אכיפת C7 + סימון-ויזואלי בקנבס. זהו 'לב עבודת-ההתאמה' שהולך-לאיבוד היום ברישום-על-דף; ברירת-מחדל-חכמה מונעת עומס-קליקים.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "אכיפה גורפת-מדי = חיכוך; מיטיגציה: ברירות-מחדל טובות כך שהמודד מאשר-ולא-מזין ברוב המקרים.",
+   "priority": "P0"
+  },
+  {
+   "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+   "key": "",
+   "title": "סף T-join לאישור-מודד",
+   "question": "מעל איזו הזזת-קצה snap חייב לעצור ולבקש אישור במקום לדרוס בשקט (B2 דרס עד 660 מ\"מ)?",
+   "options": [
+    "סף 50 מ\"מ (נגזר-נגרות)",
+    "סף 100 מ\"מ",
+    "אישור על כל snap שמזיז קצה"
+   ],
+   "recommendation": "סף 50 מ\"מ: מתחת=snap שקט (רעד-יד טבעי), מעל=אישור מפורש שנכתב ל-log. אישור-על-כל-snap יהיה מעיק; 50 מ\"מ מפריד היטב בין רעד-יד למידה-אמיתית-שנדרסת.",
+   "effort": "S",
+   "impact": "high",
+   "risk": "סף נמוך-מדי מרבה prompts; סף גבוה-מדי מחמיץ דריסות; 50 מ\"מ ניתן-לכיול בהגדרות.",
+   "priority": "P0",
+   "dependsOn": "חיבור-קירות אוטומטי בזמן-המדידה"
+  },
+  {
+   "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+   "key": "",
+   "title": "מפלס-רצפה/גבהים דו-קצה",
+   "question": "האם ללכוד גובה-תקרה ומפלס-רצפה בשני קצוות-קיר (עם אזהרת-שיפוע), או להישאר במפלס-יחיד לחדר כפי שהיום (B6)?",
+   "options": [
+    "דו-קצה נמדד עם דגל-שיפוע (height_left/right + floor_level_start/end)",
+    "מפלס-יחיד לחדר (מצב נוכחי)",
+    "דו-קצה אופציונלי בלי אכיפה"
+   ],
+   "recommendation": "דו-קצה עם דגל-שיפוע + אכיפת C3/C4. רצפה לא-מפלסת ותקרה משופעת הן שגרה; במפלס-יחיד קיזוזי-סוקל/חיפוי/קרניז חסרים והמטבח 'צף'. שוט-מהיר בכל קצה, לא טופס.",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "תוספת-שוטים מאריכה מדידה; מיטיגציה: דו-קצה נכפה רק כשמתגלה הפרש מעל-סף בין הקצוות.",
+   "priority": "P1"
+  },
+  {
+   "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+   "key": "",
+   "title": "אזהרת R4 חיה — תלות ברקע-תכנון",
+   "question": "מתי לבנות את הצלבת עומק-בליטה מול גב-הארון (R4) — כשעדיין אין שכבת-design טעונה?",
+   "options": [
+    "לבנות בגל-3 מותנה-קיום-תכנון; כשאין תכנון נאכפת מדידת-D בלבד",
+    "לדחות עד שציר-התכנון בשל",
+    "לבנות עכשיו עם קלט-ידני של מרווח-גב-הארון"
+   ],
+   "recommendation": "לבנות בגל-3 מותנה-קיום-תכנון, כשמדידת-D (גל-2) כבר מספקת את הקלט. זהו הפיצ'ר-היחיד-בשוק אך תלוי בשכבת-design; עד-אז אכיפת-D עצמה (§5.1) כבר סוגרת את רוב-הכאב ('רושם-בצד').",
+   "effort": "L",
+   "impact": "high",
+   "risk": "בלי שכבת-design אמינה ההצלבה חסרת-ערך; מיטיגציה: הפרדה נקייה — מדידת-D עצמאית, ההצלבה כשכבה-מעל.",
+   "priority": "P1",
+   "dependsOn": "עומק-בליטה — מדידה נכפית מול שדה-ידני"
+  },
+  {
+   "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+   "key": "",
+   "title": "רקע-תכנון + מנוע-הצפה R1–R10 — בעלות-ציר",
+   "question": "האם מנוע-הרמזים-החיים R1–R10 נבנה בציר-שלמות-השטח, או בציר-נגזר (מנוע-התאמה/design)?",
+   "options": [
+    "ציר-שלמות מספק רק את הקלט; המנוע נבנה בציר-נגזר",
+    "לבנות מנוע R1–R10 מלא בתוך ציר-שלמות",
+    "תת-קבוצת-R חיה בשטח כאן + מנוע-מלא במשרד בציר-אחר"
+   ],
+   "recommendation": "תת-קבוצת-R חיה בשטח (R1/R2/R3/R9) כאן בגל-3, מנוע-R1–R10-מלא בציר-המשרד. ציר-השלמות כבר מספק את כל הקלט (זווית-אמיתית, D, מפלס דו-קצה); הפרדה זו מונעת נפיחות-ציר ומאפשרת שחרור-הדרגתי.",
+   "effort": "XL",
+   "impact": "high",
+   "risk": "R בזמן-אמת על טלפון עלול להיות כבד (סיכון פתוח ב-SPEC §18); מיטיגציה: להתחיל בתת-קבוצה קלה-חישובית.",
+   "priority": "P2",
+   "dependsOn": "אזהרת R4 חיה — תלות ברקע-תכנון"
+  },
+  {
+   "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+   "key": "",
+   "title": "מנוע-קיזוז אזורי",
+   "question": "האם לבנות קיזוז פר-אזור (ריצוף/גבס/חיפוי/הנמכה) המקושר לסטטוס-מידה, או להשאיר את החישוב למשרד?",
+   "options": [
+    "קיזוז-אוטומטי נישא-על-הדאטה, מקושר ל-measure_status",
+    "השארת החישוב למנוע-ההתאמה במשרד",
+    "קיזוז ידני שהמודד מזין"
+   ],
+   "recommendation": "קיזוז-אוטומטי נישא-על-הדאטה מקושר ל-measure_status (after_flooring→+20 ס\"מ ברירת-מחדל ניתנת-לעריכה). מבטל את ה'חישוב-בראש' ומעביר את הקיזוז כדאטה מובנית למשרד; תלוי-מבנית בקיום שדה-הסטטוס.",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "ערכי-קיזוז שגויים כברירת-מחדל מטעים; מיטיגציה: ערכים ניתנים-לעריכה + מקור-הקיזוז מתועד.",
+   "priority": "P2",
+   "dependsOn": "סטטוס-מידה — היקף האכיפה"
+  },
+  {
+   "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+   "key": "",
+   "title": "ארגונומיית-שדה: הערה-קולית ומקרי-חושך",
+   "question": "האם להשקיע בהערה-קולית (STT עברית) ופנס-שדה/מצב-בהיר-זמני, או להשאיר כפער-נמוך?",
+   "options": [
+    "לבנות STT-עברית + פנס-שדה בגל-4",
+    "STT בלבד",
+    "לדחות — פער-ארגונומי נמוך"
+   ],
+   "recommendation": "לבנות בגל-4 (P2). STT פותר אילתור-אמיתי (הקלדה ביד-רטובה/מלוכלכת) ופנס פותר מקרה-קצה נפוץ באתרי-בנייה (המצב-הנוכחי 'כהה במיוחד' הוא ההפך מהנדרש); שניהם זולים-יחסית אך לא-חוסמים.",
+   "effort": "M",
+   "impact": "low",
+   "risk": "דיוק STT-עברית בשטח-רועש נמוך; מיטיגציה: fallback-הקלדה תמיד-זמין, STT כתוספת-לא-תלות.",
+   "priority": "P2"
+  },
+  {
+   "track": "שלמות פונקציות שטח — פונקציה לכל צורך-מדידה, שער-איכות חוסם-יציאה, ותיקון 17 האילתורים ממסע-המודד",
+   "key": "",
+   "title": "פלט עברי-תקין — בעלות-ציר",
+   "question": "האם לתקן PDF-RTL ושם-קובץ-עברי (B3/B10) בציר-שלמות-השטח או בציר-הייצוא?",
+   "options": [
+    "מתואם ציר-הייצוא, לא נבנה כאן",
+    "לבנות בתוך ציר-שלמות-השטח",
+    "פיצול: סניטציית-שם כאן, PDF-RTL בייצוא"
+   ],
+   "recommendation": "מתואם ציר-הייצוא, לא נבנה כאן. זהו תנאי-סף להגעה-ללקוח וקריטי, אך רוחבי לפורמטי-הפלט (PDF/DXF/ORDX) ולא לשלמות-הלכידה-בשטח; שיוכו לציר-הייצוא מונע כפילות. מסומן במסמך כתלות-חוץ.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "אם אף ציר לא-מאמץ אותו הוא נופל-בין-הכיסאות; מיטיגציה: מסומן במפורש כתלות-חוץ P0 של ציר-הייצוא.",
+   "priority": "P1"
+  },
+  {
+   "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+   "key": "",
+   "title": "יחס ‎.sol‎ ל-Room DB",
+   "question": "האם ‎.sol‎ מחליף את מסד ה-Room הקיים, או מתקיים לצדו כ-artifact ממומש?",
+   "options": [
+    "‎.sol‎ מחליף את Room כאחסון-הראשי",
+    "Room נשאר working store; ‎.sol‎ נכתב מתוכו בנקודות-מפתח",
+    "כתיבה-כפולה סימולטנית לשניהם בכל עריכה"
+   ],
+   "recommendation": "Room נשאר ה-working store החי (offline-first, autosave, undo — ללא שינוי); ‎.sol‎ נכתב ממנו רק ב-4 נקודות (סיום/סנכרון/ייצוא/מעבר-שלב). כך מקבלים שכבות+גרסאות+הצפנה בלי לסכן את ה-70% הקשה שכבר עובד, ובלי עלות-כתיבת-ZIP בכל keystroke.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "עלות-כתיבת ZIP+הצפנה על טאבלט בפרויקט גדול; יש למדוד. מוקל ע\"י כתיבה רק ב-4 נקודות.",
+   "priority": "P0"
+  },
+  {
+   "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+   "key": "",
+   "title": "סקופ סכמת-v1",
+   "question": "האם לממש את כל 8 השכבות של ‎.sol‎ מיד, או תת-קבוצה מינימלית-שמישה?",
+   "options": [
+    "8 שכבות מלאות מיום-1",
+    "v1 מינימלי: manifest+meta+measured+annotations+revisions; השאר present:false",
+    "רק manifest+measured (שטוח)"
+   ],
+   "recommendation": "v1 מינימלי שמכסה בדיוק את מה שה-Room כבר לוכד + תשתית-גרסאות. design/fit/bom/3d נשארים מבנה-מוגדר present:false ומתמלאים כשהמנוע R1–R10 ותוכנת-העיצוב יגיעו. אפשרי כי הסכמה forward-compatible מלכתחילה.",
+   "effort": "L",
+   "impact": "high",
+   "risk": "אם שדות עתידיים לא יישמרו-מראש → MAJOR-migration. מוקל ע\"י שדות-placeholder (designRef, status).",
+   "priority": "P0"
+  },
+  {
+   "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+   "key": "",
+   "title": "עקרון lossless מ-Room",
+   "question": "האם ‎.sol‎ ישמור כל שדה של ה-Room, או תת-קבוצה מנורמלת?",
+   "options": [
+    "שמירת-כל (lossless) — כולל cabinets/גרף-חיבורים/depth/slot",
+    "תת-קבוצה מנורמלת לצורות-תצוגה",
+    "כמו-ORDX (מאבד cabinets/status)"
+   ],
+   "recommendation": "lossless מלא — ‎.sol‎ הוא ה-HUB וחייב להכיל כל שדה שה-Room לוכד (כולל cabinets, גרף-החיבורים, depth, slot, wallTopStyle). אחרת חוזרים לבעיית-ה-lossy של ORDX. נורמליזציה נעשית רק בקריאה/ייצוא, לא באחסון.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "נמוך; דורש round-trip-test שמכשיל על כל שדה נשמט.",
+   "priority": "P0",
+   "dependsOn": "סקופ סכמת-v1"
+  },
+  {
+   "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+   "key": "",
+   "title": "אסטרטגיית מיגרציה מ-Room",
+   "question": "כיצד ממירים פרויקטים קיימים ל-‎.sol‎ — המרה חד-פעמית או עצלה?",
+   "options": [
+    "המרה חד-פעמית הרסנית (מוחקת/מחליפה את הישן)",
+    "SolWriter/SolReader + backfill עצל (‎.sol‎ נוצר בשמירה-ראשונה)",
+    "ידני פר-פרויקט"
+   ],
+   "recommendation": "לא-הרסני: מודול sol/ חדש עם SolWriter (Room→‎.sol‎) ו-SolReader (‎.sol‎→Room), backfill עצל — כל פרויקט מקבל ‎.sol‎ בפעם-הראשונה שהוא נשמר-בסיום/מסונכרן. אין big-bang, אפס סיכון-נתונים.",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "נמוך — ה-Room נשאר שלם. סיכון עיקרי: באג-סריאליזציה בשטוח accessories/cabinets → re-nest.",
+   "priority": "P1",
+   "dependsOn": "יחס ‎.sol‎ ל-Room DB"
+  },
+  {
+   "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+   "key": "",
+   "title": "יציבות-מזהים (join keys)",
+   "question": "האם לאמץ את ה-UUIDs הקיימים של ה-Room כמזהי-‎.sol‎ כבר עכשיו, למרות ש-design/fit עדיין לא קיימים?",
+   "options": [
+    "אימוץ ה-UUIDs הקיימים מיום-1 כמזהים יציבים",
+    "המצאת מזהים חדשים ל-‎.sol‎ עכשיו, remap בעתיד",
+    "דחיית ההחלטה עד שיגיע fit/"
+   ],
+   "recommendation": "לאמץ את wall.id/accessory.id/project.id הקיימים כמזהי-‎.sol‎ יציבים כבר עכשיו. כש-fit/deltas.json יופיע הוא יצביע לאובייקטים לפי id ו-designRef יהיה ה-join-key. קיבוע מוקדם מונע remap-כואב. עלות אפסית.",
+   "effort": "S",
+   "impact": "medium",
+   "risk": "אם לא נעשה עכשיו → MAJOR-migration כשה-fit יגיע.",
+   "priority": "P1",
+   "dependsOn": "אסטרטגיית מיגרציה מ-Room"
+  },
+  {
+   "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+   "key": "",
+   "title": "ארכיטקטורת הצפנה וניהול-מפתחות",
+   "question": "כיצד מצפינים את ‎.sol‎ כך שקובץ-מועתק יהיה אטום, מבלי לשבור offline-first?",
+   "options": [
+    "מפתח-סיסמה מקומי בקובץ",
+    "envelope: TMK(שרת)→KEK(פר-פרויקט)→DEK(פר-שכבה) + Tink + Android Keystore + license-lease",
+    "ללא הצפנה, הסתמכות על הרשאות-שרת בלבד"
+   ],
+   "recommendation": "envelope encryption עם Google Tink (AES-256-GCM): DEK פר-שכבה עטוף ב-KEK-פר-פרויקט, שמגיע למכשיר עטוף ב-Device-Key ב-Android Keystore; אקטיבציה מקוונת מוסרת license-lease (TTL 14–30 יום) לעבודה offline. כך מכשיר-מורשה עובד offline וקובץ-גנוב על מכשיר-אחר אטום. מפתח לעולם לא נשמר בתוך הקובץ.",
+   "effort": "L",
+   "impact": "high",
+   "risk": "תלוי בשרת-רישוי אמין שעדיין לא קיים; פקיעת-lease בשטח עלולה לנעול מודד — יש לכייל TTL ולהתריע מראש.",
+   "priority": "P0",
+   "dependsOn": "יחס ‎.sol‎ ל-Room DB"
+  },
+  {
+   "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+   "key": "",
+   "title": "הצפנה-בשלבים",
+   "question": "האם v1 צריך להישלח מוצפן מיד, או קודם גלוי ואז הצפנה?",
+   "options": [
+    "מוצפן מהיום הראשון",
+    "v1a גלוי (מוכיח מיגרציה+round-trip), v1b מוצפן לפני שהקובץ עוזב את המכשיר",
+    "לעולם לא להצפין at-rest מקומי"
+   ],
+   "recommendation": "v1a נכתב לא-מוצפן כדי לאמת מהר מיגרציה, סכמה ו-round-trip בלי מורכבות-קריפטו; הצפנה (v1b) חובה לפני שקובץ עוזב את המכשיר (סנכרון/שיתוף/שרת), ובפרודקשן גם at-rest מקומי מוצפן דרך Keystore.",
+   "effort": "S",
+   "impact": "medium",
+   "risk": "חלון-חשיפה אם v1a-גלוי דולף לפרודקשן — יש לגדר שלא ייצא מהמכשיר לפני v1b.",
+   "priority": "P1",
+   "dependsOn": "ארכיטקטורת הצפנה וניהול-מפתחות"
+  },
+  {
+   "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+   "key": "",
+   "title": "מעטפת-הצפנה: ZIP-כולו מול פר-entry",
+   "question": "האם להצפין את ה-ZIP כיחידה אחת, או כל שכבת-entry בנפרד?",
+   "options": [
+    "הצפנת-ZIP-כולו (envelope יחיד + header-plaintext עם magic)",
+    "הצפנה-פר-entry (DEK לכל שכבה, מאפשר שיתוף-חלקי)",
+    "הצפנת-manifest בלבד"
+   ],
+   "recommendation": "v1b מתחיל בהצפנת-ה-ZIP-כולו (פשוט, מספיק להגנת-IP) עם header-plaintext קטן שנושא magic SOL1+גרסה+מטא-מפתח. מעבר להצפנה-פר-entry נדחה ל-v2, כשיתוף-חלקי עם ספק-CNC (bom/ גלוי, meta/annotations מוצפנים) יהפוך רלוונטי.",
+   "effort": "S",
+   "impact": "medium",
+   "risk": "נמוך; מעבר עתידי לפר-entry דורש שינוי-פורמט מתוכנן (MINOR).",
+   "priority": "P2",
+   "dependsOn": "ארכיטקטורת הצפנה וניהול-מפתחות"
+  },
+  {
+   "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+   "key": "",
+   "title": "יחידת-סנכרון",
+   "question": "האם לסנכרן ‎.sol‎ כקובץ-שלם או כדלתאות?",
+   "options": [
+    "העלאת-קובץ-שלם תמיד",
+    "העלאה עם דילוג-שכבות לפי sha256 ב-manifest",
+    "oplog דלתאי מלא (revisions/history append-only)"
+   ],
+   "recommendation": "v1 — העלאת-קובץ עם דילוג-שכבות לפי hash (מעלים רק שכבות שהשתנו); זול ומספיק. oplog-דלתאי אמיתי (מ-revisions/history.json) נדחה ל-v2. מתלבש על חוזה INTERFACE.md — חבילת job הופכת ל-‎.sol‎ יחיד.",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "מיזוג פר-id דו-מכשירי (last-writer-wins) עלול ליצור קונפליקטים — דורש updatedAt יציב פר-אובייקט.",
+   "priority": "P2",
+   "dependsOn": "אסטרטגיית מיגרציה מ-Room"
+  },
+  {
+   "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+   "key": "",
+   "title": "יחס ל-ORDX",
+   "question": "מה תפקיד ORDX ברגע ש-‎.sol‎ קיים — פורמט-חילוף, ייבוא, או ייצוא-בלבד?",
+   "options": [
+    "ORDX נשאר פורמט-חילוף-מרכזי",
+    "‎.sol‎ HUB; ORDX ייצוא-בלבד + הטמעת source.ordx כ-provenance + בלוק Ext ל-lossless-פנימי",
+    "ביטול-מלא של ORDX"
+   ],
+   "recommendation": "‎.sol‎ הופך ל-HUB; ORDX הוא יעד-ייצוא-בלבד (הממיר הופך למנוע-ייצוא מתוך ‎.sol‎). מטמיעים את ה-ORDX שנוצר ב-measured/source.ordx כ-provenance, ומוסיפים בלוק <Ext xmlns:sol> בייצוא לצריכת-הממיר כדי לשאת status/גרף-חיבורים/slot — הופך ORDX-פנימי ל-lossless. lossless-gate ב-CI. ייבוא-ORDX רק כ-legacy דרך SolReader.",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "InnoDraw מתעלם מ-Ext — יש לוודא שהממיר קורא אותו; אחרת שדות קריטיים נופלים בשקט.",
+   "priority": "P1",
+   "dependsOn": "עקרון lossless מ-Room"
+  },
+  {
+   "track": "מימוש פורמט ‎.sol‎ — סכמה, מיגרציה מ-Room, הצפנה, כתיבה native, יחס ל-ORDX",
+   "key": "",
+   "title": "tamper-evidence וחתימה דיגיטלית",
+   "question": "האם לחתום את ‎.sol‎ ב-Ed25519 כבר ב-v1, או להסתפק ב-hashes ולדחות?",
+   "options": [
+    "Ed25519 מלא מיום-1",
+    "v1: sha256 פר-שכבה ב-manifest; v2: חתימת Ed25519 כמסמך-אחריות",
+    "ללא tamper-evidence"
+   ],
+   "recommendation": "v1 — sha256 פר-שכבה ב-manifest (זול, מיידי, מזהה שינוי). חתימת Ed25519 על ה-manifest (הופך תכנית-מדידה למסמך-אחריות משפטי חתום עם חותם+timestamp) נדחית ל-v2, כשמעבר measured→delivered והיבט-האחריות המשפטי יהפכו רלוונטיים.",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "נמוך; דחיית-חתימה משמעה שאין ראיה-משפטית עד v2 — קביל בשלב מוקדם.",
+   "priority": "P2",
+   "dependsOn": "סקופ סכמת-v1"
+  },
+  {
+   "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+   "key": "",
+   "title": "אסטרטגיית ניתוק מ-bravh",
+   "question": "כיצד לנתק את התלות הכפולה ב-bravh (CVSM למדידה + OrdX לעיצוב)?",
+   "options": [
+    "ניתוק דו-שלבי: קודם adapt של CVSM (H1-H3), אז החלפת OrdX בתוכנת-עיצוב (H4)",
+    "ניתוק בו-זמני של שני הכלים",
+    "rewrite מלא מאפס של שני הכלים"
+   ],
+   "recommendation": "ניתוק דו-שלבי. שליטה על המדידה מושגת מהר וזול דרך adapt, מייצרת דאטה+תזרים שמממנים את המהלך הגדול (תוכנת-עיצוב). ניתוק בו-זמני מפזר משאבים דקים; rewrite הורס את הבסיס הבשל.",
+   "effort": "XL",
+   "impact": "high",
+   "risk": "אם רישוי bravh מגביל שינוי/re-brand של CVSM — כל מסלול ה-adapt נופל וצריך לחזור ל-rewrite",
+   "priority": "P0",
+   "dependsOn": "בירור-רישוי bravh (H0)"
+  },
+  {
+   "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+   "key": "",
+   "title": "בירור-רישוי bravh לפני פיתוח",
+   "question": "האם להשקיע ב-H0 בבירור-משפטי מלא של מה שמורשה ל-Soline ב-CVSM/OrdX לפני כתיבת קוד?",
+   "options": [
+    "כן — לסגור רישוי לפני שורת-קוד ראשונה",
+    "לא — להתחיל adapt ולברר תוך-כדי",
+    "להניח שהרישוי מספיק ולהמשיך"
+   ],
+   "recommendation": "כן, ב-H0. זו הנחת-היסוד של כל מסלול ה-adapt. טעות כאן מבזבזת חודשי-פיתוח על בסיס שאולי לא ניתן לשנות/למתג חוקית.",
+   "effort": "S",
+   "impact": "high",
+   "risk": "עיכוב תחילת-הפיתוח בכמה שבועות; חשיפה של הכוונה בפני bravh",
+   "priority": "P0",
+   "dependsOn": ""
+  },
+  {
+   "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+   "key": "",
+   "title": "שכבת ה-BLE/USB במיגרציה",
+   "question": "האם לגעת בשכבת החיבור ל-DISTO (BLE) ול-Encoder (USB) בזמן ההתאמה?",
+   "options": [
+    "לא לגעת — לשמר as-is ולתעד פרוטוקול בזמן-ריצה",
+    "לרפקטר את שכבת-החומרה",
+    "לכתוב מחדש עם שכבת-הפשטה מיידית"
+   ],
+   "recommendation": "לא לגעת. זהו ה-crown jewel וה-benchmark-לדיוק של השוק, קשה-לשחזור ופרוטוקול טרם-מתועד. לתעד ב-logcat+מדידה-חיה לפני כל שינוי; שכבת-הפשטה רק אם/כשיתווסף Web Bluetooth.",
+   "effort": "S",
+   "impact": "high",
+   "risk": "פרוטוקול לא-מתועד — אם נשבר בעתיד קשה לשחזר",
+   "priority": "P0",
+   "dependsOn": "תיעוד פרוטוקול H0"
+  },
+  {
+   "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+   "key": "",
+   "title": "אחסון-פנימי מול פורמט .sol",
+   "question": "האם להחליף את אחסון ה-Room ב-CVSM בכתיבת .sol native?",
+   "options": [
+    "הפרדה: Room לאחסון-חי, .sol כפורמט-חילוף/מסירה",
+    "להחליף Room ב-ZIP/.sol לאחסון-פנימי",
+    "להשאיר JSON-ב-Room בלבד בלי .sol"
+   ],
+   "recommendation": "הפרדה. Room נשאר מנוע-האחסון-החי (מהיר, טרנזקציוני, offline); .sol נכתב native ל-measured/ בגמר-מדידה ובסנכרון. כתיבת-ZIP על כל שמירה-אוטומטית הורגת ביצועים.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "מיפוי-סכמה חסר-שדות (measure_status, designRef, מפלס דו-קצה) עלול לדרוש הגירת-מודל נוספת",
+   "priority": "P0",
+   "dependsOn": "הרחבת מודל-הנתונים (H1)"
+  },
+  {
+   "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+   "key": "",
+   "title": "תזמון בניית תוכנת-העיצוב (ניתוק OrdX)",
+   "question": "מתי לבנות את תוכנת-העיצוב שתחליף את OrdX?",
+   "options": [
+    "H4 (18-36 ח׳) אחרי ביסוס-שירות ודאטה",
+    "מוקדם יותר, במקביל ל-H1-H2",
+    "לדחות ללא-הגבלה ולהמשיך לשכור OrdX"
+   ],
+   "recommendation": "H4, מתוזמן מול כימות עלות-שכירת-OrdX. זו המשימה הגדולה בתוכנית (25-45 איש-חודש); דורשת דאטה ותזרים שנצברים ב-H1-H3. לא לשחרר את OrdX עד parity.",
+   "effort": "XL",
+   "impact": "high",
+   "risk": "בנייה גדולה שמחליפה כלי-בשל; החלקת-לו\"ז מעכבת ניתוק סופי מ-bravh",
+   "priority": "P1",
+   "dependsOn": "פורמט .sol מלא + backend-ענן + סגירת-הממיר"
+  },
+  {
+   "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+   "key": "",
+   "title": "אסטרטגיית מנוע-משותף (מדידה↔עיצוב)",
+   "question": "כיצד לשתף לוגיקת-כללים (R1-R10) בין אפליקציית-המדידה (Kotlin) לתוכנת-העיצוב?",
+   "options": [
+    "חוזה-נתונים .sol + מפרט-R1-R10 משותף שכל צד מיישם",
+    "Kotlin Multiplatform (KMP) — kernel-קוד משותף",
+    "kernel-קוד יחיד המחייב אותה טכנולוגיה בשני-הצדדים"
+   ],
+   "recommendation": "חוזה-נתונים + מפרט-כללים. שומר על ה-offline-first הבשל של CVSM בלי לכפות טכנולוגיה על תוכנת-העיצוב. KMP כאופציה עתידית אם יתברר כפל-מימוש כואב.",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "כפל-מימוש של R1-R10 עלול ליצור חוסר-עקביות בין השטח למשרד",
+   "priority": "P1",
+   "dependsOn": "הגדרת פורמט .sol"
+  },
+  {
+   "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+   "key": "",
+   "title": "מיגרציית-נתונים בשטח",
+   "question": "האם המודדים ממשיכים על אותה התקנה (in-place) או מתקינים מחדש?",
+   "options": [
+    "שמירת אותו applicationId ב-H1 ודחיית שינוי-החבילה",
+    "applicationId חדש + כלי-מיגרציה חד-פעמי",
+    "applicationId חדש בלי מיגרציה (התקנה-נקייה)"
+   ],
+   "recommendation": "שמירת אותו applicationId ב-H1 (מיתוג-בלבד) ודחיית שינוי-החבילה, או כלי-מיגרציה אם חייבים חבילה-חדשה. applicationId חדש = התקנה-נפרדת, והפרויקטים בנתיב-החיצוני לא-נראים — אובדן-דאטה-בשטח הוא סיכון-מוניטין.",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "אובדן פרוטקטים קיימים בשטח אם עוברים לחבילה-חדשה בלי מיגרציה",
+   "priority": "P1",
+   "dependsOn": "החלטת מיתוג (H1)"
+  },
+  {
+   "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+   "key": "",
+   "title": "הגנת key-person על ידע-הממיר ו-.sol",
+   "question": "כיצד להפחית את ריכוז ידע-הממיר ו-.sol אצל Michael?",
+   "options": [
+    "תיעוד מהיום + גיוס מהנדס-שני לממיר",
+    "להישען על Michael עד H4-H5",
+    "תיעוד בלבד בלי גיוס"
+   ],
+   "recommendation": "תיעוד מהיום + גיוס מהנדס-שני מוקדם ככל האפשר. ה-IP הוא הנכס; ריכוזו באדם-אחד הוא דגל-אדום למשקיע וסיכון-קיומי לחברה.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "אובדן-ידע קיומי אם Michael אינו זמין; חוסם גיוס-משקיעים",
+   "priority": "P0",
+   "dependsOn": ""
+  },
+  {
+   "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+   "key": "",
+   "title": "תזמון הגבייה (הגנת-תזרים)",
+   "question": "מתי לבנות חשבוניות+גבייה+אשראי?",
+   "options": [
+    "ב-H1 כחלק מ-MVP",
+    "לדחות ל-H2 אחרי ייצוב-המדידה",
+    "לטפל ידנית עד שיהיה נפח"
+   ],
+   "recommendation": "ב-H1. מסלול-שירות נופל על תזרים לא על רווח; משלמים למודד/דלק לפני שהנגר משלם. בלי גבייה אין הון לממן את H2-H4.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "מחנק-תזרים שעוצר את המעבר ל-H2+; ריכוזיות-אשראי בנגר-גדול",
+   "priority": "P0",
+   "dependsOn": ""
+  },
+  {
+   "track": "Soline Measure — מפת-דרכים, משאבים וסיכונים (ניתוק מ-bravh)",
+   "key": "",
+   "title": "סדר-מימוש מנוע-ההתאמה R1-R10",
+   "question": "מאיזה כלל להתחיל במנוע-ההתאמה החי על-הטלפון?",
+   "options": [
+    "R4 (בליטה-מול-עומק) ראשון, אז R1/R3/R9",
+    "סט-מלא R1-R10 בבת-אחת",
+    "R1 (שורה-לא-נכנסת) ראשון"
+   ],
+   "recommendation": "R4 ראשון. המודל כבר לוכד depth, זה החפיר-הבולט (FR-MEAS-24), וההצלבה מול design/ מיידית. סט-מלא בבת-אחת לא-ריאלי לזמן-אמת על-טלפון.",
+   "effort": "L",
+   "impact": "high",
+   "risk": "לא כל החוקים ריאליים לזמן-אמת על-טלפון; צריך dirty-tracking והמנוע-המלא במשרד",
+   "priority": "P1",
+   "dependsOn": "כותב/קורא .sol + שכבת-רקע design/"
+  },
+  {
+   "track": "גשר ORDX והחלפת bravh / 3D OrdX — הבעלות על השרשרת מדידה→עיצוב→ייצור סביב .sol",
+   "key": "",
+   "title": "מעמד ORDX בצינור",
+   "question": "האם ORDX יישאר חוליה-פנימית-הכרחית בזרימת מדידה→עיצוב, או יורד למעמד פורמט-חילוף יוצא-בלבד סביב .sol כמרכז?",
+   "options": [
+    "ORDX חוליה-פנימית (המצב היום)",
+    ".sol כמקור-אמת, ORDX פורמט-יוצא-בלבד (ל-CV כשצריך)",
+    "לוותר על ORDX לגמרי ולעבוד רק ב-.sol+PDP"
+   ],
+   "recommendation": ".sol כמקור-אמת ו-ORDX כפורמט-חילוף יוצא-בלבד. זה מנטרל את כל אובדן-המידע של ORDX-הליבה מהזרימה-הפנימית (המקור-העשיר תמיד ב-.sol) והוא היסוד שמאפשר להחליף את 3D OrdX. לא לוותר על ORDX כי הוא נחוץ ל-interop עם Cabinet Vision של צד-ג'.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "נמוך — מתלבש על SOL_FORMAT.md §8 (חבילת job הופכת ל-.sol יחיד) ועל parseOrdx שכבר מאומת round-trip; בעיקר החלטה ארכיטקטונית ולא RE חדש.",
+   "priority": "P0"
+  },
+  {
+   "track": "גשר ORDX והחלפת bravh / 3D OrdX — הבעלות על השרשרת מדידה→עיצוב→ייצור סביב .sol",
+   "key": "",
+   "title": "ערוץ-אספקת-הארונות לייצור",
+   "question": "באיזה פורמט הארונות שעוצבו יישאו לייצור, בהינתן ש-ORDX משאיר <Cabinet> ריק והעיצוב כלוא ב-.abv הסגור של bravh?",
+   "options": [
+    "<Cabinet> ב-ORDX (interop ל-Cabinet Vision)",
+    "PDP-native (הזרקת ארונות, אייקוני-ראומפלן)",
+    "BOM/CNC ישיר מ-.sol (soline-cad-engine)",
+    "לבנות את BOM/CNC כיעד-אסטרטגי + <Cabinet>-ב-ORDX כגשר-interop במקביל"
+   ],
+   "recommendation": "לבנות BOM/CNC ישיר מ-.sol כיעד-אסטרטגי (עצמאות מלאה מ-bravh ומ-Cabinet Vision) ובמקביל לספק <Cabinet> ב-ORDX כגשר-interop ללקוחות/ספקים שכן עובדים ב-CV. PDP-native נשמר ל-viewer הפנימי, לא כערוץ-ייצור ראשי. זו ההכרעה שמנתקת את התלות בליבתה.",
+   "effort": "XL",
+   "impact": "high",
+   "risk": "בינוני-גבוה — הנתיב-הישיר דורש בניית מנוע-ייצור עד CNC; מיטיגציה: resolveCatalog/אלקינצ'ו כבר קיים, ו-<Cabinet>-ב-ORDX מספק ערך-מיידי לפני שהנתיב-הישיר בשל.",
+   "priority": "P0"
+  },
+  {
+   "track": "גשר ORDX והחלפת bravh / 3D OrdX — הבעלות על השרשרת מדידה→עיצוב→ייצור סביב .sol",
+   "key": "",
+   "title": "פיצוח ordx_templates ומילוי <Cabinet> ב-ORDX",
+   "question": "כיצד לפצח את template_xml+variable_map_json (ריקים/מינימליים בקטלוג שנחקר) כדי לכתוב ארונות ל-<Cabinet> — מה ש-3D OrdX עצמו לא עושה?",
+   "options": [
+    "חילוץ ordx_templates מ-catalog.sqlite על מחשב Michael + RE",
+    "אפיון סכמת-<Cabinet> של Cabinet Vision ישירות מדגימת-CV אמיתית",
+    "שילוב: template_xml כמנגנון + סכמת-CV כאמת-היעד",
+    "לוותר על <Cabinet> ולהסתמך רק על BOM/CNC ישיר"
+   ],
+   "recommendation": "שילוב: לחלץ template_xml+variable_map_json על מחשב Michael (read-only, SQLite/Ordx_Admin), לאמת מול דגימת-ORDX שנוצרה ב-Cabinet Vision אמיתי (הסכמה מוגדרת ע\"י CV, לא ע\"י bravh), ואז לממש objectToCabinet+serializeCabinet ב-export_ordx.js. אם Soline ממלא <Cabinet> — הוא מייתר את 3D OrdX בזרימה ל-CV.",
+   "effort": "L",
+   "impact": "high",
+   "risk": "גבוה — הקטלוג שנחקר ריק; ייתכן ש-3D OrdX לעולם לא כותב <Cabinet>, ואז אין דגימת-יעד מ-bravh וצריך להישען על סכמת-CV. תלוי-Michael לחקירת ה-SQLite.",
+   "priority": "P0",
+   "dependsOn": "ערוץ-אספקת-הארונות לייצור"
+  },
+  {
+   "track": "גשר ORDX והחלפת bravh / 3D OrdX — הבעלות על השרשרת מדידה→עיצוב→ייצור סביב .sol",
+   "key": "",
+   "title": "בלוק הרחבה <Ext sol> לגישור חסר-אובדן",
+   "question": "כיצד לשמר את השדות ש-ORDX-הליבה לא מחזיק (סטטוס-נקודה, קיר-מעוקל, גרף-חיבוריות, wallTopStyle L/R, elevation, face, slot מזגן) בגשר דרך פורמט צד-שלישי?",
+   "options": [
+    "בלוק <Ext xmlns:sol> פר-Wall/Furnishing/Cabinet",
+    "לקודד ב-<Description> (פתרון-ביניים)",
+    "לוותר — לשמור את העושר רק ב-.sol ולא ב-ORDX"
+   ],
+   "recommendation": "בלוק <Ext xmlns:sol=\"soline\"> פר-ישות. Cabinet Vision יתעלם ממנו, Soline יקרא אותו ב-round-trip — כך ORDX הופך מייצוא-הרסני לייצוא-נאמן. סטטוס-נקודה הוא אזרח-מדרג-ראשון (החוסר הקריטי ביותר). קיר-מעוקל: גם כמקטעי-קו ל-CV וגם כפרמטרי-קשת ב-<Ext> לשחזור מלא.",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "נמוך — תוספת בלבד, לא שוברת את ה-round-trip המאומת; שער-אי-אובדן (D5) יתפוס רגרסיה.",
+   "priority": "P1",
+   "dependsOn": "מעמד ORDX בצינור"
+  },
+  {
+   "track": "גשר ORDX והחלפת bravh / 3D OrdX — הבעלות על השרשרת מדידה→עיצוב→ייצור סביב .sol",
+   "key": "",
+   "title": "תיקון-פרסר ושער אי-אובדן",
+   "question": "כיצד לסגור את חובות-הפרסר הידועים (Z נזרק, Depth לחלונות עלול להישמט) ולמנוע אובדן-שקט עתידי?",
+   "options": [
+    "תיקון Z+Depth בלבד",
+    "תיקון + הרחבת --selftest לשער-אי-אובדן ב-CI",
+    "לדחות עד אחרי ערוץ-הארונות"
+   ],
+   "recommendation": "לתקן קריאת Position/Z ב-parsePlacedItem (שורה אחת) + לוודא Depth לחלונות/דלתות, ולהרחיב את --selftest להשוואת כל שדה מדידה→ORDX עם כשל-CI על שדה שנשמט בלי מיפוי/Ext/ויתור-מודע. עבודה קטנה, ROI גבוה, מייצבת את הבסיס לפני כל שאר העבודה.",
+   "effort": "S",
+   "impact": "medium",
+   "risk": "נמוך מאוד — שינוי מקומי בקוד קיים ומאומת.",
+   "priority": "P1"
+  },
+  {
+   "track": "גשר ORDX והחלפת bravh / 3D OrdX — הבעלות על השרשרת מדידה→עיצוב→ייצור סביב .sol",
+   "key": "",
+   "title": "אימוץ סכמת catalog.sqlite כקטלוג-.sol",
+   "question": "האם לאמץ/לשכפל את סכמת הקטלוג של 3D OrdX (catalog_items/accessory_items/ordx_templates/materials) כקטלוג-.sol?",
+   "options": [
+    "אימוץ מלא של הסכמה כולל ordx_templates",
+    "בנייה מאפס של קטלוג-Soline",
+    "איחוד: הסכמה + elements.json/elkincho_catalog.json הקיימים"
+   ],
+   "recommendation": "איחוד — קטלוג-האביזרים (elements.json 170 + symbols.json) וקטלוג-הארונות (elkincho_catalog.json) + resolveCatalog כבר קיימים אצל Soline; מה שמתווסף מ-catalog.sqlite הוא קטלוג-הארונות התלת-ממדי (.dae+resize/snap rules) ומנגנון ordx_templates פר-ארון. זה מה שהופך את פיצוח D3 לניתן-לתחזוקה: כל ארון נושא את תבנית-ה-ORDX שלו.",
+   "effort": "L",
+   "impact": "medium",
+   "risk": "בינוני — צורך תיאום בין סכמת-bravh לבין המבנה הקיים של הממיר; אין סיכון-רישוי כי מדובר באימוץ-סכמה, לא בקוד.",
+   "priority": "P1",
+   "dependsOn": "ערוץ-אספקת-הארונות לייצור"
+  },
+  {
+   "track": "גשר ORDX והחלפת bravh / 3D OrdX — הבעלות על השרשרת מדידה→עיצוב→ייצור סביב .sol",
+   "key": "",
+   "title": "מקור ייצוא-ה-ORDX",
+   "question": "מהיכן ייוצר ה-ORDX — ממנוע-Soline (export_ordx.js) מתוך .sol, או מ-exportToOrdx של CVSM (הקוד של bravh)?",
+   "options": [
+    "export_ordx.js של Soline מתוך .sol",
+    "exportToOrdx של CVSM (המצב היום)",
+    "שניהם במקביל לתקופת-מעבר"
+   ],
+   "recommendation": "לייצא ORDX ממנוע-Soline (export_ordx.js) מתוך .sol, לא מ-CVSM. זה נותן ל-Soline בקרה מלאה על התוכן (כולל <Cabinet> ו-<Ext>), מנתק תלות בקוד-הייצוא של bravh, ומבטיח אימות מול דגימת-CV אמיתית. אפשר להשאיר את exportToOrdx של CVSM כ-fallback לתקופת-מעבר.",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "נמוך — export_ordx.js כבר קיים ומאומת round-trip; בעיקר חיווט .sol→מנוע.",
+   "priority": "P1",
+   "dependsOn": "מעמד ORDX בצינור"
+  },
+  {
+   "track": "גשר ORDX והחלפת bravh / 3D OrdX — הבעלות על השרשרת מדידה→עיצוב→ייצור סביב .sol",
+   "key": "",
+   "title": "החלפת 3D OrdX ב-soline-cad-engine ותוכנת-העיצוב",
+   "question": "כיצד להחליף את 3D OrdX (עיצוב + report/pdf/abv/ORDX + viewer + קטלוג) ברכיבים של Soline?",
+   "options": [
+    "החלפה מלאה בהרכבת רכיבים קיימים סביב .sol",
+    "המשך שכירת 3D OrdX מ-bravh",
+    "החלפה חלקית (רק הפלטים, להשאיר את העיצוב ב-3D OrdX)"
+   ],
+   "recommendation": "החלפה מלאה בהרכבת רכיבים קיימים: תוכנת-העיצוב (DESIGN_TOOL_SPEC) → design/ ב-.sol; soline-cad-engine כמנוע-דו\"ח; export_dxf2d/3d + export_ordx כמייצאים; viewer three.js offline; .sol מחליף את .abv. אין ב-3D OrdX תפקיד ללא מחליף בצד Soline — זו הרכבה, לא בנייה מאפס, ולכן XL אך נמוכת-סיכון-טכני.",
+   "effort": "XL",
+   "impact": "high",
+   "risk": "בינוני — הרכיבים עובדים בנפרד אך לא הורכבו לצינור-מלא; תלוי בבשלות תוכנת-העיצוב ובנתיב-הייצור (D2).",
+   "priority": "P2",
+   "dependsOn": "ערוץ-אספקת-הארונות לייצור"
+  },
+  {
+   "track": "גשר ORDX והחלפת bravh / 3D OrdX — הבעלות על השרשרת מדידה→עיצוב→ייצור סביב .sol",
+   "key": "",
+   "title": "יעד Cabinet Vision במורד-הזרם",
+   "question": "האם Cabinet Vision יישאר יעד-הכרחי בצינור (עם רכש-רישיון Hexagon יקר), או יעד-interop אופציונלי בלבד?",
+   "options": [
+    "יעד-interop אופציונלי דרך <Cabinet>-ב-ORDX (D3)",
+    "יעד-הכרחי עם רכש-רישיון-CV",
+    "לנתק לגמרי — רק BOM/CNC ישיר מ-.sol"
+   ],
+   "recommendation": "לשמור את Cabinet Vision כיעד-interop אופציונלי בלבד, דרך <Cabinet>-ב-ORDX (D3) — לשירות לקוחות/ספקים שכבר עובדים ב-CV. אין לרכוש רישיון-CV לצורך הצינור-הפנימי של Soline; הנתיב-הפנימי הוא BOM/CNC ישיר מ-.sol (D2). כך CV הופך מ\"חוליה-הכרחית\" ל\"פורמט-יצוא נוסף\".",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "נמוך — נסמך על D3; אם D3 נכשל, נשארים עם BOM/CNC ישיר בלבד (שממילא היעד-האסטרטגי).",
+   "priority": "P2",
+   "dependsOn": "ערוץ-אספקת-הארונות לייצור"
+  },
+  {
+   "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+   "key": "",
+   "title": "בחירת פלטפורמת ה-Backend",
+   "question": "על איזו תשתית לבנות את השרת — BaaS סגור, custom מאפס, או Postgres מנוהל עם RLS?",
+   "options": [
+    "Firebase/Firestore (NoSQL, מהיר, נעילה חזקה)",
+    "custom Node/.NET + Postgres מאפס",
+    "Supabase (Postgres מנוהל + Auth + Storage, self-host-able)",
+    "AWS custom (RDS+Cognito+S3)"
+   ],
+   "recommendation": "Supabase — Postgres אמיתי עם Row-Level-Security לבידוד-דייר, phone-OTP מובנה, אחסון, והכי חשוב self-host-able כדי לא להחליף נעילת-bravh בנעילת-ספק חדש; Firestore נדחה כי המודל יחסי ו-RLS דורש SQL, custom-מאפס נדחה כתקורה מיותרת מעל Postgres-מנוהל",
+   "effort": "L",
+   "impact": "high",
+   "risk": "החלפת תלות ב-bravh בתלות בספק-ענן; ממותן ע\"י בחירה בקוד-פתוח ש-self-host-able",
+   "priority": "P0"
+  },
+  {
+   "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+   "key": "",
+   "title": "מודל רב-דיירות ובידוד-דייר",
+   "question": "איך לבודד כל נגר כדייר נפרד — DB נפרד, schema נפרד, או סכמה-משותפת עם RLS?",
+   "options": [
+    "DB-per-tenant (בידוד מקסימלי, תקורה גבוהה)",
+    "schema-per-tenant (ביניים)",
+    "סכמה-משותפת + tenant_id בכל שורה + Row-Level-Security"
+   ],
+   "recommendation": "סכמה-משותפת + RLS על tenant_id/carpenterId — הבידוד נאכף במנוע-הנתונים ולא בקוד-הקליינט (כדרישת ROLES_PERMISSIONS), כך שגם באג בקליינט לא דולף עבודות בין נגרים; מחייב חבילת-בדיקות-דליפה ייעודית כתנאי-שחרור",
+   "effort": "M",
+   "impact": "high",
+   "risk": "דליפה בין-דיירית = כשל-אבטחה מדרגה ראשונה; ממותן ע\"י RLS + בדיקות-דליפה חוסמות-שחרור",
+   "priority": "P0",
+   "dependsOn": "בחירת פלטפורמת ה-Backend"
+  },
+  {
+   "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+   "key": "",
+   "title": "שרת-רישוי (החלפת קבצי-ה-GitHub של bravh)",
+   "question": "במה להחליף את הרישיון-כקובץ ב-repo של bravh בלי לשבור את ה-offline-first?",
+   "options": [
+    "קבצי-רישיון ב-repo של Soline (אותה חולשה, בעלים אחר)",
+    "בדיקה-מקוונת בכל הפעלה (שובר offline)",
+    "טוקן חתום Ed25519 שמאומת מקומית + cache-offline עם TTL"
+   ],
+   "recommendation": "טוקן-רישיון חתום Ed25519 (tenantId/userId/role/seats/deviceId/exp) שהקליינט מאמת מקומית מול מפתח-ציבורי — אימות-ראשוני מקוון ואז cache-offline מוגבל-זמן (7–14 יום), בדיוק כדרישת SOL_FORMAT §6.3; מחליף את הקובץ-הפתוח ושומר על ה-offline-first",
+   "effort": "M",
+   "impact": "high",
+   "risk": "קשירה אגרסיבית תנעל מודד בשטח בלי-קליטה; ממותן ע\"י TTL סביר",
+   "priority": "P0",
+   "dependsOn": "בחירת פלטפורמת ה-Backend"
+  },
+  {
+   "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+   "key": "",
+   "title": "מנגנון האימות (Authentication)",
+   "question": "איך משתמשים מזדהים — סיסמאות, טלפון+OTP, או מסלול כפול?",
+   "options": [
+    "email+סיסמה לכולם",
+    "phone-OTP לכולם",
+    "מסלול כפול: phone-OTP לשדה (נגר/מודד) + email/סיסמה+2FA לפנימיים (מתאם/מנהל)"
+   ],
+   "recommendation": "מסלול כפול — נגר ומודד ב-phone-OTP (אין סיסמאות בשטח), מתאם ומנהל ב-email/סיסמה+2FA, מאוחד תחת ספק-Auth אחד; בורר-התפקיד-המקומי של שלב-1 נשמר כמצב-פיתוח מאחורי flag ומוסר מ-prod",
+   "effort": "M",
+   "impact": "high",
+   "risk": "OTP תלוי-סלולר בשטח עם קליטה חלשה; ממותן ע\"י cache-סשן",
+   "priority": "P0",
+   "dependsOn": "בחירת פלטפורמת ה-Backend"
+  },
+  {
+   "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+   "key": "",
+   "title": "קשירת-מכשיר ומודל-מושבים (seats)",
+   "question": "לקשור רישיון למכשיר בודד, למשתמש בלי הגבלה, או למשתמש עם רישום-מכשירים?",
+   "options": [
+    "קשירה-פר-מכשיר קשיחה (MAC/androidId)",
+    "פר-משתמש בלי הגבלת-מכשיר",
+    "פר-משתמש עם device-registry והגבלת-מכשירים-פעילים"
+   ],
+   "recommendation": "פר-משתמש עם רישום-מכשירים והגבלת-מספר-פעיל — מודד שמחליף טאבלט לא נחסם, אבל אי-אפשר לשכפל מושב על עשרה מכשירים; deviceId נכנס לטוקן לביטול מכשיר גנוב/אבוד מרחוק",
+   "effort": "S",
+   "impact": "medium",
+   "risk": "חילופי-מכשיר תכופים יגיעו לתקרה; ממותן ע\"י ניהול-מרחוק ותקרה גמישה",
+   "priority": "P1",
+   "dependsOn": "שרת-רישוי (החלפת קבצי-ה-GitHub של bravh)"
+  },
+  {
+   "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+   "key": "",
+   "title": "ארכיטקטורת הסנכרון (offline-first)",
+   "question": "איך לסנכרן בין הטאבלט לענן בלי לשבור את ה-offline-first הבשל?",
+   "options": [
+    "replication-מלא (PowerSync/ElectricSQL)",
+    "push-only בלי pull",
+    "outbox + pull-since-cursor דלתאי, server-authoritative על מעברי-שלב"
+   ],
+   "recommendation": "outbox + pull-since-cursor מעל WorkManager/okhttp הקיימים — LWW ברמת-השורה לתוכן, אבל מעברי-stage בפייפליין server-authoritative (השרת בורר); .sol והנכסים הכבדים עוברים כ-blobs ל-Object-Storage עם מצביע בלבד בשורה. לא מכניס ספק-replication חדש",
+   "effort": "L",
+   "impact": "high",
+   "risk": "קונפליקטים במצב רב-מכשיר/רב-עורך; ממותן ע\"י server-authoritative על סטטוסים",
+   "priority": "P0",
+   "dependsOn": "מודל רב-דיירות ובידוד-דייר"
+  },
+  {
+   "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+   "key": "",
+   "title": "אחסון-קבצים וקשירת-ה-DRM של .sol",
+   "question": "איפה לאחסן את קבצי-ה-.sol והנכסים, ואיך לקשור אותם לרישיון?",
+   "options": [
+    "blobs ב-Postgres ישירות",
+    "Object-Storage עם prefix-פר-דייר + signed-URLs + עטיפת-מפתח דרך License-Service",
+    "אחסון-מקומי בלבד בלי ענן"
+   ],
+   "recommendation": "Object-Storage עם prefix פר-דייר ו-signed-URLs קצרי-מועד (בלי נתונים אישיים ב-URL); מפתח-ההצפנה של .sol נעטף במפתח שמנוהל ב-License-Service ונגזר מזהות-החשבון (SOL_FORMAT §6.3) — בלי רישיון אין מפתח, בלי מפתח אין פתיחה, כך שקובץ מועתק חסר-תועלת",
+   "effort": "M",
+   "impact": "high",
+   "risk": "אובדן/דליפת מפתחות; ממותן ע\"י KMS ו-rotation",
+   "priority": "P1",
+   "dependsOn": "שרת-רישוי (החלפת קבצי-ה-GitHub של bravh)"
+  },
+  {
+   "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+   "key": "",
+   "title": "הפצת-האפליקציה והעדכונים",
+   "question": "איך להפיץ ולעדכן את האפליקציה בלי התלות ב-releases של bravh?",
+   "options": [
+    "להשאיר self-update מ-GitHub-releases של bravh (התלות עצמה)",
+    "Google Play בערוץ closed/managed",
+    "APK-חתום מתארח-עצמית + endpoint-עדכונים של Soline",
+    "MDM/EMM"
+   ],
+   "recommendation": "Google-Play בערוץ-סגור/מנוהל כעיקרי (staged-rollout, rollback, בקרת-גרסה — חוסם-NASDAQ ל-CI/CD) + ניתוב AppUpdater ל-endpoint של Soline כגיבוי; בכל מקרה כתובת-ה-GitHub של bravh יוצאת מהקוד",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "מדיניות-Play/עיכובי-סקירה; ממותן ע\"י מסלול-גיבוי מתארח-עצמית",
+   "priority": "P1"
+  },
+  {
+   "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+   "key": "",
+   "title": "תאימות, אזור-אירוח וממשל-דאטה",
+   "question": "איפה לארח ואילו בקרות-דאטה להטמיע מהיום כדי לעמוד בתאימות?",
+   "options": [
+    "אירוח US בלי תכנון-פרטיות מוקדם",
+    "אירוח EU + audit-trail + מדיניות-שמירה + מחיקה-רכה + ייצוא-נגר",
+    "אירוח מקומי בישראל בלבד"
+   ],
+   "recommendation": "אירוח EU (Frankfurt) — קרוב לישראל ותואם GDPR-ready + חוק-הגנת-הפרטיות; audit_log על פעולות רגישות (הרחבת history[] הקיים), מחיקה-רכה בלבד, ובעלות-הנגר על הדאטה עם ייצוא-מלא ב-.sol בלחיצה. יסוד-האמון ותנאי-סף ל-SOC2/ISO27001 בהמשך",
+   "effort": "M",
+   "impact": "high",
+   "risk": "דרישות-רגולציה משתנות; ממותן ע\"י ארכיטקטורה שמפרידה אזור ומדיניות-שמירה",
+   "priority": "P1",
+   "dependsOn": "בחירת פלטפורמת ה-Backend"
+  },
+  {
+   "track": "Backend, רישוי ורב-דיירות ל-Soline Measure — ניתוק התלות ב-bravh ובניית תשתית-ענן רב-דיירת",
+   "key": "",
+   "title": "ניהול-מפתחות, סודות ו-escrow",
+   "question": "איך לנהל את מפתחות-החתימה ולהתמודד עם key-person/IP-risk?",
+   "options": [
+    "מפתחות בקוד/קונפיג (נדחה)",
+    "KMS/סוד-מנוהל + rotation + escrow צד-שלישי",
+    "מפתח בודד קבוע בלי rotation"
+   ],
+   "recommendation": "מפתחות-החתימה Ed25519 ב-KMS (לא בקוד), מדיניות-rotation עם מפתח-ציבורי-כפול בקליינט לתקופת-מעבר, ו-escrow של מפתחות וקוד-הרישוי אצל צד-שלישי כמענה ל-key-person-risk (IP אצל Michael) — חובה לפני שיחת-משקיע רצינית",
+   "effort": "S",
+   "impact": "medium",
+   "risk": "אובדן-מפתח משבית אימות-רישיונות; ממותן ע\"י KMS + escrow + rotation מבוקר",
+   "priority": "P2",
+   "dependsOn": "שרת-רישוי (החלפת קבצי-ה-GitHub של bravh)"
+  },
+  {
+   "track": "חיבור Soline Measure לפלטפורמת התפעול ולפורטל הנגר — שבעת התפרים של המדידה באקוסיסטם",
+   "key": "",
+   "title": "backend משותף לכל התצוגות",
+   "question": "על איזו תשתית-שרת יתנהלו סנכרון-המדידה, קידום-הסטטוס וקריאת-הפורטל?",
+   "options": [
+    "תיקיות-Drive inbox/outbox כמסלול-ביניים (INTERFACE שלב-ב)",
+    "backend רב-דיירת ענני מלא מהיום",
+    "היברידי: Drive-ביניים בגל-1 → ענן-מלא בגל-2"
+   ],
+   "recommendation": "היברידי — מסלול-Drive זול מוכיח את שבעת החוזים ומריץ עבודה-אחת end-to-end מיד, ואז מחליפים ל-backend רב-דיירת אמיתי בגל-2 בלי לשבור את החוזים. זה הפער שסומן ב-MASTER_SPEC §10 וחוצה את כל התפרים.",
+   "effort": "XL",
+   "impact": "high",
+   "risk": "בלי backend אף תפר לא נסגר; ענן-מלא מוקדם מדי שורף זמן לפני שהחוזים הוכחו; Drive-ביניים לא מדרגי לרב-דיירות",
+   "priority": "P0"
+  },
+  {
+   "track": "חיבור Soline Measure לפלטפורמת התפעול ולפורטל הנגר — שבעת התפרים של המדידה באקוסיסטם",
+   "key": "",
+   "title": "תוכן וזמן חבילת-קליטת-העבודה",
+   "question": "מה בדיוק נכנס לחבילה שנוחתת על מכשיר-המודד, ומתי היא מסתנכרנת?",
+   "options": [
+    "רק job.json+access בשיבוץ (מדידה בסיסית)",
+    "חבילה מלאה design/+catalog/+checklist בשיבוץ",
+    "lazy-load של design בפתיחת-עבודה כשיש רשת"
+   ],
+   "recommendation": "חבילה מלאה בזמן-השיבוץ (scheduled), לא בפתיחת-העבודה — offline-first הוא אילוץ בל-יעבור ובאתר אין קליטה. design/ מותנה: נכלל רק אם הנגר עיצב תכנון-מקדים. זה תנאי-הכרחי לתפר 2 (רמזי-ההתאמה, הבידול מס' 1).",
+   "effort": "M",
+   "impact": "high",
+   "risk": "בלי design/ במכשיר אין overlay ואין רמזי-R1–R10; lazy-load נכשל באתר-ללא-קליטה",
+   "priority": "P0",
+   "dependsOn": "backend משותף לכל התצוגות"
+  },
+  {
+   "track": "חיבור Soline Measure לפלטפורמת התפעול ולפורטל הנגר — שבעת התפרים של המדידה באקוסיסטם",
+   "key": "",
+   "title": "נתיב-המסירה לממיר בעידן .sol",
+   "question": "האם המדידה מזינה את הממיר ב-.sol native או ממשיכה דרך חבילת-ORDX?",
+   "options": [
+    "ORDX בלבד (חוזה INTERFACE הקיים)",
+    ".sol-native מיידי לממיר",
+    "dual-write: measured native + ORDX-גישור, ומיגרציה מדורגת"
+   ],
+   "recommendation": "dual-write בתקופת-המעבר — כותבים measured/ native וגם מייצאים ORDX תואם-INTERFACE כדי שהממיר והצינור הקיים ימשיכו בלי המתנה למיגרציה; אז שלב-ב (inbox .sol) ושלב-ג (קריאת-מודול), ו-ORDX יורד לפורמט-גישור-יוצא ל-Cabinet Vision בלבד.",
+   "effort": "L",
+   "impact": "medium",
+   "risk": "מיגרציה חפוזה שוברת את הצינור הקיים; dual-write ארוך-מדי מנציח חוב-כפול",
+   "priority": "P1",
+   "dependsOn": "backend משותף לכל התצוגות"
+  },
+  {
+   "track": "חיבור Soline Measure לפלטפורמת התפעול ולפורטל הנגר — שבעת התפרים של המדידה באקוסיסטם",
+   "key": "",
+   "title": "מקור-האמת של job.stage",
+   "question": "מי קובע את הסטטוס — המכשיר-offline או ה-backend?",
+   "options": [
+    "device-authoritative (המכשיר קובע stage)",
+    "server-authoritative (המכשיר פולט אירועים, backend מכריע)",
+    "היברידי לפי סוג-המעבר"
+   ],
+   "recommendation": "server-authoritative — המכשיר offline לא יכול להיות מקור-אמת כי הפורטל והקונסולה (web) צריכים סטטוס גם כשהמכשיר מנותק. המכשיר מספק events.json כראיות; ה-backend מקדם את stage; הפורטל קורא אותו. מיישר גם עם בידוד-הדייר.",
+   "effort": "M",
+   "impact": "high",
+   "risk": "device-authoritative → נגר רואה עדכון רק אחרי חזרת-רשת של המכשיר (חוויה-שבורה); היברידי מסבך את מודל-העקביות",
+   "priority": "P0",
+   "dependsOn": "backend משותף לכל התצוגות"
+  },
+  {
+   "track": "חיבור Soline Measure לפלטפורמת התפעול ולפורטל הנגר — שבעת התפרים של המדידה באקוסיסטם",
+   "key": "",
+   "title": "ארכיטקטורת הסנכרון-מעלה",
+   "question": "איך מסתנכרנת המדידה כשחוזרת רשת — קובץ-שלם או דלתא?",
+   "options": [
+    "העלאת .sol קובץ-שלם בכל סנכרון",
+    "append-only oplog + סנכרון-דלתאי + מיזוג פר-id",
+    "snapshot תקופתי + דלתא בין snapshots"
+   ],
+   "recommendation": "append-only oplog דלתאי עם מיזוג פר-id מול שכבת design (SOL_FORMAT §7.3, FR-MEAS-23) — מדידה חיה מייצרת עומס-כתיבה גבוה; דלתא חוסך רוחב-פס ותומך במיזוג לא-הרסני עם התכנון הקיים. אין מחיקה-קשה, גיבוי מקומי עד אישור-קליטה.",
+   "effort": "L",
+   "impact": "high",
+   "risk": "קובץ-שלם דורס את design ומבזבז רוחב-פס; מיזוג פר-id דורש מדיניות-קונפליקטים ברורה",
+   "priority": "P1",
+   "dependsOn": "backend משותף לכל התצוגות"
+  },
+  {
+   "track": "חיבור Soline Measure לפלטפורמת התפעול ולפורטל הנגר — שבעת התפרים של המדידה באקוסיסטם",
+   "key": "",
+   "title": "אכיפת-פרטיות של דאטת-המנוע",
+   "question": "איך מבטיחים ש-GPS/זמנים מ-events.json נשארים אדמין-בלבד ולא דולפים דרך תפר-הסטטוס או האקוסיסטם?",
+   "options": [
+    "הפרדת-סכמה: events נפרד לחלוטין ממה שנגר/מודד קוראים",
+    "סינון בשכבת-ה-API לפי תפקיד",
+    "הצפנת שדות-רגישים ב-.sol"
+   ],
+   "recommendation": "הפרדת-סכמה + סינון-לפי-תפקיד בשכבת-ה-API — events.json הוא ערוץ נפרד שרק המנוע-הנסתר צורך; תפר-הסטטוס (4) מוציא רק stage-מפושט, תפר-האקוסיסטם (7) לא נוגע ב-events. נאכף ב-ROLES_PERMISSIONS בשכבת-הנתונים.",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "דליפת מיקום/זמני-מודד לנגר = הפרת-פרטיות ופגיעה-באמון; אכיפה-רק-ב-UI ניתנת-לעקיפה",
+   "priority": "P1",
+   "dependsOn": "מקור-האמת של job.stage"
+  },
+  {
+   "track": "חיבור Soline Measure לפלטפורמת התפעול ולפורטל הנגר — שבעת התפרים של המדידה באקוסיסטם",
+   "key": "",
+   "title": "בסיס-הסטאק של אפליקציית-המדידה",
+   "question": "האם המדידה תישאר Android-Kotlin (adapt-CVSM) או תעבור web/Capacitor לשיתוף-מנוע עם העיצוב?",
+   "options": [
+    "Adapt-CVSM Kotlin/Android (build/01)",
+    "web/Capacitor עם מנוע-משותף לעיצוב (MEASURE §10)",
+    "Kotlin עכשיו + הערכת-KMP בעתיד"
+   ],
+   "recommendation": "Kotlin/Android כעת (build/01 כבר הכריע adapt, כי ה-BLE וה-offline הם crown-jewel מאומת) והגישור לעיצוב/פורטל דרך חוזה-.sol+R1–R10, לא דרך קוד-משותף. שיתוף-מנוע/KMP נבחן רק בגל-3 אם יצדיק את-עצמו. יש כאן מתח מתועד בין שני מסמכים שצריך הכרעה מפורשת.",
+   "effort": "M",
+   "impact": "medium",
+   "risk": "web-rewrite מקריב BLE+offline מוכחים תמורת יתרון-תיאורטי; דחייה מתמדת של ההכרעה משאירה שני מסמכים סותרים",
+   "priority": "P2",
+   "dependsOn": "backend משותף לכל התצוגות"
+  },
+  {
+   "track": "חיבור Soline Measure לפלטפורמת התפעול ולפורטל הנגר — שבעת התפרים של המדידה באקוסיסטם",
+   "key": "",
+   "title": "התפר לאקוסיסטם ולמסע-הנגר",
+   "question": "מתי וכיצד ה-.sol המדוד מזין את ספריית-הפרויקטים, ה-BOM והתמחור-ללקוח?",
+   "options": [
+    "רק שמירה-בספרייה+גרסאות בגל-מוקדם",
+    "האכלת-BOM/nesting/תמחור מלאה מוקדם",
+    "מדורג: ספרייה+גרסאות בגל-1, BOM/תמחור בגל-3"
+   ],
+   "recommendation": "מדורג — בגל-1 ה-.sol המדוד נשמר בספריית-הנגר וכחוליה בהיסטוריית-הגרסאות (switching-cost זול-ומיידי, CARPENTER_TOOLS גל-1); האכלת BOM/nesting/תמחור-ללקוח באה בגל-3 (H3) כי היא דורשת את מנוע-העיצוב המלא ומידות-אמת. המדידה היא ה'במהלך' שסוגר בין ה'לפני' ל'אחרי' של מסע-הנגר.",
+   "effort": "L",
+   "impact": "medium",
+   "risk": "בניית האקוסיסטם המלא מוקדם-מדי לפני שהלולאה-הבסיסית עובדת מבזבזת מאמץ; דחייה-מוחלטת מפספסת נעילה-זולה",
+   "priority": "P2",
+   "dependsOn": "נתיב-המסירה לממיר בעידן .sol"
+  }
+ ]
+}

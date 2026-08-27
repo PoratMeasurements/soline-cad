@@ -1,0 +1,34 @@
+{
+  "roots": [
+    {
+      "label": "before",
+      "path": "G:\\My Drive\\לקוחות",
+      "note": "צילומי מדידה בשטח — ה'לפני'. מבנה: <ערוץ>/<נגרייה או חברה>/<לקוח סופי - מספר הזמנה>/"
+    },
+    {
+      "label": "after",
+      "path": "G:\\My Drive\\soline\\שיווק",
+      "note": "צילומי תוצר מוגמר — ה'אחרי'."
+    }
+  ],
+  "skipDirNames": ["locks", "History", ".git", "node_modules", "__MACOSX", ".tmp.drivedownload", "לפני ואחרי"],
+  "imageExt": [".jpg", ".jpeg", ".png", ".heic", ".heif", ".webp"],
+  "videoExt": [".mp4", ".mov", ".m4v", ".avi"],
+  "libraryPath": "G:\\My Drive\\soline\\שיווק\\לפני ואחרי",
+  "_manualPairs": "קישורים שה-GPS לא יכול למצוא — למשל כשצילומי ה'אחרי' עברו עריכה מקצועית והמטא-דאטה נמחקה.",
+  "manualPairs": [
+    {
+      "id": "M001",
+      "label": "וילה - צילום אדריכלי",
+      "shop": "אדור קונספט",
+      "beforeDir": "G:\\My Drive\\לקוחות\\תקיות צד לקוח\\אדור קונספט\\פרוייקטים גמורים\\חיים מוהבטי",
+      "afterDir": "G:\\My Drive\\soline\\שיווק\\מוהבטי",
+      "note": "172 צילומי מדידה לפי פריט נגרות מול 88 צילומי אדריכלות מקצועיים של אותו בית. הקישור נעשה לפי שם התיקייה — צילומי האחרי עברו עריכה ואין בהם EXIF."
+    }
+  ],
+  "pairing": {
+    "gpsRadiusMeters": 45,
+    "minDaysAfter": 3,
+    "maxDaysAfter": 400
+  }
+}

@@ -1,0 +1,2431 @@
+{
+  "module": "Soline Openings",
+  "version": "0.1.0",
+  "date": "2026-08-23",
+  "units": "mm",
+  "source": "Klil Belgian-Plus dynamic template (convention+dimensions, explicit owner permission) + Soline internal specs. Original geometry — no Klil linework/blocks/names/layers embedded.",
+  "layers": {
+    "SOL-KIROT": {
+      "aci": 7,
+      "wt": 0.5,
+      "hex": "#2b2b2b",
+      "role": "פני-קיר (קו-חתך כבד)"
+    },
+    "SOL-KIROT-MILUY": {
+      "aci": 8,
+      "wt": 0.13,
+      "hex": "#b9b2a6",
+      "role": "מילוי-קיר (פושה)",
+      "dash": true
+    },
+    "SOL-PTACHIM": {
+      "aci": 5,
+      "wt": 0.25,
+      "hex": "#1f5fa8",
+      "role": "דלתות+חלונות: מסגרת/כנף/זיגוג"
+    },
+    "SOL-PTACHIM-DOOR": {
+      "aci": 5,
+      "wt": 0.25,
+      "hex": "#2f7fd0",
+      "role": "קשת/כנף-פתיחה של דלת"
+    },
+    "SOL-MIZUG": {
+      "aci": 141,
+      "wt": 0.25,
+      "hex": "#2f8f8f",
+      "role": "מיזוג/איוורור"
+    },
+    "SOL-INSTALATSIA": {
+      "aci": 4,
+      "wt": 0.25,
+      "hex": "#0aa0a0",
+      "role": "אינסטלציה (ניקוז)"
+    },
+    "SOL-TEKST": {
+      "aci": 7,
+      "wt": 0.18,
+      "hex": "#5a5248",
+      "role": "תוויות/סימון"
+    },
+    "SOL-MIDOT-PNIM": {
+      "aci": 3,
+      "wt": 0.13,
+      "hex": "#3a7d3a",
+      "role": "מידות-פנים"
+    }
+  },
+  "approval": "PENDING owner sign-off",
+  "types": [
+    {
+      "key": "SOL-DOOR-HINGED-L",
+      "blockName": "SL_OPN_DOOR_HINGED_L",
+      "kind": "door",
+      "family": "door",
+      "hebrewName": "דלת-פנים ציר-שמאל",
+      "englishName": "Interior door, left hinge",
+      "mamad": false,
+      "dims": {
+        "w": 900,
+        "h": 2050,
+        "d": 100,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 45,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "hinged",
+        "hingeSide": "L",
+        "swing": "in",
+        "leafCount": 1,
+        "glazing": "none",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-PTACHIM",
+        "swing": "SOL-PTACHIM-DOOR",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "wallThickness",
+        "frameThickness",
+        "leafThickness",
+        "openMode",
+        "hingeSide",
+        "swing",
+        "leafCount",
+        "glazing"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -162,
+        "mny": 0,
+        "mxx": 1062,
+        "mxy": 1000,
+        "w": 1224,
+        "h": 1000
+      },
+      "elevBbox": {
+        "mnx": 0,
+        "mny": 0,
+        "mxx": 900,
+        "mxy": 2050,
+        "w": 900,
+        "h": 2050
+      },
+      "counts": {
+        "plan": 10,
+        "elev": 8
+      }
+    },
+    {
+      "key": "SOL-DOOR-HINGED-R",
+      "blockName": "SL_OPN_DOOR_HINGED_R",
+      "kind": "door",
+      "family": "door",
+      "hebrewName": "דלת-פנים ציר-ימין",
+      "englishName": "Interior door, right hinge",
+      "mamad": false,
+      "dims": {
+        "w": 900,
+        "h": 2050,
+        "d": 100,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 45,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "hinged",
+        "hingeSide": "R",
+        "swing": "in",
+        "leafCount": 1,
+        "glazing": "none",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-PTACHIM",
+        "swing": "SOL-PTACHIM-DOOR",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "wallThickness",
+        "frameThickness",
+        "leafThickness",
+        "openMode",
+        "hingeSide",
+        "swing",
+        "leafCount",
+        "glazing"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -162,
+        "mny": 0,
+        "mxx": 1062,
+        "mxy": 1000,
+        "w": 1224,
+        "h": 1000
+      },
+      "elevBbox": {
+        "mnx": 0,
+        "mny": 0,
+        "mxx": 900,
+        "mxy": 2050,
+        "w": 900,
+        "h": 2050
+      },
+      "counts": {
+        "plan": 10,
+        "elev": 8
+      }
+    },
+    {
+      "key": "SOL-DOOR-ENTRANCE",
+      "blockName": "SL_OPN_DOOR_ENTRANCE",
+      "kind": "door",
+      "family": "door",
+      "hebrewName": "דלת-כניסה / פלדלת",
+      "englishName": "Entrance / steel security door",
+      "mamad": false,
+      "dims": {
+        "w": 1000,
+        "h": 2100,
+        "d": 120,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 60,
+        "leafThk": 60
+      },
+      "config": {
+        "openMode": "hinged",
+        "hingeSide": "R",
+        "swing": "in",
+        "leafCount": 1,
+        "glazing": "none",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-PTACHIM",
+        "swing": "SOL-PTACHIM-DOOR",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "wallThickness",
+        "frameThickness",
+        "leafThickness",
+        "openMode",
+        "hingeSide",
+        "swing",
+        "leafCount",
+        "glazing"
+      ],
+      "provenance": "מידות תואמות פתח-בנייה תקני לפלדלת (100×210)",
+      "planBbox": {
+        "mnx": -180,
+        "mny": 0,
+        "mxx": 1180,
+        "mxy": 1100,
+        "w": 1360,
+        "h": 1100
+      },
+      "elevBbox": {
+        "mnx": 0,
+        "mny": 0,
+        "mxx": 1000,
+        "mxy": 2100,
+        "w": 1000,
+        "h": 2100
+      },
+      "counts": {
+        "plan": 10,
+        "elev": 8
+      }
+    },
+    {
+      "key": "SOL-DOOR-DOUBLE",
+      "blockName": "SL_OPN_DOOR_DOUBLE",
+      "kind": "door",
+      "family": "door",
+      "hebrewName": "דלת דו-כנפית",
+      "englishName": "Double-leaf door",
+      "mamad": false,
+      "dims": {
+        "w": 1800,
+        "h": 2100,
+        "d": 100,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 50,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "double",
+        "hingeSide": "L",
+        "swing": "in",
+        "leafCount": 2,
+        "glazing": "partial",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-PTACHIM",
+        "swing": "SOL-PTACHIM-DOOR",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "wallThickness",
+        "frameThickness",
+        "leafThickness",
+        "openMode",
+        "hingeSide",
+        "swing",
+        "leafCount",
+        "glazing"
+      ],
+      "provenance": "מידות תואמות דלת דו-כנפית ~180×210 ס״מ",
+      "planBbox": {
+        "mnx": -324,
+        "mny": 0,
+        "mxx": 2124,
+        "mxy": 1900,
+        "w": 2448,
+        "h": 1900
+      },
+      "elevBbox": {
+        "mnx": 0,
+        "mny": 0,
+        "mxx": 1800,
+        "mxy": 2100,
+        "w": 1800,
+        "h": 2100
+      },
+      "counts": {
+        "plan": 10,
+        "elev": 16
+      }
+    },
+    {
+      "key": "SOL-DOOR-SLIDING",
+      "blockName": "SL_OPN_DOOR_SLIDING",
+      "kind": "door",
+      "family": "door",
+      "hebrewName": "דלת-הזזה / מרפסת",
+      "englishName": "Sliding / patio door",
+      "mamad": false,
+      "dims": {
+        "w": 1800,
+        "h": 2100,
+        "d": 120,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 55,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "sliding",
+        "hingeSide": null,
+        "swing": null,
+        "leafCount": 2,
+        "glazing": "full",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-PTACHIM",
+        "swing": "SOL-PTACHIM-DOOR",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "wallThickness",
+        "frameThickness",
+        "leafThickness",
+        "openMode",
+        "hingeSide",
+        "swing",
+        "leafCount",
+        "glazing"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -324,
+        "mny": 0,
+        "mxx": 2124,
+        "mxy": 100,
+        "w": 2448,
+        "h": 100
+      },
+      "elevBbox": {
+        "mnx": 0,
+        "mny": 0,
+        "mxx": 1800,
+        "mxy": 2100,
+        "w": 1800,
+        "h": 2100
+      },
+      "counts": {
+        "plan": 13,
+        "elev": 15
+      }
+    },
+    {
+      "key": "SOL-DOOR-POCKET",
+      "blockName": "SL_OPN_DOOR_POCKET",
+      "kind": "door",
+      "family": "door",
+      "hebrewName": "דלת-כיס",
+      "englishName": "Pocket door",
+      "mamad": false,
+      "dims": {
+        "w": 900,
+        "h": 2100,
+        "d": 100,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 45,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "pocket",
+        "hingeSide": null,
+        "swing": null,
+        "leafCount": 1,
+        "glazing": "none",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-PTACHIM",
+        "swing": "SOL-PTACHIM-DOOR",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "wallThickness",
+        "frameThickness",
+        "leafThickness",
+        "openMode",
+        "hingeSide",
+        "swing",
+        "leafCount",
+        "glazing"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -162,
+        "mny": 0,
+        "mxx": 1062,
+        "mxy": 100,
+        "w": 1224,
+        "h": 100
+      },
+      "elevBbox": {
+        "mnx": 0,
+        "mny": 0,
+        "mxx": 900,
+        "mxy": 2100,
+        "w": 900,
+        "h": 2100
+      },
+      "counts": {
+        "plan": 12,
+        "elev": 9
+      }
+    },
+    {
+      "key": "SOL-DOOR-FOLDING",
+      "blockName": "SL_OPN_DOOR_FOLDING",
+      "kind": "door",
+      "family": "door",
+      "hebrewName": "דלת מתקפלת (אקורדיון)",
+      "englishName": "Folding / accordion door",
+      "mamad": false,
+      "dims": {
+        "w": 900,
+        "h": 2050,
+        "d": 100,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 45,
+        "leafThk": 30
+      },
+      "config": {
+        "openMode": "folding",
+        "hingeSide": null,
+        "swing": null,
+        "leafCount": 4,
+        "glazing": "none",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-PTACHIM",
+        "swing": "SOL-PTACHIM-DOOR",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "wallThickness",
+        "frameThickness",
+        "leafThickness",
+        "openMode",
+        "hingeSide",
+        "swing",
+        "leafCount",
+        "glazing"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -162,
+        "mny": 0,
+        "mxx": 1062,
+        "mxy": 302.5,
+        "w": 1224,
+        "h": 302.5
+      },
+      "elevBbox": {
+        "mnx": 0,
+        "mny": 0,
+        "mxx": 900,
+        "mxy": 2050,
+        "w": 900,
+        "h": 2050
+      },
+      "counts": {
+        "plan": 9,
+        "elev": 10
+      }
+    },
+    {
+      "key": "SOL-DOOR-MAMAD",
+      "blockName": "SL_OPN_DOOR_MAMAD",
+      "kind": "door",
+      "family": "door",
+      "hebrewName": "דלת ממ״ד (הדף)",
+      "englishName": "Blast (protected-space) door",
+      "mamad": true,
+      "dims": {
+        "w": 800,
+        "h": 2000,
+        "d": 200,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 80,
+        "leafThk": 60
+      },
+      "config": {
+        "openMode": "hinged",
+        "hingeSide": "R",
+        "swing": "out",
+        "leafCount": 1,
+        "glazing": "none",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-PTACHIM",
+        "swing": "SOL-PTACHIM-DOOR",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "wallThickness",
+        "frameThickness",
+        "leafThickness",
+        "openMode",
+        "hingeSide",
+        "swing",
+        "leafCount",
+        "glazing"
+      ],
+      "provenance": "תקן פיקוד-העורף (פתח-מגורים 80×200)",
+      "planBbox": {
+        "mnx": -144,
+        "mny": -800,
+        "mxx": 944,
+        "mxy": 100,
+        "w": 1088,
+        "h": 900
+      },
+      "elevBbox": {
+        "mnx": 0,
+        "mny": 0,
+        "mxx": 800,
+        "mxy": 2000,
+        "w": 800,
+        "h": 2000
+      },
+      "counts": {
+        "plan": 10,
+        "elev": 9
+      }
+    },
+    {
+      "key": "SOL-DOOR-CONCEALED-L",
+      "blockName": "SL_OPN_DOOR_CONCEALED_L",
+      "kind": "door",
+      "family": "door",
+      "hebrewName": "דלת נסתרת (חלקה)",
+      "englishName": "Concealed / flush door",
+      "mamad": false,
+      "dims": {
+        "w": 800,
+        "h": 2100,
+        "d": 100,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 40,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "hinged",
+        "hingeSide": "L",
+        "swing": "in",
+        "leafCount": 1,
+        "glazing": "none",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-PTACHIM",
+        "swing": "SOL-PTACHIM-DOOR",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "wallThickness",
+        "frameThickness",
+        "leafThickness",
+        "openMode",
+        "hingeSide",
+        "swing",
+        "leafCount",
+        "glazing"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -144,
+        "mny": 0,
+        "mxx": 944,
+        "mxy": 900,
+        "w": 1088,
+        "h": 900
+      },
+      "elevBbox": {
+        "mnx": 0,
+        "mny": 0,
+        "mxx": 800,
+        "mxy": 2100,
+        "w": 800,
+        "h": 2100
+      },
+      "counts": {
+        "plan": 10,
+        "elev": 8
+      }
+    },
+    {
+      "key": "SOL-WIN-FIXED",
+      "blockName": "SL_OPN_WIN_FIXED",
+      "kind": "window",
+      "family": "window",
+      "hebrewName": "חלון קבוע (כללי)",
+      "englishName": "Fixed window",
+      "mamad": false,
+      "dims": {
+        "w": 1200,
+        "h": 1200,
+        "d": 100,
+        "sill": 900,
+        "wallThk": 100,
+        "frameThk": 50,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "fixed",
+        "hingeSide": null,
+        "swing": null,
+        "leafCount": 2,
+        "glazing": "full",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-PTACHIM",
+        "swing": "SOL-PTACHIM-DOOR",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "sillHeight",
+        "wallThickness",
+        "frameThickness",
+        "openMode",
+        "hingeSide",
+        "leafCount",
+        "shutterBox"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -216,
+        "mny": 0,
+        "mxx": 1416,
+        "mxy": 100,
+        "w": 1632,
+        "h": 100
+      },
+      "elevBbox": {
+        "mnx": -50,
+        "mny": 0,
+        "mxx": 1250,
+        "mxy": 1200,
+        "w": 1300,
+        "h": 1200
+      },
+      "counts": {
+        "plan": 10,
+        "elev": 12
+      }
+    },
+    {
+      "key": "SOL-WIN-CASEMENT-L",
+      "blockName": "SL_OPN_WIN_CASEMENT_L",
+      "kind": "window",
+      "family": "window",
+      "hebrewName": "חלון-ציר",
+      "englishName": "Casement window",
+      "mamad": false,
+      "dims": {
+        "w": 800,
+        "h": 1200,
+        "d": 100,
+        "sill": 900,
+        "wallThk": 100,
+        "frameThk": 50,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "casement",
+        "hingeSide": "L",
+        "swing": null,
+        "leafCount": 1,
+        "glazing": "full",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-PTACHIM",
+        "swing": "SOL-PTACHIM-DOOR",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "sillHeight",
+        "wallThickness",
+        "frameThickness",
+        "openMode",
+        "hingeSide",
+        "leafCount",
+        "shutterBox"
+      ],
+      "provenance": "מידות תואמות כנף-ציר תקנית (~80×120–140)",
+      "planBbox": {
+        "mnx": -144,
+        "mny": 0,
+        "mxx": 944,
+        "mxy": 500,
+        "w": 1088,
+        "h": 500
+      },
+      "elevBbox": {
+        "mnx": -50,
+        "mny": 0,
+        "mxx": 850,
+        "mxy": 1200,
+        "w": 900,
+        "h": 1200
+      },
+      "counts": {
+        "plan": 11,
+        "elev": 10
+      }
+    },
+    {
+      "key": "SOL-WIN-TILTTURN-L",
+      "blockName": "SL_OPN_WIN_TILTTURN_L",
+      "kind": "window",
+      "family": "window",
+      "hebrewName": "חלון קיפ (דריי-קיפ)",
+      "englishName": "Tilt-turn window",
+      "mamad": false,
+      "dims": {
+        "w": 800,
+        "h": 1400,
+        "d": 100,
+        "sill": 900,
+        "wallThk": 100,
+        "frameThk": 50,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "kip",
+        "hingeSide": "L",
+        "swing": null,
+        "leafCount": 1,
+        "glazing": "full",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-PTACHIM",
+        "swing": "SOL-PTACHIM-DOOR",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "sillHeight",
+        "wallThickness",
+        "frameThickness",
+        "openMode",
+        "hingeSide",
+        "leafCount",
+        "shutterBox"
+      ],
+      "provenance": "מידות תואמות כנף דריי-קיפ תקנית (~80×140)",
+      "planBbox": {
+        "mnx": -144,
+        "mny": 0,
+        "mxx": 944,
+        "mxy": 500,
+        "w": 1088,
+        "h": 500
+      },
+      "elevBbox": {
+        "mnx": -50,
+        "mny": 0,
+        "mxx": 850,
+        "mxy": 1400,
+        "w": 900,
+        "h": 1400
+      },
+      "counts": {
+        "plan": 11,
+        "elev": 12
+      }
+    },
+    {
+      "key": "SOL-WIN-AWNING",
+      "blockName": "SL_OPN_WIN_AWNING",
+      "kind": "window",
+      "family": "window",
+      "hebrewName": "חלון-מדף עליון",
+      "englishName": "Awning / top-hung window",
+      "mamad": false,
+      "dims": {
+        "w": 800,
+        "h": 600,
+        "d": 100,
+        "sill": 1400,
+        "wallThk": 100,
+        "frameThk": 50,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "awning",
+        "hingeSide": null,
+        "swing": null,
+        "leafCount": 1,
+        "glazing": "full",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-PTACHIM",
+        "swing": "SOL-PTACHIM-DOOR",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "sillHeight",
+        "wallThickness",
+        "frameThickness",
+        "openMode",
+        "hingeSide",
+        "leafCount",
+        "shutterBox"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -144,
+        "mny": 0,
+        "mxx": 944,
+        "mxy": 100,
+        "w": 1088,
+        "h": 100
+      },
+      "elevBbox": {
+        "mnx": -50,
+        "mny": 0,
+        "mxx": 850,
+        "mxy": 600,
+        "w": 900,
+        "h": 600
+      },
+      "counts": {
+        "plan": 10,
+        "elev": 10
+      }
+    },
+    {
+      "key": "SOL-WIN-SLIDING",
+      "blockName": "SL_OPN_WIN_SLIDING",
+      "kind": "window",
+      "family": "window",
+      "hebrewName": "חלון-הזזה",
+      "englishName": "Sliding window",
+      "mamad": false,
+      "dims": {
+        "w": 1500,
+        "h": 1200,
+        "d": 100,
+        "sill": 900,
+        "wallThk": 100,
+        "frameThk": 50,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "sliding",
+        "hingeSide": null,
+        "swing": null,
+        "leafCount": 2,
+        "glazing": "full",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-PTACHIM",
+        "swing": "SOL-PTACHIM-DOOR",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "sillHeight",
+        "wallThickness",
+        "frameThickness",
+        "openMode",
+        "hingeSide",
+        "leafCount",
+        "shutterBox"
+      ],
+      "provenance": "מידות תואמות חלון-הזזה 2-כנפי נפוץ (~150×120)",
+      "planBbox": {
+        "mnx": -270,
+        "mny": 0,
+        "mxx": 1770,
+        "mxy": 100,
+        "w": 2040,
+        "h": 100
+      },
+      "elevBbox": {
+        "mnx": -50,
+        "mny": 0,
+        "mxx": 1550,
+        "mxy": 1200,
+        "w": 1600,
+        "h": 1200
+      },
+      "counts": {
+        "plan": 14,
+        "elev": 14
+      }
+    },
+    {
+      "key": "SOL-WIN-HUNG",
+      "blockName": "SL_OPN_WIN_HUNG",
+      "kind": "window",
+      "family": "window",
+      "hebrewName": "חלון גיליון",
+      "englishName": "Double-hung window",
+      "mamad": false,
+      "dims": {
+        "w": 900,
+        "h": 1400,
+        "d": 100,
+        "sill": 900,
+        "wallThk": 100,
+        "frameThk": 50,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "hung",
+        "hingeSide": null,
+        "swing": null,
+        "leafCount": 1,
+        "glazing": "full",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-PTACHIM",
+        "swing": "SOL-PTACHIM-DOOR",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "sillHeight",
+        "wallThickness",
+        "frameThickness",
+        "openMode",
+        "hingeSide",
+        "leafCount",
+        "shutterBox"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -162,
+        "mny": 0,
+        "mxx": 1062,
+        "mxy": 100,
+        "w": 1224,
+        "h": 100
+      },
+      "elevBbox": {
+        "mnx": -50,
+        "mny": 0,
+        "mxx": 950,
+        "mxy": 1400,
+        "w": 1000,
+        "h": 1400
+      },
+      "counts": {
+        "plan": 10,
+        "elev": 12
+      }
+    },
+    {
+      "key": "SOL-WIN-MAMAD",
+      "blockName": "SL_OPN_WIN_MAMAD",
+      "kind": "window",
+      "family": "window",
+      "hebrewName": "חלון ממ״ד (הדף)",
+      "englishName": "Blast (protected-space) window",
+      "mamad": true,
+      "dims": {
+        "w": 1000,
+        "h": 1000,
+        "d": 300,
+        "sill": 900,
+        "wallThk": 100,
+        "frameThk": 80,
+        "leafThk": 60
+      },
+      "config": {
+        "openMode": "casement",
+        "hingeSide": "L",
+        "swing": null,
+        "leafCount": 1,
+        "glazing": "full",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-PTACHIM",
+        "swing": "SOL-PTACHIM-DOOR",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "sillHeight",
+        "wallThickness",
+        "frameThickness",
+        "openMode",
+        "hingeSide",
+        "leafCount",
+        "shutterBox"
+      ],
+      "provenance": "תקן פיקוד-העורף / ת״י (פתח 100×100)",
+      "planBbox": {
+        "mnx": -180,
+        "mny": 0,
+        "mxx": 1180,
+        "mxy": 600,
+        "w": 1360,
+        "h": 600
+      },
+      "elevBbox": {
+        "mnx": -80,
+        "mny": -40,
+        "mxx": 1080,
+        "mxy": 1040,
+        "w": 1160,
+        "h": 1080
+      },
+      "counts": {
+        "plan": 11,
+        "elev": 12
+      }
+    },
+    {
+      "key": "SOL-WIN-STOREFRONT",
+      "blockName": "SL_OPN_WIN_STOREFRONT",
+      "kind": "window",
+      "family": "window",
+      "hebrewName": "ויטרינה / חלון-ראווה",
+      "englishName": "Storefront / display window",
+      "mamad": false,
+      "dims": {
+        "w": 2000,
+        "h": 2400,
+        "d": 120,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 60,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "fixed",
+        "hingeSide": null,
+        "swing": null,
+        "leafCount": 3,
+        "glazing": "full",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-PTACHIM",
+        "swing": "SOL-PTACHIM-DOOR",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "sillHeight",
+        "wallThickness",
+        "frameThickness",
+        "openMode",
+        "hingeSide",
+        "leafCount",
+        "shutterBox"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -360,
+        "mny": 0,
+        "mxx": 2360,
+        "mxy": 100,
+        "w": 2720,
+        "h": 100
+      },
+      "elevBbox": {
+        "mnx": -60,
+        "mny": 0,
+        "mxx": 2060,
+        "mxy": 2400,
+        "w": 2120,
+        "h": 2400
+      },
+      "counts": {
+        "plan": 10,
+        "elev": 16
+      }
+    },
+    {
+      "key": "SOL-WIN-SMALL",
+      "blockName": "SL_OPN_WIN_SMALL",
+      "kind": "window",
+      "family": "window",
+      "hebrewName": "חלונית / צוהר",
+      "englishName": "Small window / vent light",
+      "mamad": false,
+      "dims": {
+        "w": 500,
+        "h": 500,
+        "d": 100,
+        "sill": 1500,
+        "wallThk": 100,
+        "frameThk": 40,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "awning",
+        "hingeSide": null,
+        "swing": null,
+        "leafCount": 1,
+        "glazing": "full",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-PTACHIM",
+        "swing": "SOL-PTACHIM-DOOR",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "sillHeight",
+        "wallThickness",
+        "frameThickness",
+        "openMode",
+        "hingeSide",
+        "leafCount",
+        "shutterBox"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -120,
+        "mny": 0,
+        "mxx": 620,
+        "mxy": 100,
+        "w": 740,
+        "h": 100
+      },
+      "elevBbox": {
+        "mnx": -40,
+        "mny": 0,
+        "mxx": 540,
+        "mxy": 500,
+        "w": 580,
+        "h": 500
+      },
+      "counts": {
+        "plan": 10,
+        "elev": 10
+      }
+    },
+    {
+      "key": "SOL-VENT-MAMAD-VALVE",
+      "blockName": "SL_OPN_VENT_MAMAD_VALVE",
+      "kind": "vent",
+      "family": "vent",
+      "hebrewName": "פתח-אוויר ממ״ד + שסתום-הדף",
+      "englishName": "MAMAD air valve (blast damper)",
+      "mamad": true,
+      "dims": {
+        "w": 250,
+        "h": 250,
+        "d": 300,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 80,
+        "leafThk": 60
+      },
+      "config": {
+        "openMode": "hinged",
+        "hingeSide": null,
+        "swing": null,
+        "leafCount": 1,
+        "glazing": "none",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-MIZUG",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "wallThickness"
+      ],
+      "provenance": "ת״י 4910 (חובה בכל ממ״ד)",
+      "planBbox": {
+        "mnx": -120,
+        "mny": 0,
+        "mxx": 370,
+        "mxy": 100,
+        "w": 490,
+        "h": 100
+      },
+      "elevBbox": {
+        "mnx": 20,
+        "mny": 20,
+        "mxx": 230,
+        "mxy": 230,
+        "w": 210,
+        "h": 210
+      },
+      "counts": {
+        "plan": 9,
+        "elev": 3
+      }
+    },
+    {
+      "key": "SOL-VENT-GRILLE",
+      "blockName": "SL_OPN_VENT_GRILLE",
+      "kind": "vent",
+      "family": "vent",
+      "hebrewName": "שבכת-איוורור",
+      "englishName": "Ventilation grille",
+      "mamad": false,
+      "dims": {
+        "w": 200,
+        "h": 200,
+        "d": 60,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 45,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "hinged",
+        "hingeSide": null,
+        "swing": null,
+        "leafCount": 1,
+        "glazing": "none",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-MIZUG",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "wallThickness"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -120,
+        "mny": 0,
+        "mxx": 320,
+        "mxy": 100,
+        "w": 440,
+        "h": 100
+      },
+      "elevBbox": {
+        "mnx": 16,
+        "mny": 32,
+        "mxx": 184,
+        "mxy": 168,
+        "w": 168,
+        "h": 136
+      },
+      "counts": {
+        "plan": 11,
+        "elev": 6
+      }
+    },
+    {
+      "key": "SOL-VENT-LOUVER",
+      "blockName": "SL_OPN_VENT_LOUVER",
+      "kind": "vent",
+      "family": "vent",
+      "hebrewName": "תריס-איוורור חיצוני (ז׳לוזי)",
+      "englishName": "External wall louver",
+      "mamad": false,
+      "dims": {
+        "w": 300,
+        "h": 300,
+        "d": 60,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 45,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "hinged",
+        "hingeSide": null,
+        "swing": null,
+        "leafCount": 1,
+        "glazing": "none",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-MIZUG",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "wallThickness"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -120,
+        "mny": 0,
+        "mxx": 420,
+        "mxy": 100,
+        "w": 540,
+        "h": 100
+      },
+      "elevBbox": {
+        "mnx": 24,
+        "mny": 48,
+        "mxx": 276,
+        "mxy": 252,
+        "w": 252,
+        "h": 204
+      },
+      "counts": {
+        "plan": 11,
+        "elev": 6
+      }
+    },
+    {
+      "key": "SOL-VENT-EXHAUST-FAN",
+      "blockName": "SL_OPN_VENT_EXHAUST_FAN",
+      "kind": "vent",
+      "family": "vent",
+      "hebrewName": "מאוורר-יניקה (ונטה)",
+      "englishName": "Exhaust fan",
+      "mamad": false,
+      "dims": {
+        "w": 250,
+        "h": 250,
+        "d": 150,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 45,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "hinged",
+        "hingeSide": null,
+        "swing": null,
+        "leafCount": 1,
+        "glazing": "none",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-MIZUG",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "wallThickness"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -120,
+        "mny": 0,
+        "mxx": 370,
+        "mxy": 100,
+        "w": 490,
+        "h": 100
+      },
+      "elevBbox": {
+        "mnx": 25,
+        "mny": 25,
+        "mxx": 225,
+        "mxy": 225,
+        "w": 200,
+        "h": 200
+      },
+      "counts": {
+        "plan": 13,
+        "elev": 7
+      }
+    },
+    {
+      "key": "SOL-VENT-HOOD-DUCT",
+      "blockName": "SL_OPN_VENT_HOOD_DUCT",
+      "kind": "vent",
+      "family": "vent",
+      "hebrewName": "תעלת-מנדף (קולט-אדים)",
+      "englishName": "Range-hood duct",
+      "mamad": false,
+      "dims": {
+        "w": 150,
+        "h": 150,
+        "d": 300,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 45,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "hinged",
+        "hingeSide": null,
+        "swing": null,
+        "leafCount": 1,
+        "glazing": "none",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-MIZUG",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "diameter",
+        "wallThickness"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -120,
+        "mny": 0,
+        "mxx": 270,
+        "mxy": 100,
+        "w": 390,
+        "h": 100
+      },
+      "elevBbox": {
+        "mnx": 15,
+        "mny": 15,
+        "mxx": 135,
+        "mxy": 135,
+        "w": 120,
+        "h": 120
+      },
+      "counts": {
+        "plan": 8,
+        "elev": 4
+      }
+    },
+    {
+      "key": "SOL-VENT-DRYER",
+      "blockName": "SL_OPN_VENT_DRYER",
+      "kind": "vent",
+      "family": "vent",
+      "hebrewName": "פתח מייבש-כביסה",
+      "englishName": "Dryer vent",
+      "mamad": false,
+      "dims": {
+        "w": 110,
+        "h": 110,
+        "d": 300,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 45,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "hinged",
+        "hingeSide": null,
+        "swing": null,
+        "leafCount": 1,
+        "glazing": "none",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-MIZUG",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "diameter",
+        "wallThickness"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -120,
+        "mny": 0,
+        "mxx": 230,
+        "mxy": 100,
+        "w": 350,
+        "h": 100
+      },
+      "elevBbox": {
+        "mnx": 11,
+        "mny": 11,
+        "mxx": 99,
+        "mxy": 99,
+        "w": 88,
+        "h": 88
+      },
+      "counts": {
+        "plan": 8,
+        "elev": 4
+      }
+    },
+    {
+      "key": "SOL-VENT-BOILER-FLUE",
+      "blockName": "SL_OPN_VENT_BOILER_FLUE",
+      "kind": "vent",
+      "family": "vent",
+      "hebrewName": "ארובת-דוד / מפלט-בעירה",
+      "englishName": "Boiler flue",
+      "mamad": false,
+      "dims": {
+        "w": 130,
+        "h": 130,
+        "d": 300,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 45,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "hinged",
+        "hingeSide": null,
+        "swing": null,
+        "leafCount": 1,
+        "glazing": "none",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-MIZUG",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "diameter",
+        "wallThickness"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -120,
+        "mny": 0,
+        "mxx": 250,
+        "mxy": 100,
+        "w": 370,
+        "h": 100
+      },
+      "elevBbox": {
+        "mnx": 13,
+        "mny": 13,
+        "mxx": 117,
+        "mxy": 117,
+        "w": 104,
+        "h": 104
+      },
+      "counts": {
+        "plan": 8,
+        "elev": 4
+      }
+    },
+    {
+      "key": "SOL-VENT-CHIMNEY-FLUE",
+      "blockName": "SL_OPN_VENT_CHIMNEY_FLUE",
+      "kind": "vent",
+      "family": "vent",
+      "hebrewName": "ארובה / מפלט-עשן (קמין)",
+      "englishName": "Chimney flue",
+      "mamad": false,
+      "dims": {
+        "w": 200,
+        "h": 200,
+        "d": 300,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 45,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "hinged",
+        "hingeSide": null,
+        "swing": null,
+        "leafCount": 1,
+        "glazing": "none",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-MIZUG",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "diameter",
+        "wallThickness"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -120,
+        "mny": 0,
+        "mxx": 320,
+        "mxy": 100,
+        "w": 440,
+        "h": 100
+      },
+      "elevBbox": {
+        "mnx": 20,
+        "mny": 20,
+        "mxx": 180,
+        "mxy": 180,
+        "w": 160,
+        "h": 160
+      },
+      "counts": {
+        "plan": 8,
+        "elev": 4
+      }
+    },
+    {
+      "key": "SOL-VENT-FRESH-AIR",
+      "blockName": "SL_OPN_VENT_FRESH_AIR",
+      "kind": "vent",
+      "family": "vent",
+      "hebrewName": "פתח אוויר-צח / מסנן",
+      "englishName": "Fresh-air intake",
+      "mamad": false,
+      "dims": {
+        "w": 200,
+        "h": 200,
+        "d": 150,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 45,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "hinged",
+        "hingeSide": null,
+        "swing": null,
+        "leafCount": 1,
+        "glazing": "none",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-MIZUG",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "width",
+        "height",
+        "wallThickness"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -120,
+        "mny": 0,
+        "mxx": 320,
+        "mxy": 100,
+        "w": 440,
+        "h": 100
+      },
+      "elevBbox": {
+        "mnx": 16,
+        "mny": 32,
+        "mxx": 184,
+        "mxy": 168,
+        "w": 168,
+        "h": 136
+      },
+      "counts": {
+        "plan": 11,
+        "elev": 6
+      }
+    },
+    {
+      "key": "SOL-VENT-AC-SLEEVE",
+      "blockName": "SL_OPN_VENT_AC_SLEEVE",
+      "kind": "vent",
+      "family": "vent",
+      "hebrewName": "שרוול-מזגן / מעבר-צנרת",
+      "englishName": "AC sleeve / pipe pass-through",
+      "mamad": false,
+      "dims": {
+        "w": 110,
+        "h": 110,
+        "d": 300,
+        "sill": 0,
+        "wallThk": 100,
+        "frameThk": 45,
+        "leafThk": 40
+      },
+      "config": {
+        "openMode": "hinged",
+        "hingeSide": null,
+        "swing": null,
+        "leafCount": 1,
+        "glazing": "none",
+        "shutterBox": false
+      },
+      "layers": {
+        "primary": "SOL-MIZUG",
+        "text": "SOL-TEKST",
+        "dim": "SOL-MIDOT-PNIM"
+      },
+      "insertion": {
+        "plan": {
+          "anchor": "opening-centre-outerface",
+          "at": [
+            0,
+            0
+          ],
+          "rotationRule": "wall-aligned",
+          "wallSide": "either"
+        },
+        "elev": {
+          "anchor": "bottom-centre",
+          "at": [
+            0,
+            0
+          ],
+          "floorAtY0": true
+        }
+      },
+      "views": [
+        "plan",
+        "elev"
+      ],
+      "params": [
+        "diameter",
+        "wallThickness"
+      ],
+      "provenance": null,
+      "planBbox": {
+        "mnx": -120,
+        "mny": 0,
+        "mxx": 230,
+        "mxy": 100,
+        "w": 350,
+        "h": 100
+      },
+      "elevBbox": {
+        "mnx": 11,
+        "mny": 11,
+        "mxx": 99,
+        "mxy": 99,
+        "w": 88,
+        "h": 88
+      },
+      "counts": {
+        "plan": 8,
+        "elev": 4
+      }
+    }
+  ]
+}

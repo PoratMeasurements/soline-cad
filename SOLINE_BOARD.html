@@ -1,0 +1,199 @@
+<title>לוח Soline</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Poppins:wght@600&display=swap">
+<style>
+  :root{
+    --bg:#FBF4E6; --surface:#FFFFFF; --surface2:#FAF3E2; --text:#2B2620; --muted:#6E6656;
+    --border:#EADFC7; --accent:#E8890B; --teal:#127C8C;
+    --ok:#2E9E6B; --run:#E8A400; --wait:#8A7F6B; --crit:#C6532B;
+    --shadow:0 1px 2px rgba(74,58,20,.05),0 10px 26px rgba(74,58,20,.09);
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme=light]){
+    --bg:#16181A; --surface:#1F2427; --surface2:#232a2e; --text:#ECE7DB; --muted:#A7A093;
+    --border:#2E3439; --accent:#F7AC3A; --teal:#3BB6C7;
+    --ok:#54C08A; --run:#F0BF3F; --wait:#9A8F79; --crit:#E67A4E;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.35);
+  }}
+  :root[data-theme=dark]{
+    --bg:#16181A; --surface:#1F2427; --surface2:#232a2e; --text:#ECE7DB; --muted:#A7A093;
+    --border:#2E3439; --accent:#F7AC3A; --teal:#3BB6C7;
+    --ok:#54C08A; --run:#F0BF3F; --wait:#9A8F79; --crit:#E67A4E;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--text);direction:rtl;
+    font-family:Heebo,system-ui,-apple-system,sans-serif;line-height:1.5;
+    padding:max(16px,env(safe-area-inset-top)) 16px 64px;}
+  .wrap{max-width:760px;margin:0 auto}
+  /* header */
+  .top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;
+    border-bottom:2px solid var(--border);padding-bottom:14px;margin-bottom:20px}
+  .wm{font-family:Poppins,sans-serif;font-size:26px;color:var(--accent);line-height:1}
+  .wm b{color:var(--teal)}
+  h1{font-size:19px;font-weight:800;margin:4px 0 0}
+  .meta{color:var(--muted);font-size:12.5px;text-align:left;white-space:nowrap}
+  /* vitals */
+  .vitals{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}
+  @media(max-width:520px){.vitals{grid-template-columns:1fr 1fr}}
+  .v{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:12px 13px;box-shadow:var(--shadow)}
+  .v .n{font-size:23px;font-weight:800;color:var(--accent);line-height:1;font-variant-numeric:tabular-nums}
+  .v .l{font-size:12px;color:var(--muted);margin-top:5px;font-weight:600}
+  /* section label */
+  h2{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);
+    font-weight:800;margin:26px 0 12px;display:flex;align-items:center;gap:8px}
+  h2::after{content:"";flex:1;height:1px;background:var(--border)}
+  /* rows */
+  .row{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:13px 15px;box-shadow:var(--shadow);margin-bottom:10px}
+  .rh{display:flex;align-items:center;gap:10px}
+  .rt{font-weight:700;font-size:15.5px;flex:1}
+  .rd{font-size:13.5px;color:var(--muted);margin:6px 0 0}
+  .pill{font-size:11.5px;font-weight:800;padding:3px 11px;border-radius:999px;
+    white-space:nowrap;color:#fff}
+  .p-ok{background:var(--ok)} .p-run{background:var(--run)}
+  .p-wait{background:var(--wait)} .p-crit{background:var(--crit)}
+  .bar{height:7px;border-radius:999px;background:var(--border);overflow:hidden;margin-top:10px}
+  .fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),#f0b055)}
+  /* review cards */
+  .rev{border-right:4px solid var(--accent)}
+  .rev .file{font-weight:700;font-size:15px}
+  .rev .chk{font-size:13px;color:var(--muted);margin-top:4px}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--teal);
+    background:var(--surface2);border:1px solid var(--border);border-radius:7px;
+    padding:2px 8px;margin-top:8px}
+  /* pending */
+  .pend{border-right:4px solid var(--teal)}
+  .ask{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:13px 15px;box-shadow:var(--shadow);margin-bottom:10px;border-right:4px solid var(--teal)}
+  .ask b{color:var(--text)}
+  /* how-to note */
+  .note{background:var(--surface2);border:1px solid var(--border);border-radius:12px;
+    padding:12px 14px;font-size:13.5px;color:var(--muted);margin-top:8px}
+  .note b{color:var(--text)}
+  footer{margin-top:26px;color:var(--muted);font-size:12px;text-align:center}
+  .tog{position:fixed;top:10px;left:10px;width:38px;height:38px;border-radius:999px;
+    background:var(--surface);border:1px solid var(--border);color:var(--text);
+    box-shadow:var(--shadow);cursor:pointer;font-size:16px}
+  .tog:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+
+<button class="tog" aria-label="החלף מצב תצוגה" onclick="var r=document.documentElement,d=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');r.setAttribute('data-theme',d==='dark'?'light':'dark')">◐</button>
+
+<div class="wrap">
+  <div class="top">
+    <div>
+      <div class="wm">soline<b>.</b></div>
+      <h1>לוח-מצב חי · פיתוח</h1>
+    </div>
+    <div class="meta">עודכן<br>26 אוג׳ 2026 · 22:15<br>עצירה מבוקרת</div>
+  </div>
+
+  <div class="vitals">
+    <div class="v"><div class="n">7</div><div class="l">פורמטי-ייצוא (+ORD)</div></div>
+    <div class="v"><div class="n">~90%</div><div class="l">התקדמות כוללת</div></div>
+    <div class="v"><div class="n">1</div><div class="l">סוכן רץ (CVSM)</div></div>
+    <div class="v"><div class="n">12</div><div class="l">פריטי בדיקה-חוזרת</div></div>
+  </div>
+
+  <h2>מסלולי-עבודה</h2>
+
+  <div class="row">
+    <div class="rh"><div class="rt">גל-שדה חי — X6 · משגר-כלים · מנוע-גבהים</div><span class="pill p-run">בבדיקות</span></div>
+    <div class="rd">✅ מותקן על הטאבלט: תיקון-הערות (אומת) · שינויים-עתידיים · מהלך-גבהים חכם (לייזר-רציף+חריגה>2ס"מ) · משגר-כלים-אחד 🛠️(🐞/📡/🔬) · צירוף-נתוני-לייזר-לדיווח · #1 גדר-poll (מחזיר מרחק) · #2 רמז-מצב-P2P. ⏳ אימות-שדה: X6 מרחק חוזר? Measure-3D מעורר אזימוט?</div>
+  </div>
+
+  <div class="row">
+    <div class="rh"><div class="rt">מחקר X6 — חיבור · פילוס · P2P</div><span class="pill p-ok">הושלם</span></div>
+    <div class="rd">📄 docs/X6_LEVELLING_P2P.md: SDK רשמי=.NET (נשארים BLE-גולמי) · elcad לא-שולח-פקודת-מצב (המשתמש בוחר Measure-3D במכשיר) · אזימוט מתעורר רק ב-P2P+פילוס · ⚠️ בדיקת-זווית-זנית ל-P2P. CVSM APK בניתוח.</div>
+  </div>
+
+  <div class="row">
+    <div class="rh"><div class="rt">קליטת-מודד + דיווח-באגים מהשטח</div><span class="pill p-ok">מוכן</span></div>
+    <div class="rd">📘 חוברת-מודד (Artifact+QR) · 🐞 דיווח-באגים (צילום+חצים+טקסט+נתוני-לייזר) · דו"ח-מודד חי + חובת צילום-חדש/הערכה. ⏳ OTA (חסום: gh auth login מול חשבון-פורת).</div>
+  </div>
+
+  <div class="row">
+    <div class="rh"><div class="rt">בקורת-אפליקציה (/qa) — 8 סוכנים · ~90 ממצאים · 4 batches + HIGH/MED</div><span class="pill p-ok">מתוקן</span></div>
+    <div class="rd">✅ כל 4 ה-batches הקריטיים (DB v17) + סוכן-HIGH/MED (soffit/מחיקת-קיר/height-sweep, DB v18) + 44 בדיקות-יחידה + נעילת-מיגרציות. APK נבנה (התקנה לא-אומתה).</div>
+  </div>
+
+  <div class="row">
+    <div class="rh"><div class="rt">גל-אוטונומי (בזמן שהבעלים לא-כאן)</div><span class="pill p-ok">רובו-הושלם</span></div>
+    <div class="rd">✅ ORD→Cabinet-Vision (פורמט 7) · בדיקות-רגרסיה-ממיר · בדיקות+CI-אפליקציה · תיקוני-HIGH/MED · המלצות-שדרוג-מדידה. ⚠️ איחוד-עיצוב (סוכן-5) נעצר-באמצע — לאמת-build בחידוש.</div>
+  </div>
+
+  <div class="row">
+    <div class="rh"><div class="rt">מודיעין-תחרותי + מחקרי-אינטרופ</div><span class="pill p-ok">7 מסמכים</span></div>
+    <div class="rd">מתחרים (⚠️ InnoDraw/CadNet קיים בישראל) · ORDX=CV-נייטיב · SPEEDtemplate (מדידות-חדרים) · iCS50 · המלצות-מדידה. הבידול: offline+6-פורמטים+נגרות.</div>
+  </div>
+
+  <div class="row">
+    <div class="rh"><div class="rt">DXF — מידות ס״מ + סמלים-בלוקים</div><span class="pill p-ok">סגור</span></div>
+    <div class="rd">v17 נפתח ב-AutoCAD · מידות אוטומטיות בס״מ · כל סמל בלוק-אחיד.</div>
+  </div>
+
+  <div class="row">
+    <div class="rh"><div class="rt">סמלים — דלתות/חלונות/איוורור/שקעים/אינסטלציה</div><span class="pill p-ok">שודרג</span></div>
+    <div class="rd">193 סמלים · היררכיית-קווים · מקורי (שיטה מסיון, אפס-העתקה) · גלריה נשלחה.</div>
+  </div>
+
+  <div class="row">
+    <div class="rh"><div class="rt">PDP — חוק-הגודל 🔒/🎚️ (האייקון-המוטה)</div><span class="pill p-ok">אושר</span></div>
+    <div class="rd">האייקון יוצא ישר ב-Raumplan · מידות-שלנו למשתנה, native לקבוע · אומת-בייט.</div>
+  </div>
+
+  <div class="row">
+    <div class="rh"><div class="rt">PDP — פיצוח ״שקע+״ (מידות-שלנו לכל התשתיות)</div><span class="pill p-ok">פוצח</span></div>
+    <div class="rd">המנגנון: שדה-המידות = 2 שלישיות. t1 נועל את האייקון (native), t2 = המידה שלך. מוכח לשקע/מפסק/טלפון · צריך דגימת ״+גז״ לאישור-כללי.</div>
+  </div>
+
+  <div class="row">
+    <div class="rh"><div class="rt">אפליקציה — צילום · וידאו · שערי-סגירה</div><span class="pill p-ok">מותקן</span></div>
+    <div class="rd">DB v14 · צילום-פר-חזית · רשימת-משימות · סרטון-הסבר ברמת-פרויקט · שער-חדר+פרויקט.</div>
+  </div>
+
+  <div class="row">
+    <div class="rh"><div class="rt">קובץ-כל-האלמנטים → ייצוא 6 פורמטים</div><span class="pill p-ok">הושלם</span></div>
+    <div class="rd">32 אלמנטים, 4 קירות, פריסה בלי-חפיפה (מוכח). כל 6 הפורמטים יוצאים ב-showcase/. התיקייה נוקתה (38 ישנים→_archive).</div>
+  </div>
+
+  <h2>קבצים לאישור — פתח במחשב</h2>
+
+  <div class="row rev">
+    <div class="file">allelem_v17_2d.dxf</div>
+    <div class="chk">פתח ב-AutoCAD → מתח מידה → אמורה לצאת ס״מ · לחץ על סמל = אובייקט-אחד.</div>
+    <span class="tag">DXF · ✓ אישרת שעובד</span>
+  </div>
+  <div class="row rev">
+    <div class="file">tashtiot_inject_test.pdp</div>
+    <div class="chk">פתח ב-Raumplan → אלמנטי-🔒 (שקע/מפסק…) ישרים ובגודל-Raumplan.</div>
+    <span class="tag">PDP · ✓ אישרת שיוצא נכון</span>
+  </div>
+  <div class="row rev">
+    <div class="file">symbols_preview.html — גלריית-סמלים</div>
+    <div class="chk">193 סמלים משודרגים · סמן מה עדיין לא-ברמה (תעשה כשנוח).</div>
+    <span class="tag">גלריה · ממתין לסימון שלך</span>
+  </div>
+  <div class="row rev">
+    <div class="file">app-debug.apk — על הטאבלט</div>
+    <div class="chk">בחן: רשימת-משימות · צילום+וידאו · שערי-סגירת חדר/פרויקט.</div>
+    <span class="tag">אפליקציה · מותקן R5GL60ZDP5N</span>
+  </div>
+
+  <h2>ממתין ממך</h2>
+
+  <div class="ask"><b>1. אימות-שדה X6</b> (קריטי) — חבר X6 → 🔬 → מדוד DIST: המרחק חוזר (#1)? ואז Measure-3D/P2P+פילוס: האזימוט מתעורר?</div>
+  <div class="ask"><b>2. GitHub OTA</b> — <code>gh auth login</code> מול חשבון פורת-מדידות → אקים Releases + עדכון-בתוך-האפליקציה.</div>
+  <div class="ask"><b>3. batch-3</b> — רוחב-קיר מינ/מקס (#5) + בורר-ייצוא מינ/מקס (#6, ‎.sol נושא הבחירה). מוכן לבנות.</div>
+  <div class="ask"><b>4. בסיס-אב PDP</b> · <b>5. דגימות ״+מזגן/+מפסק״</b> · <b>6. סימון גלריית-סמלים · תמחור/roadmap · אימוץ ORD ל-CV</b>.</div>
+
+  <div class="note">
+    <b>איך לאשר מהטאבלט:</b> הדף הזה חי — אני מעדכן אותו תוך-כדי. כדי לאשר או להעיר על משהו,
+    השאר <b>תגובה</b> על הדף (סמן @claude) ואני אקרא אותה כאן. קבצי-CAD פותחים במחשב;
+    כאן אתה רואה סטטוס ומאשר.
+  </div>
+
+  <footer>Soline — מדידה חכמה → ייצור · לוח-מצב פנימי · מתעדכן חי</footer>
+</div>

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
+<meta name="theme-color" content="#0b1119">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="styles.css">
+<title>Soline Ops · תפעול מדידות</title>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Soline<span>·</span>Ops</div>
+    <div class="net">
+      <button id="netPill" class="pill" title="מצב רשת">● מקוון</button>
+    </div>
+  </header>
+
+  <main id="view"><!-- מסכים מוזרקים כאן --></main>
+
+  <button id="fab" class="fab" title="עבודה חדשה">+</button>
+
+  <nav class="nav" id="nav">
+    <button data-route="#/board"><span class="ic">📋</span>עבודות</button>
+    <button data-route="#/schedule"><span class="ic">🗓️</span>לו״ז</button>
+    <button data-route="#/surveyors"><span class="ic">👷</span>מודדים</button>
+  </nav>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

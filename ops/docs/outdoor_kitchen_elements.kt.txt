@@ -1,0 +1,116 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ *  מטבח חוץ (Outdoor Kitchen) — קטע-קוד מוכן-להדבקה עבור האינטגרטור.
+ *
+ *  מקור: docs/OUTDOOR_KITCHEN_LIBRARY.md (13 תוכניות-לקוח — שגב כרמל / אלקינצו).
+ *  שתי-חטיבות:
+ *    (1) ElementDef[] — מוצרים להצבה, בקבוצה חדשה "מטבח חוץ".
+ *    (2) OutdoorCabinetKind — תבניות-ארון בצורת CabinetKind (data/CabinetModel.kt).
+ *
+ *  הצורות הועתקו 1:1 מ:
+ *    catalog/ElementCatalog.kt  →  ElementDef(key, he, group, defaultDepth,
+ *                                              round, hasDepth, ordxClass, ordxType)
+ *    data/CabinetModel.kt       →  CabinetKind(he, belt, defaultDoorType,
+ *                                              defaultWidth, defaultDepth,
+ *                                              defaultHeightFrom, defaultHeightTo)
+ *
+ *  אינטגרציה מוצעת:
+ *    • הוסף const val OUTDOOR = "מטבח חוץ" ל-ElementGroup, ושרשר ל-order.
+ *    • הוסף את outdoorElements אל ElementCatalog.all (או שרשר: all + outdoorElements).
+ *    • הוסף את ערכי OutdoorCabinetKind אל enum CabinetKind (או השאר enum נפרד
+ *      וחבר ב-CabinetCatalog.kinds). belt="base" בכולם — אין חגורה-עליונה בחוץ.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  (1) מוצרים — ElementDef  (קבוצה: "מטבח חוץ")
+//      defaultDepth = עומק-בליטה D במ"מ (יסוד R4), כמו בשאר הקטלוג.
+//      מיפוי-ORDX: בישול/קירור → Appliance/DishWasher · מים/גז → Fixture/Part ·
+//                  אוורור → Appliance · סוכך/עציץ/גשר → Decorative/Miscellaneous.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// אם מוסיפים קבוצה: const val OUTDOOR = "מטבח חוץ"  (ב-object ElementGroup)
+
+val outdoorElements: List<ElementDef> = listOf(
+    // ── בישול → Appliance/DishWasher ──────────────────────────────────────
+    ElementDef("OK_GRILL_BUILTIN", "גריל בנוי", "מטבח חוץ", 560.0, ordxClass = "Appliance", ordxType = "DishWasher"),
+    ElementDef("OK_GRILL_CART", "גריל חופשי / עגלה", "מטבח חוץ", 600.0, ordxClass = "Appliance", ordxType = "DishWasher"),
+    ElementDef("OK_KAMADO", "קמאדו / ביצה", "מטבח חוץ", 600.0, round = true, ordxClass = "Appliance", ordxType = "DishWasher"),
+    ElementDef("OK_PIZZA_OVEN", "טאבון / תנור פיצה", "מטבח חוץ", 700.0, ordxClass = "Appliance", ordxType = "DishWasher"),
+    ElementDef("OK_SMOKER", "מעשנת", "מטבח חוץ", 700.0, ordxClass = "Appliance", ordxType = "DishWasher"),
+    ElementDef("OK_GAS_COOKTOP", "כירת גז חוץ", "מטבח חוץ", 520.0, ordxClass = "Appliance", ordxType = "DishWasher"),
+    ElementDef("OK_SIDE_BURNER", "מבער צד", "מטבח חוץ", 520.0, ordxClass = "Appliance", ordxType = "DishWasher"),
+    ElementDef("OK_WARMING_DRAWER", "מגירת חימום", "מטבח חוץ", 560.0, ordxClass = "Appliance", ordxType = "DishWasher"),
+
+    // ── אוורור → Appliance ────────────────────────────────────────────────
+    ElementDef("OK_RANGE_HOOD", "קולט אדים חוץ", "מטבח חוץ", 500.0, ordxClass = "Appliance", ordxType = "DishWasher"),
+
+    // ── קירור → Appliance/DishWasher ──────────────────────────────────────
+    ElementDef("OK_FRIDGE", "מקרר חוץ", "מטבח חוץ", 600.0, ordxClass = "Appliance", ordxType = "DishWasher"),
+    ElementDef("OK_FREEZER", "מקפיא", "מטבח חוץ", 600.0, ordxClass = "Appliance", ordxType = "DishWasher"),
+    ElementDef("OK_ICE_MAKER", "מכונת קרח / אייס מייקר", "מטבח חוץ", 600.0, ordxClass = "Appliance", ordxType = "DishWasher"),
+    ElementDef("OK_KEGERATOR", "קגרייטור", "מטבח חוץ", 600.0, ordxClass = "Appliance", ordxType = "DishWasher"),
+    ElementDef("OK_WINE_COOLER", "מצנן יין", "מטבח חוץ", 600.0, ordxClass = "Appliance", ordxType = "DishWasher"),
+
+    // ── מים / גז → Fixture/Part ───────────────────────────────────────────
+    ElementDef("OK_SINK", "כיור חוץ", "מטבח חוץ", 450.0, ordxClass = "Fixture", ordxType = "Part"),
+    ElementDef("OK_FAUCET", "ברז / ברז נשלף", "מטבח חוץ", 250.0, ordxClass = "Fixture", ordxType = "Part"),
+    ElementDef("OK_GAS_TAP", "ברז גז חיצוני", "מטבח חוץ", 60.0, ordxClass = "Fixture", ordxType = "Part"),
+
+    // ── אחסון → Fixture/Miscellaneous ─────────────────────────────────────
+    ElementDef("OK_TRASH_DRAWER", "מגירת אשפה", "מטבח חוץ", 560.0, ordxClass = "Fixture", ordxType = "Miscellaneous"),
+    ElementDef("OK_STORAGE_DRAWERS", "מגירות אחסון", "מטבח חוץ", 560.0, ordxClass = "Fixture", ordxType = "Miscellaneous"),
+
+    // ── גינה / מבנה → Decorative/Miscellaneous ────────────────────────────
+    ElementDef("OK_PLANTER", "עציץ מובנה", "מטבח חוץ", 400.0, ordxClass = "Decorative", ordxType = "Miscellaneous"),
+    ElementDef("OK_UMBRELLA_ANCHOR", "עמוד סוכך / עוגן פרגולה", "מטבח חוץ", 100.0, round = true, ordxClass = "Decorative", ordxType = "TWall"),
+    ElementDef("OK_LIGHTING_BRIDGE", "גשר תאורה", "מטבח חוץ", 100.0, ordxClass = "Decorative", ordxType = "Miscellaneous"),
+)
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  (2) תבניות-ארון — בצורת CabinetKind
+//      כולם חגורת-בסיס (belt="base"). אין ארונות-עליונים במטבח-חוץ.
+//      עומק 600 (660 לגריל/פינה). גובה-שיש: heightTo 920 (מדידה חוזרת 92–94 ס"מ),
+//      צוקל: heightFrom 100 (150 כשיש מדרגה). עציץ/דמה — heightFrom/To ייחודיים.
+//
+//      אפשר להוסיף ישירות אל enum CabinetKind הקיים, או להשאיר enum נפרד ולחבר
+//      ב-CabinetCatalog.kinds. שדות בדיוק כמו CabinetModel.kt:
+//        (he, belt, defaultDoorType, defaultWidth, defaultDepth,
+//         defaultHeightFrom, defaultHeightTo)
+// ─────────────────────────────────────────────────────────────────────────────
+
+enum class OutdoorCabinetKind(
+    val he: String,
+    val belt: String,
+    val defaultDoorType: String,
+    val defaultWidth: Double,
+    val defaultDepth: Double,
+    val defaultHeightFrom: Double,
+    val defaultHeightTo: Double,
+) {
+    // he · belt · doorType · width · depth · heightFrom · heightTo
+    OK_GRILL_CAB      ("ארון גריל",                 "base", "door",    1000.0, 660.0, 100.0, 920.0),
+    OK_COOKTOP_CAB    ("ארון כירת גז / מבער",       "base", "door",     600.0, 600.0, 100.0, 920.0),
+    OK_SINK_CAB       ("ארון כיור",                 "base", "double",   600.0, 600.0, 100.0, 920.0),
+    OK_FRIDGE_CAB     ("ארון מקרר חוץ",             "base", "appliance",600.0, 600.0, 100.0, 920.0),
+    OK_FREEZER_CAB    ("ארון מקפיא",                "base", "appliance",600.0, 600.0, 100.0, 920.0),
+    OK_ICEMAKER_CAB   ("ארון מכונת קרח",            "base", "appliance",450.0, 600.0, 100.0, 920.0),
+    OK_DRAWERS_CAB    ("ארון מגירות אחסון",         "base", "drawers",   600.0, 600.0, 100.0, 920.0),
+    OK_TRASH_CAB      ("ארון מגירת אשפה",           "base", "drawers",   400.0, 600.0, 100.0, 920.0),
+    OK_CORNER_CAB     ("ארון פינה 68/68",           "base", "single",    680.0, 660.0, 100.0, 920.0),
+    OK_PLANTER_CAB    ("ארון עציץ / רגל-עציץ",      "base", "open",       400.0, 400.0, 100.0, 600.0),
+    OK_FALSEFRONT_CAB ("ארון-דמה / פאנל שירות",     "base", "panel",      300.0, 600.0, 100.0, 920.0),
+    OK_PIZZA_STAND    ("ארון טאבון (עומד חופשי)",   "base", "none",       700.0, 700.0,   0.0, 1100.0);
+
+    companion object {
+        fun of(name: String): OutdoorCabinetKind = entries.firstOrNull { it.name == name } ?: OK_GRILL_CAB
+    }
+}
+
+/* ── הערות-שילוב במנוע-ה-fit ──────────────────────────────────────────────────
+ *  • רוחבי-מודול נפוצים בחוץ: 400 / 450 / 600 / 800 / 1000 מ"מ (60 ו-1000 שולטים).
+ *  • גובה-שיש מטבח-חוץ מומלץ: 920–940 (במקום 900 בפנים). צוקל 120 (150 עם מדרגה).
+ *  • doorType-ים חדשים ("appliance"/"open"/"panel"/"none") — האינטגרטור ימפה
+ *    לחזיתות הקיימות (single/double/drawers) או יוסיף סוגים לפי הצורך.
+ *  • OK_PIZZA_STAND הוא פריט עומד-חופשי (heightFrom=0) — לא ארון-נגרות אמיתי;
+ *    שקול לייצג אותו כ-ElementDef (OK_PIZZA_OVEN) במקום כ-Cabinet.
+ * ────────────────────────────────────────────────────────────────────────── */

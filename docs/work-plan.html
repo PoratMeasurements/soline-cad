@@ -1,0 +1,542 @@
+<title>תוכנית־העבודה של Soline</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Heebo:wght@300;400;500;600;700&display=swap">
+<style>
+  :root{
+    --bg:#FBF4E6; --surface:#FFFFFF; --surface-2:#FCF8F0; --raise:#FFFDF8;
+    --text:#2B2B2B; --muted:#6E6656; --faint:#9A927F; --border:#EAE0CB; --border-2:#DFD3B8;
+    --accent:#E8890B; --accent-soft:#FBE7C6; --teal:#127C8C; --teal-soft:#D6EEF1;
+    --ok:#12805C; --ok-bg:#E4F3EC; --amber:#B87503; --amber-bg:#FBEFD6; --red:#D53A3F; --red-bg:#FBE4E4; --plan:#8A8272; --plan-bg:#EFE9DB;
+    --shadow:0 1px 2px rgba(74,58,20,.05), 0 8px 26px rgba(74,58,20,.07);
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --disp:"Rubik",system-ui,sans-serif; --body:"Heebo",system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#17191B; --surface:#202427; --surface-2:#1b1f22; --raise:#252a2e;
+      --text:#ECE7DB; --muted:#A7A093; --faint:#736C60; --border:#2E3338; --border-2:#3a4046;
+      --accent:#F7AC3A; --accent-soft:#3a2f1c; --teal:#3BB6C7; --teal-soft:#173438;
+      --ok:#3FC28B; --ok-bg:#14301f; --amber:#E4A73A; --amber-bg:#33260f; --red:#F0636A; --red-bg:#361a1c; --plan:#8A8577; --plan-bg:#282c2f;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.32);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#17191B; --surface:#202427; --surface-2:#1b1f22; --raise:#252a2e;
+    --text:#ECE7DB; --muted:#A7A093; --faint:#736C60; --border:#2E3338; --border-2:#3a4046;
+    --accent:#F7AC3A; --accent-soft:#3a2f1c; --teal:#3BB6C7; --teal-soft:#173438;
+    --ok:#3FC28B; --ok-bg:#14301f; --amber:#E4A73A; --amber-bg:#33260f; --red:#F0636A; --red-bg:#361a1c; --plan:#8A8577; --plan-bg:#282c2f;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.32);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);
+    direction:rtl;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;font-weight:400}
+  .wrap{max-width:1080px;margin:0 auto;padding:26px 20px 80px}
+  h1,h2,h3{font-family:var(--disp);font-weight:700;letter-spacing:-.01em;text-wrap:balance;margin:0}
+  a{color:var(--teal);text-decoration:none}
+  .eyebrow{font-size:11.5px;letter-spacing:.2em;font-weight:700;color:var(--teal);text-transform:uppercase;font-family:var(--disp)}
+  code{font-family:var(--mono);font-size:.86em;background:var(--surface-2);border:1px solid var(--border);border-radius:5px;padding:.05em .4em;direction:ltr;display:inline-block}
+
+  /* header */
+  header{margin:8px 0 30px}
+  .brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+  .brand h1{font-size:clamp(30px,6.5vw,44px);font-weight:800;color:var(--accent);line-height:.95}
+  .brand .tag{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);font-weight:700;font-family:var(--disp)}
+  .lede{margin:14px 0 0;font-size:clamp(17px,3.3vw,20px);color:var(--text);font-weight:500;max-width:64ch}
+  .flow{margin-top:18px;background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:14px 18px;font-size:14.5px;display:flex;flex-wrap:wrap;gap:9px;align-items:center;box-shadow:var(--shadow);font-weight:500}
+  .flow .k{color:var(--accent);font-weight:700} .flow .t{color:var(--teal);font-weight:700} .flow .ar{color:var(--faint)}
+
+  /* stat strip */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:16px}
+  .stat{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:14px 16px;box-shadow:var(--shadow)}
+  .stat .n{font-family:var(--disp);font-size:26px;font-weight:800;color:var(--accent);line-height:1;font-variant-numeric:tabular-nums}
+  .stat .l{font-size:13px;color:var(--muted);margin-top:4px;font-weight:500}
+  .stat.good .n{color:var(--ok)} .stat.warn .n{color:var(--amber)}
+
+  /* nav */
+  nav.jump{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--border);margin:26px -20px 0;padding:11px 20px;
+    display:flex;gap:7px;overflow-x:auto;scrollbar-width:thin}
+  nav.jump a{white-space:nowrap;font-size:13px;font-weight:600;color:var(--muted);padding:6px 12px;border-radius:999px;
+    border:1px solid transparent;font-family:var(--disp)}
+  nav.jump a:hover{background:var(--surface);color:var(--text)}
+  nav.jump a.on{background:var(--accent-soft);color:var(--accent);border-color:var(--border-2)}
+
+  /* section */
+  section{margin-top:40px;scroll-margin-top:64px}
+  .h2row{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+  h2{font-size:23px}
+  .h2row .idx{font-family:var(--mono);font-size:13px;color:var(--faint);font-weight:600}
+  .sublede{color:var(--muted);margin:0 0 18px;font-size:15px;max-width:70ch;font-weight:500}
+
+  /* legend */
+  .legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:0 0 20px;font-size:13px;color:var(--muted);font-weight:500}
+  .legend .pill{margin-inline-end:5px}
+
+  /* pill */
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;border-radius:999px;
+    padding:2.5px 9px;font-family:var(--disp);white-space:nowrap;border:1px solid transparent}
+  .pill.ok{background:var(--ok-bg);color:var(--ok)} .pill.part{background:var(--amber-bg);color:var(--amber)}
+  .pill.plan{background:var(--plan-bg);color:var(--plan)} .pill.bug{background:var(--red-bg);color:var(--red)}
+  .pill.star{background:var(--accent-soft);color:var(--accent)}
+
+  /* waves */
+  .wave{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow);margin-bottom:14px;position:relative;overflow:hidden}
+  .wave::before{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:4px;background:var(--accent)}
+  .wave.w0::before{background:var(--red)} .wave.w1::before{background:var(--accent)}
+  .wave.w2::before{background:var(--teal)} .wave.w3::before{background:var(--plan)} .wave.w4::before{background:var(--faint)}
+  .wave .whead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+  .wave .wtag{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--faint)}
+  .wave h3{font-size:19px}
+  .wave .goal{color:var(--muted);font-size:14.5px;margin:2px 0 14px;font-weight:500}
+  .wlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+  .wlist li{display:flex;gap:11px;align-items:flex-start;font-size:15px}
+  .wlist .b{color:var(--accent);font-weight:800;flex:0 0 auto;line-height:1.5}
+  .wlist .txt strong{font-weight:600}
+  .wlist .txt .sub{color:var(--muted);font-size:13.5px;font-weight:500}
+
+  /* feature map */
+  details.area{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:11px;box-shadow:var(--shadow);overflow:hidden}
+  details.area>summary{list-style:none;cursor:pointer;padding:15px 18px;display:flex;align-items:center;gap:12px;font-family:var(--disp);font-weight:700;font-size:16.5px}
+  details.area>summary::-webkit-details-marker{display:none}
+  details.area>summary .chev{color:var(--faint);transition:transform .18s;font-size:13px;margin-inline-start:auto}
+  @media (prefers-reduced-motion:reduce){details.area>summary .chev{transition:none}}
+  details.area[open]>summary .chev{transform:rotate(180deg)}
+  details.area>summary .an{font-family:var(--mono);font-size:12px;color:var(--faint);font-weight:600}
+  .mini{display:flex;gap:5px}
+  .mini .m{font-size:11px;font-weight:700;color:var(--muted);font-family:var(--mono);background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:1px 6px}
+  .mini .m.ok{color:var(--ok)} .mini .m.part{color:var(--amber)} .mini .m.bug{color:var(--red)}
+  .rows{border-top:1px solid var(--border);padding:6px 0}
+  .row{display:grid;grid-template-columns:96px 1fr auto;gap:12px;align-items:baseline;padding:9px 18px;border-bottom:1px solid var(--surface-2)}
+  .row:last-child{border-bottom:0}
+  .row .st{justify-self:start}
+  .row .ft{font-size:14.5px;font-weight:500}
+  .row .ft .d{color:var(--muted);font-weight:400;font-size:13px}
+  .row .src{font-family:var(--mono);font-size:11px;color:var(--faint);white-space:nowrap;justify-self:end}
+  .row.wl{background:linear-gradient(90deg,var(--accent-soft),transparent 60%)}
+  @media (max-width:640px){
+    .row{grid-template-columns:1fr auto;gap:6px}
+    .row .src{grid-column:1/-1;justify-self:start}
+  }
+
+  /* priority cards */
+  .prio{display:flex;flex-direction:column;gap:12px}
+  .pcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);display:grid;grid-template-columns:44px 1fr;gap:16px}
+  .pcard .rank{font-family:var(--disp);font-size:30px;font-weight:800;color:var(--accent);line-height:1;font-variant-numeric:tabular-nums}
+  .pcard h3{font-size:17px;margin-bottom:3px}
+  .pcard .why{color:var(--muted);font-size:14px;margin:0 0 10px;font-weight:500}
+  .tasks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+  .tasks li{display:flex;gap:9px;font-size:14px;align-items:flex-start}
+  .tasks li::before{content:"▸";color:var(--teal);font-weight:800;flex:0 0 auto}
+  .tasks code{font-size:.82em}
+
+  footer{margin-top:46px;padding-top:20px;border-top:1px solid var(--border);color:var(--muted);font-size:13.5px;font-weight:500}
+  footer b{color:var(--text)}
+  .togg{position:fixed;top:12px;inset-inline-start:12px;z-index:40;background:var(--surface);border:1px solid var(--border);border-radius:999px;width:38px;height:38px;cursor:pointer;box-shadow:var(--shadow);font-size:15px;color:var(--text)}
+</style>
+
+<button class="togg" id="tg" aria-label="החלף בהיר/כהה">◐</button>
+<div class="wrap">
+
+  <header>
+    <div class="brand"><h1>Soline</h1><span class="tag">Smart&nbsp;Spatial&nbsp;Solutions</span></div>
+    <p class="lede">תוכנית־עבודה אחת לכל האקוסיסטם — מדידה בשטח, ממיר־פורמטים, וכלי־תכנון — עם סטטוס אמיתי לכל פיצ'ר, מפורק לגלים ולמשימות.</p>
+    <div class="flow">
+      <span class="k">מדידה בשטח</span><span class="ar">←</span><span><code>.sol</code></span><span class="ar">←</span><span>הממיר</span>
+      <span class="ar">→</span><span class="t">ORDX</span><span class="ar">·</span><span class="t">PDP</span><span class="ar">·</span><span class="t">DXF־2D</span><span class="ar">·</span><span class="t">DXF־3D</span><span class="ar">·</span><span class="t">PDF</span><span class="ar">·</span><span class="t">HTML</span>
+    </div>
+    <div class="stats">
+      <div class="stat good"><div class="n">4</div><div class="l">פורמטים ברמת־הגשה: ORDX · DXF־2D · DXF־3D · HTML</div></div>
+      <div class="stat"><div class="n">59</div><div class="l">קבצי Kotlin באפליקציה — מותקנת ורצה</div></div>
+      <div class="stat warn"><div class="n">PDP</div><div class="l">החוליה החלשה — טרם אושר טעינה ב־Raumplan</div></div>
+      <div class="stat"><div class="n">4</div><div class="l">חפירים / מנועי־בידול לבנות</div></div>
+    </div>
+  </header>
+
+  <nav class="jump" id="jump">
+    <a href="#today">היום</a>
+    <a href="#waves">גלים</a>
+    <a href="#top">עדיפויות</a>
+    <a href="#map">מפת־פיצ'רים</a>
+  </nav>
+
+  <!-- TODAY / NORTH STAR -->
+  <section id="today">
+    <div class="h2row"><h2>איפה אנחנו — ולאן</h2></div>
+    <p class="sublede">מה כבר עומד היום, ומהם ארבעת מנועי־הבידול שכל השאר נשען עליהם.</p>
+    <div class="wave" style="margin-bottom:14px">
+      <div class="whead"><h3>עומד היום</h3><span class="pill ok">בנוי ורץ</span></div>
+      <p class="goal">אפליקציית־מדידה מלאה (Kotlin/Compose, offline־first, 3 מדי־לייזר, DST 360־X — זווית־אופקית פוצחה), הכותבת <code>.sol</code>. הממיר מפיק <strong>6 פורמטים</strong>; ORDX + DXF־2D + DXF־3D + HTML ברמת־הגשה ומאומתים על 7/7 הקורפוס. מנוע־הדמייה תלת־ממד עובד.</p>
+    </div>
+    <div class="wave w1">
+      <div class="whead"><h3>ארבעת החפירים (הבידול)</h3><span class="pill star">★ החזון</span></div>
+      <ul class="wlist">
+        <li><span class="b">1</span><span class="txt"><strong>עומק־בליטה נמדד + אזהרת־התנגשות חיה (R4)</strong> — <span class="sub">"המטבח לא נכנס" הוא אויב מס' 1 של הנגרות; אף מתחרה לא מודל את זה.</span></span></li>
+        <li><span class="b">2</span><span class="txt"><strong>שתי־שכבות: תכנון על מדידה (as־built reconciliation)</strong> — <span class="sub">CAD שצועק בשטח שהמטבח לא ייכנס — קטגוריה חדשה.</span></span></li>
+        <li><span class="b">3</span><span class="txt"><strong>ייצוא PDP ל־Raumplan</strong> — <span class="sub">יתרון בלעדי בשוק הישראלי; "סוס טרויאני".</span></span></li>
+        <li><span class="b">4</span><span class="txt"><strong>פורמט <code>.sol</code> + נעילת־ידע</strong> — <span class="sub">מצב־אמת קנוני שכל האקוסיסטם והחפיר נשענים עליו (switching cost).</span></span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- WAVES -->
+  <section id="waves">
+    <div class="h2row"><h2>הגלים — סדר־הביצוע</h2></div>
+    <p class="sublede">כל גל נשען על הקודם. גל 0 הופך את הקיים ליציב ומקצועי; גל 1 בונה את הבידול; גל 2–4 מרחיבים לפלטפורמה.</p>
+
+    <div class="wave w0">
+      <div class="whead"><span class="wtag">גל 0</span><h3>יציבות ופלט אמין</h3><span class="pill bug">חוסמים</span></div>
+      <p class="goal">"קודם שהקיים יעבוד נקי." תיקון קריסות, פלט־עברי תקין, וחיווט מסלול־ה־PDP האמיתי.</p>
+      <ul class="wlist">
+        <li><span class="b">·</span><span class="txt"><strong>3 באגי־P0</strong> — קריסת־Compose (remember־אחרי־return), NPE־ניווט, ClassCastException.</span></li>
+        <li><span class="b">·</span><span class="txt"><strong>פלט עברי תקין</strong> — PDF־RTL (במקום LTR/אנגלית) · DXF־cp1255 · סניטציית שם־קובץ־ORDX ששומרת עברית. <span class="sub">(B3, B10)</span></span></li>
+        <li><span class="b">·</span><span class="txt"><strong>חיווט PDP אמיתי</strong> — לחבר <code>convertRoomDRv2</code> ל־<code>soline_convert.js</code> (במקום הזרקת־2918) + אישור־טעינה של DRv3 ב־Raumplan.</span></li>
+        <li><span class="b">·</span><span class="txt"><strong>השלמת מילון־אלמנטים</strong> — חילוץ <code>גז.bin</code>/<code>מים.bin</code> ו־14 החסרים מ־CVSM (ELCAD מותקן).</span></li>
+        <li><span class="b">·</span><span class="txt"><strong>ולידציית־סגירה חוסמת + auto־connect</strong> — פוליגון־פתוח לא ייצא; snap דורס־בשקט מקבל אישור. <span class="sub">(B1, B2, B4, B5)</span></span></li>
+      </ul>
+    </div>
+
+    <div class="wave w1">
+      <div class="whead"><span class="wtag">גל 1</span><h3>הבידול — ארבעת המנועים</h3><span class="pill star">★</span></div>
+      <p class="goal">מה שהופך את Soline מ"עוד מודד" לקטגוריה בפני עצמה.</p>
+      <ul class="wlist">
+        <li><span class="b">·</span><span class="txt"><strong>עומק־בליטה נמדד־בפועל + R4 חי</strong> — המודל כבר לוכד <code>depth</code>; חסרה ההצלבה ארון↔תשתית והאזהרה החיה. <span class="sub">(FR־MEAS־24, B9)</span></span></li>
+        <li><span class="b">·</span><span class="txt"><strong>שכבת־תכנון על מדידה + רמזי R1–R10 חיים</strong> — <code>design/</code> כרקע־על, תצוגת־fit (overlay/מפת־חום/סמני־התנגשות). <span class="sub">(FR־DESIGN־20…27)</span></span></li>
+        <li><span class="b">·</span><span class="txt"><strong>צ'קליסט־שלמות חוסם־יציאה + סטטוס־מידה</strong> — מונע ~80% מחזרות־השטח; סטטוס סופי/אחרי־ריצוף לכל מידה. <span class="sub">(FR־MEAS־10/14)</span></span></li>
+        <li><span class="b">·</span><span class="txt"><strong>XYZ מלא מ־DST 360־X</strong> — הזווית־האופקית קיימת ב־<code>Reading.hAngleDeg</code>; לחווט לכל האלגוריתמים (רצפה/תקרה, P2P, station).</span></li>
+      </ul>
+    </div>
+
+    <div class="wave w2">
+      <div class="whead"><span class="wtag">גל 2</span><h3>דו"חות ו־<code>.sol</code></h3><span class="pill part">חלקי</span></div>
+      <p class="goal">להפוך את המדידה למסמך־מסירה מקצועי, ואת <code>.sol</code> למצב־האמת.</p>
+      <ul class="wlist">
+        <li><span class="b">·</span><span class="txt"><strong>PDF סיכום־פרויקט 8־עמודים RTL</strong> — שער/תוכנית/חזיתות/טבלאות/ממצאי־R1–R10/הערות/חתימות + <strong>פילטר־הערות לפי תפקיד</strong> (מודד/מפעל/תצוגה) + עריכת־מפעל. <span class="sub">(דרישת Michael)</span></span></li>
+        <li><span class="b">·</span><span class="txt"><strong>פורמט <code>.sol</code> 8־שכבות</strong> — design/measured/fit/catalog/bom/3d/annotations/meta + כתיבה native ל־<code>measured/</code>.</span></li>
+        <li><span class="b">·</span><span class="txt"><strong>מנוע R1–R10 מלא</strong> — עשרת חוקי־בדיקת־ההתאמה בזמן־אמת.</span></li>
+        <li><span class="b">·</span><span class="txt"><strong>הטמעת מנוע־ההדמייה</strong> — חיבור viz לצינור (מודל→JSON־viz) + WebView באפליקציה + בדו"ח־HTML.</span></li>
+      </ul>
+    </div>
+
+    <div class="wave w3">
+      <div class="whead"><span class="wtag">גל 3</span><h3>פלטפורמה ותפעול</h3><span class="pill plan">מתוכנן</span></div>
+      <p class="goal">מאפליקציה — למערכת־הפעלה של עסק־המדידה.</p>
+      <ul class="wlist">
+        <li><span class="b">·</span><span class="txt"><strong>4־תצוגות</strong> — פורטל־נגר · אפליקציית־מודד · קונסולת־מתאם · דאשבורד־מנהל, עם תפקידים+הרשאות+בידוד־דייר.</span></li>
+        <li><span class="b">·</span><span class="txt"><strong>שכבת־Ops + מנוע־מדדים</strong> — אירועי־GPS (יצאתי/הגעתי/חזרתי), רווחיות־פר־עבודה, <strong>שיבוץ־גאוגרפי</strong> (מנוף 13%→44%).</span></li>
+        <li><span class="b">·</span><span class="txt"><strong>גבייה</strong> — חשבונית/aging/אשראי/iCount + מקרי־קצה (no־show, ביטול, מחלוקת). <span class="sub">(פער מהותי היום)</span></span></li>
+        <li><span class="b">·</span><span class="txt"><strong>multi־tenant + רישוי פר־מודד/פר־נגר</strong> — מחליף את רישיון־החברה־היחיד של CVSM.</span></li>
+      </ul>
+    </div>
+
+    <div class="wave w4">
+      <div class="whead"><span class="wtag">גל 4</span><h3>כלי־עיצוב ומסחר</h3><span class="pill plan">חזון</span></div>
+      <p class="goal">הלולאה הסגורה: עיצוב → מדידה → התאמה → ייצור.</p>
+      <ul class="wlist">
+        <li><span class="b">·</span><span class="txt"><strong>כלי־עיצוב מלא</strong> — מבטים 2D/חזית/חתך/3D, drag־drop, חומרי־PBR, auto־fit, בדיקת־פינה 68/68, DSL־הערות. <span class="sub">(FR־DESIGN־01…40)</span></span></li>
+        <li><span class="b">·</span><span class="txt"><strong>ספריות</strong> — מודולי־נגרות, כיורים (60+ יצרנים), חיתוכים, מטבח־חוץ מלא.</span></li>
+        <li><span class="b">·</span><span class="txt"><strong>marketplace + אפשור־ייצור</strong> — רשימות־חיתוך + nesting → CNC/G־Code; שוק־ספקים דו־צדדי.</span></li>
+        <li><span class="b">·</span><span class="txt"><strong>מוכנות־NASDAQ</strong> — ענן multi־tenant, SOC2/ISO27001, observability, הגנת־IP.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- TOP PRIORITIES -->
+  <section id="top">
+    <div class="h2row"><h2>עשר עדיפויות־העל — מפורקות למשימות</h2></div>
+    <p class="sublede">מ־wishlist־Michael ומהחוסמים. כאן מתחילים לפרק "משימה־משימה לגורמים".</p>
+    <div class="prio">
+
+      <div class="pcard"><div class="rank">1</div><div>
+        <h3>עומק־בליטה נמדד + אזהרת־התנגשות R4 חיה <span class="pill star">★</span></h3>
+        <p class="why">האויב מס' 1 של הנגרות, העדות הכי־צפופה בקורפוס. המודל כבר לוכד <code>depth</code> — חסרה ההצלבה.</p>
+        <ul class="tasks">
+          <li>לחייב מדידת <code>depth</code> בפועל בבורר (לא ברירת־מחדל) — לכל אלמנט <code>hasDepth</code>.</li>
+          <li>מנוע־R4: הצלבת עומק־בליטה מול מרווח־גב־ארון → דגל אדום.</li>
+          <li>אזהרה חיה בשטח (בזמן־המדידה) + סימון בחזית־המאוחדת. <code>ElevationFit.kt</code> קיים — להרחיב.</li>
+        </ul>
+      </div></div>
+
+      <div class="pcard"><div class="rank">2</div><div>
+        <h3>שכבת־תכנון על מדידה + R1–R10 חיים <span class="pill star">★</span></h3>
+        <p class="why">בידול מס' 1 של כל האקוסיסטם — "CAD שצועק שהמטבח לא ייכנס, עוד בשטח".</p>
+        <ul class="tasks">
+          <li>טעינת <code>design/</code> מ־<code>.sol</code> כשכבת־רקע במסך־המדידה.</li>
+          <li>תצוגת־fit: overlay design↔as־built, פערים־אדום, מפת־חום, סמני־התנגשות.</li>
+          <li>מנוע R1–R10 עם dirty־tracking — הערות בשפת־הנגר (מה/איפה/כמה/תיקון).</li>
+        </ul>
+      </div></div>
+
+      <div class="pcard"><div class="rank">3</div><div>
+        <h3>צ'קליסט־שלמות + ולידציית־סגירה חוסמים <span class="pill star">★</span></h3>
+        <p class="why">מונע ~80% מחזרות־השטח — רוצח־הרווח. (⚠️ B1: פוליגון־פתוח 2.63מ' יצא ל־ORDX)</p>
+        <ul class="tasks">
+          <li>ולידציית סגירת־פוליגון + סכום־זוויות ‎(n−2)×180°‎ גם במסך־Plan (לא רק חזית).</li>
+          <li>auto־connect קירות + אישור snap מעל סף (במקום דריסה שקטה עד 660מ"מ).</li>
+          <li>צ'קליסט חוסם־יציאה: כל קיר נמדד · גבהים · אלמנטים · סגירה — לפני ORDX.</li>
+        </ul>
+      </div></div>
+
+      <div class="pcard"><div class="rank">4</div><div>
+        <h3>פלט עברי מקצועי — תנאי־סף <span class="pill bug">חוסם</span></h3>
+        <p class="why">בלי פלט תקין, כל הבידול לא מגיע ללקוח. (B3, B10)</p>
+        <ul class="tasks">
+          <li>PDF: מנוע־מימוד RTL עברי־תקין (בלי "????", בלי חפיפה).</li>
+          <li>DXF: עברית cp1255 + שכבות־סמנטיות + ACI — מאומת מול לקוח.</li>
+          <li>סניטציית שם־קובץ־ORDX ששומרת עברית ועקבית.</li>
+        </ul>
+      </div></div>
+
+      <div class="pcard"><div class="rank">5</div><div>
+        <h3>סטטוס־מידה + מנוע־קיזוז־אזורי <span class="pill star">★</span></h3>
+        <p class="why">מבטל את ה"רישום בצד". התשתית קיימת (MeasureStatus) — לא מחוברת. (P2-12)</p>
+        <ul class="tasks">
+          <li>לחבר <code>MeasureStatus</code> (סופי/אחרי־ריצוף/גבס/חיפוי) לכל מידה + UI.</li>
+          <li>מנוע־קיזוז אזורי (ריצוף/גבס/חיפוי/הנמכה) על המידות הגולמיות.</li>
+          <li>חיווי־ויזואלי של סטטוס בתוכנית ובדו"ח.</li>
+        </ul>
+      </div></div>
+
+      <div class="pcard"><div class="rank">6</div><div>
+        <h3>תיקון 3 באגי־P0 — יציבות <span class="pill bug">חוסם</span></h3>
+        <p class="why">חוסמי־יציבות באפליקציה הנוכחית.</p>
+        <ul class="tasks">
+          <li>קריסת־Compose: <code>remember</code> אחרי return.</li>
+          <li>NPE בניווט: <code>!!.toLong()</code>.</li>
+          <li>ClassCastException מ־cast קשיח.</li>
+        </ul>
+      </div></div>
+
+      <div class="pcard"><div class="rank">7</div><div>
+        <h3>PDF סיכום־פרויקט מלא + הערות־לפי־תפקיד <span class="pill star">★</span></h3>
+        <p class="why">דרישת Michael ישירה — דו"ח 8־עמודים RTL.</p>
+        <ul class="tasks">
+          <li>8 סוגי־עמוד (שער/תוכנית/חזית/אלמנטים/קירות/ממצאים/הערות/חתימות).</li>
+          <li>פילטר NoteRole (מודד/מפעל/תצוגה) — התשתית קיימת.</li>
+          <li>placeholders לעריכת־מפעל (מידות־סופיות/הערות־קבינט).</li>
+        </ul>
+      </div></div>
+
+      <div class="pcard"><div class="rank">8</div><div>
+        <h3>פורמט <code>.sol</code> — מצב־האמת הקנוני</h3>
+        <p class="why">הבסיס שכל האקוסיסטם והחפיר נשענים עליו.</p>
+        <ul class="tasks">
+          <li>8 שכבות + manifest + magic <code>SOL1</code> + JSON־Schema פר־שכבה.</li>
+          <li>כתיבה native ל־<code>measured/</code> (כבר יש cabinets[]) + round־trip נאמן.</li>
+          <li>סנכרון־דלתאי offline (oplog) + מחיקה־רכה + semver.</li>
+        </ul>
+      </div></div>
+
+      <div class="pcard"><div class="rank">9</div><div>
+        <h3>שכבת־Ops + מנוע־מדדים + שיבוץ־גאוגרפי</h3>
+        <p class="why">מנוף־הרווחיות מס' 1 (13%→44%). הדאטה קיימת — הפעולה לא.</p>
+        <ul class="tasks">
+          <li>אירועי־מנוע (יצאתי/הגעתי/מדידה/חזרתי) עם זמן+GPS ב־<code>events.json</code>.</li>
+          <li>מנוע־מדדים: ק"מ־Haversine, עלות, רווחיות־פר־עבודה, יעילות־מודד.</li>
+          <li>שיבוץ־גאוגרפי / אופטימיזציית־מסלול.</li>
+        </ul>
+      </div></div>
+
+      <div class="pcard"><div class="rank">10</div><div>
+        <h3>גבייה ומקרי־קצה תפעוליים</h3>
+        <p class="why">פער מהותי שחסר לגמרי באפיון הנוכחי.</p>
+        <ul class="tasks">
+          <li>צבירת־חיובים + דו"ח־סוף־חודש + אינטגרציית־iCount.</li>
+          <li>מעקב־תשלומים + aging + אשראי + חסימת־חוב.</li>
+          <li>מקרי־קצה: no־show+חיוב־נסיעה, ביטול־אמצע, מחלוקת־מדידה, עבודה־דחופה.</li>
+        </ul>
+      </div></div>
+
+    </div>
+  </section>
+
+  <!-- FULL FEATURE MAP -->
+  <section id="map">
+    <div class="h2row"><h2>מפת־הפיצ'רים המלאה</h2></div>
+    <p class="sublede">כל מה שדובר בכל השיחות והסוכנים, לפי 10 תחומים. הרחב תחום לפירוט. הכוכב ★ = wishlist־Michael.</p>
+    <div class="legend">
+      <span><span class="pill ok">✅</span>עובד</span>
+      <span><span class="pill part">◐</span>חלקי</span>
+      <span><span class="pill plan">⬜</span>מתוכנן</span>
+      <span><span class="pill bug">⚠️</span>באג/חוסם</span>
+      <span><span class="pill star">★</span>wishlist</span>
+    </div>
+
+    <details class="area" open><summary><span class="an">01</span> מדידה בשטח <span class="mini"><span class="m ok">6✅</span><span class="m part">6◐</span><span class="m bug">2⚠️</span></span><span class="chev">▾</span></summary>
+      <div class="rows">
+        <div class="row wl"><span class="st"><span class="pill part">◐</span></span><span class="ft">מסך־מדידה אחד mode־less, פעולה בהקשה־אחת ★ <span class="d">— בלי מעבר־מצבים, לפי סדר־המדידה</span></span><span class="src">WISHLIST</span></div>
+        <div class="row wl"><span class="st"><span class="pill part">◐</span></span><span class="ft">ביטול־נקודה חי באמצע סריקה ★ <span class="d">— undo עד 20 קיים</span></span><span class="src">CVSM_FEATURES</span></div>
+        <div class="row wl"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">בחירת שיטת־מדידה (מרכז / 2־פינות / 3־נקודות) ★ <span class="d">— לא לכפות 4 נקודות</span></span><span class="src">WISHLIST</span></div>
+        <div class="row wl"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">מנגנון־אוטומטי בתחילת־מדידה (בוש) ★ <span class="d">— נקודות־רצפה→שכבת־תקרה</span></span><span class="src">WISHLIST</span></div>
+        <div class="row wl"><span class="st"><span class="pill part">◐</span></span><span class="ft">P2P עם X6 + ביטול־נקודה ★ <span class="d">— XYZ דורש DST 360־X</span></span><span class="src">X6_CAPAB</span></div>
+        <div class="row wl"><span class="st"><span class="pill ok">✅</span></span><span class="ft">סאונד/רטט בקליטת־נקודה ★ <span class="d">— עבודה חד־ידנית בשמש</span></span><span class="src">FAST_FLOW</span></div>
+        <div class="row wl"><span class="st"><span class="pill bug">⚠️</span></span><span class="ft">אופטימיזציית־סוללה (gate ל־polling DST360) ★ <span class="d">— B13</span></span><span class="src">APP_ISSUES</span></div>
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">אינטגרציית DISTO מלאה <span class="d">— מדוד־לאלמנט, חיץ־offline, fallback ידני (crown־jewel)</span></span><span class="src">MEASURE_SPEC</span></div>
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">מדידה־מהירה: אריחי־ענק + מועדפים★ + אחרונים</span><span class="src">FAST_FLOW</span></div>
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">צילומים־ממוקמים + הערות־שדה</span><span class="src">MEASURE_SPEC</span></div>
+        <div class="row wl"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">צ'קליסט־שלמות חוסם־יציאה ★ <span class="d">— מונע ~80% מחזרות־השטח</span></span><span class="src">MEASURE_SPEC</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">סטטוס־מידה (סופי/אחרי־ריצוף) <span class="d">— MeasureStatus לא־מחובר</span></span><span class="src">APP_REVIEW</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">הערה־קולית (STT עברית) <span class="d">— רק TTS־פלט קיים</span></span><span class="src">FIELD_WF</span></div>
+        <div class="row"><span class="st"><span class="pill part">◐</span></span><span class="ft">זרימת־פתיחת־פרויקט 7־שלבים <span class="d">— חובה־מינימלי: נגר+לקוח</span></span><span class="src">NEW_FLOW</span></div>
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">שמירה־אוטומטית מתמדת offline (Room WAL)</span><span class="src">REBUILD</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">אירועי־מנוע (יצאתי/הגעתי, זמן+GPS) <span class="d">— שכבת־Ops</span></span><span class="src">MEASURE_SPEC</span></div>
+      </div>
+    </details>
+
+    <details class="area"><summary><span class="an">02</span> גאומטריה ומנוע־מדידה <span class="mini"><span class="m ok">3✅</span><span class="m part">6◐</span><span class="m bug">4⚠️</span></span><span class="chev">▾</span></summary>
+      <div class="rows">
+        <div class="row wl"><span class="st"><span class="pill part">◐</span></span><span class="ft">בניית־קירות 90°/זוויות + הכנסת־משולש ★ <span class="d">— "לרוץ על הקירות בטאבלט"</span></span><span class="src">WISHLIST</span></div>
+        <div class="row wl"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">עומק־פנימי+חיצוני, בחירת־זווית־סגירה, בנייה דו־כיוונית ★</span><span class="src">WISHLIST</span></div>
+        <div class="row wl"><span class="st"><span class="pill ok">✅</span></span><span class="ft">חיבור־T בין קירות ★ <span class="d">— TJoinMethod (5.3)</span></span><span class="src">UPDATE_5.3</span></div>
+        <div class="row wl"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">מבט־על עם גובה־שלילי (שיפוע־רצפה) ★</span><span class="src">WISHLIST</span></div>
+        <div class="row"><span class="st"><span class="pill part">◐</span></span><span class="ft">קיר־כפרופיל: זווית־אמת + HeightBands + מפלסי־רצפה/תקרה <span class="d">— floor דו־קצה חסר (B6)</span></span><span class="src">MEASURE_SPEC</span></div>
+        <div class="row"><span class="st"><span class="pill bug">⚠️</span></span><span class="ft">אימות־חי: סגירת־פוליגון + טריאנגולציה <span class="d">— קיים בחזית לא ב־Plan (B5)</span></span><span class="src">MEASURE_SPEC</span></div>
+        <div class="row"><span class="st"><span class="pill bug">⚠️</span></span><span class="ft">ולידציית־סגירה חוסמת + auto־connect <span class="d">— B1 פוליגון־פתוח יצא; B4</span></span><span class="src">APP_ISSUES</span></div>
+        <div class="row"><span class="st"><span class="pill bug">⚠️</span></span><span class="ft">סף T־join + אישור <span class="d">— B2 snap דורס עד 660מ"מ בשקט</span></span><span class="src">APP_ISSUES</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">לכידת־צורה מ־X6 + תבניות־חדר (מלבן/L/U/T/Z) <span class="d">— ShapeSolver (5.6)</span></span><span class="src">CVSM_5.6</span></div>
+        <div class="row"><span class="st"><span class="pill part">◐</span></span><span class="ft">מדידות: P2P, משטח↔משטח, משולש־הזהב, אלכסון, 2־נק'־לקיר</span><span class="src">CVSM/INNO</span></div>
+        <div class="row"><span class="st"><span class="pill part">◐</span></span><span class="ft">נעילת־90°, snapping (פינות/קצוות/רשת), סרגל+רשת</span><span class="src">CVSM_FEAT</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">נקודות־מוצא מרובות + טרילטרציה + Relocate־לייזר</span><span class="src">CVSM_FEAT</span></div>
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">יישור־חדר־לציר ("מלבן") <span class="d">— (5.4)</span></span><span class="src">UPDATE_5.4</span></div>
+        <div class="row"><span class="st"><span class="pill part">◐</span></span><span class="ft">סוגי־ראש־קיר (ישר/משופע/גמלון/Vault) + soffit <span class="d">— רק Standard/Vault מאומתים</span></span><span class="src">CVSM_SCHEMA</span></div>
+        <div class="row"><span class="st"><span class="pill bug">⚠️</span></span><span class="ft">קונבנציית WallEntity.angle כפולה <span class="d">— P1-1: ORDX שגוי בזווית≠90°</span></span><span class="src">APP_REVIEW</span></div>
+      </div>
+    </details>
+
+    <details class="area"><summary><span class="an">03</span> קטלוג־אלמנטים <span class="mini"><span class="m ok">5✅</span><span class="m part">6◐</span><span class="m bug">2⚠️</span></span><span class="chev">▾</span></summary>
+      <div class="rows">
+        <div class="row wl"><span class="st"><span class="pill part">◐</span></span><span class="ft">אובייקטים־עגולים עם מימד־עומק ★</span><span class="src">WISHLIST</span></div>
+        <div class="row wl"><span class="st"><span class="pill part">◐</span></span><span class="ft">מדידת־פאנלים ★ · פתחים־עד־הרצפה ★ · שטיכמוס+קו־תקרה ★</span><span class="src">WISHLIST</span></div>
+        <div class="row wl"><span class="st"><span class="pill part">◐</span></span><span class="ft">עומק־בליטה (protrusion_mm) לכל אובייקט ★ <span class="d">— B9 לא־נמדד־בפועל, ברירות אימפריאליות</span></span><span class="src">APP_ISSUES</span></div>
+        <div class="row"><span class="st"><span class="pill part">◐</span></span><span class="ft">קטלוג מאוחד Soline (~83–90 סוגים, key יחיד .sol→ORDX+PDP+DXF)</span><span class="src">MERGED</span></div>
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">13 קטגוריות ממיר (83 אלמנטים) — שקעים/מפסקים/מים/גז/מיזוג...</span><span class="src">BRIDGE</span></div>
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">עורך־קטלוג + שכפול־וריאנט + דריסת־מידות + סמלים־מותאמים <span class="d">— (5.9)</span></span><span class="src">CVSM_5.9</span></div>
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">חלון = H a+b+c (סף+פתח+משקוף)</span><span class="src">FIELD_WF</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">ספריית־כיורים (60+ יצרנים) + קטלוג־חיתוכים R6/R7/R10/R13</span><span class="src">INNODRAW</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">נוהג־התקנה־ישראלי (שקע 110, גז 30mbar, פינה 68/68)</span><span class="src">MEASURE_SPEC</span></div>
+        <div class="row"><span class="st"><span class="pill bug">⚠️</span></span><span class="ft">פער קטלוג מדידה↔ממיר (63 app מול 83 ממיר; 14 חסרי־.bin) <span class="d">— אין גז.bin/מים.bin</span></span><span class="src">GAP</span></div>
+        <div class="row"><span class="st"><span class="pill bug">⚠️</span></span><span class="ft">ElementCatalog העשיר לא־בשימוש בדיאלוג <span class="d">— P2-3</span></span><span class="src">APP_REVIEW</span></div>
+      </div>
+    </details>
+
+    <details class="area"><summary><span class="an">04</span> חומרים <span class="mini"><span class="m ok">6✅</span><span class="m part">2◐</span></span><span class="chev">▾</span></summary>
+      <div class="rows">
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">MaterialLibrary — 71 חומרים (offline פרוצדורלי, בלי תמונות)</span><span class="src">MATERIALS</span></div>
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">חזיתות (20) · שיש Dekton/Sensa/Caesarstone (22) · קירות (13) · רצפות (10) · מתכת (6)</span><span class="src">MATERIALS</span></div>
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">9 TextureKind + כללי־glossy</span><span class="src">MATERIALS</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">MaterialPickerSheet (UI־בורר) + שמירה per־ארון + ל־.sol <span class="d">— UI חסר</span></span><span class="src">MATERIALS</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">חומרי־PBR לרינדור + 386 טקסטורות־Raumplan <span class="d">— רישוי לבירור</span></span><span class="src">DESIGN_SPEC</span></div>
+      </div>
+    </details>
+
+    <details class="area"><summary><span class="an">05</span> ארונות ומטבח־חוץ <span class="mini"><span class="m ok">2✅</span><span class="m part">3◐</span><span class="m bug">2⚠️</span></span><span class="chev">▾</span></summary>
+      <div class="rows">
+        <div class="row"><span class="st"><span class="pill part">◐</span></span><span class="ft">מודל־ארונות מלא (19 סוגים/5 מחלקות/צירים/פינות) <span class="d">— בפועל Furnishing/Base/Standard</span></span><span class="src">CVSM_5.6</span></div>
+        <div class="row"><span class="st"><span class="pill bug">⚠️</span></span><span class="ft">ORDX Cabinet Assembly (Sections/Door/Hinge/Hardware) <span class="d">— 0־מופעים בקורפוס, לתקן הנחות</span></span><span class="src">CVSM_SCHEMA</span></div>
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">פענוח קודי־ארונות CW/CB/CT · 1D/2D · DR</span><span class="src">INNO_NEW</span></div>
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">ספריית מטבחי־חוץ (13 תוכניות־לקוח, שיש 92–94, צוקל 10–15)</span><span class="src">OUTDOOR</span></div>
+        <div class="row"><span class="st"><span class="pill part">◐</span></span><span class="ft">13 מודולי־ארונות־חוץ + ~24 מוצרים (גריל/כירה/כיור/מקרר...) <span class="d">— קוד מוכן־להדבקה</span></span><span class="src">OUTDOOR</span></div>
+        <div class="row"><span class="st"><span class="pill part">◐</span></span><span class="ft">מתג־נראות שכבת־ארונות + זרימת־ארונות ל־.sol (SolWriter)</span><span class="src">SCREENS</span></div>
+      </div>
+    </details>
+
+    <details class="area"><summary><span class="an">06</span> כלי־עיצוב (Design Tool) <span class="mini"><span class="m part">4◐</span><span class="m bug">1⚠️</span></span><span class="chev">▾</span></summary>
+      <div class="rows">
+        <div class="row"><span class="st"><span class="pill part">◐</span></span><span class="ft">מבטים: 2D / חזיתות / חתכים / 3D־אינטראקטיבי offline <span class="d">— POC קיים (FR־01…04)</span></span><span class="src">DESIGN_SPEC</span></div>
+        <div class="row wl"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">3D של קיר־בודד/אלמנט ★ · שליטה־בתצוגה־בלייב ★ · מבט־על מידות־עברית ★</span><span class="src">WISHLIST</span></div>
+        <div class="row"><span class="st"><span class="pill bug">⚠️</span></span><span class="ft">מנוע־מימוד עברי־תקין (RTL, בלי "????") <span class="d">— B3 PDF LTR/en</span></span><span class="src">DESIGN_SPEC</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">בורר־קטלוג drag־drop + 3 ספריות + חומרי־PBR + רינדר־פוטוריאליסטי <span class="d">— FR־07…12</span></span><span class="src">DESIGN_SPEC</span></div>
+        <div class="row wl"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">מודל־שתי־השכבות (design על measured) + תצוגת־fit ★ <span class="d">— בידול#1, FR־20…21</span></span><span class="src">DESIGN_SPEC</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">auto־fit + בדיקת־פינה 68/68 (killer) + התראות בשפת־הנגר <span class="d">— FR־25…27</span></span><span class="src">DESIGN_SPEC</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">מנוע R1–R10 בזמן־אמת + פותר־אילוצים + DSL־הערות <span class="d">— FR־15…24</span></span><span class="src">DESIGN_SPEC</span></div>
+        <div class="row"><span class="st"><span class="pill part">◐</span></span><span class="ft">מודל־אובייקט־קנוני + .sol מצב־אמת + מייצאים קוראים־מהמודל <span class="d">— FR־30…33</span></span><span class="src">DESIGN_SPEC</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">CRDT (Yjs) עריכה־משותפת + חוצה־פלטפורמות <span class="d">— FR־39/40</span></span><span class="src">DESIGN_SPEC</span></div>
+      </div>
+    </details>
+
+    <details class="area"><summary><span class="an">07</span> דו"חות ופורמטים <span class="mini"><span class="m ok">4✅</span><span class="m part">3◐</span><span class="m bug">2⚠️</span></span><span class="chev">▾</span></summary>
+      <div class="rows">
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">ייצוא ORDX <span class="d">— round־trip מאומת, מחווט</span></span><span class="src">converter</span></div>
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">ייצוא DXF־2D Pro <span class="d">— קירות־poché, מנוע־מימוד, 13 שכבות, מקרא, עברית \\U+</span></span><span class="src">converter</span></div>
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">ייצוא DXF־3D Pro <span class="d">— 3DFACE, רצפה ear־clipping, 9 שכבות</span></span><span class="src">converter</span></div>
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">דו"ח־HTML אינטראקטיבי <span class="d">— self־contained, RTL, plan/elevation</span></span><span class="src">converter</span></div>
+        <div class="row"><span class="st"><span class="pill part">◐</span></span><span class="ft">דו"ח־PDF וקטורי <span class="d">— תלוי־דפדפן; נכשל־רך ל־HTML</span></span><span class="src">converter</span></div>
+        <div class="row"><span class="st"><span class="pill part">◐</span></span><span class="ft">ייצוא PDP (Raumplan) — יתרון־בלעדי <span class="d">— DRv2→921; DRv3 ממתין; לא־מחווט</span></span><span class="src">dr_item</span></div>
+        <div class="row wl"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">PDF סיכום־8־עמודים RTL + פילטר־הערות־תפקיד + עריכת־מפעל ★</span><span class="src">PDF_SPEC</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">מנוע R1–R10 (עמוד־ממצאים) + שער־איכות</span><span class="src">PDF_SPEC</span></div>
+        <div class="row"><span class="st"><span class="pill bug">⚠️</span></span><span class="ft">ORDX חוסר־שדות (ארונות/סטטוס/קשת/Z) <span class="d">— בלוק &lt;Ext&gt; נדרש; B10 שם־קובץ</span></span><span class="src">ORDX_BRIDGE</span></div>
+      </div>
+    </details>
+
+    <details class="area"><summary><span class="an">08</span> פלטפורמה, ניהול, ‎.sol‎ <span class="mini"><span class="m ok">3✅</span><span class="m part">3◐</span><span class="m bug">3⚠️</span></span><span class="chev">▾</span></summary>
+      <div class="rows">
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">4־תצוגות (פורטל־נגר / מודד / מתאם / דאשבורד־מנהל)</span><span class="src">MASTER_SPEC</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">זרימת 11־שלבים + 5־לולאות־תיקון + DR1/DR2</span><span class="src">WORKFLOW</span></div>
+        <div class="row"><span class="st"><span class="pill part">◐</span></span><span class="ft">4־תפקידים + מטריצת־הרשאות + בידוד־דייר <span class="d">— בורר־dev שלב־1</span></span><span class="src">ROLES</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">מנוע־מדדים־נסתר (זמן/ק"מ/עלות/רווחיות/יעילות) — אדמין־בלבד</span><span class="src">METRICS</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">דאשבורד KPI (5 stat־tiles + פאנלים)</span><span class="src">ADMIN_DASH</span></div>
+        <div class="row"><span class="st"><span class="pill part">◐</span></span><span class="ft">קטלוג־מק"טים + מחירון־פר־נגר + תמחור־היברידי</span><span class="src">PRICING</span></div>
+        <div class="row"><span class="st"><span class="pill bug">⚠️</span></span><span class="ft">גבייה (חשבונית/aging/אשראי/iCount) <span class="d">— פער מהותי, חסר באפיון</span></span><span class="src">OWNER</span></div>
+        <div class="row"><span class="st"><span class="pill bug">⚠️</span></span><span class="ft">שיבוץ־גאוגרפי / אופטימיזציית־מסלול <span class="d">— מנוף 13%→44%, הדאטה קיימת</span></span><span class="src">STRATEGY</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">פורמט .sol 8־שכבות + ZIP+manifest+magic + Schema פר־שכבה</span><span class="src">SOL_FORMAT</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">.sol אבטחה (AES־256, חתימה־Ed25519, DRM, audit) + סנכרון־דלתאי</span><span class="src">SOL_FORMAT</span></div>
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">חוזה תפעול↔ממיר (job/ → out/ + result.json)</span><span class="src">INTERFACE</span></div>
+        <div class="row"><span class="st"><span class="pill bug">⚠️</span></span><span class="ft">multi־tenant + רישוי פר־מודד <span class="d">— מחליף רישיון־יחיד של CVSM</span></span><span class="src">REBUILD</span></div>
+      </div>
+    </details>
+
+    <details class="area"><summary><span class="an">09</span> שוק ואסטרטגיה <span class="mini"><span class="m ok">2✅</span><span class="m plan">רב־מתוכנן</span></span><span class="chev">▾</span></summary>
+      <div class="rows">
+        <div class="row wl"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">חזון־על: "תוכנה בלעדית לבניית אלמנטים לקבינט בתחום המדידות" ★</span><span class="src">WISHLIST</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">4 חפירים (IP־הממיר / גלגל־דיוק / switching־cost־.sol / צפיפות־גאוגרפית)</span><span class="src">STRATEGY</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">as־built reconciliation כקטגוריה חדשה <span class="d">— אף־מתחרה לא מודל</span></span><span class="src">MARKET</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">מודל־הכנסות (SaaS + marketplace + per־measurement/seat)</span><span class="src">PLATFORM</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">אפשור־ייצור (רשימות־חיתוך + nesting → CNC/G־Code)</span><span class="src">PLATFORM</span></div>
+        <div class="row"><span class="st"><span class="pill plan">⬜</span></span><span class="ft">מוכנות־NASDAQ (ענן multi־tenant, SOC2, observability, IP)</span><span class="src">PLATFORM</span></div>
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">מבנה־תאגידי: Soline חברת־בת פורת־מדידות</span><span class="src">COLLAB</span></div>
+        <div class="row"><span class="st"><span class="pill part">◐</span></span><span class="ft">שוק־ישראלי: Raumplan־PDP "סוס־טרויאני", עברית, וואטסאפ, Blum</span><span class="src">MARKET_IL</span></div>
+      </div>
+    </details>
+
+    <details class="area"><summary><span class="an">10</span> מכשיר, UX/UI ובאגים <span class="mini"><span class="m ok">4✅</span><span class="m bug">רבים⚠️</span></span><span class="chev">▾</span></summary>
+      <div class="rows">
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">Leica DISTO X6 — טווח/tilt/BLE + פונקציות Smart־Horizontal/P2P/Stake־out</span><span class="src">X6_CAPAB</span></div>
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">פרוטוקולי־BLE פוענחו: X6 (מדידה+זווית), Bosch GLM, Leica D2 <span class="d">— חי</span></span><span class="src">DISTO</span></div>
+        <div class="row"><span class="st"><span class="pill bug">⚠️</span></span><span class="ft">gate־XYZ: X6־לבד = מרחק+זווית־אנכית; azimuth דורש DST 360־X</span><span class="src">X6_CAPAB</span></div>
+        <div class="row"><span class="st"><span class="pill ok">✅</span></span><span class="ft">טוקני־מותג Theme + SolineComponents + "המשך־אחרון" + BigActionButton</span><span class="src">UX_AUDIT</span></div>
+        <div class="row"><span class="st"><span class="pill bug">⚠️</span></span><span class="ft">מסך־ההגדרות אינו־משפיע — כל ה־Prefs מתעלמים <span class="d">— P1-2</span></span><span class="src">APP_REVIEW</span></div>
+        <div class="row"><span class="st"><span class="pill bug">⚠️</span></span><span class="ft">3 באגי־P0 (קריסת־Compose / NPE / ClassCast)</span><span class="src">APP_REVIEW</span></div>
+        <div class="row"><span class="st"><span class="pill bug">⚠️</span></span><span class="ft">B1–B13 (פוליגון־פתוח, T־דורס, PDF־LTR, גובה־יחיד, עומק־לא־נמדד, שם־עברי, סוללה...)</span><span class="src">APP_ISSUES</span></div>
+        <div class="row"><span class="st"><span class="pill bug">⚠️</span></span><span class="ft">כאבי־נגרים (VoC): "מטבח־לא־נכנס" (60%), טעויות־אחרי־התקנה, CAD־יקר/לא־עברי</span><span class="src">PAINS</span></div>
+      </div>
+    </details>
+
+  </section>
+
+  <footer>
+    <b>Soline — תוכנית־עבודה חיה.</b> נבנתה ממיפוי מלא של כל השיחות והסוכנים (צד־מוצר, ממיר, אפליקציה).
+    המקור המלא לכל שורה: <code>Soline/ops/docs/</code> · <code>Soline/converter/docs/</code> · <code>Soline/HANDOFF-measure.md</code>.
+    זהו העוגן — מכאן מפרקים משימה־משימה. · soline.co.il
+  </footer>
+</div>
+
+<script>
+  (function(){
+    var tg=document.getElementById('tg'), root=document.documentElement;
+    function cur(){var e=root.getAttribute('data-theme'); if(e) return e; return matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+    tg.addEventListener('click',function(){root.setAttribute('data-theme', cur()==='dark'?'light':'dark');});
+    // active nav on scroll
+    var links=[].slice.call(document.querySelectorAll('nav.jump a'));
+    var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'));});
+    function onScroll(){
+      var y=window.scrollY+90, best=0;
+      secs.forEach(function(s,i){ if(s && s.offsetTop<=y) best=i; });
+      links.forEach(function(a,i){ a.classList.toggle('on', i===best); });
+    }
+    window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+  })();
+</script>

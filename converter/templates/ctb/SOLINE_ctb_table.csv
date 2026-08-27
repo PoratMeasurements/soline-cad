@@ -1,0 +1,21 @@
+ACI,Color name,Soline layer,Role,Pen width (mm),Plot color (SOLINE.ctb),Screening
+255,white/black,(section/border),Section-cut lines / sheet border (heaviest),0.70,Black,100%
+7,white/black,SOL-KIROT,Walls - cut outline,0.50,Black,100%
+9,grey,SOL-MIVNE,Structure / columns,0.35,Black,100%
+5,blue,SOL-PTACHIM,Openings - doors & windows,0.25,Black,100%
+6,magenta,SOL-CHASHMAL,Electrical,0.25,Black,100%
+4,cyan,SOL-INSTALATSIA,Plumbing / water,0.25,Black,100%
+2,yellow,SOL-GAZ,Gas,0.25,Black,100%
+141,blue-grey,SOL-MIZUG,HVAC / ventilation,0.25,Black,100%
+30,orange,SOL-TEURA,Lighting,0.25,Black,100%
+42,tan,SOL-RIHUT,Furniture / cabinetry,0.25,Black,100%
+150,turquoise,SOL-TEKST,Text / notes / labels,0.18,Black,100%
+250,grey,SOL-MISGERET,Title-block fine rules,0.18,Black,100%
+1,red,SOL-MIDOT-CHUTS,Outer / overall dimensions,0.13,Black,100%
+3,green,SOL-MIDOT-PNIM,Inner / clear dimensions,0.13,Black,100%
+251,grey,SOL-RITZPA,Floor slab / tiling,0.13,Black,100%
+8,dark grey,SOL-KIROT-MILUY,Wall poche / hatch fill (screened tone),0.13,Black,50%
+252,grey ramp,(reference),Light construction / setting-out lines,0.13,Black,50%
+253,grey ramp,(reference),Screened background / underlay,0.13,Black,40%
+254,grey ramp,(reference),Faint XREF / trace underlay,0.13,Black,25%
+all others (236 colors),(any),(default),Default medium pen - full 1-255 coverage (no fall-through),0.25,Black,100%

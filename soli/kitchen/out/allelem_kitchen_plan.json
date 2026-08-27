@@ -1,0 +1,745 @@
+{
+  "triangle": {
+    "sink": {
+      "X": 4000,
+      "Y": 1700
+    },
+    "hob": {
+      "X": 4000,
+      "Y": 2400
+    },
+    "fridge": {
+      "X": 350,
+      "Y": 0
+    }
+  },
+  "tri": {
+    "legs": [
+      [
+        "כיור→כיריים",
+        700
+      ],
+      [
+        "כיריים→מקרר",
+        4368.352092036538
+      ],
+      [
+        "מקרר→כיור",
+        4026.4748850576475
+      ]
+    ],
+    "sum": 9094.826977094186
+  },
+  "warnings": [
+    "פינה בין קיר 1↔2: הקירות עמוסים — ללא ארון-פינה ייעודי, חיבור-פינה פשוט (butt). ניצול-פינה חלקי.",
+    "קיר 1: אין מקום למדיח (SB-DW) — הקיר עמוס. לשקול קיר אחר / הקטנת 600מ\"מ.",
+    "קיר 2: חלון @1000 — אין ארון עליון בקטע זה (סף 900).",
+    "פינה בין קיר 0↔1: שוריין 900מ\"מ (קרוסלה (Lazy-Susan)) בקיר 1 + החזרת-פינה בקיר 0.",
+    "פינה בין קיר 2↔3: שוריין 900מ\"מ (קרוסלה (Lazy-Susan)) בקיר 3 + החזרת-פינה בקיר 2.",
+    "פינה בין קיר 3↔0: שוריין 900מ\"מ (קרוסלה (Lazy-Susan)) בקיר 0 + החזרת-פינה בקיר 3.",
+    "משולש עבודה: צלע כיור→כיריים=0.70מ' קצרה מהמינימום 1.2מ' (NKBA)",
+    "משולש עבודה: צלע כיריים→מקרר=4.37מ' ארוכה מהמומלץ 2.7מ' (NKBA)",
+    "משולש עבודה: צלע מקרר→כיור=4.03מ' ארוכה מהמומלץ 2.7מ' (NKBA)",
+    "משולש עבודה: סכום 9.09מ' > 8מ' (NKBA)"
+  ],
+  "corners": [
+    {
+      "a": 0,
+      "b": 1,
+      "aEnd": true,
+      "bStart": true,
+      "_honored": true
+    },
+    {
+      "a": 1,
+      "b": 2,
+      "aEnd": true,
+      "bStart": true,
+      "_butt": true
+    },
+    {
+      "a": 2,
+      "b": 3,
+      "aEnd": true,
+      "bStart": true,
+      "_honored": true
+    },
+    {
+      "a": 3,
+      "b": 0,
+      "aEnd": true,
+      "bStart": true,
+      "_honored": true
+    }
+  ],
+  "layout": [
+    {
+      "wall": 0,
+      "length": 4000,
+      "base": [
+        {
+          "type": "base",
+          "family": "corner",
+          "role": "corner",
+          "code": "SC-B-LAZY-900",
+          "w": 900,
+          "a": 0,
+          "b": 900,
+          "corner": {
+            "code": "LAZY",
+            "name": "קרוסלה (Lazy-Susan)",
+            "minW": 900,
+            "door": "bi-fold",
+            "access": "מלא",
+            "reserveAdj": 600
+          },
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "blind"
+          }
+        },
+        {
+          "type": "base",
+          "family": "base",
+          "role": "door",
+          "code": "SB-1200",
+          "w": 1200,
+          "a": 900,
+          "b": 2100,
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        },
+        {
+          "type": "base",
+          "family": "base",
+          "role": "door",
+          "code": "SB-1200",
+          "w": 1200,
+          "a": 2100,
+          "b": 3300,
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        },
+        {
+          "type": "filler",
+          "family": "filler",
+          "code": "SF-100",
+          "w": 100,
+          "a": 3300,
+          "b": 3400
+        },
+        {
+          "type": "filler",
+          "family": "panel",
+          "role": "return",
+          "code": "SP-END-600",
+          "w": 600,
+          "a": 3400,
+          "b": 4000,
+          "note": "החזרת-פינה"
+        }
+      ],
+      "uppers": [
+        {
+          "type": "wall",
+          "family": "wall",
+          "role": "lift",
+          "code": "SW-LIFT-1000",
+          "w": 1000,
+          "a": 0,
+          "b": 1000,
+          "lift": {
+            "code": "HS",
+            "name": "AVENTOS HS (up & over)",
+            "minH": 350,
+            "maxH": 800,
+            "maxW": 1800,
+            "note": "דלת מלמעלה-ומעל"
+          },
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        },
+        {
+          "type": "wall",
+          "family": "wall",
+          "role": "lift",
+          "code": "SW-LIFT-1000",
+          "w": 1000,
+          "a": 1000,
+          "b": 2000,
+          "lift": {
+            "code": "HS",
+            "name": "AVENTOS HS (up & over)",
+            "minH": 350,
+            "maxH": 800,
+            "maxW": 1800,
+            "note": "דלת מלמעלה-ומעל"
+          },
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        },
+        {
+          "type": "wall",
+          "family": "wall",
+          "role": "lift",
+          "code": "SW-LIFT-1000",
+          "w": 1000,
+          "a": 2000,
+          "b": 3000,
+          "lift": {
+            "code": "HS",
+            "name": "AVENTOS HS (up & over)",
+            "minH": 350,
+            "maxH": 800,
+            "maxW": 1800,
+            "note": "דלת מלמעלה-ומעל"
+          },
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        },
+        {
+          "type": "wall",
+          "family": "wall",
+          "role": "lift",
+          "code": "SW-LIFT-1000",
+          "w": 1000,
+          "a": 3000,
+          "b": 4000,
+          "lift": {
+            "code": "HS",
+            "name": "AVENTOS HS (up & over)",
+            "minH": 350,
+            "maxH": 800,
+            "maxW": 1800,
+            "note": "דלת מלמעלה-ומעל"
+          },
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        }
+      ],
+      "hood": false
+    },
+    {
+      "wall": 1,
+      "length": 3000,
+      "base": [
+        {
+          "type": "base",
+          "family": "corner",
+          "role": "corner",
+          "code": "SC-B-LAZY-900",
+          "w": 900,
+          "a": 0,
+          "b": 900,
+          "corner": {
+            "code": "LAZY",
+            "name": "קרוסלה (Lazy-Susan)",
+            "minW": 900,
+            "door": "bi-fold",
+            "access": "מלא",
+            "reserveAdj": 600
+          },
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "blind"
+          }
+        },
+        {
+          "type": "base",
+          "family": "base",
+          "role": "drawers",
+          "code": "SB-DWR-300",
+          "w": 300,
+          "a": 900,
+          "b": 1200,
+          "_drawers": {
+            "system": "LEGRABOX",
+            "NL": 550,
+            "boxW": 238,
+            "load": 70,
+            "fronts": [
+              {
+                "h": 158,
+                "sys": "M"
+              },
+              {
+                "h": 280,
+                "sys": "C"
+              },
+              {
+                "h": 280,
+                "sys": "C"
+              }
+            ]
+          }
+        },
+        {
+          "type": "filler",
+          "family": "filler",
+          "code": "SF-50",
+          "w": 50,
+          "a": 1200,
+          "b": 1250
+        },
+        {
+          "type": "base",
+          "family": "appliance",
+          "special": "SINK",
+          "cat": "sink",
+          "code": "SB-SINK-900",
+          "w": 900,
+          "a": 1250,
+          "b": 2150,
+          "needs": [
+            "water",
+            "drain"
+          ],
+          "front": "door",
+          "svcX": 1700,
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        },
+        {
+          "type": "base",
+          "family": "appliance",
+          "special": "HOB",
+          "cat": "hob",
+          "code": "SB-HOB-800",
+          "w": 800,
+          "a": 2150,
+          "b": 2950,
+          "needs": [
+            "gas_or_elec"
+          ],
+          "front": "drawers",
+          "svcX": 2400,
+          "_drawers": {
+            "system": "TANDEMBOX antaro",
+            "NL": 550,
+            "boxW": 738,
+            "load": 65,
+            "fronts": [
+              {
+                "h": 129,
+                "sys": "M"
+              },
+              {
+                "h": 294,
+                "sys": "K"
+              },
+              {
+                "h": 294,
+                "sys": "K"
+              }
+            ]
+          }
+        },
+        {
+          "type": "filler",
+          "family": "filler",
+          "code": "SF-50",
+          "w": 50,
+          "a": 2950,
+          "b": 3000
+        }
+      ],
+      "uppers": [
+        {
+          "type": "wall",
+          "family": "wall",
+          "role": "lift",
+          "code": "SW-LIFT-1000",
+          "w": 1000,
+          "a": 0,
+          "b": 1000,
+          "lift": {
+            "code": "HS",
+            "name": "AVENTOS HS (up & over)",
+            "minH": 350,
+            "maxH": 800,
+            "maxW": 1800,
+            "note": "דלת מלמעלה-ומעל"
+          },
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        },
+        {
+          "type": "wall",
+          "family": "wall",
+          "role": "lift",
+          "code": "SW-LIFT-1000",
+          "w": 1000,
+          "a": 1000,
+          "b": 2000,
+          "lift": {
+            "code": "HS",
+            "name": "AVENTOS HS (up & over)",
+            "minH": 350,
+            "maxH": 800,
+            "maxW": 1800,
+            "note": "דלת מלמעלה-ומעל"
+          },
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        },
+        {
+          "type": "wall",
+          "family": "wall",
+          "role": "lift",
+          "code": "SW-LIFT-1000",
+          "w": 1000,
+          "a": 2000,
+          "b": 3000,
+          "lift": {
+            "code": "HS",
+            "name": "AVENTOS HS (up & over)",
+            "minH": 350,
+            "maxH": 800,
+            "maxW": 1800,
+            "note": "דלת מלמעלה-ומעל"
+          },
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        }
+      ],
+      "hood": true
+    },
+    {
+      "wall": 2,
+      "length": 4000,
+      "base": [
+        {
+          "type": "base",
+          "family": "base",
+          "role": "door",
+          "code": "SB-1200",
+          "w": 1200,
+          "a": 0,
+          "b": 1200,
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        },
+        {
+          "type": "filler",
+          "family": "filler",
+          "code": "SF-50",
+          "w": 50,
+          "a": 1200,
+          "b": 1250
+        },
+        {
+          "type": "base",
+          "family": "base",
+          "role": "drawers",
+          "code": "SB-DWR-150",
+          "w": 150,
+          "a": 2850,
+          "b": 3000,
+          "_drawers": {
+            "system": "LEGRABOX",
+            "NL": 550,
+            "boxW": 88,
+            "load": 70,
+            "fronts": [
+              {
+                "h": 158,
+                "sys": "M"
+              },
+              {
+                "h": 280,
+                "sys": "C"
+              },
+              {
+                "h": 280,
+                "sys": "C"
+              }
+            ]
+          }
+        },
+        {
+          "type": "base",
+          "family": "base",
+          "role": "drawers",
+          "code": "SB-DWR-200",
+          "w": 200,
+          "a": 3200,
+          "b": 3400,
+          "_drawers": {
+            "system": "LEGRABOX",
+            "NL": 550,
+            "boxW": 138,
+            "load": 70,
+            "fronts": [
+              {
+                "h": 158,
+                "sys": "M"
+              },
+              {
+                "h": 280,
+                "sys": "C"
+              },
+              {
+                "h": 280,
+                "sys": "C"
+              }
+            ]
+          }
+        },
+        {
+          "type": "filler",
+          "family": "panel",
+          "role": "return",
+          "code": "SP-END-600",
+          "w": 600,
+          "a": 3400,
+          "b": 4000,
+          "note": "החזרת-פינה"
+        }
+      ],
+      "uppers": [
+        {
+          "type": "wall",
+          "family": "wall",
+          "role": "door",
+          "code": "SW-500",
+          "w": 500,
+          "a": 0,
+          "b": 500,
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 1,
+            "type": "full"
+          }
+        },
+        {
+          "type": "wall",
+          "family": "wall",
+          "role": "lift",
+          "code": "SW-LIFT-800",
+          "w": 800,
+          "a": 3200,
+          "b": 4000,
+          "lift": {
+            "code": "HS",
+            "name": "AVENTOS HS (up & over)",
+            "minH": 350,
+            "maxH": 800,
+            "maxW": 1800,
+            "note": "דלת מלמעלה-ומעל"
+          },
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        }
+      ],
+      "hood": false
+    },
+    {
+      "wall": 3,
+      "length": 3000,
+      "base": [
+        {
+          "type": "base",
+          "family": "corner",
+          "role": "corner",
+          "code": "SC-B-LAZY-900",
+          "w": 900,
+          "a": 0,
+          "b": 900,
+          "corner": {
+            "code": "LAZY",
+            "name": "קרוסלה (Lazy-Susan)",
+            "minW": 900,
+            "door": "bi-fold",
+            "access": "מלא",
+            "reserveAdj": 600
+          },
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "blind"
+          }
+        },
+        {
+          "type": "base",
+          "family": "base",
+          "role": "door",
+          "code": "SB-1200",
+          "w": 1200,
+          "a": 900,
+          "b": 2100,
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        },
+        {
+          "type": "base",
+          "family": "base",
+          "role": "drawers",
+          "code": "SB-DWR-300",
+          "w": 300,
+          "a": 2100,
+          "b": 2400,
+          "_drawers": {
+            "system": "LEGRABOX",
+            "NL": 550,
+            "boxW": 238,
+            "load": 70,
+            "fronts": [
+              {
+                "h": 158,
+                "sys": "M"
+              },
+              {
+                "h": 280,
+                "sys": "C"
+              },
+              {
+                "h": 280,
+                "sys": "C"
+              }
+            ]
+          }
+        },
+        {
+          "type": "filler",
+          "family": "panel",
+          "role": "return",
+          "code": "SP-END-600",
+          "w": 600,
+          "a": 2400,
+          "b": 3000,
+          "note": "החזרת-פינה"
+        }
+      ],
+      "uppers": [
+        {
+          "type": "wall",
+          "family": "wall",
+          "role": "lift",
+          "code": "SW-LIFT-1000",
+          "w": 1000,
+          "a": 800,
+          "b": 1800,
+          "lift": {
+            "code": "HS",
+            "name": "AVENTOS HS (up & over)",
+            "minH": 350,
+            "maxH": 800,
+            "maxW": 1800,
+            "note": "דלת מלמעלה-ומעל"
+          },
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        },
+        {
+          "type": "wall",
+          "family": "wall",
+          "role": "lift",
+          "code": "SW-LIFT-1000",
+          "w": 1000,
+          "a": 1800,
+          "b": 2800,
+          "lift": {
+            "code": "HS",
+            "name": "AVENTOS HS (up & over)",
+            "minH": 350,
+            "maxH": 800,
+            "maxW": 1800,
+            "note": "דלת מלמעלה-ומעל"
+          },
+          "_hinges": {
+            "perDoor": 2,
+            "doors": 2,
+            "type": "full"
+          }
+        }
+      ],
+      "hood": false
+    }
+  ],
+  "islands": [],
+  "modules": {
+    "SC-B-LAZY-900": 3,
+    "SB-1200": 4,
+    "SF-100": 1,
+    "SP-END-600": 3,
+    "SW-LIFT-1000": 9,
+    "SB-DWR-300": 2,
+    "SF-50": 3,
+    "SB-SINK-900": 1,
+    "SB-HOB-800": 1,
+    "SB-DWR-150": 1,
+    "SB-DWR-200": 1,
+    "SW-500": 1,
+    "SW-LIFT-800": 1
+  },
+  "sheets": {
+    "MFC": {
+      "name": "מלמין (MFC 18mm)",
+      "sheet": "2800×2070",
+      "sheets": 11,
+      "parts": 147,
+      "util": 64.1,
+      "oversize": 0
+    },
+    "HDF": {
+      "name": "גב HDF/מלמין 8mm",
+      "sheet": "2800×2070",
+      "sheets": 4,
+      "parts": 39,
+      "util": 69.4,
+      "oversize": 0
+    },
+    "MDF": {
+      "name": "MDF צבוע/מצופה 18mm",
+      "sheet": "2800×2070",
+      "sheets": 4,
+      "parts": 52,
+      "util": 63.1,
+      "oversize": 0
+    }
+  }
+}

@@ -1,0 +1,15 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Soline room plan measurement mark">
+  <!-- Icon C: an open room-plan square (orange) with a teal measurement point at the open corner -->
+  <rect x="0" y="0" width="512" height="512" rx="116" ry="116" fill="#FBF4E6"/>
+  <!-- room outline, opened at the top-left corner -->
+  <path d="M 214 150
+           L 322 150 Q 362 150 362 190
+           L 362 322 Q 362 362 322 362
+           L 190 362 Q 150 362 150 322
+           L 150 206"
+        fill="none" stroke="#F49A1A" stroke-width="48"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- teal measurement point anchoring the open corner -->
+  <circle cx="166" cy="166" r="30" fill="#1596A8"/>
+  <circle cx="166" cy="166" r="11" fill="#FBF4E6"/>
+</svg>

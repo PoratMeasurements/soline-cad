@@ -1,0 +1,22 @@
+{
+  "name": "מטבח-חוץ לדוגמה (L)",
+  "walls": [
+    {
+      "num": 0, "sx": 0, "sy": 0, "ex": 3600, "ey": 0,
+      "length": 3600, "height": 2400, "thick": 120,
+      "fixtures": [
+        { "name": "Gas",          "desc": "גז + ברז ניתוק", "w": 60, "h": 60, "x": 900,  "y": 300 },
+        { "name": "Power Line",   "desc": "GFCI",           "w": 60, "h": 60, "x": 1600, "y": 300 },
+        { "name": "Water Supply", "desc": "מים",            "w": 60, "h": 60, "x": 2700, "y": 300 },
+        { "name": "ניקוז רצפתי",  "desc": "drain",          "w": 100,"h": 100,"x": 2700, "y": 0 }
+      ]
+    },
+    {
+      "num": 1, "sx": 3600, "sy": 0, "ex": 3600, "ey": 2400,
+      "length": 2400, "height": 2400, "thick": 120,
+      "fixtures": [
+        { "name": "Power Line", "desc": "GFCI", "w": 60, "h": 60, "x": 600, "y": 300 }
+      ]
+    }
+  ]
+}
