@@ -1,0 +1,33 @@
+# ── Soline .gitignore (production hygiene) ──
+# Google Drive noise (was polluting .git and the tree)
+desktop.ini
+**/desktop.ini
+Thumbs.db
+.DS_Store
+
+# Android / Gradle build artifacts
+**/build/
+**/.gradle/
+**/.cxx/
+local.properties
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Node (converter tooling)
+**/node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Generated APK output folder
+_LATEST/apk/
+
+# Logs / temp
+*.log
+*.tmp
