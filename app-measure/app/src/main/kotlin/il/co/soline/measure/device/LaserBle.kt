@@ -129,6 +129,9 @@ class LaserBle(private val context: Context) {
         val LEICA_MEAS = leica("010d")      // X6: מרחק + זווית אנכית (20B, indicate)
         val LEICA_D2_MEAS = leica("0101")   // DISTO D2: מרחק בלבד (float32 LE מטר, 4B)
         val LEICA_HANGLE = leica("010f")    // זווית אופקית מ-DST360 (read/poll ~150ms)
+        val LEICA_DST_CMD = leica("0120")   // פקודת-הפעלת-DST-360 (WRITE) — "raiseEvent 100\r\n" (מ-CVSM)
+        // פקודת-ההפעלה שמפעילה את מצב-ה-P2P של ה-DST 360 (אחרת האזימוט נשאר אפס). מ-ניתוח-CVSM.
+        val DST_ACTIVATE_CMD = "raiseEvent 100\r\n".toByteArray(Charsets.US_ASCII)
         val BOSCH_SVC = UUID.fromString("02a6c0d0-0451-4000-b000-fb3210111989")
         val BOSCH_MEAS = UUID.fromString("02a6c0d1-0451-4000-b000-fb3210111989")
         val CCCD = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
@@ -176,7 +179,8 @@ class LaserBle(private val context: Context) {
             val nm = (result.device.name ?: rec?.deviceName ?: "").lowercase()
             val isLeica = uuids.any { it.contains("f831-4395-b29d-570977d5bf94") } ||
                 nm.contains("disto") || nm.contains("leica") || nm.contains("x6") ||
-                nm.contains("x4") || nm.contains("x3") || nm.contains("dst")
+                nm.contains("x4") || nm.contains("x3") || nm.contains("dst") ||
+                nm.contains("d2") || nm.contains("d1") || nm.contains("d5") || nm.contains("d8")
             val isBosch = uuids.any { it.contains("fb3210111989") } ||
                 nm.contains("glm") || nm.contains("bosch") || nm.contains("blaze")
             val raw = result.device.name ?: rec?.deviceName
@@ -322,6 +326,7 @@ class LaserBle(private val context: Context) {
             val leicaD2 = findChar(g, LEICA_D2_MEAS)
             val boschMeas = findChar(g, BOSCH_MEAS)
             hAngleChar = findChar(g, LEICA_HANGLE)
+            val dstCmd = findChar(g, LEICA_DST_CMD)   // פקודת-הפעלת-DST-360 (X6+DST)
             log("leicaMeas=${leicaMeas != null} leicaD2=${leicaD2 != null} boschMeas=${boschMeas != null} hAngle=${hAngleChar != null}")
             diag {
                 copy(
@@ -340,6 +345,17 @@ class LaserBle(private val context: Context) {
                     for (s in g.services) for (c in s.characteristics) log("  char ${c.uuid} props=0x%02X".format(c.properties))
                     // מדליקים notify/indicate על כל ה-characteristics כדי ללכוד את ערוץ-המדידה
                     enableAllNotifyIndicate(g)
+                    // הפעלת-DST-360 תוכנתית (מ-CVSM): כתיבת "raiseEvent 100\r\n" ל-3ab10120 מפעילה
+                    // את מצב-ה-P2P — אחרת האזימוט נשאר אפס. נשלח אחרי ה-CCCD (התור מסדֵּר).
+                    if (dstCmd != null) enqueue {
+                        @Suppress("DEPRECATION")
+                        run {
+                            dstCmd.value = DST_ACTIVATE_CMD
+                            val ok = try { g.writeCharacteristic(dstCmd) } catch (_: Exception) { false }
+                            log("DST activate write ok=$ok")
+                            if (!ok) next()
+                        }
+                    }
                     // הזווית-האופקית (DST 360-X · 3ab1010f) היא read/poll — לא notify. סוקרים אותה
                     // **רק כשמסך-P2P פעיל** (מחוץ ל-P2P ה-poll מחזיר אפסים, מציף ומחניק את notify-המרחק).
                     if (p2pActive) startHAnglePoll(g)

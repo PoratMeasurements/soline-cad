@@ -247,6 +247,8 @@ private fun BugEditorOverlay(
 
     val annotations = remember { mutableStateListOf<AnnUi>() }
     var notes by remember { mutableStateOf("") }
+    // צירוף-נתוני-לייזר כ**מתג** — נצרב בשמירה, בלי לגזול את שדה-ההערות (שנשאר של המודד).
+    var attachLaser by remember { mutableStateOf(false) }
     var selectedId by remember { mutableStateOf<Int?>(null) }
     var nextId by remember { mutableStateOf(1) }
     var boxSize by remember { mutableStateOf(IntSize.Zero) }
@@ -293,12 +295,17 @@ private fun BugEditorOverlay(
                             if (saving) return@Button
                             saving = true
                             val sizeNow = boxSize
+                            // נתוני-הלייזר מצורפים רק אם המתג פעיל — ההערות של המודד נשמרות כמות-שהן.
+                            val finalNotes = if (attachLaser) {
+                                val d = formatLaserDiag(SolineApp.instance.ble.diag.value)
+                                if (notes.isBlank()) d else "$notes\n\n$d"
+                            } else notes
                             scope.launch {
                                 try {
                                     val saved = withContext(Dispatchers.IO) {
                                         persistReport(
                                             context, bitmap, sizeNow, annotations.toList(),
-                                            notes, screen, projectId, roomId,
+                                            finalNotes, screen, projectId, roomId,
                                         )
                                     }
                                     shareBugReport(context, saved)
@@ -381,10 +388,12 @@ private fun BugEditorOverlay(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     val connected by SolineApp.instance.ble.connected.collectAsState()
-                    TextButton(onClick = {
-                        val snap = formatLaserDiag(SolineApp.instance.ble.diag.value)
-                        notes = if (notes.isBlank()) snap else "$notes\n$snap"
-                    }) { Text("📡 צרף נתוני-לייזר", color = Teal, fontWeight = FontWeight.Bold) }
+                    TextButton(onClick = { attachLaser = !attachLaser }) {
+                        Text(
+                            if (attachLaser) "✓ נתוני-לייזר יצורפו" else "📡 צרף נתוני-לייזר",
+                            color = if (attachLaser) OkGreen else Teal, fontWeight = FontWeight.Bold,
+                        )
+                    }
                     Spacer(Modifier.weight(1f))
                     Text(
                         if (connected != null) "מחובר: $connected" else "לייזר לא מחובר",

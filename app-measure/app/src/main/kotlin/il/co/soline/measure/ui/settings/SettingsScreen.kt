@@ -34,6 +34,7 @@ import il.co.soline.measure.ui.Orange
 import il.co.soline.measure.ui.Teal
 import il.co.soline.measure.ui.components.BrandHeader
 import il.co.soline.measure.ui.components.SolineCard
+import il.co.soline.measure.update.UpdatePanel
 import il.co.soline.measure.ui.bug.BugReportStore
 import il.co.soline.measure.ui.bug.SavedBugReport
 import il.co.soline.measure.ui.bug.shareAllBugReports
@@ -103,6 +104,11 @@ fun SettingsScreen(
                             modifier = Modifier.fillMaxWidth(),
                             colors = fieldColors()
                         )
+                    }
+
+                    // ---- עדכון גרסה (OTA) ----
+                    Section("עדכון גרסה") {
+                        UpdatePanel()
                     }
 
                     // ---- מדידה ----

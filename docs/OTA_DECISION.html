@@ -1,0 +1,218 @@
+<title>עדכון גרסה מרחוק</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Poppins:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root{
+    --bg:#FBF4E6; --surface:#FFFFFF; --surface2:#FAF3E2; --ink:#2B2620; --muted:#6E6656;
+    --border:#EAD9BC; --accent:#E8890B; --teal:#127C8C;
+    --ok:#2E9E6B; --okbg:#E8F5EE; --warn:#C77A12; --warnbg:#FBF0DC; --risk:#C6392B; --riskbg:#FBE7E3;
+    --shadow:0 1px 2px rgba(74,58,20,.05),0 10px 30px rgba(74,58,20,.08);
+    --shadow-lg:0 2px 4px rgba(74,58,20,.06),0 20px 50px rgba(74,58,20,.13);
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme=light]){
+    --bg:#14171A; --surface:#1D2328; --surface2:#232a30; --ink:#ECE7DB; --muted:#A7A093;
+    --border:#313941; --accent:#F7AC3A; --teal:#43B9CA;
+    --ok:#54C08A; --okbg:#16302410; --warn:#E5A63C; --warnbg:#2a220f; --risk:#E5685A; --riskbg:#2c1512;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 34px rgba(0,0,0,.42);
+    --shadow-lg:0 2px 6px rgba(0,0,0,.4),0 24px 60px rgba(0,0,0,.5);
+  }}
+  :root[data-theme=dark]{
+    --bg:#14171A; --surface:#1D2328; --surface2:#232a30; --ink:#ECE7DB; --muted:#A7A093;
+    --border:#313941; --accent:#F7AC3A; --teal:#43B9CA;
+    --ok:#54C08A; --okbg:#163024; --warn:#E5A63C; --warnbg:#2a220f; --risk:#E5685A; --riskbg:#2c1512;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 34px rgba(0,0,0,.42);
+    --shadow-lg:0 2px 6px rgba(0,0,0,.4),0 24px 60px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);direction:rtl;
+    font-family:Heebo,system-ui,-apple-system,sans-serif;line-height:1.65;
+    padding:max(20px,env(safe-area-inset-top)) 18px 72px;font-size:16px}
+  .wrap{max-width:820px;margin:0 auto}
+  ::selection{background:var(--accent);color:#fff}
+
+  /* header */
+  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
+    border-bottom:2px solid var(--border);padding-bottom:20px;margin-bottom:8px}
+  .wm{font-family:Poppins,sans-serif;font-size:27px;font-weight:700;color:var(--accent);line-height:1}
+  .wm b{color:var(--teal)}
+  .kicker{font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);
+    font-weight:700;margin-top:3px}
+  .meta{color:var(--muted);font-size:12.5px;text-align:left;white-space:nowrap;line-height:1.7}
+  h1{font-size:30px;font-weight:800;margin:26px 0 6px;letter-spacing:-.01em;text-wrap:balance;line-height:1.15}
+  .lead{font-size:17.5px;color:var(--muted);max-width:62ch;margin:0 0 8px}
+
+  /* section */
+  h2{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);
+    font-weight:800;margin:38px 0 14px;display:flex;align-items:center;gap:10px}
+  h2 .num{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);
+    border:1.5px solid var(--accent);border-radius:6px;padding:1px 7px;font-weight:600}
+  h2::after{content:"";flex:1;height:1.5px;background:var(--border)}
+  p{margin:0 0 14px;max-width:64ch}
+  strong{font-weight:700;color:var(--ink)}
+
+  /* summary card */
+  .summary{background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    padding:22px 24px;box-shadow:var(--shadow-lg);margin:6px 0 4px}
+  .summary p:last-child{margin-bottom:0}
+  .pillrow{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 2px}
+  .pill{font-size:12.5px;font-weight:600;padding:5px 12px;border-radius:999px;
+    background:var(--surface2);border:1px solid var(--border);color:var(--ink)}
+  .pill.done{background:var(--okbg);border-color:var(--ok);color:var(--ok)}
+  .pill.hold{background:var(--warnbg);border-color:var(--warn);color:var(--warn)}
+
+  /* the tension diagram */
+  .flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;margin:8px 0 18px;
+    border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface)}
+  .flow .step{flex:1 1 150px;padding:16px 18px;min-width:150px}
+  .flow .step + .step{border-inline-start:1px solid var(--border)}
+  .flow .s-lbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .flow .s-txt{font-size:14.5px;margin-top:5px;line-height:1.5}
+  .flow .step.pain{background:var(--riskbg)}
+  .flow .step.pain .s-lbl{color:var(--risk)}
+
+  /* options table */
+  .tw{overflow-x:auto;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:640px;background:var(--surface);font-size:14px}
+  th,td{text-align:right;padding:13px 15px;border-bottom:1px solid var(--border);vertical-align:top}
+  thead th{background:var(--surface2);font-size:12px;letter-spacing:.04em;color:var(--muted);
+    font-weight:800;white-space:nowrap;position:sticky;top:0}
+  tbody tr:last-child td{border-bottom:none}
+  .opt{font-weight:700;color:var(--ink);font-size:14.5px}
+  .opt small{display:block;font-weight:500;color:var(--muted);font-size:12px;margin-top:2px}
+  .rec-row{background:linear-gradient(90deg,var(--okbg),transparent)}
+  .mark{font-weight:800;font-size:15px}.mark.y{color:var(--ok)}.mark.n{color:var(--risk)}.mark.m{color:var(--warn)}
+  .tag-rec{display:inline-block;font-size:10.5px;font-weight:800;background:var(--ok);color:#fff;
+    border-radius:6px;padding:2px 7px;margin-inline-start:6px;vertical-align:middle}
+
+  /* recommendation */
+  .rec{background:var(--surface);border:1px solid var(--border);border-inline-start:5px solid var(--ok);
+    border-radius:14px;padding:20px 22px;box-shadow:var(--shadow);margin:10px 0}
+  .rec h3{margin:0 0 8px;font-size:18px;color:var(--ink);display:flex;align-items:center;gap:9px}
+  .rec h3 .dot{width:10px;height:10px;border-radius:50%;background:var(--ok);flex:none}
+  .rec p:last-child{margin-bottom:0}
+  code{font-family:'JetBrains Mono',monospace;font-size:.86em;background:var(--surface2);
+    border:1px solid var(--border);border-radius:5px;padding:1px 6px;color:var(--teal);white-space:nowrap}
+
+  /* decision checklist */
+  .decide{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:8px 22px;box-shadow:var(--shadow)}
+  .decide .item{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--border)}
+  .decide .item:last-child{border-bottom:none}
+  .decide .box{width:22px;height:22px;border:2px solid var(--accent);border-radius:6px;flex:none;margin-top:2px}
+  .decide .q{font-weight:700;font-size:15.5px;margin:0 0 3px}
+  .decide .h{font-size:13.5px;color:var(--muted);margin:0;max-width:60ch}
+
+  /* glossary */
+  .gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:6px}
+  .gloss div{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:13px 15px}
+  .gloss dt{font-weight:700;font-size:14px;color:var(--teal)}
+  .gloss dd{margin:4px 0 0;font-size:13px;color:var(--muted);line-height:1.55}
+
+  footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--border);
+    color:var(--muted);font-size:12.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+  .tog{position:fixed;top:12px;inset-inline-start:12px;width:38px;height:38px;border-radius:999px;
+    background:var(--surface);border:1px solid var(--border);color:var(--ink);box-shadow:var(--shadow);
+    cursor:pointer;font-size:16px;z-index:10}
+  .tog:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  @media(max-width:520px){h1{font-size:24px}body{font-size:15px}.flow .step + .step{border-inline-start:none;border-top:1px solid var(--border)}}
+</style>
+
+<button class="tog" aria-label="החלף מצב תצוגה" onclick="var r=document.documentElement,d=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');r.setAttribute('data-theme',d==='dark'?'light':'dark')">◐</button>
+
+<div class="wrap">
+  <div class="top">
+    <div>
+      <div class="wm">soline<b>.</b></div>
+      <div class="kicker">מסמך החלטה · למנהל המוצר</div>
+    </div>
+    <div class="meta">פורת מדידות<br>27 אוג׳ 2026<br>מכין: צוות הפיתוח</div>
+  </div>
+
+  <h1>איך נעדכן את אפליקציית-המדידה מרחוק</h1>
+  <p class="lead">רוצים שהמודד יעדכן את האפליקציה בלחיצת-כפתור — בלי מחשב, בלי כבל. המנגנון כבר בנוי; נותרה החלטה אחת: איך האפליקציה מושכת גרסה חדשה מהמאגר הפרטי של פורת.</p>
+
+  <div class="summary">
+    <p><strong>מה כבר עשינו.</strong> קוד-האפליקציה עבר למאגר GitHub הפרטי של פורת (<code>soline-cad</code>), עם היגיינת-פרודקשן מלאה. בנינו באפליקציה מסך <strong>"בדוק עדכון גרסה"</strong> שיודע להוריד ולהתקין גרסה חדשה לבד.</p>
+    <p><strong>מה חסום.</strong> כדי שהאפליקציה תמשוך את הגרסה ממאגר <em>פרטי</em>, היא צריכה להזדהות. זו נקודת-ההחלטה היחידה — ויש לה השלכת-אבטחה שדורשת את אישורכם.</p>
+    <div class="pillrow">
+      <span class="pill done">✓ קוד במאגר פורת</span>
+      <span class="pill done">✓ מסך-עדכון באפליקציה</span>
+      <span class="pill done">✓ מדיניות: כל גרסה → GitHub</span>
+      <span class="pill hold">⏳ ממתין: איך מזדהים למאגר הפרטי</span>
+    </div>
+  </div>
+
+  <h2><span class="num">01</span> הדילמה — בקצרה</h2>
+  <p>מאגר פרטי הוא הבחירה הנכונה (הקוד לא-חשוף לאיש). אבל הוא יוצר שרשרת בלתי-נמנעת:</p>
+  <div class="flow">
+    <div class="step"><div class="s-lbl">המאגר</div><div class="s-txt">פרטי — רק פורת רואה את הקוד</div></div>
+    <div class="step pain"><div class="s-lbl">לכן</div><div class="s-txt">הורדת-הגרסה <strong>דורשת הזדהות</strong></div></div>
+    <div class="step"><div class="s-lbl">אבל</div><div class="s-txt">אפליקציה מופצת צריכה <strong>אישור מוטמע בתוכה</strong> — או התחברות-משתמש</div></div>
+  </div>
+  <p>אין דרך שאפליקציה תמשוך ממאגר-פרטי בלי אחד מהשניים. השאלה היא רק <strong>איזו דרך</strong> — וכל דרך היא איזון בין פשטות, אבטחה, ועלות.</p>
+
+  <h2><span class="num">02</span> האפשרויות</h2>
+  <div class="tw">
+    <table>
+      <thead>
+        <tr><th>אפשרות</th><th>רק פורת/GitHub?</th><th>אבטחה</th><th>מאמץ</th><th>עלות</th></tr>
+      </thead>
+      <tbody>
+        <tr class="rec-row">
+          <td class="opt">א · טוקן קריאה-בלבד מוטמע<span class="tag-rec">מומלץ</span><small>PAT מצומצם, מוזרק בזמן-בנייה, לא נשמר בקוד</small></td>
+          <td><span class="mark y">✓</span> כן</td>
+          <td><span class="mark m">בינונית</span><br><small>הטוקן ניתן-לחילוץ מה-APK (קריאה-בלבד, רק Releases)</small></td>
+          <td><span class="mark y">נמוך</span><br><small>מוכן תוך שעה</small></td>
+          <td><span class="mark y">₪0</span></td>
+        </tr>
+        <tr>
+          <td class="opt">ב · Firebase App Distribution<small>הפצה-פרטית מאומתת פר-מכשיר</small></td>
+          <td><span class="mark n">✗</span> לא<br><small>שירות נוסף של Google</small></td>
+          <td><span class="mark y">גבוהה</span><br><small>בלי טוקן מוטמע</small></td>
+          <td><span class="mark m">בינוני</span><br><small>הקמת-שירות + הזמנת-בודקים</small></td>
+          <td><span class="mark y">₪0</span><br><small>חינם עד מגבלה</small></td>
+        </tr>
+        <tr>
+          <td class="opt">ג · ידני בינתיים<small>הכפתור מוכן אך כבוי</small></td>
+          <td><span class="mark y">✓</span> כן</td>
+          <td><span class="mark y">מלאה</span></td>
+          <td><span class="mark y">אפס</span></td>
+          <td><span class="mark y">₪0</span><br><small>אבל דורש חיבור-כבל לכל עדכון</small></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2><span class="num">03</span> ההמלצה שלנו</h2>
+  <div class="rec">
+    <h3><span class="dot"></span>אפשרות א — טוקן קריאה-בלבד מוטמע</h3>
+    <p>זהו כלי <strong>פנימי</strong> המותקן על מכשיר אחד-בודד של עובד-פורת. במצב כזה, טוקן <code>fine-grained</code> עם הרשאת <strong>קריאה-בלבד</strong>, מוגבל ל<strong>מאגר-אחד</strong> ולקטע ה-<strong>Releases</strong> בלבד — הוא איזון סביר לחלוטין. גם אם מישהו יפרק את ה-APK, כל מה שיוכל לעשות הוא לקרוא את קבצי-ההתקנה של אותו מאגר (לא את הקוד, ולא לכתוב דבר).</p>
+    <p>הטוקן <strong>אינו נשמר בקוד ואינו עולה ל-GitHub</strong> — הוא מוזרק לאפליקציה רק ברגע-הבנייה. <strong>פורת מפיקה את הטוקן</strong> (שליטה מלאה, ניתן לביטול בכל רגע); אנחנו רק מחברים אותו למנגנון.</p>
+  </div>
+
+  <h2><span class="num">04</span> מה צריך שתחליטו</h2>
+  <div class="decide">
+    <div class="item"><div class="box"></div><div><p class="q">1. איזו אפשרות — א / ב / ג?</p><p class="h">ההמלצה: א (טוקן מוטמע). אם רמת-האבטחה של "טוקן ניתן-לחילוץ" לא-מקובלת עליכם — ב (Firebase).</p></div></div>
+    <div class="item"><div class="box"></div><div><p class="q">2. אם א — מי מפיק את הטוקן?</p><p class="h">‏PAT מסוג fine-grained, הרשאת Contents=Read בלבד, מוגבל למאגר <code>soline-cad</code>. מומלץ שפורת תפיק ותחזיק אותו (ולא הפיתוח).</p></div></div>
+    <div class="item"><div class="box"></div><div><p class="q">3. מי מאשר שחרור-גרסה חדשה?</p><p class="h">כל build → Release ב-GitHub (מדיניות שכבר סוכמה). האם כל שחרור דורש אישור-מנהל-מוצר, או שחרור-חופשי לפיתוח?</p></div></div>
+    <div class="item"><div class="box"></div><div><p class="q">4. שם המכשירים המורשים לעדכון</p><p class="h">כרגע מודד-אחד. אם צפויים מודדים נוספים — נשקול מראש הפצה רחבה יותר (משנה מעט את הבחירה).</p></div></div>
+  </div>
+
+  <h2><span class="num">05</span> מה קורה אחרי שתחליטו</h2>
+  <p>ברגע שנקבל את ההנחיה (ובאפשרות א — את הטוקן מפורת), <strong>תוך שעה</strong> המנגנון חי: כל גרסה חדשה שנשחרר ל-GitHub תופיע למודד ככפתור "עדכן" באפליקציה — הורדה והתקנה בשטח, בלי מחשב ובלי כבל. עדכון-גרסה הופך מ"להביא את הטאבלט למשרד" ל"לחיצה אחת בשטח".</p>
+
+  <h2><span class="num">06</span> מונחים</h2>
+  <dl class="gloss">
+    <div><dt>OTA</dt><dd>Over-The-Air — עדכון-גרסה שמגיע דרך האינטרנט ישירות למכשיר, בלי חיבור פיזי.</dd></div>
+    <div><dt>Release</dt><dd>גרסה ארוזה (APK) שמתפרסמת ב-GitHub עם מספר-גרסה. המקור שממנו האפליקציה מושכת.</dd></div>
+    <div><dt>PAT (fine-grained)</dt><dd>אסימון-גישה אישי מדויק — מגדירים לו בדיוק אילו הרשאות ואיזה מאגר. ניתן לביטול מיידי.</dd></div>
+    <div><dt>קריאה-בלבד</dt><dd>הטוקן יכול רק להוריד, לא לשנות שום דבר במאגר.</dd></div>
+  </dl>
+
+  <footer>
+    <span>Soline — חברת-בת של פורת מדידות · מסמך פנימי</span>
+    <span>החלטה נדרשת · סעיף 04</span>
+  </footer>
+</div>

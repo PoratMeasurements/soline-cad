@@ -7,4 +7,6 @@
     <files-path name="videos" path="videos/" />
     <!-- דיווחי-באגים: bug_*.png + bug_*.json לשיתוף עם הבעלים (ACTION_SEND/SEND_MULTIPLE). -->
     <files-path name="bug_reports" path="bug_reports/" />
+    <!-- עדכון-גרסה: APK שהורד (soline-update.apk) למתקין-החבילות של אנדרואיד. -->
+    <files-path name="updates" path="updates/" />
 </paths>

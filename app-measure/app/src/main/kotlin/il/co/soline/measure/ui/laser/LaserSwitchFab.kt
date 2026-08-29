@@ -62,8 +62,9 @@ fun LaserPanel(visible: Boolean, onClose: () -> Unit) {
     // בפתיחה — סורק אוטומטית כדי שהרשימה תתמלא.
     LaunchedEffect(visible) { if (visible) scan() }
 
-    // רשימת-בחירה: קודם מד-לייזר, ואז השאר (dedupe לפי כתובת).
+    // רשימת-בחירה: מדי-לייזר מזוהים; אם אין — פברוזה לכל-המכשירים (D2 שלא-משדר שם/UUID).
     val lasers = remember(found) { found.filter { it.isLaser }.distinctBy { it.address } }
+    val shown = remember(found, lasers) { if (lasers.isNotEmpty()) lasers else found.distinctBy { it.address } }
 
     Box(Modifier.fillMaxSize()) {
         AnimatedVisibility(
@@ -95,10 +96,13 @@ fun LaserPanel(visible: Boolean, onClose: () -> Unit) {
 
                     HorizontalDivider(color = Muted.copy(alpha = 0.15f))
 
-                    if (lasers.isEmpty()) {
-                        Text("לא נמצאו מדי-לייזר. הקש \"סרוק\".", fontSize = 12.sp, color = Muted)
+                    if (shown.isEmpty()) {
+                        Text("לא נמצאו מכשירים. הקש \"סרוק\".", fontSize = 12.sp, color = Muted)
                     } else {
-                        for (dev in lasers) {
+                        if (lasers.isEmpty()) {
+                            Text("לא זוהה מד-לייזר אוטומטית — בחר מהרשימה:", fontSize = 11.sp, color = Muted)
+                        }
+                        for (dev in shown) {
                             val isThis = connected != null && connected == dev.name
                             Row(
                                 Modifier.fillMaxWidth()

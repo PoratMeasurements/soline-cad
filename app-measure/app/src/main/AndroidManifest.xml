@@ -6,6 +6,9 @@
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- עדכון-גרסה בתוך-האפליקציה (OTA): בדיקת-מניפסט + הורדת-APK + התקנה -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <!-- שיתוף-מיקום-בהסכמה (Ops-Metrics · GPS · לשיפור-השירות · בהסכמת-המודד בלבד).
          נאסף אך-ורק לאחר OPT-IN מפורש (LocationConsentScreen); בלי הסכמה — לא-נדרש
@@ -45,7 +48,8 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
