@@ -34,6 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import il.co.soline.measure.data.AccessoryEntity
+import il.co.soline.measure.data.Prefs
 import il.co.soline.measure.data.WallEntity
 import il.co.soline.measure.data.leftEdgeMm
 import il.co.soline.measure.geometry.WallBuilder
@@ -239,7 +240,7 @@ fun Room3DView(
                         wallPaint.textSize = 11.dp.toPx()
                         val baseMid = toScreen(project(Pt3((ax + bx) / 2f, (ay + by) / 2f, 0f)))
                         drawContext.canvas.nativeCanvas.drawText(
-                            "קיר ${w.idx + 1} · ${w.length.roundToInt()} מ\"מ",
+                            "קיר ${w.idx + 1} · ${Prefs.formatLen(w.length)}",
                             baseMid.x, baseMid.y + 14.dp.toPx(), wallPaint,
                         )
 

@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import il.co.soline.measure.data.Prefs
 import il.co.soline.measure.data.SolineApp
 import il.co.soline.measure.geometry.WallBuilder.Pt as GeoPt
 import il.co.soline.measure.geometry.WallProfileSolver
@@ -377,7 +378,7 @@ fun WallShapeCapture(
                         val (nx, ny) = outwardNormal(hRad)
                         val offPx = 16.dp.toPx()
                         drawContext.canvas.nativeCanvas.drawText(
-                            "${len.roundToInt()} מ\"מ", mid.x + nx * offPx, mid.y + ny * offPx + 4.dp.toPx(), dimPaint,
+                            Prefs.formatLen(len), mid.x + nx * offPx, mid.y + ny * offPx + 4.dp.toPx(), dimPaint,
                         )
                     }
 
@@ -410,8 +411,8 @@ fun WallShapeCapture(
             if (belly != null) {
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    "מוטה ${belly.spanMm.roundToInt()} · מתאר ${belly.developedMm.roundToInt()} · " +
-                        "בטן +${belly.maxPosMm.roundToInt()} / ${belly.maxNegMm.roundToInt()} מ\"מ",
+                    "מוטה ${Prefs.lenValue(belly.spanMm)} · מתאר ${Prefs.lenValue(belly.developedMm)} · " +
+                        "בטן +${Prefs.lenValue(belly.maxPosMm)} / ${Prefs.formatLen(belly.maxNegMm)}",
                     fontSize = 12.sp, color = Teal, fontWeight = FontWeight.SemiBold,
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -482,7 +483,7 @@ private fun ControlPanel(
 
         // בקרה-עצמית: מונה-נקודות + אורך-מתאר
         Text(
-            "בקרה: ${if (pointCount == 0) "אין נקודות עדיין" else "$pointCount נקודות"} · אורך-מתאר ${totalLenMm.roundToInt()} מ\"מ",
+            "בקרה: ${if (pointCount == 0) "אין נקודות עדיין" else "$pointCount נקודות"} · אורך-מתאר ${Prefs.formatLen(totalLenMm)}",
             fontSize = 12.sp, color = if (pointCount >= 2) OkGreen else Muted, fontWeight = FontWeight.SemiBold,
         )
         Spacer(Modifier.height(6.dp))
@@ -502,12 +503,12 @@ private fun ControlPanel(
                     val shown = pendingDistMm ?: liveDistMm
                     Row(verticalAlignment = Alignment.Bottom) {
                         Text(
-                            if (shown != null) shown.roundToInt().toString() else "– – –",
+                            if (shown != null) Prefs.lenValue(shown) else "– – –",
                             fontSize = 42.sp, fontWeight = FontWeight.Bold,
                             color = if (pendingDistMm != null) Orange else Ink, lineHeight = 44.sp,
                         )
                         Spacer(Modifier.width(6.dp))
-                        Text("מ\"מ", fontSize = 18.sp, color = Muted, modifier = Modifier.padding(bottom = 6.dp))
+                        Text(Prefs.unitSuffix, fontSize = 18.sp, color = Muted, modifier = Modifier.padding(bottom = 6.dp))
                     }
                     Text(
                         if (pendingDistMm != null) "מרחק-הירי הבא (מדידה חיה)" else "מדידה חיה — לחץ על המכשיר",
@@ -601,7 +602,7 @@ private fun ControlPanel(
                 append(if (on) "● מחובר" else "○ ")
                 append(connected ?: status)
                 val d = liveDistMm
-                if (d != null && d > 0.0) append(" · מדידה חיה ${d.roundToInt()} מ\"מ")
+                if (d != null && d > 0.0) append(" · מדידה חיה ${Prefs.formatLen(d)}")
             },
             fontSize = 12.sp, color = if (on) OkGreen else WarnAmber, fontWeight = FontWeight.SemiBold,
         )

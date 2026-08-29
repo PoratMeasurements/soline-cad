@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavController
+import il.co.soline.measure.data.Prefs
 import il.co.soline.measure.device.LaserBle
 
 private fun blePerms(): Array<String> =
@@ -91,7 +92,7 @@ fun DevicesScreen(nav: NavController) {
                     Column(Modifier.padding(18.dp)) {
                         Text("מחובר: $connected", color = OkGreen, fontWeight = FontWeight.Bold)
                         Spacer(Modifier.height(10.dp))
-                        Text(last?.distanceMm?.let { "%.1f מ\"מ".format(it) } ?: "—", fontSize = 40.sp, fontWeight = FontWeight.Bold, color = Orange)
+                        Text(last?.distanceMm?.let { Prefs.formatLen(it) } ?: "—", fontSize = 40.sp, fontWeight = FontWeight.Bold, color = Orange)
                         Text(last?.vAngleDeg?.let { "זווית אנכית: %.2f°".format(it) } ?: "מרחק בלבד", fontSize = 14.sp, color = Muted)
                     }
                 }
@@ -100,7 +101,7 @@ fun DevicesScreen(nav: NavController) {
                     items(readings) { r ->
                         Column(Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
                             Text(
-                                (r.distanceMm?.let { "%.1f מ\"מ".format(it) } ?: "—") +
+                                (r.distanceMm?.let { Prefs.formatLen(it) } ?: "—") +
                                     (r.vAngleDeg?.let { " · %.2f°".format(it) } ?: ""),
                                 color = Ink, fontSize = 15.sp,
                             )
@@ -219,7 +220,7 @@ private fun LaserDiagPanel(d: il.co.soline.measure.device.LaserBle.Diag) {
                 Text(
                     buildString {
                         append("מרחק ")
-                        append(d.lastDistanceMm?.let { "%.1f מ\"מ".format(it) } ?: "—")
+                        append(d.lastDistanceMm?.let { Prefs.formatLen(it) } ?: "—")
                         append("  ·  אנכית ")
                         append(d.lastVAngleDeg?.let { "%.2f°".format(it) } ?: "—")
                         append("  ·  אופקית ")

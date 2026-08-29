@@ -47,6 +47,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import il.co.soline.measure.data.Prefs
 import il.co.soline.measure.data.WallEntity
 import il.co.soline.measure.geometry.WallBuilder
 import il.co.soline.measure.ui.Cream
@@ -288,7 +289,7 @@ fun CadDimensionEditor(
                             drawCircle(Orange.copy(alpha = 0.14f), 26.dp.toPx(), Offset(lx, ly - 5.dp.toPx()))
                         }
                         drawContext.canvas.nativeCanvas.apply {
-                            drawText("${w.length.roundToInt()} מ\"מ", lx, ly + 4.dp.toPx(), dimPaint)
+                            drawText(Prefs.formatLen(w.length), lx, ly + 4.dp.toPx(), dimPaint)
                             drawText("קיר ${w.idx + 1}", m.x - nx * offPx, m.y - ny * offPx, idxPaint)
                         }
                         hits.add(HitRegion(kind = 0, wallId = w.id, wallIdx = w.idx, sx = lx, sy = ly))
@@ -363,9 +364,10 @@ fun CadDimensionEditor(
         } else if (e.kind == 0) {
             NumberEditDialog(
                 title = "עריכת אורך · קיר ${wall.idx + 1}",
-                label = "אורך (מ\"מ)",
+                label = "אורך (${Prefs.unitSuffix})",
                 initial = wall.length,
-                suffix = "מ\"מ",
+                suffix = Prefs.unitSuffix,
+                isLength = true,
                 min = 1.0,
                 laser = true, // C3: מדידה-מחדש בלייזר גם בעריכת-אורך
                 onConfirm = { newLen ->
@@ -377,9 +379,10 @@ fun CadDimensionEditor(
         } else if (e.kind == 2) {
             NumberEditDialog(
                 title = "עריכת גובה · קיר ${wall.idx + 1}",
-                label = "גובה (מ\"מ)",
+                label = "גובה (${Prefs.unitSuffix})",
                 initial = wall.height,
-                suffix = "מ\"מ",
+                suffix = Prefs.unitSuffix,
+                isLength = true,
                 min = 1.0,
                 laser = true, // C3: מדידה-מחדש בלייזר גם בעריכת-גובה
                 onConfirm = { newHt ->
@@ -417,7 +420,7 @@ private fun ClosureBadge(closed: Boolean, gapMm: Double, wallCount: Int) {
     val (bg, fg, txt) = when {
         wallCount < 3 -> Triple(Muted.copy(alpha = 0.15f), Muted, "מתאר פתוח")
         closed -> Triple(OkGreen.copy(alpha = 0.15f), OkGreen, "סגור ✓")
-        else -> Triple(Orange.copy(alpha = 0.15f), Orange, "פער ${gapMm.roundToInt()} מ\"מ")
+        else -> Triple(Orange.copy(alpha = 0.15f), Orange, "פער ${Prefs.formatLen(gapMm)}")
     }
     Box(
         Modifier
@@ -450,9 +453,9 @@ private fun WallRow(
             modifier = Modifier.width(64.dp),
         )
         Column(Modifier.weight(1f)) {
-            Text("אורך: ${wall.length.roundToInt()} מ\"מ", color = Ink, fontSize = 14.sp)
+            Text("אורך: ${Prefs.formatLen(wall.length)}", color = Ink, fontSize = 14.sp)
             Text(
-                "גובה: ${wall.height.roundToInt()} מ\"מ" + if (wall.heightMeasured) " ✓" else " (ברירת-מחדל)",
+                "גובה: ${Prefs.formatLen(wall.height)}" + if (wall.heightMeasured) " ✓" else " (ברירת-מחדל)",
                 color = if (wall.heightMeasured) Ink else Orange, fontSize = 13.sp,
             )
             Text(
@@ -497,12 +500,16 @@ private fun NumberEditDialog(
     min: Double = Double.NEGATIVE_INFINITY,
     max: Double = Double.POSITIVE_INFINITY,
     laser: Boolean = false,
+    // כשtrue: הערך מידה (מ"מ פנימי) — הקלט/התצוגה ביחידת-התצוגה, min/max נשארים מ"מ.
+    isLength: Boolean = false,
     onConfirm: (Double) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    var text by remember { mutableStateOf(fmt(initial)) }
+    var text by remember { mutableStateOf(if (isLength) Prefs.toDisplayText(initial) else fmt(initial)) }
     val parsed = text.trim().replace(',', '.').toDoubleOrNull()
-    val valid = parsed != null && parsed in min..max
+    // ערך-הבדיקה/השמירה תמיד במ"מ (הקלט מומר מיחידת-התצוגה כשisLength).
+    val parsedMm = if (isLength) parsed?.let { Prefs.toMm(it) } else parsed
+    val valid = parsedMm != null && parsedMm in min..max
 
     // C3: מדידה-מחדש בלייזר (one-shot arm→shoot) בעורך-הערך הקיים — רק לשדות-מרחק.
     val ble = il.co.soline.measure.data.SolineApp.instance.ble
@@ -513,7 +520,7 @@ private fun NumberEditDialog(
         val r = reading
         val d = r?.distanceMm
         if (laser && armed && r != null && d != null && d > 0.0 && r.ts > armedFrom) {
-            text = fmt(Math.round(d).toDouble())
+            text = if (isLength) Prefs.toDisplayText(d) else fmt(Math.round(d).toDouble())
             armed = false
             armedFrom = Long.MAX_VALUE
         }
@@ -553,14 +560,14 @@ private fun NumberEditDialog(
                 modifier = Modifier.fillMaxWidth(),
             )
             if (text.isNotBlank() && !valid) {
-                Text("ערך לא תקין (טווח מותר: ${fmt(min)}…${fmt(max)})", color = Orange, fontSize = 12.sp)
+                Text("ערך לא תקין (טווח מותר: ${if (isLength) Prefs.lenValue(min) else fmt(min)}…${if (isLength) Prefs.lenValue(max) else fmt(max)})", color = Orange, fontSize = 12.sp)
             }
 
             if (laser) {
                 val liveMm = reading?.distanceMm
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
-                        "לייזר חי: " + (liveMm?.roundToInt()?.toString() ?: "– – –") + " מ\"מ",
+                        "לייזר חי: " + (liveMm?.let { Prefs.lenValue(it) } ?: "– – –") + " " + Prefs.unitSuffix,
                         color = Teal, fontSize = 12.sp, modifier = Modifier.weight(1f),
                     )
                     Button(
@@ -581,7 +588,7 @@ private fun NumberEditDialog(
                     contentPadding = PaddingValues(vertical = 12.dp),
                 ) { Text("ביטול", fontSize = 15.sp) }
                 Button(
-                    onClick = { parsed?.let(onConfirm) },
+                    onClick = { parsedMm?.let(onConfirm) },
                     enabled = valid,
                     colors = ButtonDefaults.buttonColors(containerColor = Teal),
                     modifier = Modifier.weight(1f),

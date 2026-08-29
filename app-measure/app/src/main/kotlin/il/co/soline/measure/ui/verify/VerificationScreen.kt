@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import il.co.soline.measure.data.AccType
 import il.co.soline.measure.data.AccessoryEntity
+import il.co.soline.measure.data.Prefs
 import il.co.soline.measure.data.RoomEntity
 import il.co.soline.measure.data.RoomSurvey
 import il.co.soline.measure.data.WallEntity
@@ -93,7 +94,8 @@ private data class CalcSummary(
 
 // ─── עזרי-חישוב טהורים ─────────────────────────────────────────────────────
 
-private fun mm(v: Double): String = v.roundToInt().toString()
+// ערך-מידה לפי יחידת-התצוגה (ערך בלבד, בלי סיומת). האחסון תמיד מ"מ.
+private fun mm(v: Double): String = Prefs.lenValue(v)
 private fun meters(v: Double): String = "%.2f".format(v / 1000.0)
 private fun m2(v: Double): String = "%.2f".format(v / 1_000_000.0)
 
@@ -227,8 +229,8 @@ private fun buildChecklist(
         Check(
             calc.allClosed,
             "מתאר-החדר סגור",
-            if (calc.allClosed) "כל החדרים נסגרים (פער ≤ ${mm(calc.maxGapMm)} מ\"מ)"
-            else "פער-סגירה ${mm(calc.maxGapMm)} מ\"מ — יש להשלים/לאחות",
+            if (calc.allClosed) "כל החדרים נסגרים (פער ≤ ${mm(calc.maxGapMm)} ${Prefs.unitSuffix})"
+            else "פער-סגירה ${mm(calc.maxGapMm)} ${Prefs.unitSuffix} — יש להשלים/לאחות",
         )
     )
 
@@ -405,9 +407,9 @@ private fun CalcCard(calc: CalcSummary) {
     Card(title = "סיכום-חישוב (Calc)") {
         StatRow("חדרים", "${calc.roomCount}")
         StatRow("קירות", "${calc.wallCount}")
-        StatRow("היקף כולל", "${meters(calc.perimeterMm)} מ׳ (${mm(calc.perimeterMm)} מ\"מ)")
+        StatRow("היקף כולל", "${meters(calc.perimeterMm)} מ׳ (${mm(calc.perimeterMm)} ${Prefs.unitSuffix})")
         StatRow("שטח-קירות", "${m2(calc.wallAreaMm2)} מ\"ר")
-        StatRow("סטטוס-סגירה", if (calc.allClosed) "סגור ✓" else "פתוח · פער ${mm(calc.maxGapMm)} מ\"מ",
+        StatRow("סטטוס-סגירה", if (calc.allClosed) "סגור ✓" else "פתוח · פער ${mm(calc.maxGapMm)} ${Prefs.unitSuffix}",
             valueColor = if (calc.allClosed) OkGreen else BlockRed)
         Spacer(Modifier.height(6.dp))
         Text("אלמנטים (${calc.elementCount}):", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Ink)

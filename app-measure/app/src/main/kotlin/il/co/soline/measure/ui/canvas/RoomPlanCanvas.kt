@@ -34,6 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import il.co.soline.measure.data.AccessoryEntity
+import il.co.soline.measure.data.Prefs
 import il.co.soline.measure.data.WallEntity
 import il.co.soline.measure.data.leftEdgeMm
 import il.co.soline.measure.geometry.WallBuilder
@@ -106,7 +107,7 @@ fun RoomPlanCanvas(
         if (negatives.isNotEmpty()) {
             Text(
                 "⚠ גובה מינוס — שיפוע רצפה: " +
-                    negatives.joinToString("، ") { "${it.name} (${it.fromBottom.roundToInt()} מ\"מ)" },
+                    negatives.joinToString("، ") { "${it.name} (${Prefs.formatLen(it.fromBottom)})" },
                 color = WarnAmber,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -170,7 +171,7 @@ fun RoomPlanCanvas(
                         val (nx, ny) = outwardNormal(h)
                         val off = 16.dp.toPx()
                         drawContext.canvas.nativeCanvas.apply {
-                            drawText("${w.length.roundToInt()} מ\"מ", m.x + nx * off, m.y + ny * off + 4.dp.toPx(), dimPaint)
+                            drawText(Prefs.formatLen(w.length), m.x + nx * off, m.y + ny * off + 4.dp.toPx(), dimPaint)
                             drawText("קיר ${w.idx + 1}", m.x - nx * off, m.y - ny * off, idxPaint)
                         }
                     }
@@ -211,7 +212,7 @@ fun RoomPlanCanvas(
                             drawCircle(Teal, 4.dp.toPx(), mark)
                             val lbl = Offset(bs.x + nx * (depthPx + 14.dp.toPx()), bs.y + ny * (depthPx + 14.dp.toPx()) + 3.dp.toPx())
                             drawContext.canvas.nativeCanvas.drawText(
-                                "${acc.name} · ${acc.depth.roundToInt()} מ\"מ", lbl.x, lbl.y, objPaint,
+                                "${acc.name} · ${Prefs.formatLen(acc.depth)}", lbl.x, lbl.y, objPaint,
                             )
                         }
                     }

@@ -24,6 +24,7 @@ import il.co.soline.measure.catalog.ElementCatalog
 import il.co.soline.measure.catalog.ElementDef
 import il.co.soline.measure.catalog.ElementGroup
 import il.co.soline.measure.data.CustomElementStore
+import il.co.soline.measure.data.Prefs
 import il.co.soline.measure.ui.Cream
 import il.co.soline.measure.ui.Ink
 import il.co.soline.measure.ui.Muted
@@ -57,7 +58,7 @@ private fun ElementDef.toDraft(originalKey: String?) = ElementDraft(
     originalKey = originalKey,
     he = he,
     group = group,
-    depthText = defaultDepth.let { if (it == it.toLong().toDouble()) it.toLong().toString() else it.toString() },
+    depthText = Prefs.toDisplayText(defaultDepth),
     round = round,
     hasDepth = hasDepth,
     ordxClass = ordxClass,
@@ -150,7 +151,7 @@ fun ElementLibraryScreen(onBack: () -> Unit) {
                 onChange = { draft = it },
                 onDismiss = { draft = null },
                 onSave = {
-                    val depth = d.depthText.trim().toDoubleOrNull() ?: 0.0
+                    val depth = Prefs.parseToMm(d.depthText) ?: 0.0   // קלט ביחידת-התצוגה → מ"מ
                     val key = d.originalKey ?: CustomElementStore.newKey()
                     val saved = ElementDef(
                         key = key,
@@ -236,7 +237,7 @@ private fun LibraryRow(
                 }
                 Text(
                     buildString {
-                        if (def.hasDepth) append("עומק ${def.defaultDepth.toInt()} מ\"מ") else append("ללא עומק")
+                        if (def.hasDepth) append("עומק ${Prefs.formatLen(def.defaultDepth)}") else append("ללא עומק")
                         if (def.round) append(" · עגול")
                         append(" · ${def.ordxClass}/${def.ordxType}")
                     },
@@ -310,7 +311,7 @@ private fun ElementEditorSheet(
 
                 Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
                     Column(Modifier.weight(1f)) {
-                        Field("עומק ברירת-מחדל (מ\"מ)") {
+                        Field("עומק ברירת-מחדל (${Prefs.unitSuffix})") {
                             OutlinedTextField(
                                 value = draft.depthText,
                                 onValueChange = { onChange(draft.copy(depthText = it.filter { c -> c.isDigit() || c == '.' })) },

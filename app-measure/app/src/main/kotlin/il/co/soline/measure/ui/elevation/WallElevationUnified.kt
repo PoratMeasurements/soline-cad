@@ -68,6 +68,7 @@ import il.co.soline.measure.data.AccType
 import il.co.soline.measure.data.AccessoryEntity
 import il.co.soline.measure.data.CabinetEntity
 import il.co.soline.measure.data.CabinetKind
+import il.co.soline.measure.data.Prefs
 import il.co.soline.measure.data.SolineApp
 import il.co.soline.measure.data.WallEntity
 import il.co.soline.measure.fit.ClashSeverity
@@ -205,7 +206,8 @@ internal fun laserHeightMm(distMm: Double?, vAngleDeg: Double?): Double? {
     return comp
 }
 
-private fun Double.mmU(): String = roundToInt().toString()
+// מעצב-הערך-המשותף לפי יחידת-התצוגה (ערך בלבד, בלי סיומת). האחסון תמיד מ"מ.
+private fun Double.mmU(): String = Prefs.lenValue(this)
 
 /**
  * מסך-החזית המאוחד לקיר בודד — לכידת-מתאר-חזית + מדידת-אלמנטים-בגובה.
@@ -363,7 +365,7 @@ fun WallElevationUnified(
             Column(Modifier.weight(1f)) {
                 Text("soline · חזית קיר", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Orange, lineHeight = 22.sp)
                 Text(
-                    "רוחב ${wall.length.mmU()} · גובה ${wall.height.mmU()} מ\"מ · ${accessories.size} אביזרים · ${frame.size} נק' מסגרת",
+                    "רוחב ${wall.length.mmU()} · גובה ${wall.height.mmU()} ${Prefs.unitSuffix} · ${accessories.size} אביזרים · ${frame.size} נק' מסגרת",
                     fontSize = 12.sp, color = Teal,
                 )
             }
@@ -546,7 +548,7 @@ fun WallElevationUnified(
                         val cy = (t + b) / 2f
                         nc.drawText(c.name, midX, cy - 2.dp.toPx(), cabPaint)
                         nc.drawText(
-                            "${beltHeU(c.kind)} · ${c.width.mmU()} מ\"מ",
+                            "${beltHeU(c.kind)} · ${c.width.mmU()} ${Prefs.unitSuffix}",
                             midX, cy + 15.dp.toPx(), cabPaint,
                         )
                     }
@@ -605,7 +607,7 @@ fun WallElevationUnified(
                             pathEffect = PathEffect.dashPathEffect(floatArrayOf(8f, 8f), 0f),
                         )
                         nc.drawText(a.name, midX, t - 6.dp.toPx(), accPaint)
-                        nc.drawText("h=${a.fromBottom.mmU()} מ\"מ", midX, b + 14.dp.toPx(), accPaint)
+                        nc.drawText("h=${a.fromBottom.mmU()} ${Prefs.unitSuffix}", midX, b + 14.dp.toPx(), accPaint)
                     }
 
                     // קו-סימון / סופיט (soffit / הנמכת-תקרה) — קו אופקי לרוחב בגובהו
@@ -618,7 +620,7 @@ fun WallElevationUnified(
                         )
                         markPaint.textSize = 12.dp.toPx()
                         markPaint.color = WarnAmber.toArgb()
-                        nc.drawText("קו-סימון h=${mh.mmU()} מ\"מ", leftX + 6.dp.toPx(), my - 6.dp.toPx(), markPaint)
+                        nc.drawText("קו-סימון h=${mh.mmU()} ${Prefs.unitSuffix}", leftX + 6.dp.toPx(), my - 6.dp.toPx(), markPaint)
                     }
                 }
 
@@ -659,14 +661,14 @@ fun WallElevationUnified(
 
                 // ── תוויות-מידה: רוחב (למטה) + גובה (בצד-שמאל, מסובבת) ──────
                 wallPaint.textSize = 13.dp.toPx()
-                nc.drawText("${wall.length.mmU()} מ\"מ", (leftX + rightX) / 2f, botY + 34.dp.toPx(), wallPaint)
+                nc.drawText("${wall.length.mmU()} ${Prefs.unitSuffix}", (leftX + rightX) / 2f, botY + 34.dp.toPx(), wallPaint)
 
                 hPaint.textSize = 13.dp.toPx()
                 val hx = leftX - 16.dp.toPx()
                 val hy = xf.sy(wall.height / 2.0)
                 nc.save()
                 nc.rotate(-90f, hx, hy)
-                nc.drawText("${wall.height.mmU()} מ\"מ", hx, hy, hPaint)
+                nc.drawText("${wall.height.mmU()} ${Prefs.unitSuffix}", hx, hy, hPaint)
                 nc.restore()
             }
         }
@@ -859,7 +861,7 @@ private fun FramePanel(
                 // פס-הגלייה: בליטה-מירבית + מקור-המיקום-האופקי (נמדד/ידני)
                 Text(
                     buildString {
-                        append("בליטה מירבית ${maxAbsE.roundToInt()} מ\"מ · ")
+                        append("בליטה מירבית ${Prefs.formatLen(maxAbsE)} · ")
                         append(if (hasMeasuredU) "אופקי נמדד (φ)" else "אופקי ידני — אין φ")
                     },
                     fontSize = 11.sp,
@@ -881,12 +883,12 @@ private fun FramePanel(
             Column(Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.Bottom) {
                     Text(
-                        liveDistMm?.roundToInt()?.toString() ?: "– – –",
+                        liveDistMm?.let { Prefs.lenValue(it) } ?: "– – –",
                         fontSize = 40.sp, fontWeight = FontWeight.Bold,
                         color = if (pending) Orange else Ink, lineHeight = 42.sp,
                     )
                     Spacer(Modifier.width(6.dp))
-                    Text("מ\"מ", fontSize = 16.sp, color = Muted, modifier = Modifier.padding(bottom = 5.dp))
+                    Text(Prefs.unitSuffix, fontSize = 16.sp, color = Muted, modifier = Modifier.padding(bottom = 5.dp))
                 }
                 val derived = laserHeightMm(liveDistMm, liveVDeg)
                 Text(
@@ -894,7 +896,7 @@ private fun FramePanel(
                         append(if (pending) "מרחק-הירי הבא" else "מדידה חיה — לחץ על המכשיר")
                         if (liveVDeg != null) append(" · אנכית ${liveVDeg.roundToInt()}°")
                         if (liveHDeg != null) append(" · φ ${liveHDeg.roundToInt()}°")
-                        if (derived != null) append(" · גובה≈${derived.roundToInt()} מ\"מ")
+                        if (derived != null) append(" · גובה≈${Prefs.formatLen(derived)}")
                     },
                     fontSize = 12.sp, color = Teal,
                 )
@@ -916,7 +918,7 @@ private fun FramePanel(
                     .border(1.dp, Muted.copy(alpha = 0.4f), RoundedCornerShape(10.dp))
                     .padding(vertical = 8.dp),
                 contentAlignment = Alignment.Center,
-            ) { Text("${horizMm.roundToInt()} מ\"מ", fontSize = 17.sp, fontWeight = FontWeight.Bold, color = Ink) }
+            ) { Text(Prefs.formatLen(horizMm), fontSize = 17.sp, fontWeight = FontWeight.Bold, color = Ink) }
             StepBtn("+", { onHoriz(horizMm + stepMm) })
         }
         Spacer(Modifier.height(6.dp))
@@ -1024,11 +1026,11 @@ private fun ElementsPanel(
             Column(Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.Bottom) {
                     Text(
-                        liveMm?.roundToInt()?.toString() ?: "– – –",
+                        liveMm?.let { Prefs.lenValue(it) } ?: "– – –",
                         fontSize = 40.sp, fontWeight = FontWeight.Bold, color = Ink, lineHeight = 42.sp,
                     )
                     Spacer(Modifier.width(6.dp))
-                    Text("מ\"מ", fontSize = 16.sp, color = Muted, modifier = Modifier.padding(bottom = 5.dp))
+                    Text(Prefs.unitSuffix, fontSize = 16.sp, color = Muted, modifier = Modifier.padding(bottom = 5.dp))
                 }
                 Text("גובה חי מהלייזר — לחץ על המכשיר בשטח", fontSize = 12.sp, color = Teal)
             }
@@ -1078,7 +1080,8 @@ fun AccessoryEditor(
     var heightTxt by remember { mutableStateOf(initial.height.mmU()) }
     var depthTxt by remember { mutableStateOf(initial.depth.mmU()) }
 
-    fun num(s: String, fallback: Double) = s.trim().toDoubleOrNull() ?: fallback
+    // הקלט מוזן ביחידת-התצוגה → המרה חזרה למ"מ לאחסון (fallback הוא כבר מ"מ).
+    fun num(s: String, fallback: Double) = Prefs.parseToMm(s) ?: fallback
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -1118,7 +1121,7 @@ fun AccessoryEditor(
                     Column(Modifier.weight(1f)) {
                         Text("לייזר חי", fontSize = 11.sp, color = Teal)
                         Text(
-                            (liveMm?.roundToInt()?.toString() ?: "– – –") + " מ\"מ",
+                            (liveMm?.let { Prefs.lenValue(it) } ?: "– – –") + " " + Prefs.unitSuffix,
                             fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Ink,
                         )
                     }
@@ -1157,15 +1160,15 @@ fun AccessoryEditor(
 
                 NumRow("שם", nameTxt, KeyboardType.Text) { nameTxt = it }
                 Spacer(Modifier.height(8.dp))
-                NumRow("גובה מהרצפה (מ\"מ)", fromBottomTxt, KeyboardType.Number) { fromBottomTxt = it }
+                NumRow("גובה מהרצפה (${Prefs.unitSuffix})", fromBottomTxt, KeyboardType.Number) { fromBottomTxt = it }
                 Spacer(Modifier.height(8.dp))
-                NumRow("מרחק משמאל (מ\"מ)", fromLeftTxt, KeyboardType.Number) { fromLeftTxt = it }
+                NumRow("מרחק משמאל (${Prefs.unitSuffix})", fromLeftTxt, KeyboardType.Number) { fromLeftTxt = it }
                 Spacer(Modifier.height(8.dp))
-                NumRow("רוחב (מ\"מ)", widthTxt, KeyboardType.Number) { widthTxt = it }
+                NumRow("רוחב (${Prefs.unitSuffix})", widthTxt, KeyboardType.Number) { widthTxt = it }
                 Spacer(Modifier.height(8.dp))
-                NumRow("גובה (מ\"מ)", heightTxt, KeyboardType.Number) { heightTxt = it }
+                NumRow("גובה (${Prefs.unitSuffix})", heightTxt, KeyboardType.Number) { heightTxt = it }
                 Spacer(Modifier.height(8.dp))
-                NumRow("עומק-בליטה (מ\"מ)", depthTxt, KeyboardType.Number) { depthTxt = it }
+                NumRow("עומק-בליטה (${Prefs.unitSuffix})", depthTxt, KeyboardType.Number) { depthTxt = it }
             }
         },
         containerColor = Color.White,
@@ -1187,7 +1190,7 @@ private fun MarkerDialog(
     onDismiss: () -> Unit,
 ) {
     var hTxt by remember { mutableStateOf(initial.mmU()) }
-    fun num(s: String, fallback: Double) = s.trim().toDoubleOrNull() ?: fallback
+    fun num(s: String, fallback: Double) = Prefs.parseToMm(s) ?: fallback
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -1210,14 +1213,14 @@ private fun MarkerDialog(
                 ) {
                     Column(Modifier.weight(1f)) {
                         Text("לייזר חי", fontSize = 11.sp, color = Teal)
-                        Text((liveMm?.roundToInt()?.toString() ?: "– – –") + " מ\"מ", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Ink)
+                        Text((liveMm?.let { Prefs.lenValue(it) } ?: "– – –") + " " + Prefs.unitSuffix, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Ink)
                     }
                     FieldButton("קלוט גובה", Teal, liveHeightMm != null, Modifier.widthIn(min = 120.dp)) {
                         liveHeightMm?.let { hTxt = it.mmU() }
                     }
                 }
                 Spacer(Modifier.height(10.dp))
-                NumRow("גובה-קו מהרצפה (מ\"מ)", hTxt, KeyboardType.Number) { hTxt = it }
+                NumRow("גובה-קו מהרצפה (${Prefs.unitSuffix})", hTxt, KeyboardType.Number) { hTxt = it }
             }
         },
         containerColor = Color.White,

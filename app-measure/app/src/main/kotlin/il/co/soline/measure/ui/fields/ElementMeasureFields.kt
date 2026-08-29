@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.CompositionLocalProvider
 import il.co.soline.measure.catalog.OpeningSpec
+import il.co.soline.measure.data.Prefs
 import il.co.soline.measure.data.SolineApp
 import il.co.soline.measure.ui.BlockRed
 import il.co.soline.measure.ui.Cream
@@ -139,14 +140,14 @@ fun ElementMeasureFields(
             ModeToggle(centerMode = centerMode, onSelect = { centerMode = it })
 
             if (centerMode) {
-                LaserNumField("מיקום-מרכז (מ\"מ מהקצה השמאלי)", centerPos, onEdited = markMeasured, error = centerErr)
-                LaserNumField(if (round) "קוטר (מ\"מ)" else "רוחב (מ\"מ)", widthCenter, onEdited = markMeasured, error = widthErr)
+                LaserNumField("מיקום-מרכז (${Prefs.unitSuffix} מהקצה השמאלי)", centerPos, onEdited = markMeasured, error = centerErr)
+                LaserNumField(if (round) "קוטר (${Prefs.unitSuffix})" else "רוחב (${Prefs.unitSuffix})", widthCenter, onEdited = markMeasured, error = widthErr)
             } else {
-                LaserNumField("היסט משמאל (מ\"מ)", offsetLeft, onEdited = markMeasured)
-                LaserNumField("היסט מימין (מ\"מ)", offsetRight, onEdited = markMeasured)
+                LaserNumField("היסט משמאל (${Prefs.unitSuffix})", offsetLeft, onEdited = markMeasured)
+                LaserNumField("היסט מימין (${Prefs.unitSuffix})", offsetRight, onEdited = markMeasured)
                 Text(
-                    if (computedWidthErr) "רוחב מחושב לא-תקין (${computedWidth.roundToInt()}) — צמצם את ההיסטים"
-                    else "רוחב מחושב: ${computedWidth.roundToInt()} מ\"מ",
+                    if (computedWidthErr) "רוחב מחושב לא-תקין (${Prefs.lenValue(computedWidth)}) — צמצם את ההיסטים"
+                    else "רוחב מחושב: ${Prefs.formatLen(computedWidth)}",
                     fontSize = 13.sp,
                     color = if (computedWidthErr) BlockRed else Teal,
                     fontWeight = FontWeight.SemiBold,
@@ -154,9 +155,9 @@ fun ElementMeasureFields(
                 )
             }
 
-            if (hasDepth) LaserNumField("עומק-בליטה D (מ\"מ)", depth, onEdited = markMeasured)
-            LaserNumField("גובה מהרצפה (מ\"מ)", fromBottom, onEdited = markMeasured)
-            LaserNumField("גובה האלמנט (מ\"מ)", height, onEdited = markMeasured, error = heightErr)
+            if (hasDepth) LaserNumField("עומק-בליטה D (${Prefs.unitSuffix})", depth, onEdited = markMeasured)
+            LaserNumField("גובה מהרצפה (${Prefs.unitSuffix})", fromBottom, onEdited = markMeasured)
+            LaserNumField("גובה האלמנט (${Prefs.unitSuffix})", height, onEdited = markMeasured, error = heightErr)
         }
     }
 }
@@ -224,7 +225,7 @@ private fun LaserNumField(
         val r = last
         if (laser && armed && r?.distanceMm != null && r.ts > armedFrom) {
             armedFrom = r.ts             // דורס-וממשיך-דרוך — הירייה-הבאה תדרוס שוב
-            state.value = Math.round(r.distanceMm).toString()
+            state.value = Prefs.toDisplayText(r.distanceMm)   // מזריק ביחידת-התצוגה
             onEdited?.invoke()           // הזרקת-לייזר = מדידה-אמיתית
         }
     }
@@ -270,8 +271,11 @@ private fun LaserNumField(
     )
 }
 
-/** מ"מ מטקסט: תומך גם בפסיק עשרוני; ריק/לא-תקין → 0.0 */
-private fun String.toMm(): Double = trim().replace(',', '.').toDoubleOrNull() ?: 0.0
+/** מ"מ מטקסט: הטקסט מוזן ביחידת-התצוגה → מומר למ"מ; ריק/לא-תקין → 0.0 */
+private fun String.toMm(): Double {
+    val v = trim().replace(',', '.').toDoubleOrNull() ?: return 0.0
+    return Prefs.toMm(v)
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 //  טופס-פתח פרמטרי (דלת / חלון / מיזוג-איוורור) — OPENING_ELEMENT_SCHEMA.md
@@ -304,9 +308,8 @@ private val HINGE_SIDES = listOf("L", "R", "")
 private val SWINGS = listOf("in", "out", "")
 private val GLAZINGS = listOf("none", "partial", "full")
 
-/** מ"מ→טקסט קצר (בלי ".0" מיותר). */
-private fun fmtMm(v: Double): String =
-    if (v.isFinite() && v == v.toLong().toDouble()) v.toLong().toString() else v.toString()
+/** מ"מ→טקסט-תצוגה קצר לפי יחידת-התצוגה (למילוי-מראש של שדה-קלט). */
+private fun fmtMm(v: Double): String = Prefs.lenValue(v)
 
 /**
  * שדות-מדידה של **פתח פרמטרי**. ממולא-מראש מ-[spec] (מידות-יצרן) — המודד דורס
@@ -399,17 +402,17 @@ fun OpeningMeasureFields(
 
             SectionLabel("מיקום על הקיר")
             CornerToggle(fromCorner.value) { fromCorner.value = it }
-            LaserNumField(if (fromCorner.value == "start") "היסט מהפינה השמאלית (מ\"מ)" else "היסט מהפינה הימנית (מ\"מ)", offset, onEdited = markMeasured, error = offErr)
+            LaserNumField(if (fromCorner.value == "start") "היסט מהפינה השמאלית (${Prefs.unitSuffix})" else "היסט מהפינה הימנית (${Prefs.unitSuffix})", offset, onEdited = markMeasured, error = offErr)
 
             SectionLabel("גיאומטריה — מידות-אמת")
-            LaserNumField("רוחב-פתח (מ\"מ)", width, onEdited = markMeasured, error = wErr)
-            LaserNumField("גובה-פתח (מ\"מ)", height, onEdited = markMeasured, error = hErr)
-            if (!isDoor) LaserNumField("גובה-סף מהרצפה (מ\"מ)", sill, onEdited = markMeasured)
-            LaserNumField("עובי-קיר מארח (מ\"מ)", wallTh, onEdited = markMeasured)
-            LaserNumField(if (isWindow) "עובי-מסגרת (מ\"מ)" else "עובי-משקוף (מ\"מ)", frameTh, onEdited = markMeasured)
-            if (isDoor || isWindow) LaserNumField("חשפה / מלבן נראה (מ\"מ)", reveal, onEdited = markMeasured)
-            if (isDoor) LaserNumField("עובי-כנף (מ\"מ)", leafTh, onEdited = markMeasured)
-            if (hasDepth) LaserNumField("עומק-בליטה D (מ\"מ)", depth, onEdited = markMeasured)
+            LaserNumField("רוחב-פתח (${Prefs.unitSuffix})", width, onEdited = markMeasured, error = wErr)
+            LaserNumField("גובה-פתח (${Prefs.unitSuffix})", height, onEdited = markMeasured, error = hErr)
+            if (!isDoor) LaserNumField("גובה-סף מהרצפה (${Prefs.unitSuffix})", sill, onEdited = markMeasured)
+            LaserNumField("עובי-קיר מארח (${Prefs.unitSuffix})", wallTh, onEdited = markMeasured)
+            LaserNumField(if (isWindow) "עובי-מסגרת (${Prefs.unitSuffix})" else "עובי-משקוף (${Prefs.unitSuffix})", frameTh, onEdited = markMeasured)
+            if (isDoor || isWindow) LaserNumField("חשפה / מלבן נראה (${Prefs.unitSuffix})", reveal, onEdited = markMeasured)
+            if (isDoor) LaserNumField("עובי-כנף (${Prefs.unitSuffix})", leafTh, onEdited = markMeasured)
+            if (hasDepth) LaserNumField("עומק-בליטה D (${Prefs.unitSuffix})", depth, onEdited = markMeasured)
 
             SectionLabel("תצורה")
             // מנגנון-הפתיחה מסונן לסוג: דלת/חלון מקבלים רק את המצבים הרלוונטיים להם.

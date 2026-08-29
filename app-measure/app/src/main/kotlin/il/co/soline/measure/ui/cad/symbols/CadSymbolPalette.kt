@@ -35,6 +35,7 @@ import il.co.soline.measure.catalog.CadSymbolDef
 import il.co.soline.measure.catalog.CadSymbolShape
 import il.co.soline.measure.catalog.CadSymbolView
 import il.co.soline.measure.data.CustomSymbolStore
+import il.co.soline.measure.data.Prefs
 import il.co.soline.measure.ui.Border
 import il.co.soline.measure.ui.Cream
 import il.co.soline.measure.ui.Ink
@@ -222,12 +223,12 @@ private fun NewSymbolDialog(
 ) {
     var he by remember { mutableStateOf("") }
     var shape by remember { mutableStateOf(CadSymbolShape.RECT) }
-    var wTxt by remember { mutableStateOf("400") }
-    var hTxt by remember { mutableStateOf("400") }
-    var dTxt by remember { mutableStateOf("0") }
+    var wTxt by remember { mutableStateOf(Prefs.toDisplayText(400.0)) }
+    var hTxt by remember { mutableStateOf(Prefs.toDisplayText(400.0)) }
+    var dTxt by remember { mutableStateOf(Prefs.toDisplayText(0.0)) }
 
-    val wMm = wTxt.toDoubleOrNull() ?: 0.0
-    val hMm = hTxt.toDoubleOrNull() ?: 0.0
+    val wMm = Prefs.parseToMm(wTxt) ?: 0.0   // קלט ביחידת-התצוגה → מ"מ
+    val hMm = Prefs.parseToMm(hTxt) ?: 0.0
     val valid = he.isNotBlank() && wMm > 0 && hMm > 0
     val previewDef = CadSymbolDef("PREVIEW", he.ifBlank { "סמל" }, CadSymbolCategory.CUSTOM, wMm, hMm, shape = shape, builtin = false)
 
@@ -236,7 +237,7 @@ private fun NewSymbolDialog(
         confirmButton = {
             TextButton(
                 enabled = valid,
-                onClick = { onCreate(CustomSymbolStore.newKey(existing), he.trim(), shape, wMm, hMm, dTxt.toDoubleOrNull() ?: 0.0) },
+                onClick = { onCreate(CustomSymbolStore.newKey(existing), he.trim(), shape, wMm, hMm, Prefs.parseToMm(dTxt) ?: 0.0) },
             ) { Text("צור סמל", color = if (valid) Orange else Muted, fontWeight = FontWeight.Bold) }
         },
         dismissButton = { TextButton(onClick = onDismiss) { Text("ביטול", color = Muted) } },
@@ -265,9 +266,9 @@ private fun NewSymbolDialog(
                 }
                 Spacer(Modifier.height(10.dp))
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    OutlinedTextField(wTxt, { wTxt = it }, label = { Text("רוחב מ\"מ") }, singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), modifier = Modifier.weight(1f))
-                    OutlinedTextField(hTxt, { hTxt = it }, label = { Text("גובה מ\"מ") }, singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), modifier = Modifier.weight(1f))
-                    OutlinedTextField(dTxt, { dTxt = it }, label = { Text("עומק מ\"מ") }, singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), modifier = Modifier.weight(1f))
+                    OutlinedTextField(wTxt, { wTxt = it }, label = { Text("רוחב ${Prefs.unitSuffix}") }, singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), modifier = Modifier.weight(1f))
+                    OutlinedTextField(hTxt, { hTxt = it }, label = { Text("גובה ${Prefs.unitSuffix}") }, singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), modifier = Modifier.weight(1f))
+                    OutlinedTextField(dTxt, { dTxt = it }, label = { Text("עומק ${Prefs.unitSuffix}") }, singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), modifier = Modifier.weight(1f))
                 }
             }
         },

@@ -256,7 +256,7 @@ private fun numField(label: String, state: MutableState<String>, laser: Boolean 
         val r = last
         if (laser && armed && r?.distanceMm != null && r.ts > armedFrom) {
             armedFrom = r.ts             // דורס-וממשיך-דרוך — הירייה-הבאה תדרוס שוב
-            state.value = Math.round(r.distanceMm).toString()
+            state.value = Prefs.toDisplayText(r.distanceMm)   // מזריק ביחידת-התצוגה (מ"מ→ס"מ בעת-הצורך)
         }
     }
     OutlinedTextField(
@@ -583,7 +583,7 @@ fun RoomScreen(nav: NavController, roomId: Long) {
                                 Modifier.weight(1f).clickable { nav.navigate("wall/${w.id}") }.padding(16.dp),
                             ) {
                                 Text("קיר ${w.idx + 1}", fontSize = 17.sp, fontWeight = FontWeight.SemiBold, color = Ink)
-                                Text("אורך ${w.length.toInt()} מ\"מ · גובה ${w.height.toInt()} מ\"מ$headSuffix", fontSize = 13.sp, color = Muted, modifier = Modifier.padding(top = 2.dp))
+                                Text("אורך ${Prefs.lenValue(w.length)} · גובה ${Prefs.formatLen(w.height)}$headSuffix", fontSize = 13.sp, color = Muted, modifier = Modifier.padding(top = 2.dp))
                             }
                             IconButton(onClick = { wallToDelete = w }, modifier = Modifier.padding(end = 6.dp)) {
                                 Icon(Icons.Default.Delete, "מחק קיר", tint = BlockRed)
@@ -596,13 +596,13 @@ fun RoomScreen(nav: NavController, roomId: Long) {
     }
     if (showAdd) {
         val len = remember { mutableStateOf("") }
-        val hgt = remember { mutableStateOf(Prefs.defaultWallHeightMm.toInt().toString()) }
+        val hgt = remember { mutableStateOf(Prefs.toDisplayText(Prefs.defaultWallHeightMm)) }
         FormDialog("קיר חדש", onDismiss = { showAdd = false }, onConfirm = {
-            val l = len.value.toDoubleOrNull(); val h = hgt.value.toDoubleOrNull()
+            val l = Prefs.parseToMm(len.value); val h = Prefs.parseToMm(hgt.value)
             if (l != null && h != null) { scope.launch { repo.addWall(roomId, l, h) }; showAdd = false }
         }) {
-            numField("אורך הקיר (מ\"מ)", len)
-            numField("גובה הקיר (מ\"מ)", hgt)
+            numField("אורך הקיר (${Prefs.unitSuffix})", len)
+            numField("גובה הקיר (${Prefs.unitSuffix})", hgt)
         }
     }
     wallToDelete?.let { w ->
@@ -687,7 +687,7 @@ private fun MeasurementStartCard(
             SurveyRow(
                 label = "מהלך גבהים",
                 value = if (heights.isEmpty()) "לא נמדד" else
-                    "מינ' ${heights.min().toInt()} · מקס' ${heights.max().toInt()} מ\"מ (${heights.size})",
+                    "מינ' ${Prefs.lenValue(heights.min())} · מקס' ${Prefs.formatLen(heights.max())} (${heights.size})",
                 onEdit = { showHeights = true },
             )
             HorizontalDivider(Modifier.padding(vertical = 6.dp), color = Muted.copy(alpha = 0.2f))
@@ -941,9 +941,9 @@ private fun HeightSweepDialog(current: List<Double>, onDismiss: () -> Unit, onSa
                 Modifier.fillMaxWidth().padding(vertical = 6.dp)
                     .background(BlockRed.copy(alpha = 0.10f), RoundedCornerShape(10.dp)).padding(10.dp),
             ) {
-                Text("⚠️ מידה חריגה: ${p.toInt()} מ\"מ", color = BlockRed, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                Text("⚠️ מידה חריגה: ${Prefs.formatLen(p)}", color = BlockRed, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                 Text(
-                    "סטייה ${kotlin.math.abs(p - (refMm() ?: p)).toInt()} מ\"מ מהחציון — ייתכן תקלה בלקיחת-המידה.",
+                    "סטייה ${Prefs.formatLen(kotlin.math.abs(p - (refMm() ?: p)))} מהחציון — ייתכן תקלה בלקיחת-המידה.",
                     fontSize = 12.sp, color = Ink,
                 )
                 Row(Modifier.fillMaxWidth().padding(top = 6.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -956,20 +956,20 @@ private fun HeightSweepDialog(current: List<Double>, onDismiss: () -> Unit, onSa
         if (list.isEmpty()) Text("אין מדידות עדיין.", fontSize = 13.sp, color = Muted)
         else {
             Text(
-                "מינ' ${list.min().toInt()} · מקס' ${list.max().toInt()} מ\"מ · המחייב = ${list.min().toInt()}",
+                "מינ' ${Prefs.lenValue(list.min())} · מקס' ${Prefs.formatLen(list.max())} · המחייב = ${Prefs.formatLen(list.min())}",
                 fontSize = 13.sp, color = Teal, fontWeight = FontWeight.SemiBold,
             )
             list.forEachIndexed { i, h ->
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text("${h.toInt()} מ\"מ", fontSize = 15.sp, color = Ink, modifier = Modifier.weight(1f))
+                    Text(Prefs.formatLen(h), fontSize = 15.sp, color = Ink, modifier = Modifier.weight(1f))
                     IconButton(onClick = { list.removeAt(i) }) { Icon(Icons.Default.Delete, "מחק", tint = BlockRed) }
                 }
             }
         }
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.weight(1f)) { numField("גובה חדש (מ\"מ)", entry, laser = false) }
+            Box(Modifier.weight(1f)) { numField("גובה חדש (${Prefs.unitSuffix})", entry, laser = false) }
             OutlinedButton(onClick = {
-                entry.value.toDoubleOrNull()?.let { if (it > 0.0) { list.add(it); entry.value = "" } }
+                Prefs.parseToMm(entry.value)?.let { if (it > 0.0) { list.add(it); entry.value = "" } }
             }) { Text("הוסף") }
         }
     }
@@ -1045,7 +1045,7 @@ private fun FitResults(deltas: List<FitDelta>) {
             ) {
                 Column(Modifier.padding(12.dp)) {
                     Text(
-                        (if (block) "חסימה" else "אזהרה") + " · ${d.rule} · חריגה ${d.delta} מ\"מ",
+                        (if (block) "חסימה" else "אזהרה") + " · ${d.rule} · חריגה ${Prefs.formatLen(d.delta.toDouble())}",
                         color = if (block) BlockRed else WarnAmber, fontWeight = FontWeight.Bold, fontSize = 13.sp,
                     )
                     Text(d.message, fontSize = 14.sp, color = Ink, modifier = Modifier.padding(top = 4.dp))
@@ -1483,7 +1483,7 @@ fun WallScreen(nav: NavController, wallId: Long) {
 
     Scaffold(containerColor = Cream, floatingActionButton = { AddFab { showAdd = true } }) { pad ->
         Column(Modifier.padding(pad).fillMaxSize()) {
-            BrandHeader(wall?.let { "קיר ${it.idx + 1} · ${it.length.toInt()}×${it.height.toInt()} מ\"מ" } ?: "קיר", onBack = { nav.popBackStack() })
+            BrandHeader(wall?.let { "קיר ${it.idx + 1} · ${Prefs.lenValue(it.length)}×${Prefs.formatLen(it.height)}" } ?: "קיר", onBack = { nav.popBackStack() })
             Button(
                 onClick = { nav.navigate("elevation/$wallId") },
                 colors = ButtonDefaults.buttonColors(containerColor = Teal),
@@ -1513,7 +1513,7 @@ fun WallScreen(nav: NavController, wallId: Long) {
                             // הקשה על השורה פותחת עריכה (A4) — במקום הצפוי, לא רק בחזית.
                             Column(Modifier.weight(1f).clickable { editing = a }.padding(16.dp)) {
                                 Text(a.name, fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Ink)
-                                Text("עומק ${a.depth.toInt()} מ\"מ · מיקום ${a.fromLeft.toInt()} · גובה ${a.fromBottom.toInt()} · רוחב ${a.width.toInt()}", fontSize = 12.sp, color = Muted)
+                                Text("עומק ${Prefs.formatLen(a.depth)} · מיקום ${Prefs.lenValue(a.fromLeft)} · גובה ${Prefs.lenValue(a.fromBottom)} · רוחב ${Prefs.lenValue(a.width)}", fontSize = 12.sp, color = Muted)
                             }
                             IconButton(onClick = { editing = a }) { Text("✎", fontSize = 18.sp) }
                             IconButton(onClick = { scope.launch { repo.addAccessory(a.copy(id = 0, fromLeft = a.fromLeft + a.width + 50)) } }) { Text("📋", fontSize = 18.sp) }

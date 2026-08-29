@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import il.co.soline.measure.data.Prefs
 import il.co.soline.measure.geometry.WallBuilder
 import il.co.soline.measure.geometry.WallHeadProfile
 import il.co.soline.measure.geometry.WallHeadProfile.HeadStyle
@@ -78,19 +79,20 @@ fun WallHeadStyleScreen(
     val startLen = initialLengthMm ?: 4000.0
     val startBase = initialBaseMm ?: defaultHeightMm
     var style by remember { mutableStateOf(initialStyle) }
-    var lengthTxt by remember { mutableStateOf(startLen.roundToInt().toString()) }
-    var baseTxt by remember { mutableStateOf(startBase.roundToInt().toString()) }
+    var lengthTxt by remember { mutableStateOf(Prefs.toDisplayText(startLen)) }
+    var baseTxt by remember { mutableStateOf(Prefs.toDisplayText(startBase)) }
     var ridgeTxt by remember {
-        mutableStateOf((if (initialRidgeMm > 0.0) initialRidgeMm else startBase + 800).roundToInt().toString())
+        mutableStateOf(Prefs.toDisplayText(if (initialRidgeMm > 0.0) initialRidgeMm else startBase + 800))
     }
     var peakTxt by remember {
-        mutableStateOf((if (initialPeakMm > 0.0) initialPeakMm else startLen / 2).roundToInt().toString())
+        mutableStateOf(Prefs.toDisplayText(if (initialPeakMm > 0.0) initialPeakMm else startLen / 2))
     }
 
-    val length = lengthTxt.toDoubleOrNull() ?: startLen
-    val base = baseTxt.toDoubleOrNull() ?: startBase
-    val ridge = ridgeTxt.toDoubleOrNull() ?: base
-    val peak = peakTxt.toDoubleOrNull() ?: (length / 2)
+    // הקלט מוזן ביחידת-התצוגה → מומר למ"מ (fallback הוא כבר מ"מ).
+    val length = Prefs.parseToMm(lengthTxt) ?: startLen
+    val base = Prefs.parseToMm(baseTxt) ?: startBase
+    val ridge = Prefs.parseToMm(ridgeTxt) ?: base
+    val peak = Prefs.parseToMm(peakTxt) ?: (length / 2)
     val spec = WallHeadProfile.HeadSpec(style, base, ridge, peak)
 
     val profile = remember(length, spec) { WallHeadProfile.profile(length, spec) }
@@ -170,7 +172,7 @@ fun WallHeadStyleScreen(
 
         // ── מידע מחושב ────────────────────────────────────────────────
         Text(
-            "שטח-חזית ${(area / 1_000_000.0).let { (it * 100).roundToInt() / 100.0 }} מ\"ר · אורך-קצה ${edge.roundToInt()} מ\"מ" +
+            "שטח-חזית ${(area / 1_000_000.0).let { (it * 100).roundToInt() / 100.0 }} מ\"ר · אורך-קצה ${Prefs.formatLen(edge)}" +
                 if (!WallHeadProfile.isRealWall(style)) " · קיר-שקוף (לא נספר)" else "",
             fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = Teal,
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
@@ -179,14 +181,14 @@ fun WallHeadStyleScreen(
         // ── שדות ──────────────────────────────────────────────────────
         Column(Modifier.padding(horizontal = 12.dp)) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                num("אורך-קיר (מ\"מ)", lengthTxt, { lengthTxt = it }, Modifier.weight(1f))
-                num("גובה-בסיס (מ\"מ)", baseTxt, { baseTxt = it }, Modifier.weight(1f))
+                num("אורך-קיר (${Prefs.unitSuffix})", lengthTxt, { lengthTxt = it }, Modifier.weight(1f))
+                num("גובה-בסיס (${Prefs.unitSuffix})", baseTxt, { baseTxt = it }, Modifier.weight(1f))
             }
             if (usesRidge) {
                 Spacer(Modifier.height(6.dp))
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    num("גובה-רכס (מ\"מ)", ridgeTxt, { ridgeTxt = it }, Modifier.weight(1f))
-                    if (usesPeak) num("מיקום-פסגה (מ\"מ)", peakTxt, { peakTxt = it }, Modifier.weight(1f))
+                    num("גובה-רכס (${Prefs.unitSuffix})", ridgeTxt, { ridgeTxt = it }, Modifier.weight(1f))
+                    if (usesPeak) num("מיקום-פסגה (${Prefs.unitSuffix})", peakTxt, { peakTxt = it }, Modifier.weight(1f))
                     else Spacer(Modifier.weight(1f))
                 }
             }

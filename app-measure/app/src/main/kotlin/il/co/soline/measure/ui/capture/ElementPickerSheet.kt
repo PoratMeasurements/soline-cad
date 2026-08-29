@@ -26,6 +26,7 @@ import il.co.soline.measure.catalog.ElementCatalog
 import il.co.soline.measure.catalog.ElementDef
 import il.co.soline.measure.catalog.ElementGroup
 import il.co.soline.measure.data.CustomElementStore
+import il.co.soline.measure.data.Prefs
 import il.co.soline.measure.data.RecentElementsStore
 import il.co.soline.measure.ui.Cream
 import il.co.soline.measure.ui.Ink
@@ -322,7 +323,7 @@ private fun ElementRow(
                 Text(def.he, fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Ink)
                 Text(
                     buildString {
-                        if (def.hasDepth) append("עומק ${def.defaultDepth.toInt()} מ\"מ") else append("ללא עומק")
+                        if (def.hasDepth) append("עומק ${Prefs.formatLen(def.defaultDepth)}") else append("ללא עומק")
                         if (def.round) append(" · עגול")
                     },
                     fontSize = 12.sp, color = Muted, modifier = Modifier.padding(top = 2.dp),

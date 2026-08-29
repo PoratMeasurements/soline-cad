@@ -303,7 +303,7 @@ fun LiveCadScreen(
                             val (nx, ny) = outwardNormal(hRad)
                             val off = 18.dp.toPx()
                             drawContext.canvas.nativeCanvas.apply {
-                                drawText("${w.length.roundToInt()} מ\"מ", m.x + nx * off, m.y + ny * off + 4.dp.toPx(), dimPaint)
+                                drawText(Prefs.formatLen(w.length), m.x + nx * off, m.y + ny * off + 4.dp.toPx(), dimPaint)
                                 drawText("קיר ${w.idx + 1}", m.x - nx * off, m.y - ny * off, idxPaint)
                             }
                         }
@@ -388,17 +388,17 @@ fun LiveCadScreen(
         )
         is CadDialog.ClosingPrefill -> AddWallDialog(
             title = "קיר סוגר",
-            initialLength = d.length.roundToInt().toString(),
+            initialLength = Prefs.toDisplayText(d.length),
             initialAngle = trimAngle(d.angle),
             onDismiss = { dialog = null },
             onConfirm = { len, ang -> addWallManual(len, snapAngle(ang)); dialog = null },
         )
         is CadDialog.EditDim -> EditValueDialog(
             title = "ערוך מידה — קיר ${d.wall.idx + 1}",
-            label = "אורך (מ\"מ)",
-            initial = d.wall.length.roundToInt().toString(),
+            label = "אורך (${Prefs.unitSuffix})",
+            initial = Prefs.toDisplayText(d.wall.length),
             onDismiss = { dialog = null },
-            onConfirm = { v -> onUpdateWall(d.wall.copy(length = v)); dialog = null },
+            onConfirm = { v -> onUpdateWall(d.wall.copy(length = Prefs.toMm(v))); dialog = null },
         )
         is CadDialog.EditAngle -> EditValueDialog(
             title = "ערוך זווית — קיר ${d.wall.idx + 1}",
@@ -435,8 +435,8 @@ private fun ArcDialog(
     var ccw by remember { mutableStateOf(true) }
     var segTxt by remember { mutableStateOf("8") }
 
-    val chord = chordTxt.toDoubleOrNull()
-    val sag = sagTxt.toDoubleOrNull()
+    val chord = Prefs.parseToMm(chordTxt)   // קלט ביחידת-התצוגה → מ"מ
+    val sag = Prefs.parseToMm(sagTxt)
     val segs = segTxt.toIntOrNull() ?: 8
     val ok = chord != null && chord > 0.0 && sag != null && sag > 0.0
     val radius = if (ok) ArcWall.radiusOf(chord!!, sag!!) else null
@@ -449,14 +449,14 @@ private fun ArcDialog(
             Column {
                 OutlinedTextField(
                     value = chordTxt, onValueChange = { chordTxt = it },
-                    label = { Text("מיתר — מרחק ישר בין קצוות (מ\"מ)") },
+                    label = { Text("מיתר — מרחק ישר בין קצוות (${Prefs.unitSuffix})") },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 )
                 Spacer(Modifier.height(8.dp))
                 OutlinedTextField(
                     value = sagTxt, onValueChange = { sagTxt = it },
-                    label = { Text("בליטה — גובה-הקשת מעל-המיתר (מ\"מ)") },
+                    label = { Text("בליטה — גובה-הקשת מעל-המיתר (${Prefs.unitSuffix})") },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 )
@@ -478,7 +478,7 @@ private fun ArcDialog(
                 )
                 if (radius != null && radius.isFinite()) {
                     Spacer(Modifier.height(6.dp))
-                    Text("רדיוס מחושב ≈ ${radius.roundToInt()} מ\"מ", color = Teal, fontSize = 12.sp)
+                    Text("רדיוס מחושב ≈ ${Prefs.formatLen(radius)}", color = Teal, fontSize = 12.sp)
                 }
             }
         },
@@ -506,7 +506,7 @@ private fun BuildBar(nextIdx: Int, onAddWall: (Double, Double) -> Unit) {
         AngleMode.DEG45 -> 45.0
         AngleMode.CUSTOM -> customTxt.toDoubleOrNull()
     }
-    val lengthMm = lengthTxt.toDoubleOrNull()
+    val lengthMm = Prefs.parseToMm(lengthTxt)   // קלט ביחידת-התצוגה → מ"מ
     val canAdd = lengthMm != null && lengthMm > 0.0 && chosenAngle != null
 
     Column(
@@ -518,7 +518,7 @@ private fun BuildBar(nextIdx: Int, onAddWall: (Double, Double) -> Unit) {
             OutlinedTextField(
                 value = lengthTxt,
                 onValueChange = { lengthTxt = it },
-                label = { Text("אורך (מ\"מ)") },
+                label = { Text("אורך (${Prefs.unitSuffix})") },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.weight(1f),
@@ -573,7 +573,7 @@ private fun AddWallDialog(
 ) {
     var lenTxt by remember { mutableStateOf(initialLength) }
     var angTxt by remember { mutableStateOf(initialAngle) }
-    val len = lenTxt.toDoubleOrNull()
+    val len = Prefs.parseToMm(lenTxt)   // קלט ביחידת-התצוגה → מ"מ
     val ang = angTxt.toDoubleOrNull()
     val ok = len != null && len > 0.0 && ang != null
 
@@ -586,7 +586,7 @@ private fun AddWallDialog(
                 OutlinedTextField(
                     value = lenTxt,
                     onValueChange = { lenTxt = it },
-                    label = { Text("אורך (מ\"מ)") },
+                    label = { Text("אורך (${Prefs.unitSuffix})") },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 )
@@ -654,7 +654,7 @@ private fun ClosureBadge(closed: Boolean, gapMm: Double) {
     val (bg, fg, txt) = if (closed) {
         Triple(OkGreen.copy(alpha = 0.14f), OkGreen, "✓ סגור")
     } else {
-        Triple(WarnAmber.copy(alpha = 0.14f), WarnAmber, "פער ${gapMm.roundToInt()} מ\"מ")
+        Triple(WarnAmber.copy(alpha = 0.14f), WarnAmber, "פער ${Prefs.formatLen(gapMm)}")
     }
     Box(
         Modifier

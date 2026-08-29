@@ -43,6 +43,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import il.co.soline.measure.data.Prefs
 import il.co.soline.measure.data.WallEntity
 import il.co.soline.measure.geometry.RoomTemplates
 import il.co.soline.measure.geometry.WallBuilder
@@ -68,8 +69,8 @@ private data class Field(val label: String, val key: String, val default: Int)
 
 private fun fieldsFor(t: RoomTemplates.Template): List<Field> = when (t) {
     RoomTemplates.Template.RECTANGLE -> listOf(
-        Field("רוחב W (מ\"מ)", "w", 4000),
-        Field("עומק H (מ\"מ)", "h", 3000),
+        Field("רוחב W (${Prefs.unitSuffix})", "w", 4000),
+        Field("עומק H (${Prefs.unitSuffix})", "h", 3000),
     )
     RoomTemplates.Template.L -> listOf(
         Field("רוחב חיצוני W", "w", 4000),
@@ -130,9 +131,10 @@ fun RoomTemplateWizard(
     val values = remember { mutableStateMapOf<String, String>() }
     val fields = fieldsFor(template)
     // ודא ברירות-מחדל לשדות שטרם הוזנו
-    fields.forEach { f -> if (values[f.key] == null) values[f.key] = f.default.toString() }
+    fields.forEach { f -> if (values[f.key] == null) values[f.key] = Prefs.toDisplayText(f.default.toDouble()) }
 
-    val parsed: Map<String, Double> = fields.associate { it.key to (values[it.key]?.toDoubleOrNull() ?: it.default.toDouble()) }
+    // הקלט מוזן ביחידת-התצוגה → מומר למ"מ לבניית-הגיאומטריה.
+    val parsed: Map<String, Double> = fields.associate { it.key to (Prefs.parseToMm(values[it.key] ?: "") ?: it.default.toDouble()) }
     val verts = remember(template, parsed) { buildVerts(template, parsed) }
     val walls = remember(template, parsed, mirror, startWall) {
         RoomTemplates.fromClosedPolygon(verts, heightMm = defaultHeightMm, mirror = mirror, startWall = startWall)
@@ -195,7 +197,7 @@ fun RoomTemplateWizard(
                 .padding(horizontal = 12.dp),
         ) {
             Text(
-                "${walls.size} קירות · היקף ${perimeter(walls).roundToInt()} מ\"מ",
+                "${walls.size} קירות · היקף ${Prefs.formatLen(perimeter(walls))}",
                 fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = Teal,
                 modifier = Modifier.padding(vertical = 6.dp),
             )

@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import kotlin.math.abs
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 /**
  * Prefs — מחזיק ההעדפות של המשתמש (מודד) עבור Soline Measure.
@@ -49,7 +52,7 @@ object Prefs {
 
         companion object {
             fun fromName(name: String?): Units =
-                entries.firstOrNull { it.name == name } ?: MM
+                entries.firstOrNull { it.name == name } ?: CM
         }
     }
 
@@ -58,7 +61,7 @@ object Prefs {
 
     // ---- backing state (מקור-האמת התגובתי; מסונכרן תמיד עם SharedPreferences) ----
     private val _surveyorName = mutableStateOf("")
-    private val _units = mutableStateOf(Units.MM)
+    private val _units = mutableStateOf(Units.CM)
     private val _defaultWallHeightMm = mutableStateOf(2700.0)
     private val _angleLockDefault = mutableStateOf(true)
     private val _soundOnCapture = mutableStateOf(true)
@@ -78,7 +81,7 @@ object Prefs {
         if (::sp.isInitialized) return
         sp = context.applicationContext.getSharedPreferences(FILE, Context.MODE_PRIVATE)
         _surveyorName.value = sp.getString(K_SURVEYOR_NAME, "") ?: ""
-        _units.value = Units.fromName(sp.getString(K_UNITS, Units.MM.name))
+        _units.value = Units.fromName(sp.getString(K_UNITS, Units.CM.name))
         _defaultWallHeightMm.value = sp.getFloat(K_WALL_HEIGHT, 2700f).toDouble()
         _angleLockDefault.value = sp.getBoolean(K_ANGLE_LOCK, true)
         _soundOnCapture.value = sp.getBoolean(K_SOUND, true)
@@ -205,4 +208,57 @@ object Prefs {
         locConsentGiven = false
         locConsentTs = 0L
     }
+
+    /* ─────────────────────────────────────────────────────────────────────────
+     * עיצוב-מידות לפי יחידת-התצוגה (המעצב-המשותף היחיד)
+     * ─────────────────────────────────────────────────────────────────────────
+     * האחסון-הפנימי תמיד מ"מ. הפונקציות כאן מתרגמות לתצוגה לפי [units]:
+     *   · CM → ערך/10, עד ספרה-עשרונית-אחת (רק אם צריך), סיומת "ס\"מ".
+     *   · MM → ערך שלם, סיומת "מ\"מ".
+     * קריאתן בתוך Composable/Canvas מבצעת snapshot-read של [unitsState] ולכן
+     * גורמת ל-recompose/redraw אוטומטי בעת שינוי-היחידה. השתמש בהן בכל אתר-תצוגה.
+     */
+
+    /** סיומת-היחידה הנוכחית לתצוגה ("ס\"מ" / "מ\"מ"). */
+    val unitSuffix: String get() { ensureInit(); return _units.value.label }
+
+    /** ערך-התצוגה בלבד (בלי סיומת) — למשל שדה-ערך גדול עם סיומת נפרדת. */
+    fun lenValue(mm: Double): String {
+        ensureInit()
+        return when (_units.value) {
+            Units.CM -> {
+                val cm = mm / 10.0
+                if (abs(cm - Math.round(cm)) < 0.05) cm.roundToLong().toString()
+                else String.format("%.1f", cm)
+            }
+            Units.MM -> mm.roundToInt().toString()
+        }
+    }
+
+    /** מחרוזת-תצוגה מלאה: ערך + רווח + סיומת-יחידה (למשל "270 ס\"מ" / "2700 מ\"מ"). */
+    fun formatLen(mm: Double): String {
+        ensureInit()
+        return lenValue(mm) + " " + _units.value.label
+    }
+
+    /** ערך-תצוגה כ-Double (למילוי-מוקדם של שדה-קלט; CM→/10). */
+    fun toDisplay(mm: Double): Double { ensureInit(); return if (_units.value == Units.CM) mm / 10.0 else mm }
+
+    /** טקסט-תצוגה למילוי-שדה: ערך-התצוגה בלי סיומת (מזהה שלם→בלי ".0"). */
+    fun toDisplayText(mm: Double): String = lenValue(mm)
+
+    /** ממיר ערך שהוקלד ביחידת-התצוגה חזרה למ"מ (לאחסון; CM→*10). */
+    fun toMm(displayValue: Double): Double { ensureInit(); return if (_units.value == Units.CM) displayValue * 10.0 else displayValue }
+
+    /** מנתח טקסט-קלט (ביחידת-התצוגה) למ"מ, או null אם ריק/לא-תקין. */
+    fun parseToMm(text: String): Double? {
+        val v = text.trim().replace(',', '.').toDoubleOrNull() ?: return null
+        return toMm(v)
+    }
 }
+
+/** קיצור-תצוגה משותף: ממיר מידה (מ"מ פנימי) למחרוזת מלאה לפי יחידת-התצוגה. */
+fun Double.lenU(): String = Prefs.formatLen(this)
+
+/** קיצור-תצוגה משותף: ערך-התצוגה בלבד (בלי סיומת-יחידה). */
+fun Double.lenValueU(): String = Prefs.lenValue(this)

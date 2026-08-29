@@ -131,12 +131,13 @@ fun SettingsScreen(
                         SectionDivider()
                         // גובה-קיר ברירת-מחדל
                         OutlinedTextField(
-                            value = if (wallHeight == 0.0) "" else formatMm(wallHeight),
+                            value = if (wallHeight == 0.0) "" else Prefs.toDisplayText(wallHeight),
                             onValueChange = { txt ->
-                                txt.replace(',', '.').toDoubleOrNull()?.let { Prefs.defaultWallHeightMm = it }
+                                // הקלט מוזן ביחידת-התצוגה → מומר למ"מ לאחסון.
+                                Prefs.parseToMm(txt)?.let { Prefs.defaultWallHeightMm = it }
                                     ?: run { if (txt.isBlank()) Prefs.defaultWallHeightMm = 0.0 }
                             },
-                            label = { Text("גובה קיר ברירת-מחדל (מ\"מ)") },
+                            label = { Text("גובה קיר ברירת-מחדל (${units.label})") },
                             singleLine = true,
                             keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = KeyboardType.Number),
                             modifier = Modifier.fillMaxWidth(),
@@ -507,6 +508,3 @@ private fun fieldColors() = OutlinedTextFieldDefaults.colors(
     unfocusedTextColor = Ink
 )
 
-/** מציג גובה במ"מ ללא נקודה-עשרונית מיותרת (2700 ולא 2700.0). */
-private fun formatMm(v: Double): String =
-    if (v % 1.0 == 0.0) v.toLong().toString() else v.toString()

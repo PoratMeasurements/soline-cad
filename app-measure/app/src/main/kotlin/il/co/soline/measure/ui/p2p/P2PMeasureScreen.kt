@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import il.co.soline.measure.data.Prefs
 import il.co.soline.measure.data.SolineApp
 import il.co.soline.measure.data.WallEntity
 import il.co.soline.measure.geometry.StationSolver
@@ -180,7 +181,7 @@ fun P2PMeasureScreen(
     val distModeHint = connected != null && captureMm != null && last?.vAngleDeg == null
 
     fun addManualCorner() {
-        val d = p(manDist); val az = p(manAz)
+        val d = p(manDist)?.let { Prefs.toMm(it) }; val az = p(manAz)   // מרחק מוזן ביחידת-התצוגה → מ"מ
         if (d != null && d > 0 && az != null) {
             val pt = StationSolver.toPlan(d, az, 0.0, cwHanded)
             val ei = editIndex
@@ -200,7 +201,7 @@ fun P2PMeasureScreen(
     // פינות-חופפות (ירייה-כפולה) — לאזהרה; המיזוג-בפועל ב-cornersToWalls.
     val coincident = StationSolver.dedupeCorners(corners.toList(), closed).size != corners.size
 
-    val height = p(heightText)?.takeIf { it > 0 } ?: defaultHeightMm
+    val height = p(heightText)?.let { Prefs.toMm(it) }?.takeIf { it > 0 } ?: defaultHeightMm
     val heightMeasured = p(heightText).let { it != null && it > 0 }
 
     // תצוגת-תוכנית + פלט-סיום נגזרים מהפינות.
@@ -278,7 +279,7 @@ fun P2PMeasureScreen(
                     }
                     if (coincident) {
                         Box(Modifier.padding(horizontal = 12.dp, vertical = 4.dp)) {
-                            WarnCard("פינות חופפות (מרחק < ${StationSolver.MIN_CORNER_SEP_MM.roundToInt()} מ\"מ) אוחדו — ירייה-כפולה לא תיצור קיר-אפס.")
+                            WarnCard("פינות חופפות (מרחק < ${Prefs.formatLen(StationSolver.MIN_CORNER_SEP_MM)}) אוחדו — ירייה-כפולה לא תיצור קיר-אפס.")
                         }
                     }
 
@@ -336,7 +337,7 @@ fun P2PMeasureScreen(
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             OutlinedTextField(
                                 value = manDist, onValueChange = { manDist = it },
-                                label = { Text("מרחק", fontSize = 13.sp) }, suffix = { Text("מ\"מ", color = Muted) },
+                                label = { Text("מרחק", fontSize = 13.sp) }, suffix = { Text(Prefs.unitSuffix, color = Muted) },
                                 singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                 modifier = Modifier.weight(1f),
                             )
@@ -390,13 +391,13 @@ fun P2PMeasureScreen(
                                         contentAlignment = Alignment.Center,
                                     ) { Text("${i + 1}", color = Teal, fontWeight = FontWeight.Bold, fontSize = 14.sp) }
                                     Text(
-                                        "מרחק ${r.roundToInt()} · אזימוט ${az.roundToInt()}°",
+                                        "מרחק ${Prefs.formatLen(r)} · אזימוט ${az.roundToInt()}°",
                                         color = Ink, fontSize = 13.sp, modifier = Modifier.weight(1f),
                                     )
                                     OutlinedButton(
                                         // עריכה **במקום**: טוען מרחק/אזימוט ומסמן editIndex — הכתיבה-חזרה
                                         // תשמור על מיקום-הפינה (בלי remove+append שמשבש את המצולע).
-                                        onClick = { manDist = r.roundToInt().toString(); manAz = az.roundToInt().toString(); editIndex = i },
+                                        onClick = { manDist = Prefs.toDisplayText(r); manAz = az.roundToInt().toString(); editIndex = i },
                                         contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
                                     ) { Text("✎", fontSize = 14.sp) }
                                     OutlinedButton(
@@ -418,7 +419,7 @@ fun P2PMeasureScreen(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Text(
-                                        "קיר ${i + 1}: אורך ${w.length.roundToInt()} מ\"מ" +
+                                        "קיר ${i + 1}: אורך ${Prefs.formatLen(w.length)}" +
                                             (if (i < previewWalls.lastIndex || closed) " · פינה ${(180 - kotlin.math.abs(w.angle)).roundToInt()}°" else ""),
                                         color = Ink, fontSize = 13.sp,
                                     )
@@ -436,8 +437,8 @@ fun P2PMeasureScreen(
                         }
                         OutlinedTextField(
                             value = heightText, onValueChange = { heightText = it },
-                            label = { Text("גובה-קירות (ברירת-מחדל ${defaultHeightMm.roundToInt()})", fontSize = 14.sp) },
-                            suffix = { Text("מ\"מ", color = Muted) },
+                            label = { Text("גובה-קירות (ברירת-מחדל ${Prefs.lenValue(defaultHeightMm)})", fontSize = 14.sp) },
+                            suffix = { Text(Prefs.unitSuffix, color = Muted) },
                             singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             modifier = Modifier.fillMaxWidth(),
                         )

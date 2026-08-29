@@ -61,6 +61,7 @@ import android.graphics.Paint
 import il.co.soline.measure.data.CabinetCatalog
 import il.co.soline.measure.data.CabinetEntity
 import il.co.soline.measure.data.CabinetKind
+import il.co.soline.measure.data.Prefs
 import il.co.soline.measure.ui.BlockRed
 import il.co.soline.measure.ui.Cream
 import il.co.soline.measure.ui.Ink
@@ -121,7 +122,8 @@ private fun beltColor(kind: String): Color = when (CabinetKind.of(kind).belt) {
     else -> Orange
 }
 
-private fun Double.mm(): String = roundToInt().toString()
+// מעצב-הערך-המשותף לפי יחידת-התצוגה (ערך בלבד, בלי סיומת). האחסון תמיד מ"מ.
+private fun Double.mm(): String = Prefs.lenValue(this)
 
 /**
  * מסך שכבת-הארונות לקיר בודד.
@@ -171,7 +173,7 @@ fun CabinetScreen(
                 Column(Modifier.weight(1f)) {
                     Text("soline · ארונות על הקיר", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Orange, lineHeight = 22.sp)
                     Text(
-                        "רוחב-קיר ${wall.length.mm()} מ\"מ · ${cabinets.size} ארונות · ${stops.size} עצירות",
+                        "רוחב-קיר ${wall.length.mm()} ${Prefs.unitSuffix} · ${cabinets.size} ארונות · ${stops.size} עצירות",
                         fontSize = 12.sp, color = Teal,
                     )
                 }
@@ -272,7 +274,7 @@ fun CabinetScreen(
                         val midX = (l + r) / 2f
                         val midY = (t + b) / 2f
                         nc.drawText(c.name, midX, midY - 4.dp.toPx(), cabPaint)
-                        nc.drawText("${c.width.mm()} מ\"מ", midX, midY + 14.dp.toPx(), cabPaint)
+                        nc.drawText("${c.width.mm()} ${Prefs.unitSuffix}", midX, midY + 14.dp.toPx(), cabPaint)
                     }
 
                     // עצירות-ארון (Cabinet stops) — קו-מקווקו אדום מהרצפה לתקרה + דגלון
@@ -290,7 +292,7 @@ fun CabinetScreen(
 
                     // תווית-רוחב הקיר
                     wallPaint.textSize = 13.dp.toPx()
-                    nc.drawText("${wall.length.mm()} מ\"מ", (leftX + rightX) / 2f, botY + 34.dp.toPx(), wallPaint)
+                    nc.drawText("${wall.length.mm()} ${Prefs.unitSuffix}", (leftX + rightX) / 2f, botY + 34.dp.toPx(), wallPaint)
                 }
             }
 
@@ -366,13 +368,13 @@ private fun RowFitBar(wallLength: Double, totalWidth: Double, remaining: Double)
         else -> OkGreen
     }
     val label = when {
-        remaining < -tol -> "עודף — חורג ב-${(-remaining).mm()} מ\"מ (השורה לא נכנסת)"
-        remaining > tol -> "חוסר — פער ${remaining.mm()} מ\"מ (נדרשת מילואה/מודול)"
-        else -> "נכנס ✓ (פער ${remaining.mm()} מ\"מ)"
+        remaining < -tol -> "עודף — חורג ב-${(-remaining).mm()} ${Prefs.unitSuffix} (השורה לא נכנסת)"
+        remaining > tol -> "חוסר — פער ${remaining.mm()} ${Prefs.unitSuffix} (נדרשת מילואה/מודול)"
+        else -> "נכנס ✓ (פער ${remaining.mm()} ${Prefs.unitSuffix})"
     }
     Column(Modifier.fillMaxWidth().background(col.copy(alpha = 0.10f)).padding(horizontal = 12.dp, vertical = 8.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Σ ${totalWidth.mm()} / ${wallLength.mm()} מ\"מ", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Ink)
+            Text("Σ ${totalWidth.mm()} / ${wallLength.mm()} ${Prefs.unitSuffix}", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Ink)
             Spacer(Modifier.weight(1f))
             Text(label, fontSize = 13.sp, fontWeight = FontWeight.Bold, color = col)
         }
@@ -409,7 +411,7 @@ private fun CabinetDialog(
     var nameEdited by remember { mutableStateOf(false) }
     var dimsEdited by remember { mutableStateOf(false) }
 
-    fun num(s: String, fb: Double) = s.trim().toDoubleOrNull() ?: fb
+    fun num(s: String, fb: Double) = Prefs.parseToMm(s) ?: fb   // קלט ביחידת-התצוגה → מ"מ
 
     fun pickKind(k: CabinetKind) {
         kind = k
@@ -461,11 +463,11 @@ private fun CabinetDialog(
                 }
                 Spacer(Modifier.height(12.dp))
 
-                Text("רוחב-מודול (מ\"מ)", fontSize = 12.sp, color = Teal, fontWeight = FontWeight.Bold)
+                Text("רוחב-מודול (${Prefs.unitSuffix})", fontSize = 12.sp, color = Teal, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(6.dp))
                 Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     for (wmm in CabinetCatalog.moduleWidths) {
-                        val selected = widthTxt.trim().toDoubleOrNull() == wmm
+                        val selected = Prefs.parseToMm(widthTxt) == wmm
                         SelChip(text = wmm.mm(), selected = selected, color = Orange) { widthTxt = wmm.mm(); dimsEdited = true }
                     }
                 }
@@ -473,15 +475,15 @@ private fun CabinetDialog(
 
                 NumField("שם", nameTxt, KeyboardType.Text) { nameTxt = it; nameEdited = true }
                 Spacer(Modifier.height(8.dp))
-                NumField("רוחב (מ\"מ)", widthTxt, KeyboardType.Number) { widthTxt = it; dimsEdited = true }
+                NumField("רוחב (${Prefs.unitSuffix})", widthTxt, KeyboardType.Number) { widthTxt = it; dimsEdited = true }
                 Spacer(Modifier.height(8.dp))
-                NumField("מרחק משמאל (מ\"מ)", fromLeftTxt, KeyboardType.Number) { fromLeftTxt = it }
+                NumField("מרחק משמאל (${Prefs.unitSuffix})", fromLeftTxt, KeyboardType.Number) { fromLeftTxt = it }
                 Spacer(Modifier.height(8.dp))
-                NumField("עומק (מ\"מ)", depthTxt, KeyboardType.Number) { depthTxt = it; dimsEdited = true }
+                NumField("עומק (${Prefs.unitSuffix})", depthTxt, KeyboardType.Number) { depthTxt = it; dimsEdited = true }
                 Spacer(Modifier.height(8.dp))
-                NumField("גובה תחתית מהרצפה (מ\"מ)", fromTxt, KeyboardType.Number) { fromTxt = it; dimsEdited = true }
+                NumField("גובה תחתית מהרצפה (${Prefs.unitSuffix})", fromTxt, KeyboardType.Number) { fromTxt = it; dimsEdited = true }
                 Spacer(Modifier.height(8.dp))
-                NumField("גובה ראש מהרצפה (מ\"מ)", toTxt, KeyboardType.Number) { toTxt = it; dimsEdited = true }
+                NumField("גובה ראש מהרצפה (${Prefs.unitSuffix})", toTxt, KeyboardType.Number) { toTxt = it; dimsEdited = true }
             }
         },
         containerColor = Color.White,

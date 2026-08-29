@@ -1,5 +1,6 @@
 package il.co.soline.measure.ui.close
 
+import il.co.soline.measure.data.Prefs
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -114,5 +115,5 @@ fun CloseToolsBar(
 private fun fmtMm(mm: Double): String {
     val a = abs(mm)
     return if (a >= 1000.0) String.format("%.2f מ'", mm / 1000.0)
-    else String.format("%.0f מ\"מ", mm)
+    else Prefs.formatLen(mm)
 }

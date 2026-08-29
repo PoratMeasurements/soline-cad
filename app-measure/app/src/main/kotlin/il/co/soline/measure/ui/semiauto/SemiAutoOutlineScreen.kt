@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import android.graphics.Paint
+import il.co.soline.measure.data.Prefs
 import il.co.soline.measure.data.SolineApp
 import il.co.soline.measure.data.WallEntity
 import il.co.soline.measure.geometry.WallBuilder
@@ -363,7 +364,7 @@ fun SemiAutoOutlineScreen(
                             val (nx, ny) = outwardNormal(hRad)
                             val offPx = 16.dp.toPx()
                             drawContext.canvas.nativeCanvas.drawText(
-                                "${len.roundToInt()} מ\"מ", mid.x + nx * offPx, mid.y + ny * offPx + 4.dp.toPx(), dimPaint,
+                                Prefs.formatLen(len), mid.x + nx * offPx, mid.y + ny * offPx + 4.dp.toPx(), dimPaint,
                             )
                         }
 
@@ -544,12 +545,12 @@ private fun ControlPanel(
                     val shown = pendingMm ?: liveMm
                     Row(verticalAlignment = Alignment.Bottom) {
                         Text(
-                            if (shown != null) shown.roundToInt().toString() else "– – –",
+                            if (shown != null) Prefs.lenValue(shown) else "– – –",
                             fontSize = 40.sp, fontWeight = FontWeight.Bold,
                             color = if (pendingMm != null) Orange else Ink, lineHeight = 42.sp,
                         )
                         Spacer(Modifier.width(6.dp))
-                        Text("מ\"מ", fontSize = 18.sp, color = Muted, modifier = Modifier.padding(bottom = 6.dp))
+                        Text(Prefs.unitSuffix, fontSize = 18.sp, color = Muted, modifier = Modifier.padding(bottom = 6.dp))
                     }
                     Text(
                         if (pendingMm != null) "אורך-הקיר הבא (מדידה חיה)" else "כוון לייזר לאורך הקיר ולחץ על המכשיר",
@@ -604,7 +605,7 @@ private fun ControlPanel(
                 append(if (on) "● מחובר" else "○ ")
                 append(connected ?: status)
                 val d = liveMm
-                if (d != null && d > 0.0) append(" · מדידה חיה ${d.roundToInt()} מ\"מ")
+                if (d != null && d > 0.0) append(" · מדידה חיה ${Prefs.formatLen(d)}")
             },
             fontSize = 12.sp, color = if (on) OkGreen else WarnAmber, fontWeight = FontWeight.SemiBold,
         )
@@ -626,10 +627,10 @@ private fun HeightRow(heightMm: Double, onHeight: (Double) -> Unit) {
                 .border(1.dp, Muted.copy(alpha = 0.4f), RoundedCornerShape(10.dp))
                 .padding(vertical = 8.dp),
             contentAlignment = Alignment.Center,
-        ) { Text("${heightMm.roundToInt()} מ\"מ", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Ink) }
+        ) { Text(Prefs.formatLen(heightMm), fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Ink) }
         Stepper("+", { onHeight(heightMm + 10) })
         for (hp in listOf(2400.0, 2600.0, 2700.0, 2800.0, 3000.0)) {
-            StepChip("${hp.roundToInt()}", heightMm == hp) { onHeight(hp) }
+            StepChip(Prefs.lenValue(hp), heightMm == hp) { onHeight(hp) }
         }
     }
 }
@@ -740,7 +741,7 @@ private fun ClosureBadge(closed: Boolean, gapMm: Double) {
             .padding(horizontal = 10.dp, vertical = 6.dp),
     ) {
         Text(
-            if (closed) "● מתאר סגור" else "○ פער ${gapMm.roundToInt()} מ\"מ",
+            if (closed) "● מתאר סגור" else "○ פער ${Prefs.formatLen(gapMm)}",
             color = fg, fontSize = 12.sp, fontWeight = FontWeight.Bold,
         )
     }

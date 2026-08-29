@@ -259,7 +259,7 @@ fun MeasureCaptureScreen(
                         drawCircle(Orange, 6.dp.toPx(), Offset(end.x, end.y), style = Stroke(width = 2.dp.toPx()))
                         dimPaint.textSize = 14.dp.toPx()
                         drawContext.canvas.nativeCanvas.drawText(
-                            "${pendingLenMm!!.roundToInt()} מ\"מ",
+                            Prefs.formatLen(pendingLenMm!!),
                             (start.x + end.x) / 2f, (start.y + end.y) / 2f - 8.dp.toPx(), anglePaint.apply { textSize = 14.dp.toPx() },
                         )
                     }
@@ -276,7 +276,7 @@ fun MeasureCaptureScreen(
                         val (nx, ny) = outwardNormal(hRad)
                         val off = 18.dp.toPx()
                         drawContext.canvas.nativeCanvas.apply {
-                            drawText("${w.length.roundToInt()} מ\"מ", m.x + nx * off, m.y + ny * off + 4.dp.toPx(), dimPaint)
+                            drawText(Prefs.formatLen(w.length), m.x + nx * off, m.y + ny * off + 4.dp.toPx(), dimPaint)
                             drawText("קיר ${w.idx + 1}", m.x - nx * off, m.y - ny * off, idxPaint)
                         }
                     }
@@ -357,7 +357,7 @@ private fun CaptureBar(
             append("בקרה: ")
             append(if (wallCount == 0) "אין קירות עדיין" else "$wallCount קירות")
             append(" · ")
-            append(if (closed) "מתאר סגור ✓" else "פתוח — פער ${gapMm.roundToInt()} מ\"מ")
+            append(if (closed) "מתאר סגור ✓" else "פתוח — פער ${Prefs.formatLen(gapMm)}")
         }
         Text(checkTxt, fontSize = 12.sp, color = if (closed) OkGreen else Muted, fontWeight = FontWeight.SemiBold)
         Spacer(Modifier.height(6.dp))
@@ -368,12 +368,12 @@ private fun CaptureBar(
                 val shown = pendingLenMm ?: distanceMm
                 Row(verticalAlignment = Alignment.Bottom) {
                     Text(
-                        if (shown != null) shown.roundToInt().toString() else "– – –",
+                        if (shown != null) Prefs.lenValue(shown) else "– – –",
                         fontSize = 46.sp, fontWeight = FontWeight.Bold,
                         color = if (pendingLenMm != null) Orange else Ink, lineHeight = 48.sp,
                     )
                     Spacer(Modifier.width(6.dp))
-                    Text("מ\"מ", fontSize = 18.sp, color = Muted, modifier = Modifier.padding(bottom = 6.dp))
+                    Text(Prefs.unitSuffix, fontSize = 18.sp, color = Muted, modifier = Modifier.padding(bottom = 6.dp))
                 }
                 val label = if (pendingLenMm != null) "אורך הקיר הבא (מדידה חיה)" else "מדידה חיה — לחץ על המכשיר"
                 Text(label, fontSize = 12.sp, color = Teal)
@@ -471,7 +471,7 @@ private fun ClosureBadge(closed: Boolean, gapMm: Double) {
     val (bg, fg, txt) = if (closed) {
         Triple(OkGreen.copy(alpha = 0.14f), OkGreen, "✓ סגור")
     } else {
-        Triple(WarnAmber.copy(alpha = 0.14f), WarnAmber, "פער ${gapMm.roundToInt()} מ\"מ")
+        Triple(WarnAmber.copy(alpha = 0.14f), WarnAmber, "פער ${Prefs.formatLen(gapMm)}")
     }
     Box(
         Modifier
