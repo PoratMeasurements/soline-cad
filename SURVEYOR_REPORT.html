@@ -1,0 +1,243 @@
+<title>דו״ח מודד</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Poppins:wght@600&display=swap">
+<style id="app-css">
+  :root{
+    --bg:#FBF4E6;--surface:#FFFFFF;--surface2:#FAF3E2;--text:#2B2620;--muted:#6E6656;
+    --border:#EADFC7;--accent:#E8890B;--teal:#127C8C;
+    --ok:#2E9E6B;--warn:#D97A0B;--upg:#127C8C;--keep:#8A7F6B;--pend:#B9AE97;
+    --shadow:0 1px 2px rgba(74,58,20,.05),0 9px 24px rgba(74,58,20,.09);
+  }
+  @media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+    --bg:#15181A;--surface:#1E2427;--surface2:#232a2e;--text:#ECE7DB;--muted:#A7A093;
+    --border:#2E3439;--accent:#F7AC3A;--teal:#3BB6C7;
+    --ok:#54C08A;--warn:#EFA13F;--upg:#3BB6C7;--keep:#9A8F79;--pend:#5A5346;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.4);
+  }}
+  :root[data-theme=dark]{
+    --bg:#15181A;--surface:#1E2427;--surface2:#232a2e;--text:#ECE7DB;--muted:#A7A093;
+    --border:#2E3439;--accent:#F7AC3A;--teal:#3BB6C7;
+    --ok:#54C08A;--warn:#EFA13F;--upg:#3BB6C7;--keep:#9A8F79;--pend:#5A5346;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);direction:rtl;
+    font-family:Heebo,system-ui,sans-serif;line-height:1.55;
+    padding:max(15px,env(safe-area-inset-top)) 15px 60px}
+  .wrap{max-width:760px;margin:0 auto}
+  .top{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;
+    border-bottom:2px solid var(--border);padding-bottom:14px;margin-bottom:14px}
+  .wm{font-family:Poppins,sans-serif;font-size:24px;color:var(--accent);line-height:1}.wm b{color:var(--teal)}
+  h1{font-size:17px;font-weight:800;margin:3px 0 0}
+  .meta{color:var(--muted);font-size:12px;text-align:left}
+  .banner{background:var(--surface2);border:1px solid var(--border);border-radius:12px;
+    padding:11px 14px;font-size:13.5px;color:var(--muted);margin-bottom:16px}
+  .banner b{color:var(--text)}
+  .banner.ro{border-right:4px solid var(--warn)}
+  .vitals{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:18px}
+  @media(max-width:560px){.vitals{grid-template-columns:repeat(3,1fr)}}
+  .v{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:9px 6px;
+    text-align:center;box-shadow:var(--shadow)}
+  .v .n{font-size:21px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+  .v .l{font-size:10.5px;color:var(--muted);margin-top:3px;font-weight:600}
+  .v.ok .n{color:var(--ok)}.v.improve .n{color:var(--warn)}.v.upgrade .n{color:var(--upg)}
+  .v.keep .n{color:var(--keep)}.v.pend .n{color:var(--pend)}
+  h2{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--teal);
+    font-weight:800;margin:20px 0 10px}
+  .item{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:14px 15px;margin-bottom:11px;box-shadow:var(--shadow)}
+  .item.done{border-inline-start:4px solid var(--ok)}
+  .ttl{font-weight:700;font-size:15.5px;margin:0 0 3px}
+  .dsc{font-size:12.5px;color:var(--muted);margin:0 0 11px}
+  .btns{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:9px}
+  .sb{flex:1 1 auto;min-width:70px;border:1.5px solid var(--border);background:var(--surface2);
+    color:var(--muted);border-radius:10px;padding:8px 6px;font-family:inherit;font-size:13px;
+    font-weight:700;cursor:pointer;transition:.12s}
+  .sb:active{transform:scale(.97)}
+  .sb[aria-pressed=true]{color:#fff}
+  .sb.ok[aria-pressed=true]{background:var(--ok);border-color:var(--ok)}
+  .sb.improve[aria-pressed=true]{background:var(--warn);border-color:var(--warn)}
+  .sb.upgrade[aria-pressed=true]{background:var(--upg);border-color:var(--upg)}
+  .sb.keep[aria-pressed=true]{background:var(--keep);border-color:var(--keep)}
+  .nt{width:100%;border:1px solid var(--border);border-radius:10px;background:var(--bg);
+    color:var(--text);font-family:inherit;font-size:13.5px;padding:9px 11px;resize:vertical;min-height:38px}
+  .nt:focus{outline:2px solid var(--accent);outline-offset:1px}
+  .st{font-size:11px;color:var(--muted);margin-top:6px;min-height:14px}
+  .st.saving{color:var(--accent)}.st.saved{color:var(--ok)}
+  .send{width:100%;margin-top:10px;border:none;border-radius:10px;background:var(--accent);
+    color:#fff;font-family:inherit;font-size:14px;font-weight:800;padding:11px;cursor:pointer;transition:.12s}
+  .send:active{transform:scale(.98)}
+  .send:disabled{background:var(--pend);cursor:default;opacity:.7}
+  footer{margin-top:24px;color:var(--muted);font-size:12px;text-align:center;
+    border-top:1px solid var(--border);padding-top:14px}
+  .tog{position:fixed;top:10px;inset-inline-start:10px;width:36px;height:36px;border-radius:999px;
+    background:var(--surface);border:1px solid var(--border);color:var(--text);box-shadow:var(--shadow);cursor:pointer}
+</style>
+
+<button class="tog" aria-label="מצב-תצוגה" onclick="var r=document.documentElement,d=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');r.setAttribute('data-theme',d==='dark'?'light':'dark')">◐</button>
+
+<div id="root"></div>
+
+<script id="app-state" type="application/json">
+{"items":[
+{"id":"bug_20260829_232819","t":"🐞 באג מהשטח · מסך הגדרות","d":"\"בדיקת העברת באג אוטומטית\" · לייזר מנותק · SM-X356B · גרסה 0.2 · הגיע אוטומטית ✓","status":null,"note":"","submitted":false},
+{"id":"x6","t":"X6 — פקודת raiseEvent (אזימוט)","d":"חבר X6+DST → 🔬 אבחון → סובב את ה-DST. האם 'אופקית' מתעוררת?","status":null,"note":"","submitted":false},
+{"id":"d2","t":"חיבור D2","d":"📡 מד-לייזר → סרוק → בחר D2. מתחבר ומודד?","status":null,"note":"","submitted":false},
+{"id":"rot","t":"סיבוב-מסך","d":"סובב את הטאבלט באמצע-מדידה — הנתונים נשארים?","status":null,"note":"","submitted":false},
+{"id":"attach","t":"צירוף נתוני-לייזר לדיווח","d":"🐞 → מתג 'צרף נתוני-לייזר' → שדה-ההערות נשאר פנוי לכתוב?","status":null,"note":"","submitted":false},
+{"id":"heights","t":"מהלך-גבהים","d":"'📡 קלוט גבהים' → ירי-רציף + חריגה>2ס\"מ באדום/השאר-מחק.","status":null,"note":"","submitted":false},
+{"id":"tools","t":"משגר-כלים 🛠️","d":"כפתור-אחד נפתח ל-🐞/📡/🔬, ולא מכסה תוכן?","status":null,"note":"","submitted":false},
+{"id":"future","t":"שינויים-עתידיים","d":"כתוב תיאור → 'שמור' (בלי 'הוסף') → נשמר?","status":null,"note":"","submitted":false},
+{"id":"notes","t":"הערות-על-תמונה","d":"🐞 → הערה → שיתוף → ההערה נצרבת על התמונה?","status":null,"note":"","submitted":false}
+]}
+</script>
+
+<script id="app-js">
+(function(){
+  var cssEl=document.getElementById('app-css');
+  var jsEl=document.getElementById('app-js');
+  var state=JSON.parse(document.getElementById('app-state').textContent);
+  var artifact=null, canWrite=true, msg='';
+  var STAT=[['ok','תקין'],['improve','לשפר'],['upgrade','לשדרג'],['keep','לשמר']];
+  var timers={};
+
+  function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function count(k){return state.items.filter(function(i){return i.submitted&&i.status===k;}).length;}
+  function pending(){return state.items.filter(function(i){return !i.submitted;});}
+
+  function buildDoc(s){
+    var j=JSON.stringify(s);
+    return '<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8">'
+      +'<title>דו״ח מודד<\/title>'
+      +'<meta name="viewport" content="width=device-width, initial-scale=1">'
+      +'<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Poppins:wght@600&display=swap">'
+      +'<style id="app-css">'+cssEl.textContent+'<\/style><\/head><body>'
+      +'<button class="tog" aria-label="מצב-תצוגה" onclick="var r=document.documentElement,d=r.getAttribute(\'data-theme\')||(matchMedia(\'(prefers-color-scheme:dark)\').matches?\'dark\':\'light\');r.setAttribute(\'data-theme\',d===\'dark\'?\'light\':\'dark\')">◐<\/button>'
+      +'<div id="root"><\/div>'
+      +'<script id="app-state" type="application/json">'+j+'<\/script>'
+      +'<script id="app-js">'+jsEl.textContent+'<\/script>'
+      +'<\/body><\/html>';
+  }
+
+  var publishing=false, again=false;
+  async function doPublish(){
+    if(!artifact){return;}
+    if(publishing){ again=true; return; }   // mutex: פרסום-אחד בכל רגע, האחרון מנצח
+    publishing=true; msg='saving'; render();
+    try{
+      await artifact.publish(buildDoc(state));
+      msg='saved';
+    }catch(e){
+      var code=(e&&(e.code||e.name))||'';
+      if(code==='not_writer'||code==='not_granted'){canWrite=false; msg='';}
+      else{ msg='saved'; } // conflict → view reloads to winner; otherwise assume ok
+    }
+    publishing=false; render();
+    if(again){ again=false; doPublish(); }  // אם הצטבר שינוי — מפרסם שוב עם המצב העדכני
+  }
+
+  function setStatus(id,k){
+    var it=state.items.filter(function(i){return i.id===id;})[0]; if(!it)return;
+    it.status=(it.status===k)?null:k;
+    state.updated=new Date().toISOString();
+    render(); doPublish();
+  }
+  function setNote(id,txt){
+    var it=state.items.filter(function(i){return i.id===id;})[0]; if(!it)return;
+    it.note=txt; state.updated=new Date().toISOString();
+    clearTimeout(timers[id]);
+    timers[id]=setTimeout(doPublish,900); // batch typing into one publish
+  }
+  function submit(id){
+    var it=state.items.filter(function(i){return i.id===id;})[0]; if(!it||!it.status)return;
+    clearTimeout(timers[id]);            // לסגור הערה-ממתינה לפני שליחה
+    it.submitted=true; it.submittedAt=new Date().toISOString();
+    state.updated=it.submittedAt;
+    render(); doPublish();               // נעלם מהמסך שלו, מגיע למיכאל
+  }
+
+  var freeText='';
+  function sendFree(){
+    var t=(freeText||'').trim(); if(!t)return;
+    if(!state.free) state.free=[];
+    state.free.push({id:'f'+Date.now(), text:t, at:new Date().toISOString()});
+    freeText=''; state.updated=new Date().toISOString(); freeSent=true;
+    render(); doPublish();               // הערה-חופשית → ישר למיכאל
+    setTimeout(function(){ freeSent=false; render(); }, 2500);
+  }
+  var freeSent=false;
+
+  function render(){
+    var root=document.getElementById('root'); if(!root)return;
+    var pend=pending().length;
+    var when = state.updated ? new Date(state.updated).toLocaleString('he-IL',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '—';
+    var h='';
+    h+='<div class="wrap">';
+    h+='<div class="top"><div><div class="wm">soline<b>.<\/b><\/div><h1>דו״ח מודד · בדיקה-חוזרת<\/h1><\/div>'
+      +'<div class="meta">עודכן<br>'+when+'<\/div><\/div>';
+    if(!artifact){
+      h+='<div class="banner">טוען…  אם זה לא-נטען — פתח את הקישור מחדש.<\/div>';
+    } else if(!canWrite){
+      h+='<div class="banner ro"><b>מצב-צפייה בלבד.<\/b> כדי לסמן — בקש ממיכאל גישת-עריכה לדף (Share → יכול לערוך).<\/div>';
+    } else {
+      h+='<div class="banner"><b>איך זה עובד:<\/b> בחר סטטוס (תקין/לשפר/לשדרג/לשמר), הוסף הערה, ולחץ <b>✅ שלח למיכאל<\/b>. הפריט יישלח אליי ו<b>ייעלם מהרשימה<\/b> — אתה שולט מה ומתי.<\/div>';
+    }
+    h+='<div class="vitals">'
+      +'<div class="v ok"><div class="n">'+count('ok')+'<\/div><div class="l">תקין<\/div><\/div>'
+      +'<div class="v improve"><div class="n">'+count('improve')+'<\/div><div class="l">לשפר<\/div><\/div>'
+      +'<div class="v upgrade"><div class="n">'+count('upgrade')+'<\/div><div class="l">לשדרג<\/div><\/div>'
+      +'<div class="v keep"><div class="n">'+count('keep')+'<\/div><div class="l">לשמר<\/div><\/div>'
+      +'<div class="v pend"><div class="n">'+pend+'<\/div><div class="l">נשארו<\/div><\/div>'
+      +'<\/div>';
+    var list=pending();
+    h+='<h2>פריטים לבדיקה-חוזרת ('+list.length+')<\/h2>';
+    if(list.length===0){
+      h+='<div class="item done" style="text-align:center"><p class="ttl">✓ כל הפריטים נשלחו — תודה!<\/p><p class="dsc">כשיהיה APK חדש, יופיעו כאן פריטים חדשים לבדיקה.<\/p><\/div>';
+    }
+    list.forEach(function(it){
+      h+='<div class="item'+(it.status?' done':'')+'">';
+      h+='<p class="ttl">'+esc(it.t)+'<\/p><p class="dsc">'+esc(it.d)+'<\/p>';
+      h+='<div class="btns">';
+      STAT.forEach(function(s){
+        var on=it.status===s[0];
+        h+='<button class="sb '+s[0]+'" aria-pressed="'+on+'" '+(canWrite?'':'disabled ')+'data-id="'+it.id+'" data-k="'+s[0]+'">'+s[1]+'<\/button>';
+      });
+      h+='<\/div>';
+      h+='<textarea class="nt" data-note="'+it.id+'" placeholder="הערה (מה לשפר/לשדרג/לשמר)…" '+(canWrite?'':'disabled')+'>'+esc(it.note)+'<\/textarea>';
+      h+='<button class="send" data-send="'+it.id+'" '+((canWrite&&it.status)?'':'disabled')+'>✅ שלח למיכאל'+(it.status?'':' (בחר סטטוס קודם)')+'<\/button>';
+      h+='<\/div>';
+    });
+    if(canWrite){
+      h+='<h2>הערה חופשית למיכאל<\/h2>';
+      h+='<div class="item">';
+      h+='<p class="dsc">משהו כללי — רעיון, בקשה, או הערה שלא-קשורה לבאג מסוים? כתוב ושלח ישירות.<\/p>';
+      h+='<textarea class="nt" id="freeta" placeholder="כתוב כאן הערה חופשית…">'+esc(freeText)+'<\/textarea>';
+      h+='<button class="send" id="freesend" '+(freeText.trim()?'':'disabled')+'>'+(freeSent?'✓ נשלח למיכאל':'✉️ שלח הערה חופשית')+'<\/button>';
+      h+='<\/div>';
+    }
+    h+='<footer>Soline — דו״ח מודד · '+(msg==='saving'?'שומר…':(msg==='saved'?'נשמר ✓':'נשמר אוטומטית'))+'<\/footer>';
+    h+='<\/div>';
+    root.innerHTML=h;
+    // handlers
+    root.querySelectorAll('.sb').forEach(function(b){
+      b.onclick=function(){ if(canWrite) setStatus(b.getAttribute('data-id'), b.getAttribute('data-k')); };
+    });
+    root.querySelectorAll('.nt').forEach(function(t){
+      t.oninput=function(){ if(canWrite) setNote(t.getAttribute('data-note'), t.value); };
+    });
+    root.querySelectorAll('.send').forEach(function(b){
+      b.onclick=function(){ if(canWrite&&!b.disabled&&b.getAttribute('data-send')) submit(b.getAttribute('data-send')); };
+    });
+    var fta=document.getElementById('freeta');
+    if(fta){ fta.oninput=function(){ freeText=fta.value; var fs=document.getElementById('freesend'); if(fs) fs.disabled=!freeText.trim(); }; }
+    var fsend=document.getElementById('freesend');
+    if(fsend){ fsend.onclick=function(){ if(canWrite&&freeText.trim()) sendFree(); }; }
+  }
+
+  render();
+  if(window.claude&&claude.use){
+    claude.use('artifact').then(function(a){ artifact=a; canWrite=!!a; render(); });
+  } else { artifact=null; render(); }
+})();
+</script>

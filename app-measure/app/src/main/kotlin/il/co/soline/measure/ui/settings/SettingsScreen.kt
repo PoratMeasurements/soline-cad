@@ -1,5 +1,8 @@
 package il.co.soline.measure.ui.settings
 
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -109,6 +112,11 @@ fun SettingsScreen(
                     // ---- עדכון גרסה (OTA) ----
                     Section("עדכון גרסה") {
                         UpdatePanel()
+                    }
+
+                    // ---- העלאת-באגים אוטומטית ל-Drive ----
+                    Section("העלאת-באגים אוטומטית") {
+                        BugUploadSection()
                     }
 
                     // ---- מדידה ----
@@ -368,6 +376,37 @@ private fun BugReportRow(
 // ---------- רכיבי-עזר ----------
 
 /** כרטיס-מקטע עם כותרת בצבע-המותג. */
+@Composable
+private fun BugUploadSection() {
+    val context = LocalContext.current
+    val treeUri by Prefs.bugUploadTreeUriState
+    val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+        if (uri != null) {
+            try {
+                context.contentResolver.takePersistableUriPermission(
+                    uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION,
+                )
+            } catch (_: Exception) {}
+            Prefs.bugUploadTreeUri = uri.toString()
+        }
+    }
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(
+            if (treeUri.isBlank()) "לא נבחרה תיקייה — דיווחי-🐞 נשלחים ידנית."
+            else "✓ תיקייה נבחרה — כל דיווח-🐞 עולה אוטומטית ומגיע למיכאל.",
+            fontSize = 13.sp, color = if (treeUri.isBlank()) Muted else Teal, fontWeight = FontWeight.SemiBold,
+        )
+        Text(
+            "בחר תיקיית-Drive מסונכרנת — כל דיווח-באג יועלה אליה אוטומטית (בלי שיתוף-ידני).",
+            fontSize = 12.sp, color = Muted,
+        )
+        Button(
+            onClick = { picker.launch(null) },
+            colors = ButtonDefaults.buttonColors(containerColor = Teal, contentColor = Color.White),
+        ) { Text(if (treeUri.isBlank()) "בחר תיקיית-Drive לבאגים" else "שנה תיקייה", fontWeight = FontWeight.SemiBold) }
+    }
+}
+
 @Composable
 private fun Section(title: String, content: @Composable ColumnScope.() -> Unit) {
     Column {

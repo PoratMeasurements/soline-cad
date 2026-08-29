@@ -308,8 +308,13 @@ private fun BugEditorOverlay(
                                             finalNotes, screen, projectId, roomId,
                                         )
                                     }
-                                    shareBugReport(context, saved)
-                                    Toast.makeText(context, "הדיווח נשמר — בחר לאן לשלוח", Toast.LENGTH_LONG).show()
+                                    // תיקייה מוגדרת → ההעלאה כבר-קרתה אוטומטית; אחרת נופלים לשיתוף-ידני.
+                                    if (il.co.soline.measure.data.Prefs.bugUploadTreeUri.isBlank()) {
+                                        shareBugReport(context, saved)
+                                        Toast.makeText(context, "הדיווח נשמר — בחר לאן לשלוח", Toast.LENGTH_LONG).show()
+                                    } else {
+                                        Toast.makeText(context, "הדיווח הועלה אוטומטית ל-Drive ✓ — הגיע למיכאל", Toast.LENGTH_LONG).show()
+                                    }
                                     onClose()
                                 } catch (e: Exception) {
                                     saving = false
@@ -574,5 +579,30 @@ private fun persistReport(
         currentRoomId = roomId,
     )
     val png = renderAnnotatedPng(bitmap, annotations, notes)
-    return BugReportStore.save(context.filesDir, base, png, bundle)
+    val saved = BugReportStore.save(context.filesDir, base, png, bundle)
+    uploadBugToTree(context, saved)   // העלאה-אוטומטית לתיקיית-Drive (אם הוגדרה) → סינרגיה לדו"ח-המודד
+    return saved
+}
+
+/**
+ * מעלה אוטומטית את זוג-קבצי-הדיווח (PNG+JSON) לתיקיית-Drive שהמודד בחר פעם-אחת ([Prefs.bugUploadTreeUri]),
+ * דרך SAF (DocumentsContract — בלי תלות חדשה). כשל שקט: הדיווח כבר-נשמר מקומית ונשתף ידנית.
+ */
+private fun uploadBugToTree(context: android.content.Context, saved: SavedBugReport) {
+    val treeStr = il.co.soline.measure.data.Prefs.bugUploadTreeUri
+    if (treeStr.isBlank()) return
+    try {
+        val tree = android.net.Uri.parse(treeStr)
+        val dirUri = android.provider.DocumentsContract.buildDocumentUriUsingTree(
+            tree, android.provider.DocumentsContract.getTreeDocumentId(tree),
+        )
+        copyToTree(context, dirUri, "image/png", saved.png)
+        copyToTree(context, dirUri, "application/json", saved.json)
+    } catch (_: Exception) { /* נשמר מקומית — שיתוף-ידני נשאר גיבוי */ }
+}
+
+private fun copyToTree(context: android.content.Context, dirUri: android.net.Uri, mime: String, file: java.io.File) {
+    val cr = context.contentResolver
+    val target = android.provider.DocumentsContract.createDocument(cr, dirUri, mime, file.name) ?: return
+    cr.openOutputStream(target)?.use { out -> file.inputStream().use { it.copyTo(out) } }
 }
