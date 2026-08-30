@@ -13,7 +13,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,7 +37,6 @@ import il.co.soline.measure.ui.Orange
 import il.co.soline.measure.ui.Teal
 import il.co.soline.measure.ui.components.BigActionButton
 import il.co.soline.measure.ui.components.EmptyState
-import il.co.soline.measure.ui.components.LaserStatusPill
 import il.co.soline.measure.ui.components.SectionHeader
 import il.co.soline.measure.ui.components.SolineButton
 import il.co.soline.measure.ui.components.SolineButtonStyle
@@ -65,12 +63,10 @@ import java.time.ZoneId
 @Composable
 fun HomeScreen(nav: NavController, modifier: Modifier = Modifier) {
     val repo = SolineApp.instance.repo
-    val ble = SolineApp.instance.ble
     val scope = rememberCoroutineScope()
 
     val projects by repo.projects().collectAsStateWithLifecycle(emptyList())
     val jobs by repo.jobs().collectAsStateWithLifecycle(emptyList())
-    val connected by ble.connected.collectAsState()
 
     var showAdd by remember { mutableStateOf(false) }
     val today = remember { LocalDate.now() }
@@ -88,8 +84,6 @@ fun HomeScreen(nav: NavController, modifier: Modifier = Modifier) {
         Scaffold(modifier = modifier, containerColor = Cream) { pad ->
             Column(Modifier.padding(pad).fillMaxSize()) {
                 TopBar(
-                    connectedName = connected,
-                    onDevices = { nav.navigate("devices") },
                     onSettings = { nav.navigate("settings") },
                 )
                 LazyColumn(
@@ -143,14 +137,6 @@ fun HomeScreen(nav: NavController, modifier: Modifier = Modifier) {
                         items(todayJobs.take(4), key = { it.id }) { job ->
                             TodayJobCard(job) { nav.navigate("schedule") }
                         }
-                    }
-
-                    // סטטוס-לייזר — חיווי-שטח קריטי למודד
-                    item {
-                        LaserStatusCard(
-                            connectedName = connected,
-                            onDevices = { nav.navigate("devices") },
-                        )
                     }
 
                     // פעולות-שטח מהירות
@@ -214,7 +200,7 @@ fun HomeScreen(nav: NavController, modifier: Modifier = Modifier) {
 
 // ── סרגל עליון ──────────────────────────────────────────────────────────────
 @Composable
-private fun TopBar(connectedName: String?, onDevices: () -> Unit, onSettings: () -> Unit) {
+private fun TopBar(onSettings: () -> Unit) {
     Surface(color = Color.White, shadowElevation = 2.dp) {
         Row(
             Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
@@ -224,8 +210,7 @@ private fun TopBar(connectedName: String?, onDevices: () -> Unit, onSettings: ()
                 Text("soline", fontSize = 26.sp, fontWeight = FontWeight.Bold, color = Orange, lineHeight = 28.sp)
                 Text("SMART SPATIAL SOLUTIONS", fontSize = 10.sp, color = Teal, letterSpacing = 2.sp)
             }
-            LaserStatusPill(connectedName = connectedName, onClick = onDevices, compact = true)
-            Spacer(Modifier.width(4.dp))
+            // חיבור-לייזר עבר לסרגל-הכלים הצדדי (📡) + מסך-מכשירים — הוסר מדף-הבית למניעת כפילות.
             IconButton(onClick = onSettings) {
                 Icon(Icons.Default.Settings, contentDescription = "הגדרות", tint = Muted)
             }
@@ -411,23 +396,6 @@ private fun TodayJobCard(job: JobEntity, onClick: () -> Unit) {
                 }
             }
             JobStatusChip(job.status)
-        }
-    }
-}
-
-// ── כרטיס-סטטוס-לייזר בולט ───────────────────────────────────────────────────
-@Composable
-private fun LaserStatusCard(connectedName: String?, onDevices: () -> Unit) {
-    SolineCard {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            LaserStatusPill(connectedName = connectedName, onClick = onDevices, modifier = Modifier.weight(1f))
-            Spacer(Modifier.width(8.dp))
-            SolineButton(
-                text = if (connectedName != null) "החלף" else "חבר",
-                onClick = onDevices,
-                style = SolineButtonStyle.SECONDARY,
-                accent = Teal,
-            )
         }
     }
 }
