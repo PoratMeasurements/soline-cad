@@ -113,8 +113,18 @@ fun HomeScreen(nav: NavController, modifier: Modifier = Modifier) {
                         )
                     }
 
-                    // בדיקות-פתוחות — הצד של המודד בבדיקה-החוזרת הדו-כיוונית
-                    item { RetestEntryCard(onClick = { nav.navigate("retest") }) }
+                    // מרכז-הבאגים באפליקציה: בדיקות-פתוחות + הבאגים-שלי
+                    item {
+                        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                            RetestEntryCard(Modifier.weight(1f)) { nav.navigate("retest") }
+                            ManageCard(
+                                emoji = "🐞", title = "הבאגים שלי",
+                                subtitle = "דיווחים + סטטוס",
+                                accent = Orange, onClick = { nav.navigate("mybugs") },
+                                modifier = Modifier.weight(1f),
+                            )
+                        }
+                    }
 
                     // לו"ז-היום — מה על הפרק היום
                     item {
@@ -307,7 +317,7 @@ private fun ManageCard(
 
 // ── בדיקות-פתוחות (בדיקה-חוזרת דו-כיוונית עם מיכאל) ───────────────────────────
 @Composable
-private fun RetestEntryCard(onClick: () -> Unit) {
+private fun RetestEntryCard(modifier: Modifier = Modifier, onClick: () -> Unit) {
     val context = LocalContext.current
     var count by remember { mutableStateOf<Int?>(null) }
     LaunchedEffect(Unit) {
@@ -315,40 +325,38 @@ private fun RetestEntryCard(onClick: () -> Unit) {
     }
     Surface(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth().heightIn(min = 68.dp),
+        modifier = modifier.heightIn(min = 96.dp),
         shape = RoundedCornerShape(16.dp),
         color = Color.White,
         border = androidx.compose.foundation.BorderStroke(1.dp, Teal.copy(alpha = 0.30f)),
     ) {
-        Row(
-            Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Box(
-                Modifier.size(40.dp).clip(RoundedCornerShape(12.dp)).background(Teal.copy(alpha = 0.12f)),
-                contentAlignment = Alignment.Center,
-            ) { Text("🔁", fontSize = 20.sp) }
-            Spacer(Modifier.width(12.dp))
-            Column(Modifier.weight(1f)) {
-                Text("בדיקות פתוחות", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Ink)
-                Text(
-                    when (val c = count) {
-                        null -> "בודק…"
-                        0 -> "אין בדיקות ממתינות"
-                        else -> "$c לאימות — סמן תקין/לשפר/לשדרג"
-                    },
-                    fontSize = 12.sp, color = Muted, modifier = Modifier.padding(top = 2.dp),
-                )
-            }
-            val c = count ?: 0
-            if (c > 0) {
-                Surface(shape = RoundedCornerShape(50), color = Orange) {
-                    Text(
-                        "$c", fontSize = 13.sp, color = Color.White, fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 3.dp),
-                    )
+        Column(Modifier.padding(14.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    Modifier.size(40.dp).clip(RoundedCornerShape(12.dp)).background(Teal.copy(alpha = 0.12f)),
+                    contentAlignment = Alignment.Center,
+                ) { Text("🔁", fontSize = 20.sp) }
+                Spacer(Modifier.weight(1f))
+                val c = count ?: 0
+                if (c > 0) {
+                    Surface(shape = RoundedCornerShape(50), color = Orange) {
+                        Text(
+                            "$c", fontSize = 13.sp, color = Color.White, fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 3.dp),
+                        )
+                    }
                 }
             }
+            Spacer(Modifier.height(10.dp))
+            Text("בדיקות פתוחות", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Ink)
+            Text(
+                when (val c = count) {
+                    null -> "בודק…"
+                    0 -> "אין ממתינות"
+                    else -> "$c לאימות"
+                },
+                fontSize = 12.sp, color = Muted, modifier = Modifier.padding(top = 2.dp),
+            )
         }
     }
 }

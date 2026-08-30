@@ -170,10 +170,14 @@ private fun RetestCard(
                 )
             }
 
-            // כפתורי-verdict (מטרות-מגע גדולות)
+            // כפתורי-verdict (מטרות-מגע גדולות) — 2 שורות
             Spacer(Modifier.height(12.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 VerdictBtn("תקין ✓", RetestVerdict.OK, verdict, OkGreen, Modifier.weight(1f)) { verdict = it }
+                VerdictBtn("לא-תקין ✗", RetestVerdict.FAIL, verdict, BlockRed, Modifier.weight(1f)) { verdict = it }
+            }
+            Spacer(Modifier.height(8.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 VerdictBtn("לשפר", RetestVerdict.IMPROVE, verdict, Orange, Modifier.weight(1f)) { verdict = it }
                 VerdictBtn("לשדרג", RetestVerdict.UPGRADE, verdict, Teal, Modifier.weight(1f)) { verdict = it }
             }

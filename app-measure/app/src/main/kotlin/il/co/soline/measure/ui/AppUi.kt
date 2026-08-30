@@ -180,6 +180,7 @@ fun SolineRoot() {
                 composable("schedule") { ScheduleScreen(nav) }
                 composable("measurements") { MeasurementsScreen(nav) }
                 composable("retest") { il.co.soline.measure.ui.retest.RetestScreen(nav) }
+                composable("mybugs") { il.co.soline.measure.ui.bug.MyBugsScreen(nav) }
             }
             // משגר-כלים מאוחד — כפתור-אחד שנפתח לאייקונים (🐞 באג · 📡 לייזר · עתידיים)
             ToolsFab(

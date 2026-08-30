@@ -30,9 +30,22 @@ data class RetestItem(
 
 /** קודי-verdict של בדיקה-חוזרת (נכתבים לתגובה). */
 object RetestVerdict {
-    const val OK = "ok"          // תקין — התיקון עבד
+    const val OK = "ok"          // תקין — התיקון עבד → נסגר
+    const val FAIL = "fail"      // לא-תקין — עדיין תקול → נפתח-מחדש
     const val IMPROVE = "improve" // לשפר — עובד אך דורש שיפור
     const val UPGRADE = "upgrade" // לשדרג — רעיון-שדרוג מעבר-לתיקון
+}
+
+/** סטטוס-באג שמיכאל מפרסם ל-Drive (bug_status.json) → מוצג למודד ב"הבאגים שלי". */
+data class BugStatus(val id: String, val status: String, val note: String, val version: String)
+
+/** קודי-סטטוס-באג. */
+object BugStage {
+    const val NEW = "new"           // התקבל, ממתין לטריאז'/החלטה
+    const val WORKING = "working"   // בטיפול (אושר לתיקון)
+    const val FIXED = "fixed"       // תוקן ושוחרר — לאימות המודד
+    const val CLOSED = "closed"     // אומת ונסגר
+    const val REOPENED = "reopened" // נבדק ועדיין תקול — חזר לטיפול
 }
 
 object RetestSync {
@@ -63,6 +76,35 @@ object RetestSync {
             }
         } catch (_: Exception) {
             emptyList()
+        }
+    }
+
+    /** קורא את מפת-סטטוסי-הבאגים (bug_status.json) מ-Drive. ריק אם אין. רץ ב-IO. */
+    fun loadBugStatuses(context: Context): Map<String, BugStatus> {
+        val treeStr = Prefs.bugUploadTreeUri
+        if (treeStr.isBlank()) return emptyMap()
+        return try {
+            val tree = Uri.parse(treeStr)
+            val docId = findChildDocId(context, tree, "bug_status.json") ?: return emptyMap()
+            val fileUri = DocumentsContract.buildDocumentUriUsingTree(tree, docId)
+            val text = context.contentResolver.openInputStream(fileUri)
+                ?.use { it.readBytes().toString(Charsets.UTF_8) } ?: return emptyMap()
+            val obj = JSONObject(text).optJSONObject("statuses") ?: return emptyMap()
+            val out = HashMap<String, BugStatus>()
+            val keys = obj.keys()
+            while (keys.hasNext()) {
+                val k = keys.next()
+                val o = obj.optJSONObject(k) ?: continue
+                out[k] = BugStatus(
+                    id = k,
+                    status = o.optString("status", BugStage.NEW),
+                    note = o.optString("note", ""),
+                    version = o.optString("version", ""),
+                )
+            }
+            out
+        } catch (_: Exception) {
+            emptyMap()
         }
     }
 
