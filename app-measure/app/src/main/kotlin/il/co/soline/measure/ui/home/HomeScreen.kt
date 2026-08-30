@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
@@ -45,7 +46,10 @@ import il.co.soline.measure.ui.components.SolineCard
 import il.co.soline.measure.ui.ops.JobStatusChip
 import il.co.soline.measure.ui.ops.heTime
 import il.co.soline.measure.ui.ops.isToday
+import il.co.soline.measure.data.RetestSync
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -114,6 +118,9 @@ fun HomeScreen(nav: NavController, modifier: Modifier = Modifier) {
                             onMeasurements = { nav.navigate("measurements") },
                         )
                     }
+
+                    // בדיקות-פתוחות — הצד של המודד בבדיקה-החוזרת הדו-כיוונית
+                    item { RetestEntryCard(onClick = { nav.navigate("retest") }) }
 
                     // לו"ז-היום — מה על הפרק היום
                     item {
@@ -309,6 +316,54 @@ private fun ManageCard(
             Spacer(Modifier.height(10.dp))
             Text(title, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Ink)
             Text(subtitle, fontSize = 12.sp, color = Muted, modifier = Modifier.padding(top = 2.dp))
+        }
+    }
+}
+
+// ── בדיקות-פתוחות (בדיקה-חוזרת דו-כיוונית עם מיכאל) ───────────────────────────
+@Composable
+private fun RetestEntryCard(onClick: () -> Unit) {
+    val context = LocalContext.current
+    var count by remember { mutableStateOf<Int?>(null) }
+    LaunchedEffect(Unit) {
+        count = withContext(Dispatchers.IO) { RetestSync.loadQueue(context).size }
+    }
+    Surface(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth().heightIn(min = 68.dp),
+        shape = RoundedCornerShape(16.dp),
+        color = Color.White,
+        border = androidx.compose.foundation.BorderStroke(1.dp, Teal.copy(alpha = 0.30f)),
+    ) {
+        Row(
+            Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(
+                Modifier.size(40.dp).clip(RoundedCornerShape(12.dp)).background(Teal.copy(alpha = 0.12f)),
+                contentAlignment = Alignment.Center,
+            ) { Text("🔁", fontSize = 20.sp) }
+            Spacer(Modifier.width(12.dp))
+            Column(Modifier.weight(1f)) {
+                Text("בדיקות פתוחות", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Ink)
+                Text(
+                    when (val c = count) {
+                        null -> "בודק…"
+                        0 -> "אין בדיקות ממתינות"
+                        else -> "$c לאימות — סמן תקין/לשפר/לשדרג"
+                    },
+                    fontSize = 12.sp, color = Muted, modifier = Modifier.padding(top = 2.dp),
+                )
+            }
+            val c = count ?: 0
+            if (c > 0) {
+                Surface(shape = RoundedCornerShape(50), color = Orange) {
+                    Text(
+                        "$c", fontSize = 13.sp, color = Color.White, fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 3.dp),
+                    )
+                }
+            }
         }
     }
 }

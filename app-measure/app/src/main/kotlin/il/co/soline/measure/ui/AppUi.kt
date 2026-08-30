@@ -179,6 +179,7 @@ fun SolineRoot() {
                 // ── צד-הניהול (לו"ז + מדידות) ──
                 composable("schedule") { ScheduleScreen(nav) }
                 composable("measurements") { MeasurementsScreen(nav) }
+                composable("retest") { il.co.soline.measure.ui.retest.RetestScreen(nav) }
             }
             // משגר-כלים מאוחד — כפתור-אחד שנפתח לאייקונים (🐞 באג · 📡 לייזר · עתידיים)
             ToolsFab(
