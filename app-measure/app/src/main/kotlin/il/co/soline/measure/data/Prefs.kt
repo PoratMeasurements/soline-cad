@@ -42,6 +42,7 @@ object Prefs {
     private const val K_CONSENT_TS = "locConsentTs"
     private const val K_SHARING_ACTIVE = "locSharingActive"
     private const val K_BUG_TREE = "bugUploadTreeUri"
+    private const val K_BACKUP_TREE = "backupTreeUri"
 
     private lateinit var sp: SharedPreferences
 
@@ -72,6 +73,7 @@ object Prefs {
     private val _locConsentTs = mutableStateOf(0L)
     private val _locSharingActive = mutableStateOf(false)
     private val _bugUploadTreeUri = mutableStateOf("")   // תיקיית-Drive (SAF tree) להעלאת-באגים אוטומטית
+    private val _backupTreeUri = mutableStateOf("")      // תיקיית-Drive (SAF tree) לגיבוי-פרויקטים (fallback כשאין תיקיית-לקוח)
 
     /**
      * אתחול — טוען את הערכים השמורים אל ה-State. יש לקרוא פעם אחת (בדרך-כלל מ-SolineApp.onCreate).
@@ -92,6 +94,7 @@ object Prefs {
         _locConsentTs.value = sp.getLong(K_CONSENT_TS, 0L)
         _locSharingActive.value = sp.getBoolean(K_SHARING_ACTIVE, false)
         _bugUploadTreeUri.value = sp.getString(K_BUG_TREE, "") ?: ""
+        _backupTreeUri.value = sp.getString(K_BACKUP_TREE, "") ?: ""
     }
 
     /** אתחול-עצל בטוח — מבטיח ש-SharedPreferences זמין גם אם לא נקרא init במפורש. */
@@ -110,6 +113,12 @@ object Prefs {
     var bugUploadTreeUri: String
         get() { ensureInit(); return _bugUploadTreeUri.value }
         set(v) { ensureInit(); _bugUploadTreeUri.value = v; sp.edit().putString(K_BUG_TREE, v).apply() }
+
+    // ---- backupTreeUri: תיקיית-Drive לגיבוי-פרויקטים (fallback כשללקוח אין תיקייה) ----
+    val backupTreeUriState: State<String> get() = _backupTreeUri
+    var backupTreeUri: String
+        get() { ensureInit(); return _backupTreeUri.value }
+        set(v) { ensureInit(); _backupTreeUri.value = v; sp.edit().putString(K_BACKUP_TREE, v).apply() }
 
     // ---- units: יחידות-תצוגה (enum, תצוגה בלבד) ----
     val unitsState: State<Units> get() = _units

@@ -362,6 +362,10 @@ fun ProjectRoomsScreen(nav: NavController, projectId: Long) {
                         file
                     }
                     repo.markProjectExported(p.id)
+                    // גיבוי-אוטומטי ל-Drive (תיקיית-הלקוח/גיבוי) — לא-חוסם את ההגשה אם נכשל.
+                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                        il.co.soline.measure.data.BackupSync.backupProject(context, p)
+                    }
                     val uri = androidx.core.content.FileProvider.getUriForFile(context, "il.co.soline.measure.fileprovider", f)
                     val send = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
                         type = "application/octet-stream"
@@ -395,6 +399,25 @@ fun ProjectRoomsScreen(nav: NavController, projectId: Long) {
                 },
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
             ) { Text("📤  הגשת פרויקט") }
+            // גיבוי ידני ל-Drive (תיקיית-הלקוח/גיבוי) — מבנה: [לקוח]/[פרויקט]/<project>.sol
+            OutlinedButton(
+                onClick = {
+                    project?.let { p ->
+                        scope.launch {
+                            val res = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                                il.co.soline.measure.data.BackupSync.backupProject(context, p)
+                            }
+                            val msg = when (res) {
+                                is il.co.soline.measure.data.BackupSync.Result.Success -> "גובה ל-Drive ✓ (${res.folderName})"
+                                is il.co.soline.measure.data.BackupSync.Result.NoFolder -> "אין תיקייה — קשר תיקיית-לקוח/גיבוי בהגדרות"
+                                is il.co.soline.measure.data.BackupSync.Result.Failed -> "גיבוי נכשל: ${res.message}"
+                            }
+                            Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+            ) { Text("☁️  גבה ל-Drive עכשיו") }
             if (rooms.isEmpty()) EmptyHint("אין חדרים. הקש + כדי להוסיף חדר.")
             else LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(16.dp)) {
                 items(rooms, key = { it.id }) { r ->

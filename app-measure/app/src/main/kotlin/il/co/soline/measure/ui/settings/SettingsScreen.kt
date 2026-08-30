@@ -300,6 +300,8 @@ fun SettingsScreen(
                             fontSize = 12.sp,
                             color = Muted
                         )
+                        SectionDivider()
+                        BackupFolderSection()
                     }
 
                     // רשימת-דיווחי-הבאגים הוסרה מההגדרות (175419) — עברה למסך "הבאגים שלי".
@@ -401,6 +403,38 @@ private fun BugUploadSection() {
             onClick = { picker.launch(null) },
             colors = ButtonDefaults.buttonColors(containerColor = Teal, contentColor = Color.White),
         ) { Text(if (treeUri.isBlank()) "בחר תיקיית-Drive לבאגים" else "שנה תיקייה", fontWeight = FontWeight.SemiBold) }
+    }
+}
+
+/** בורר תיקיית-גיבוי-כללית (fallback לפרויקטים בלי תיקיית-לקוח). */
+@Composable
+private fun BackupFolderSection() {
+    val context = LocalContext.current
+    val treeUri by Prefs.backupTreeUriState
+    val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+        if (uri != null) {
+            try {
+                context.contentResolver.takePersistableUriPermission(
+                    uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION,
+                )
+            } catch (_: Exception) {}
+            Prefs.backupTreeUri = uri.toString()
+        }
+    }
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(
+            if (treeUri.isBlank()) "לא נבחרה תיקיית-גיבוי כללית. מומלץ לקשר תיקייה לכל-לקוח במאגר-הלקוחות."
+            else "✓ תיקיית-גיבוי כללית נבחרה — פרויקט בלי תיקיית-לקוח יגובה לכאן.",
+            fontSize = 13.sp, color = if (treeUri.isBlank()) Muted else Teal, fontWeight = FontWeight.SemiBold,
+        )
+        Text(
+            "גיבוי-אוטומטי בהגשה: [תיקיית-לקוח]/[פרויקט]/‏<project>.sol — החדרים והתמונות בתוך ה-.sol.",
+            fontSize = 12.sp, color = Muted,
+        )
+        Button(
+            onClick = { picker.launch(null) },
+            colors = ButtonDefaults.buttonColors(containerColor = Teal, contentColor = Color.White),
+        ) { Text(if (treeUri.isBlank()) "בחר תיקיית-גיבוי כללית" else "שנה תיקייה", fontWeight = FontWeight.SemiBold) }
     }
 }
 
