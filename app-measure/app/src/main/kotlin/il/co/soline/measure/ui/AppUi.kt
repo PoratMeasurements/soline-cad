@@ -160,6 +160,7 @@ fun SolineRoot() {
                 composable("closeproject/{pid}") { e -> e.longArg("pid")?.let { il.co.soline.measure.ui.checklist.CloseProjectScreen(nav, it) } }
                 composable("draw/{rid}") { e -> e.longArg("rid")?.let { DrawScreenHost(nav, it) } }
                 composable("measure/{rid}") { e -> e.longArg("rid")?.let { MeasureHost(nav, it) } }
+                composable("unified/{rid}") { e -> e.longArg("rid")?.let { il.co.soline.measure.ui.unified.UnifiedMeasureHost(nav, it) } }
                 composable("view3d/{rid}") { e -> e.longArg("rid")?.let { Room3DHost(nav, it) } }
                 composable("cad/{rid}") { e -> e.longArg("rid")?.let { CadHost(nav, it) } }
                 composable("elevation/{wid}") { e -> e.longArg("wid")?.let { ElevationHost(nav, it) } }
@@ -525,6 +526,18 @@ fun RoomScreen(nav: NavController, roomId: Long) {
                     onSetChanges = { ch -> scope.launch { repo.setRoomFutureChanges(roomId, ch) } },
                 )
             }
+            // מנוע-המדידה המאוחד — מסך-אחד לכל-השיטות (לייזר/שרטוט/P2P) על אותו מתאר.
+            Button(
+                onClick = { nav.navigate("unified/$roomId") },
+                colors = ButtonDefaults.buttonColors(containerColor = OkGreen),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).heightIn(min = 56.dp),
+            ) { Text("🎛️  מנוע-מדידה מאוחד (לייזר · שרטוט · P2P)", fontWeight = FontWeight.Bold) }
+            Spacer(Modifier.height(10.dp))
+            Text(
+                "הכלים הנפרדים (למטה) נשמרים עד שהמנוע-המאוחד יוכח בשטח.",
+                fontSize = 11.sp, color = Muted, modifier = Modifier.padding(horizontal = 16.dp),
+            )
+            Spacer(Modifier.height(6.dp))
             Button(
                 onClick = { nav.navigate("template/$roomId") },
                 colors = ButtonDefaults.buttonColors(containerColor = Teal),
@@ -1487,7 +1500,8 @@ fun IntakeHost(nav: NavController) {
         onSave = { job ->
             scope.launch {
                 repo.addJob(job)
-                val pid = repo.addProject(job.clientName.ifBlank { "עבודה חדשה" }, job.clientName)
+                // שם-הפרויקט = שם-לקוח-הקצה (= שם-התיקייה); client = המפעל-המזמין (לזיהוי תיקיית-הגיבוי).
+                val pid = repo.addProject(job.clientName.ifBlank { "עבודה חדשה" }, job.clientCompany)
                 nav.navigate("rooms/$pid") { popUpTo("projects") }
             }
         },

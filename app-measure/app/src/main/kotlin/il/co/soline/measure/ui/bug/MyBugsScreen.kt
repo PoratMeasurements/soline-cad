@@ -1,5 +1,6 @@
 package il.co.soline.measure.ui.bug
 
+import android.content.Context
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -62,6 +63,7 @@ fun MyBugsScreen(nav: NavController) {
     var refreshKey by remember { mutableStateOf(0) }
     var viewImg by remember { mutableStateOf<String?>(null) }
     var showArchive by remember { mutableStateOf(false) }
+    var archivedIds by remember { mutableStateOf(loadArchived(context)) }
 
     LaunchedEffect(refreshKey) {
         bugs = withContext(Dispatchers.IO) {
@@ -115,8 +117,8 @@ fun MyBugsScreen(nav: NavController) {
                     )
                 }
                 else -> {
-                    val active = list.filter { it.status?.status != BugStage.CLOSED }
-                    val archived = list.filter { it.status?.status == BugStage.CLOSED }
+                    val active = list.filter { it.status?.status != BugStage.CLOSED && !archivedIds.contains(it.id) }
+                    val archived = list.filter { it.status?.status == BugStage.CLOSED || archivedIds.contains(it.id) }
                     LazyColumn(
                         modifier = Modifier.padding(pad).fillMaxSize(),
                         contentPadding = PaddingValues(16.dp),
@@ -129,7 +131,11 @@ fun MyBugsScreen(nav: NavController) {
                             )
                         }
                         items(active, key = { it.id }) { b ->
-                            MyBugCard(b, onView = { viewImg = b.pngPath })
+                            MyBugCard(b, onView = { viewImg = b.pngPath }, onArchive = {
+                                val s = archivedIds + b.id
+                                saveArchived(context, s)
+                                archivedIds = s
+                            })
                         }
                         if (archived.isNotEmpty()) {
                             item {
@@ -165,7 +171,7 @@ fun MyBugsScreen(nav: NavController) {
 }
 
 @Composable
-private fun MyBugCard(b: MyBug, onView: () -> Unit) {
+private fun MyBugCard(b: MyBug, onView: () -> Unit, onArchive: (() -> Unit)? = null) {
     SolineCard {
         Column(Modifier.fillMaxWidth().padding(2.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -193,8 +199,16 @@ private fun MyBugCard(b: MyBug, onView: () -> Unit) {
                 }
             }
             Spacer(Modifier.height(8.dp))
-            TextButton(onClick = onView) {
-                Text("📷 צפה בצילום-המסך", color = Teal, fontWeight = FontWeight.SemiBold)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                TextButton(onClick = onView) {
+                    Text("📷 צפה בצילום", color = Teal, fontWeight = FontWeight.SemiBold)
+                }
+                if (onArchive != null) {
+                    Spacer(Modifier.weight(1f))
+                    TextButton(onClick = onArchive) {
+                        Text("🗄️ לארכיון", color = Muted, fontWeight = FontWeight.SemiBold)
+                    }
+                }
             }
         }
     }
@@ -244,6 +258,14 @@ private fun ImageDialog(path: String, onClose: () -> Unit) {
             }
         }
     }
+}
+
+// ארכיון-מקומי של המודד: מזהי-באגים שהוא העביר-לארכיון ידנית (מעבר לסטטוס-מיכאל).
+private fun loadArchived(context: Context): Set<String> =
+    context.getSharedPreferences("soline_mybugs", Context.MODE_PRIVATE).getStringSet("archived", emptySet()) ?: emptySet()
+
+private fun saveArchived(context: Context, ids: Set<String>) {
+    context.getSharedPreferences("soline_mybugs", Context.MODE_PRIVATE).edit().putStringSet("archived", ids).apply()
 }
 
 private fun dateOf(b: MyBug): String {

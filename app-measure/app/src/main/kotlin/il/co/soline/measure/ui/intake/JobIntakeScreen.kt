@@ -39,6 +39,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -100,15 +101,28 @@ fun JobIntakeScreen(
     var elevH by remember { mutableStateOf("") }
     var elevW by remember { mutableStateOf("") }
     var elevD by remember { mutableStateOf("") }
+    var elevActiveDim by remember { mutableStateOf(-1) }          // -1=כבוי · 0=גובה · 1=רוחב · 2=עומק
+    var elevLastReading by remember { mutableStateOf<Any?>(null) } // הקריאה שכבר-נלכדה (מונע כפילות)
     var accessVehicle by remember { mutableStateOf("") } // גישת-רכב/פריקה
     var accessRemark by remember { mutableStateOf("") }
 
     // ── הערות-מודד (מתקפל) ──
     var surveyorNotes by remember { mutableStateOf("") }
+    var clientPresent by remember { mutableStateOf(true) } // לקוח נוכח במדידה? (195918)
     var moreExpanded by remember { mutableStateOf(false) }
 
     fun laserCm(): String =
-        reading?.distanceMm?.let { (it / 10.0).roundToInt().toString() } ?: ""
+        reading?.distanceMm?.let { String.format("%.1f", it / 10.0) } ?: ""
+
+    // הזנה-אוטומטית של מידות-מעלית: כל מדידה חדשה ממלאת את השדה-הפעיל ומתקדמת (גובה→רוחב→עומק).
+    LaunchedEffect(reading) {
+        if (elevator && elevActiveDim in 0..2 && reading != null && reading !== elevLastReading) {
+            val cm = laserCm()
+            when (elevActiveDim) { 0 -> elevH = cm; 1 -> elevW = cm; else -> elevD = cm }
+            elevLastReading = reading
+            elevActiveDim = if (elevActiveDim < 2) elevActiveDim + 1 else -1
+        }
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -137,17 +151,21 @@ fun JobIntakeScreen(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            // ── מפעל-מזמין (מאגר-לקוחות) ──
+            // ── מפעל-מזמין: בחירה מרשימת-האדמין בלבד (בקשת-מודד 195715) ──
             Section("מפעל מזמין") {
-                BigField(factory, { factory = it }, "שם המפעל / הנגר")
-                if (knownFactories.isNotEmpty()) {
-                    Text("מהמאגר:", fontSize = 12.sp, color = Muted)
+                if (knownFactories.isEmpty()) {
+                    Text(
+                        "אין לקוחות במאגר. האדמין מגדיר לקוחות ב: הגדרות → מאגר לקוחות.",
+                        fontSize = 13.sp, color = Muted,
+                    )
+                } else {
+                    Text("בחר מפעל מהרשימה:", fontSize = 12.sp, color = Muted)
                     Row(
                         Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         knownFactories.forEach { c ->
-                            Chip(c.name) { factory = c.name }
+                            Chip(c.name, selected = factory == c.name) { factory = c.name }
                         }
                     }
                 }
@@ -179,10 +197,28 @@ fun JobIntakeScreen(
                 ToggleRow("יש מעלית", elevator) { elevator = it }
                 AnimatedVisibility(visible = elevator) {
                     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Text("מידות-מעלית (ס\"מ) — הזן ידנית או 📡 מהלייזר:", fontSize = 12.sp, color = Muted)
-                        LaserDimRow("גובה", elevH, { elevH = it }) { elevH = laserCm() }
-                        LaserDimRow("רוחב", elevW, { elevW = it }) { elevW = laserCm() }
-                        LaserDimRow("עומק", elevD, { elevD = it }) { elevD = laserCm() }
+                        Text("מידות-מעלית (ס\"מ):", fontSize = 12.sp, color = Muted)
+                        // הזנה-אוטומטית: לחיצה אחת ואז מודדים גובה→רוחב→עומק — כל מדידה מתקדמת לבד.
+                        Surface(
+                            onClick = { elevLastReading = reading; elevActiveDim = 0 },
+                            shape = RoundedCornerShape(12.dp),
+                            color = if (elevActiveDim >= 0) OkGreen else Orange,
+                        ) {
+                            Box(Modifier.fillMaxWidth().heightIn(min = 52.dp), contentAlignment = Alignment.Center) {
+                                Text(
+                                    when (elevActiveDim) {
+                                        0 -> "📡 מודד גובה… (מדוד עכשiv)"
+                                        1 -> "📡 מודד רוחב… (מדוד עכשiv)"
+                                        2 -> "📡 מודד עומק… (מדוד עכשiv)"
+                                        else -> "📡 מדוד אוטומטית (גובה→רוחב→עומק)"
+                                    },
+                                    color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp,
+                                )
+                            }
+                        }
+                        LaserDimRow("גובה", elevH, { elevH = it }, active = elevActiveDim == 0) { elevH = laserCm() }
+                        LaserDimRow("רוחב", elevW, { elevW = it }, active = elevActiveDim == 1) { elevW = laserCm() }
+                        LaserDimRow("עומק", elevD, { elevD = it }, active = elevActiveDim == 2) { elevD = laserCm() }
                     }
                 }
                 BigField(accessVehicle, { accessVehicle = it }, "גישת-רכב / פריקה (קרוב? מדרגות?)")
@@ -191,7 +227,8 @@ fun JobIntakeScreen(
 
             // ── הערות-מודד (מתקפל) ──
             CollapsibleSection("הערות-מודד", moreExpanded, { moreExpanded = !moreExpanded }) {
-                Text("כל דבר רלוונטי: משטח לא-ישר, קיר-עקום ידוע, אילוצי-זמן, בעל-בית נוכח…", fontSize = 12.sp, color = Muted)
+                ToggleRow("לקוח נוכח במדידה", clientPresent) { clientPresent = it }
+                Text("כל דבר רלוונטי: משטח לא-ישר, קיר-עקום ידוע, אילוצי-זמן…", fontSize = 12.sp, color = Muted)
                 BigField(surveyorNotes, { surveyorNotes = it }, "הערות חופשיות", singleLine = false)
             }
 
@@ -214,7 +251,7 @@ fun JobIntakeScreen(
                                 if (entrance.isNotBlank()) add("כניסה ${entrance.trim()}")
                             }.joinToString(" · "),
                             accessNotes = buildAccessNotes(
-                                elevator, elevH, elevW, elevD, accessVehicle, accessRemark, surveyorNotes,
+                                elevator, elevH, elevW, elevD, accessVehicle, accessRemark, surveyorNotes, clientPresent,
                             ),
                         )
                     )
@@ -228,7 +265,7 @@ fun JobIntakeScreen(
 /** מאחד גישה + מעלית + הערות-מודד למחרוזת accessNotes אחת (מוצגת בדו"ח). */
 private fun buildAccessNotes(
     elevator: Boolean, h: String, w: String, d: String,
-    vehicle: String, remark: String, surveyorNotes: String,
+    vehicle: String, remark: String, surveyorNotes: String, clientPresent: Boolean,
 ): String = buildList {
     if (elevator) {
         val dims = listOf(h, w, d).map { it.trim() }
@@ -237,32 +274,33 @@ private fun buildAccessNotes(
     } else add("מעלית: אין")
     if (vehicle.isNotBlank()) add("גישת-רכב: ${vehicle.trim()}")
     if (remark.isNotBlank()) add("הערות-גישה: ${remark.trim()}")
+    add("לקוח נוכח במדידה: ${if (clientPresent) "כן" else "לא"}")
     if (surveyorNotes.isNotBlank()) add("הערות-מודד: ${surveyorNotes.trim()}")
 }.joinToString(" · ")
 
 // ── רכיבי-עזר ──────────────────────────────────────────────────────────────
 
 @Composable
-private fun Chip(text: String, onClick: () -> Unit) {
+private fun Chip(text: String, selected: Boolean = false, onClick: () -> Unit) {
     Surface(
         onClick = onClick,
         shape = RoundedCornerShape(999.dp),
-        color = Teal.copy(alpha = 0.10f),
+        color = if (selected) Teal else Teal.copy(alpha = 0.10f),
     ) {
-        Text(text, fontSize = 13.sp, color = Teal, fontWeight = FontWeight.SemiBold,
+        Text(text, fontSize = 13.sp, color = if (selected) Color.White else Teal, fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(horizontal = 13.dp, vertical = 6.dp))
     }
 }
 
-/** שדה-מידה עם כפתור 📡 שממלא מהלייזר. */
+/** שדה-מידה עם כפתור 📡 שממלא מהלייזר. active=השדה-הפעיל בהזנה-אוטומטית (מודגש). */
 @Composable
-private fun LaserDimRow(label: String, value: String, onValue: (String) -> Unit, onLaser: () -> Unit) {
+private fun LaserDimRow(label: String, value: String, onValue: (String) -> Unit, active: Boolean = false, onLaser: () -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-        Box(Modifier.weight(1f)) { BigField(value, onValue, label, KeyboardType.Number) }
+        Box(Modifier.weight(1f)) { BigField(value, onValue, if (active) "◀ $label (פעיל)" else label, KeyboardType.Number) }
         Surface(
             onClick = onLaser,
             shape = RoundedCornerShape(12.dp),
-            color = OkGreen.copy(alpha = 0.14f),
+            color = if (active) OkGreen else OkGreen.copy(alpha = 0.14f),
         ) {
             Box(Modifier.heightIn(min = 56.dp).width(64.dp), contentAlignment = Alignment.Center) {
                 Text("📡", fontSize = 22.sp)

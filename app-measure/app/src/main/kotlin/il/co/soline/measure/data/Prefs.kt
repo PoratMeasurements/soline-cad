@@ -236,9 +236,8 @@ object Prefs {
         ensureInit()
         return when (_units.value) {
             Units.CM -> {
-                val cm = mm / 10.0
-                if (abs(cm - Math.round(cm)) < 0.05) cm.roundToLong().toString()
-                else String.format("%.1f", cm)
+                // תמיד ספרה-עשרונית אחת (דיוק-מ"מ) — המ"מ אחרי הנקודה. בקשת-מודד 195516.
+                String.format("%.1f", mm / 10.0)
             }
             Units.MM -> mm.roundToInt().toString()
         }
