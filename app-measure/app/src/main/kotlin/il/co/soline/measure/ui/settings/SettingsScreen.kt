@@ -119,6 +119,11 @@ fun SettingsScreen(
                         BugUploadSection()
                     }
 
+                    // ---- מאגר-לקוחות (בעתיד: אדמין-משרד בלבד) ----
+                    Section("מאגר לקוחות") {
+                        ClientsSection()
+                    }
+
                     // ---- מדידה ----
                     Section("מדידה") {
                         // יחידות-תצוגה
@@ -396,6 +401,109 @@ private fun BugUploadSection() {
             onClick = { picker.launch(null) },
             colors = ButtonDefaults.buttonColors(containerColor = Teal, contentColor = Color.White),
         ) { Text(if (treeUri.isBlank()) "בחר תיקיית-Drive לבאגים" else "שנה תיקייה", fontWeight = FontWeight.SemiBold) }
+    }
+}
+
+/** מאגר-לקוחות — רשימה + "הקמת לקוח" (שם + קישור לתיקיית-Drive). */
+@Composable
+private fun ClientsSection() {
+    val context = LocalContext.current
+    var clients by remember { mutableStateOf(il.co.soline.measure.data.ClientsStore.all(context)) }
+    var showAdd by remember { mutableStateOf(false) }
+    var dialogName by remember { mutableStateOf("") }
+    var dialogUri by remember { mutableStateOf("") }
+
+    val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+        if (uri != null) {
+            try {
+                context.contentResolver.takePersistableUriPermission(
+                    uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION,
+                )
+            } catch (_: Exception) {}
+            dialogUri = uri.toString()
+        }
+    }
+
+    fun openFolder(uriStr: String) {
+        try {
+            context.startActivity(
+                Intent(Intent.ACTION_VIEW).apply {
+                    setDataAndType(android.net.Uri.parse(uriStr), "vnd.android.document/directory")
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                },
+            )
+        } catch (_: Exception) {
+            android.widget.Toast.makeText(context, "לא ניתן לפתוח את התיקייה", android.widget.Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        if (clients.isEmpty()) {
+            Text("אין לקוחות עדיין. הקם לקוח וקשר לו תיקיית-Drive.", fontSize = 12.sp, color = Muted)
+        } else {
+            clients.forEach { c ->
+                Row(Modifier.fillMaxWidth(), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) {
+                        Text(c.name, fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = il.co.soline.measure.ui.Ink)
+                        Text(
+                            if (c.hasFolder) "✓ תיקייה מקושרת" else "אין תיקייה",
+                            fontSize = 11.sp, color = if (c.hasFolder) Teal else Muted,
+                        )
+                    }
+                    if (c.hasFolder) {
+                        androidx.compose.material3.TextButton(onClick = { openFolder(c.folderUri) }) {
+                            Text("📂 פתח", color = Teal)
+                        }
+                    }
+                }
+            }
+        }
+        Button(
+            onClick = { dialogName = ""; dialogUri = ""; showAdd = true },
+            colors = ButtonDefaults.buttonColors(containerColor = il.co.soline.measure.ui.Orange, contentColor = Color.White),
+        ) { Text("＋ הקמת לקוח", fontWeight = FontWeight.SemiBold) }
+    }
+
+    if (showAdd) {
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = { showAdd = false },
+            confirmButton = {
+                androidx.compose.material3.TextButton(
+                    onClick = {
+                        if (dialogName.isNotBlank()) {
+                            il.co.soline.measure.data.ClientsStore.upsert(context, dialogName, dialogUri)
+                            clients = il.co.soline.measure.data.ClientsStore.all(context)
+                            showAdd = false
+                        }
+                    },
+                    enabled = dialogName.isNotBlank(),
+                ) { Text("שמור", color = il.co.soline.measure.ui.Orange, fontWeight = FontWeight.Bold) }
+            },
+            dismissButton = {
+                androidx.compose.material3.TextButton(onClick = { showAdd = false }) { Text("ביטול", color = Muted) }
+            },
+            title = { Text("הקמת לקוח", fontWeight = FontWeight.Bold) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    androidx.compose.material3.OutlinedTextField(
+                        value = dialogName, onValueChange = { dialogName = it },
+                        label = { Text("שם הלקוח / המפעל") }, singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    Button(
+                        onClick = { picker.launch(null) },
+                        colors = ButtonDefaults.buttonColors(containerColor = Teal, contentColor = Color.White),
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Text(
+                            if (dialogUri.isBlank()) "🔗 קשר תיקיית-Drive" else "✓ תיקייה מקושרת — שנה",
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                    }
+                }
+            },
+            containerColor = Color.White,
+        )
     }
 }
 
