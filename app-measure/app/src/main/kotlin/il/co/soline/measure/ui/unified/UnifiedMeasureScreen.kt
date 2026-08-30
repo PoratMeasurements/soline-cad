@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.IntOffset
@@ -86,13 +87,17 @@ fun UnifiedMeasureHost(nav: NavController, roomId: Long) {
     var railRight by remember { mutableStateOf(false) } // צד-הצמדה של הסרגל (בקשת-מודד 205033)
     var railY by remember { mutableStateOf(0f) }         // גובה-הסרגל (נגרר)
     var railCollapsed by remember { mutableStateOf(false) } // ✕ מכווץ את הסרגל, לא יוצא (211325)
+    var boxHpx by remember { mutableStateOf(0) }          // גובה-המסך (px) — לחסימת-גרירת-הסרגל (QA #3)
 
     fun addWall(lenMm: Double) {
         if (lenMm <= 0) return
-        scope.launch { repo.addWall(roomId, lenMm, Prefs.defaultWallHeightMm, if (walls.isEmpty()) 0.0 else angle) }
+        // הזווית שנבחרה היא הפנייה בין הקיר-הקודם לחדש — נשמרת על הקיר ה*קודם*
+        // (מוסכמת WallBuilder). הקיר-הראשון: אין-קודם, הזווית נעדרת ולכן חסרת-משמעות.
+        val turnFromPrev = if (walls.isEmpty()) 0.0 else angle
+        scope.launch { repo.addWallWithTurn(roomId, lenMm, Prefs.defaultWallHeightMm, turnFromPrev) }
     }
 
-    Box(Modifier.fillMaxSize().background(Cream)) {
+    Box(Modifier.fillMaxSize().background(Cream).onSizeChanged { boxHpx = it.height }) {
         Column(Modifier.fillMaxSize()) {
             // ── סרגל-עליון: חדר · חיבור · קריאה-חיה ──
             Row(
@@ -190,7 +195,9 @@ fun UnifiedMeasureHost(nav: NavController, roomId: Long) {
             offsetY = railY,
             collapsed = railCollapsed,
             onSelect = { mode = it },
-            onDragY = { railY += it },
+            // חוסם את הסרגל לגבולות-המסך — הסרגל מיושר-למרכז, אז ההיסט מוגבל ל-±חצי-גובה
+            // (לפחות חצי-סרגל נשאר גלוי; מונע "זריקה" של הסרגל אל מחוץ-למסך · QA #3).
+            onDragY = { d -> railY = if (boxHpx > 0) (railY + d).coerceIn(-boxHpx / 2f, boxHpx / 2f) else railY + d },
             onSnapSide = { railRight = it },
             onToggleCollapse = { railCollapsed = !railCollapsed },
         )

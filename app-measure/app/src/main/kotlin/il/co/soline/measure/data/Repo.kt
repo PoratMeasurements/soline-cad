@@ -115,6 +115,22 @@ class Repo(private val dao: SolineDao) {
         return dao.insertWall(WallEntity(roomId = roomId, idx = idx, length = length, height = height, angle = angle))
     }
     /**
+     * הוספת-קיר עם זווית-הפנייה שנבחרה בין הקיר-הקודם לחדש (מנוע-המדידה המאוחד).
+     *
+     * לפי מוסכמת [il.co.soline.measure.geometry.WallBuilder]: [WallEntity.angle] של קיר היא
+     * הפנייה **אחריו** אל הקיר-הבא (heading += angle). לכן זווית-הפנייה שהמודד בחר שייכת
+     * לקיר ה*קודם* (הקיים) — לא לקיר-החדש. הקיר-החדש נכנס עם angle=0 (פנייתו-הלאה עדיין
+     * לא-ידועה). ללא-זה שני-הקירות-הראשונים יוצאים על קו-אחד והמלבן/‏L לעולם לא-נסגר
+     * (רגרסיה שאותרה בביקורת-QA). קריאה סינכרונית ל-[SolineDao.wallsNow] מבטיחה שהקיר-הקודם
+     * נלקח טרי (ללא מרוץ-מצב מול ה-Flow).
+     */
+    suspend fun addWallWithTurn(roomId: Long, length: Double, height: Double, turnFromPrev: Double): Long {
+        dao.wallsNow(roomId).maxByOrNull { it.idx }?.let { prev ->
+            if (prev.angle != turnFromPrev) updateWall(prev.copy(angle = turnFromPrev))
+        }
+        return addWall(roomId, length, height, 0.0)
+    }
+    /**
      * עדכון-קיר. אם השתנה **אורך-הקיר** (עריכה-ידנית / כלֵי-סגירה+הצמדה) — מיישרים
      * מחדש את אביזריו כך שלא-יחרגו מהאורך-החדש (קיר-שהתקצר משאיר אביזר מחוץ-לקיר,
      * וייצוא-שקט של אלמנט-מחוץ-לקיר). לכל אביזר: היסט-הפינה נחסם ל-[0, אורך−רוחב]
