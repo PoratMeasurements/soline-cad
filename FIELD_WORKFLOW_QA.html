@@ -1,0 +1,173 @@
+<title>טופס מחזור-פרויקט</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Poppins:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style id="app-css">
+  :root{--bg:#FBF4E6;--surface:#FFFFFF;--surface2:#FAF3E2;--ink:#2B2620;--muted:#6E6656;
+    --border:#EAD9BC;--accent:#E8890B;--teal:#127C8C;
+    --ok:#2E9E6B;--warn:#C77A12;--err:#C6392B;--pend:#B9AE97;
+    --shadow:0 1px 2px rgba(74,58,20,.05),0 10px 28px rgba(74,58,20,.09)}
+  @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#14171A;--surface:#1D2328;--surface2:#232a30;
+    --ink:#ECE7DB;--muted:#A7A093;--border:#313941;--accent:#F7AC3A;--teal:#43B9CA;
+    --ok:#54C08A;--warn:#E5A63C;--err:#E5685A;--pend:#5A5346;--shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px rgba(0,0,0,.44)}}
+  :root[data-theme=dark]{--bg:#14171A;--surface:#1D2328;--surface2:#232a30;--ink:#ECE7DB;--muted:#A7A093;
+    --border:#313941;--accent:#F7AC3A;--teal:#43B9CA;--ok:#54C08A;--warn:#E5A63C;--err:#E5685A;--pend:#5A5346;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px rgba(0,0,0,.44)}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);direction:rtl;font-family:Heebo,system-ui,sans-serif;
+    line-height:1.55;padding:max(18px,env(safe-area-inset-top)) 14px 90px}
+  .wrap{max-width:860px;margin:0 auto}
+  .top{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;border-bottom:2px solid var(--border);padding-bottom:16px;margin-bottom:6px}
+  .wm{font-family:Poppins,sans-serif;font-size:26px;font-weight:700;color:var(--accent);line-height:1}.wm b{color:var(--teal)}
+  .kick{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);font-weight:700;margin-top:3px}
+  .meta{color:var(--muted);font-size:12px;text-align:left;line-height:1.6}
+  h1{font-size:26px;font-weight:800;margin:20px 0 4px;letter-spacing:-.01em}
+  .lead{font-size:15.5px;color:var(--muted);max-width:64ch;margin:0 0 6px}
+  .prog{display:flex;align-items:center;gap:10px;margin:14px 0 6px}
+  .bar{flex:1;height:10px;background:var(--surface2);border:1px solid var(--border);border-radius:99px;overflow:hidden}
+  .bar>i{display:block;height:100%;background:var(--ok);width:0}
+  .prog span{font-size:12.5px;color:var(--muted);font-weight:700;white-space:nowrap}
+  .stn{margin:22px 0 10px;display:flex;align-items:center;gap:10px}
+  .stn .ic{width:34px;height:34px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:17px;flex:none}
+  .stn h2{font-size:17px;font-weight:800;margin:0;color:var(--ink)}
+  .stn .c{font-size:11.5px;color:var(--muted);font-weight:700}
+  .stn .n{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);border:1.5px solid var(--accent);border-radius:6px;padding:1px 7px;flex:none}
+  .item{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:13px 15px;margin-bottom:9px;box-shadow:var(--shadow)}
+  .item.done{border-inline-start:4px solid var(--teal)}
+  .item.err{border-inline-start:4px solid var(--err)}
+  .item.ok{border-inline-start:4px solid var(--ok)}
+  .itop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .it{font-weight:700;font-size:14.5px;flex:1}
+  .ctrl{font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:6px;white-space:nowrap;flex:none}
+  .ctrl.man{color:var(--accent);border:1.5px solid var(--accent)}
+  .ctrl.auto{color:var(--teal);border:1.5px solid var(--teal)}
+  .pass{font-size:12.5px;color:var(--muted);margin:6px 0 10px}.pass b{color:var(--ink)}
+  .sts{display:flex;flex-wrap:wrap;gap:6px}
+  .sb{border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);border-radius:9px;padding:6px 12px;
+    font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:.12s}
+  .sb[aria-pressed=true]{color:#fff}
+  .sb.pend[aria-pressed=true]{background:var(--pend);border-color:var(--pend)}
+  .sb.done[aria-pressed=true]{background:var(--teal);border-color:var(--teal)}
+  .sb.err[aria-pressed=true]{background:var(--err);border-color:var(--err)}
+  .sb.ok[aria-pressed=true]{background:var(--ok);border-color:var(--ok)}
+  .banner{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:11px 14px;font-size:13px;color:var(--muted);margin-bottom:14px}
+  .banner b{color:var(--ink)}.banner.ro{border-inline-start:4px solid var(--warn)}
+  .reset{background:transparent;border:1.5px solid var(--border);color:var(--muted);border-radius:99px;padding:5px 14px;font-family:inherit;font-weight:700;font-size:12px;cursor:pointer}
+  footer{margin-top:30px;padding-top:16px;border-top:1px solid var(--border);color:var(--muted);font-size:12px;text-align:center}
+  .tog{position:fixed;top:12px;inset-inline-start:12px;width:38px;height:38px;border-radius:999px;background:var(--surface);border:1px solid var(--border);color:var(--ink);box-shadow:var(--shadow);cursor:pointer;z-index:80}
+</style>
+
+<button class="tog" aria-label="מצב-תצוגה" onclick="var r=document.documentElement,d=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');r.setAttribute('data-theme',d==='dark'?'light':'dark')">◐</button>
+
+<div id="root"></div>
+
+<script id="app-state" type="application/json">
+{"stations":[
+ {"ic":"🚗","name":"הכנה ברכב","note":"Departure Prep","items":[
+   {"id":"s1a","t":"טעינת-פרויקט + מטא-דאטה (לקוח/כתובת/גישה/מפעל)","c":"auto","pass":"פרויקט זמין-אופליין + שדות-אינטייק מלאים","st":"pend"},
+   {"id":"s1b","t":"בדיקת-סוללות מכשיר + טאבלט","c":"auto","pass":"שני-המכשירים מעל-סף (≥50%)","st":"pend"},
+   {"id":"s1c","t":"ווידוא 3 הכלים בציוד","c":"man","pass":"לייזר-יד + חצובת-P2P + מטר נוכחים","st":"pend"},
+   {"id":"s1d","t":"בדיקת חיבור-BLE","c":"auto","pass":"זיווג מוצלח לפחות למכשיר-אחד","st":"pend"},
+   {"id":"s1e","t":"כיול-ייחוס ראשוני","c":"man","pass":"ירי-בדיקה למרחק-ידוע בטווח-סבילות","st":"pend"}
+ ]},
+ {"ic":"📐","name":"הקמת-עמדה","note":"Station Setup","items":[
+   {"id":"s2a","t":"סקירת-שטח + תכנון סדר-סריקה","c":"man","pass":"מסלול-מדידה מתוכנן, ללא-הפתעות","st":"pend"},
+   {"id":"s2b","t":"בחירת ייחוס / backsight (אפס-אזימוט)","c":"man","pass":"נקודת-אפס נבחרה ונרשמה","st":"pend"},
+   {"id":"s2c","t":"פילוס חצובת-P2P","c":"auto","pass":"אישור-ידני 'מפולס' (שער-חובה ל-P2P)","st":"pend"},
+   {"id":"s2d","t":"ווידוא תנאי-תאורה/משטחים","c":"man","pass":"ללא-בוהק/החזר על-מטרת-הלייזר","st":"pend"},
+   {"id":"s2e","t":"הגדרת datum רצפה + מצב-מכשיר","c":"auto","pass":"מפלס-ייחוס נקבע + Measure-3D פעיל","st":"pend"}
+ ]},
+ {"ic":"📏","name":"המדידה בפועל","note":"Execution","items":[
+   {"id":"s3a","t":"מדידת היקף-קירות (P2P/לייזר) בסדר-סריקה","c":"auto","pass":"מצולע-סגור, אפס dead-zones במפת-הכיסוי","st":"pend"},
+   {"id":"s3b","t":"מדידת כל-הפתחים (רוחב/גובה/סף)","c":"auto","pass":"כל פתח עם 3-ערכים","st":"pend"},
+   {"id":"s3c","t":"מדידת גבהים ≥2 נק'/חדר","c":"auto","pass":"לפחות 2 גבהים לכל-חדר","st":"pend"},
+   {"id":"s3d","t":"אלכסון-ביקורת + ריבועיות","c":"auto","pass":"≥1 אלכסון/חדר, סטיית-ריבועיות בטווח","st":"pend"},
+   {"id":"s3e","t":"טיפול-בחריגות (Outliers)","c":"auto","pass":"כל חריגה >2ס\"מ טופלה (שמור/מחק)","st":"pend"},
+   {"id":"s3f","t":"בדיקת שגיאת-סגירה","c":"auto","pass":"שגיאת-סגירה בטווח-הסבילות (Bowditch)","st":"pend"}
+ ]},
+ {"ic":"✅","name":"בקרת-איכות במקום","note":"In-Situ QA · לפני-עזיבה","items":[
+   {"id":"s4a","t":"מעבר על המתאר במסך מול-המציאות","c":"man","pass":"המתאר תואם את-השטח","st":"pend"},
+   {"id":"s4b","t":"שער-שלמות המערכת","c":"auto","pass":"כל החדרים סגורים + כל אלמנטי-החובה קיימים","st":"pend"},
+   {"id":"s4c","t":"דו\"ח-חוסרים לפני-עזיבה","c":"auto","pass":"אפס-חוסרים ברשימת-המערכת","st":"pend"},
+   {"id":"s4d","t":"פתרון כל-הדגלים","c":"man","pass":"אין דגלים-אדומים פתוחים","st":"pend"},
+   {"id":"s4e","t":"תיעוד-צילום","c":"man","pass":"צילומי-הקשר מצורפים לחדרים","st":"pend"},
+   {"id":"s4f","t":"שער 'בלי-חזרה-שנייה'","c":"auto","pass":"ציון-שלמות מלא — מותר-לעזוב","st":"pend"}
+ ]},
+ {"ic":"📤","name":"סגירה והגשה","note":"Closure & Submission","items":[
+   {"id":"s5a","t":"גיבוי-אוטומטי ל-Drive","c":"auto","pass":"סנכרון-Drive הושלם","st":"pend"},
+   {"id":"s5b","t":"מעבר-ולידציה סופי","c":"auto","pass":"כל שערי-ה-QA ירוקים","st":"pend"},
+   {"id":"s5c","t":"יצירת דו\"ח-מדידה","c":"auto","pass":"דו\"ח כולל מטא-אינטייק נוצר","st":"pend"},
+   {"id":"s5d","t":"ייצוא-לממיר / CAD","c":"auto","pass":"קבצי-הייצוא נוצרו בהצלחה","st":"pend"},
+   {"id":"s5e","t":"'סגירת פרויקט והגשה'","c":"man","pass":"הפרויקט הוגש + התקבלה-קבלה","st":"pend"},
+   {"id":"s5f","t":"מדיניות-שמירה","c":"auto","pass":"7-ימים מקומי, הנתונים ב-Drive","st":"pend"}
+ ]}
+]}
+</script>
+
+<script id="app-js">
+(function(){
+  var cssEl=document.getElementById('app-css'), jsEl=document.getElementById('app-js');
+  var state=JSON.parse(document.getElementById('app-state').textContent);
+  var artifact=null, canWrite=true, msg='';
+  function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  var STS=[["pend","ממתין"],["done","בוצע"],["err","שגיאה"],["ok","אושר"]];
+  var CLS={pend:"",done:"done",err:"err",ok:"ok"};
+
+  function buildDoc(s){
+    return '<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>טופס מחזור-פרויקט<\/title>'
+      +'<meta name="viewport" content="width=device-width, initial-scale=1">'
+      +'<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Poppins:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">'
+      +'<style id="app-css">'+cssEl.textContent+'<\/style><\/head><body>'
+      +'<button class="tog" aria-label="מצב" onclick="var r=document.documentElement,d=r.getAttribute(\'data-theme\')||(matchMedia(\'(prefers-color-scheme:dark)\').matches?\'dark\':\'light\');r.setAttribute(\'data-theme\',d===\'dark\'?\'light\':\'dark\')">◐<\/button>'
+      +'<div id="root"><\/div>'
+      +'<script id="app-state" type="application/json">'+JSON.stringify(s)+'<\/script>'
+      +'<script id="app-js">'+jsEl.textContent+'<\/script><\/body><\/html>';
+  }
+  var publishing=false, again=false;
+  async function pub(){ if(!artifact)return; if(publishing){again=true;return;} publishing=true; msg='saving'; render();
+    try{ await artifact.publish(buildDoc(state)); msg='saved'; }
+    catch(e){ var c=(e&&(e.code||e.name))||''; if(c==='not_writer'||c==='not_granted'){canWrite=false;msg='';} else msg='saved'; }
+    publishing=false; render(); if(again){again=false;pub();} }
+
+  function allItems(){ var a=[]; state.stations.forEach(function(s){ s.items.forEach(function(i){a.push(i);}); }); return a; }
+  function setSt(id,st){ allItems().forEach(function(i){ if(i.id===id) i.st=st; }); render(); pub(); }
+  function reset(){ allItems().forEach(function(i){ i.st="pend"; }); render(); pub(); }
+  function counts(){ var c={pend:0,done:0,err:0,ok:0}; allItems().forEach(function(i){ c[i.st]=(c[i.st]||0)+1; }); return c; }
+
+  function render(){
+    var root=document.getElementById('root'); if(!root)return;
+    var all=allItems(), c=counts(), tot=all.length, ap=c.ok, pct=Math.round(ap/tot*100);
+    var h='<div class="wrap">';
+    h+='<div class="top"><div><div class="wm">soline<b>.<\/b><\/div><div class="kick">טופס מחזור-חיי-פרויקט · QA שטח<\/div><\/div>'
+      +'<div class="meta">'+ap+'/'+tot+' אושרו<br>'+(c.err?('⚠ '+c.err+' שגיאות'):'ללא-שגיאות')+'<br>מתעדכן חי<\/div><\/div>';
+    h+='<h1>טופס מחזור-חיי-פרויקט<\/h1>';
+    h+='<p class="lead">צ\'קליסט-QA לשטח — מהרכב ועד ההגשה. מטרה: אפס-טעויות-אנוש ואפס-חזרה-שנייה לאתר. סמן לכל-משימה סטטוס.<\/p>';
+    if(!artifact) h+='<div class="banner">טוען…<\/div>';
+    else if(!canWrite) h+='<div class="banner ro"><b>מצב-צפייה.<\/b> לסימון — פתח בחשבון עם הרשאת-עריכה (הגרסה-לשטח תיבנה בתוך-האפליקציה).<\/div>';
+    else h+='<div class="banner"><b>איך עובדים:<\/b> לכל שורה — <b>ידני</b> (בקרת-מודד) או <b>אוטומטי</b> (בקרת-מערכת). בחר סטטוס: ממתין → בוצע → אושר (או שגיאה). ✓ = קריטריון-המעבר הושג.<\/div>';
+    h+='<div class="prog"><div class="bar"><i style="width:'+pct+'%"><\/i><\/div><span>'+pct+'% אושר<\/span>'
+      + (canWrite?' <button class="reset" id="rst">אפס טופס<\/button>':'') +'<\/div>';
+
+    state.stations.forEach(function(s,idx){
+      h+='<div class="stn"><span class="n">'+(idx+1)+'<\/span><span class="ic">'+s.ic+'<\/span>'
+        +'<div><h2>'+esc(s.name)+'<\/h2><div class="c">'+esc(s.note)+'<\/div><\/div><\/div>';
+      s.items.forEach(function(i){
+        h+='<div class="item '+(CLS[i.st]||'')+'">';
+        h+='<div class="itop"><div class="it">'+esc(i.t)+'<\/div>'
+          +'<span class="ctrl '+(i.c==='man'?'man':'auto')+'">'+(i.c==='man'?'ידני':'אוטו')+'<\/span><\/div>';
+        h+='<div class="pass"><b>מעבר:<\/b> '+esc(i.pass)+'<\/div>';
+        h+='<div class="sts">';
+        STS.forEach(function(p){ var on=i.st===p[0];
+          h+='<button class="sb '+p[0]+'" aria-pressed="'+on+'" '+(canWrite?'':'disabled ')+'data-id="'+i.id+'" data-st="'+p[0]+'">'+p[1]+'<\/button>'; });
+        h+='<\/div><\/div>';
+      });
+    });
+    h+='<footer>Soline — טופס מחזור-חיי-פרויקט · '+(msg==='saving'?'שומר…':(msg==='saved'?'נשמר ✓':'מתעדכן חי'))+'<\/footer><\/div>';
+    root.innerHTML=h;
+    root.querySelectorAll('.sb').forEach(function(b){ b.onclick=function(){ if(canWrite) setSt(b.getAttribute('data-id'),b.getAttribute('data-st')); }; });
+    var r=document.getElementById('rst'); if(r) r.onclick=function(){ if(canWrite) reset(); };
+  }
+  render();
+  if(window.claude&&claude.use){ claude.use('artifact').then(function(a){ artifact=a; canWrite=!!a; render(); }); }
+})();
+</script>
