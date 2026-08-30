@@ -1,0 +1,104 @@
+<title>מוקאפ מסך-מדידה</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Poppins:wght@600;700&display=swap">
+<style>
+  :root{--bg:#FBF4E6;--surface:#FFFFFF;--surface2:#FAF3E2;--ink:#2B2620;--muted:#6E6656;
+    --border:#EAD9BC;--accent:#E8890B;--teal:#127C8C;--ok:#2E9E6B}
+  @media(prefers-color-scheme:dark){:root{--bg:#14171A;--surface:#1D2328;--surface2:#232a30;--ink:#ECE7DB;--muted:#A7A093;--border:#313941;--accent:#F7AC3A;--teal:#43B9CA;--ok:#54C08A}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);direction:rtl;font-family:Heebo,system-ui,sans-serif;padding:16px}
+  .wrap{max-width:940px;margin:0 auto}
+  h1{font-size:22px;font-weight:800;margin:6px 0 2px}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 14px}
+  /* device */
+  .device{background:#0d0f11;border-radius:22px;padding:10px;box-shadow:0 18px 44px rgba(74,58,20,.18)}
+  .screen{background:var(--bg);border-radius:14px;overflow:hidden;display:grid;grid-template-columns:64px 1fr;height:520px}
+  /* tool rail */
+  .rail{background:var(--surface);border-inline-end:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 0}
+  .tool{width:50px;height:50px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;color:var(--muted);font-size:9px;font-weight:700}
+  .tool .g{font-size:19px}
+  .tool.on{background:var(--teal);color:#fff}
+  .tool.sep{margin-top:auto}
+  /* main */
+  .main{display:flex;flex-direction:column;min-width:0}
+  .top{display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--surface);border-bottom:1px solid var(--border)}
+  .rm{font-weight:800;font-size:15px}.rm span{color:var(--muted);font-weight:600;font-size:12px}
+  .chip{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;color:var(--ok);border:1.5px solid var(--ok);border-radius:999px;padding:2px 9px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+  .read{margin-inline-start:auto;text-align:left}
+  .read .v{font-family:Poppins,sans-serif;font-size:30px;font-weight:700;color:var(--accent);line-height:1}
+  .read .l{font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.08em}
+  /* canvas */
+  .canvas{flex:1;position:relative;background:
+    linear-gradient(var(--border) .5px,transparent .5px) 0 0/26px 26px,
+    linear-gradient(90deg,var(--border) .5px,transparent .5px) 0 0/26px 26px,var(--bg)}
+  .canvas svg{position:absolute;inset:0;width:100%;height:100%}
+  /* bottom action */
+  .act{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--surface);border-top:1px solid var(--border)}
+  .cap{flex:1;background:var(--accent);color:#fff;border:none;border-radius:14px;height:56px;font-family:inherit;font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px}
+  .mini{width:56px;height:56px;border-radius:14px;border:1.5px solid var(--border);background:var(--surface2);color:var(--ink);font-size:20px;display:flex;align-items:center;justify-content:center}
+  .hint{font-size:12px;color:var(--muted)}
+  .notes{margin-top:16px;background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:14px 16px}
+  .notes h3{margin:0 0 8px;font-size:13px;color:var(--teal);font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+  .notes ul{margin:0;padding-inline-start:20px;font-size:13.5px;line-height:1.7}.notes b{color:var(--accent)}
+</style>
+
+<div class="wrap">
+  <h1>מסך-מדידה אחד — מוקאפ (לאישור)</h1>
+  <p class="sub">קנבס-שרטוט אחד במרכז · סרגל-שיטות בצד · קריאה-חיה גדולה · פעולת-לכידה ענקית. מחליפים שיטה — אותו מתאר.</p>
+
+  <div class="device">
+    <div class="screen">
+      <!-- tool rail -->
+      <div class="rail">
+        <div class="tool on"><span class="g">📡</span>לייזר</div>
+        <div class="tool"><span class="g">✏️</span>שרטוט</div>
+        <div class="tool"><span class="g">✍️</span>מטר</div>
+        <div class="tool"><span class="g">🎯</span>P2P</div>
+        <div class="tool"><span class="g">▭</span>תבנית</div>
+        <div class="tool sep"><span class="g">↩</span>בטל</div>
+        <div class="tool"><span class="g">✓</span>סיום</div>
+      </div>
+      <!-- main -->
+      <div class="main">
+        <div class="top">
+          <div class="rm">מטבח <span>· חדר 2</span></div>
+          <span class="chip"><span class="dot"></span> X6 · 87%</span>
+          <div class="read"><div class="v">234.5</div><div class="l">ס"מ · קיר 4</div></div>
+        </div>
+        <div class="canvas">
+          <svg viewBox="0 0 620 340" preserveAspectRatio="xMidYMid meet">
+            <polygon points="120,70 500,70 500,250 330,250 330,180 120,180"
+              fill="rgba(18,124,140,.06)" stroke="#127C8C" stroke-width="3" stroke-linejoin="round"/>
+            <line x1="120" y1="180" x2="120" y2="70" stroke="#E8890B" stroke-width="5"/>
+            <g font-family="Heebo" font-size="13" font-weight="700" fill="#2B2620">
+              <rect x="270" y="55" width="70" height="20" rx="5" fill="#fff" stroke="#EAD9BC"/><text x="305" y="69" text-anchor="middle">380.0</text>
+              <rect x="505" y="150" width="70" height="20" rx="5" fill="#fff" stroke="#EAD9BC"/><text x="540" y="164" text-anchor="middle">180.0</text>
+              <rect x="60" y="115" width="70" height="20" rx="5" fill="#fff2e0" stroke="#E8890B"/><text x="95" y="129" text-anchor="middle" fill="#E8890B">234.5</text>
+              <rect x="380" y="255" width="70" height="20" rx="5" fill="#fff" stroke="#EAD9BC"/><text x="415" y="269" text-anchor="middle">170.0</text>
+            </g>
+            <g fill="#127C8C"><circle cx="120" cy="70" r="5"/><circle cx="500" cy="70" r="5"/><circle cx="500" cy="250" r="5"/><circle cx="330" cy="250" r="5"/><circle cx="330" cy="180" r="5"/><circle cx="120" cy="180" r="5"/></g>
+            <g font-family="Heebo" font-size="11" fill="#6E6656"><text x="335" y="120">90°</text><text x="315" y="215">90°</text></g>
+          </svg>
+        </div>
+        <div class="act">
+          <button class="mini">↩</button>
+          <button class="cap">◉ קלוט מדידה</button>
+          <div class="hint">לחיצה על כפתור-הלייזר<br>קולטת אוטומטית</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <h3>עקרונות-ה-UX</h3>
+    <ul>
+      <li><b>קנבס אחד במרכז</b> — המתאר תמיד-גלוי, גדל תוך-כדי מדידה. מעבר-שיטה לא-מוחק.</li>
+      <li><b>סרגל-שיטות בצד</b> — לייזר · שרטוט · מטר · P2P · תבנית + בטל/סיום. השיטה-הפעילה מודגשת.</li>
+      <li><b>קריאה-חיה ענקית</b> למעלה (קריא בשמש) + צ'יפ-חיבור (מכשיר+סוללה).</li>
+      <li><b>לכידה ענקית</b> למטה — או כפתור-המכשיר קולט אוטומטית (יד-אחת).</li>
+      <li><b>מידות בס"מ עם ספרה-עשרונית</b>, זוויות-פינה, קיר-פעיל מודגש בכתום.</li>
+    </ul>
+  </div>
+</div>
