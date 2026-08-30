@@ -1,0 +1,131 @@
+<title>מפת-דרכים Soline</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Poppins:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root{--bg:#FBF4E6;--surface:#FFFFFF;--surface2:#FAF3E2;--ink:#2B2620;--muted:#6E6656;
+    --border:#EAD9BC;--accent:#E8890B;--teal:#127C8C;--ok:#2E9E6B;--warn:#C77A12;--blue:#3B6FB0;--pend:#B9AE97;
+    --shadow:0 1px 2px rgba(74,58,20,.05),0 10px 28px rgba(74,58,20,.09)}
+  @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#14171A;--surface:#1D2328;--surface2:#232a30;
+    --ink:#ECE7DB;--muted:#A7A093;--border:#313941;--accent:#F7AC3A;--teal:#43B9CA;--ok:#54C08A;--warn:#E5A63C;--blue:#6EA0D9;--pend:#5A5346;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px rgba(0,0,0,.44)}}
+  :root[data-theme=dark]{--bg:#14171A;--surface:#1D2328;--surface2:#232a30;--ink:#ECE7DB;--muted:#A7A093;
+    --border:#313941;--accent:#F7AC3A;--teal:#43B9CA;--ok:#54C08A;--warn:#E5A63C;--blue:#6EA0D9;--pend:#5A5346;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px rgba(0,0,0,.44)}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);direction:rtl;font-family:Heebo,system-ui,sans-serif;
+    line-height:1.55;padding:max(18px,env(safe-area-inset-top)) 15px 60px}
+  .wrap{max-width:900px;margin:0 auto}
+  .top{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;border-bottom:2px solid var(--border);padding-bottom:16px}
+  .wm{font-family:Poppins,sans-serif;font-size:27px;font-weight:700;color:var(--accent);line-height:1}.wm b{color:var(--teal)}
+  .kick{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);font-weight:700;margin-top:3px}
+  .meta{color:var(--muted);font-size:12px;text-align:left;line-height:1.7}
+  h1{font-size:28px;font-weight:800;margin:20px 0 4px}
+  .lead{font-size:16px;color:var(--muted);max-width:66ch;margin:0 0 14px}
+  .vitals{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 6px}
+  .v{flex:1;min-width:120px;background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:12px 14px;box-shadow:var(--shadow)}
+  .v .n{font-size:24px;font-weight:800;line-height:1}.v .l{font-size:11.5px;color:var(--muted);margin-top:3px;font-weight:600}
+  .v.ok .n{color:var(--ok)}.v.acc .n{color:var(--accent)}.v.teal .n{color:var(--teal)}.v.blue .n{color:var(--blue)}
+  h2{font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--teal);font-weight:800;
+    margin:32px 0 12px;display:flex;align-items:center;gap:9px}
+  h2::after{content:"";flex:1;height:1.5px;background:var(--border)}
+  .row{display:flex;align-items:flex-start;gap:10px;background:var(--surface);border:1px solid var(--border);
+    border-radius:12px;padding:11px 14px;margin-bottom:8px;box-shadow:var(--shadow)}
+  .row .ic{flex:none;font-size:15px;width:22px;text-align:center;margin-top:1px}
+  .row .b{flex:1}.row .b .t{font-weight:700;font-size:14.5px}.row .b .d{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .tag{flex:none;font-size:10.5px;font-weight:800;padding:2px 9px;border-radius:999px;border:1.5px solid;white-space:nowrap;margin-top:1px}
+  .tag.done{color:var(--ok);border-color:var(--ok)}.tag.v6{color:var(--accent);border-color:var(--accent)}
+  .tag.wip{color:var(--warn);border-color:var(--warn)}.tag.plan{color:var(--blue);border-color:var(--blue)}
+  .grp{font-size:12px;font-weight:800;color:var(--ink);margin:14px 0 7px;padding-inline-start:3px}
+  .phase{background:var(--surface);border:1px solid var(--border);border-inline-start:5px solid var(--accent);
+    border-radius:14px;padding:15px 17px;margin-bottom:11px;box-shadow:var(--shadow)}
+  .phase.cur{border-inline-start-color:var(--ok);background:linear-gradient(90deg,color-mix(in srgb,var(--ok) 7%,var(--surface)),var(--surface))}
+  .phase h3{margin:0 0 4px;font-size:16.5px;font-weight:800}
+  .phase h3 .num{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);border:1.5px solid var(--accent);border-radius:6px;padding:1px 8px;margin-inline-end:8px}
+  .phase .why{font-size:13px;color:var(--muted);margin:0 0 8px}
+  .phase ul{margin:0;padding-inline-start:20px;font-size:13.5px}.phase li{margin:3px 0}
+  .lk{display:inline-flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+  .lk a{font-size:12.5px;color:var(--teal);text-decoration:none;border:1px solid var(--border);border-radius:8px;padding:4px 10px;background:var(--surface)}
+  footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--border);color:var(--muted);font-size:12px;text-align:center}
+  .tog{position:fixed;top:12px;inset-inline-start:12px;width:38px;height:38px;border-radius:999px;background:var(--surface);border:1px solid var(--border);color:var(--ink);box-shadow:var(--shadow);cursor:pointer;z-index:80}
+</style>
+
+<button class="tog" aria-label="מצב-תצוגה" onclick="var r=document.documentElement,d=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');r.setAttribute('data-theme',d==='dark'?'light':'dark')">◐</button>
+
+<div class="wrap">
+  <div class="top">
+    <div><div class="wm">soline<b>.</b></div><div class="kick">מפת-דרכים · מדידה→ייצור · 30 אוג׳ 2026</div></div>
+    <div class="meta">גרסה 0.6 (מוכנה)<br>צפייה-בלבד · מתעדכן ידנית</div>
+  </div>
+
+  <h1>מפת-הדרכים של Soline</h1>
+  <p class="lead">כל מה שנבנה, מה שמוכן לשחרור, מה שפתוח-לאפיון — ואיך מתקדמים. דף-צפייה (קלט ממך דרך צ'אט / 🐞 באפליקציה, לא דרך עריכה כאן).</p>
+
+  <div class="vitals">
+    <div class="v ok"><div class="n">21</div><div class="l">נסגרו / שוחררו ✅</div></div>
+    <div class="v acc"><div class="n">10</div><div class="l">ב-v0.6 (ממתין לשחרור)</div></div>
+    <div class="v blue"><div class="n">13</div><div class="l">פתוח — לאפיון 📋</div></div>
+    <div class="v teal"><div class="n">5</div><div class="l">בטיפול / חקר 🔧</div></div>
+  </div>
+
+  <!-- ===== הושלם ===== -->
+  <h2>✅ מה שנבנה ושוחרר (v0.1 → v0.5)</h2>
+  <div class="grp">תשתית — מערכת-הבאגים והאפיון</div>
+  <div class="row"><div class="ic">🔗</div><div class="b"><div class="t">סינרגיית-באגים דרך Drive</div><div class="d">🐞 באפליקציה → העלאה-אוטומטית לתיקיית-Drive → מגיע אליי אוטומטית</div></div><span class="tag done">פעיל</span></div>
+  <div class="row"><div class="ic">🤖</div><div class="b"><div class="t">מנטר-באגים אוטומטי מתמיד</div><div class="d">סורק כל ~10 דק', מטריא'ז + מתריע — בלי מעקב ידני</div></div><span class="tag done">פעיל</span></div>
+  <div class="row"><div class="ic">🔁</div><div class="b"><div class="t">בדיקות-חוזרות דו-כיווניות</div><div class="d">המודד מסמן תקין/לא-תקין/לשפר/לשדרג → חוזר אליי; verdict "לא-תקין" פותח-מחדש (כלום לא-נאבד)</div></div><span class="tag done">v0.3–0.5</span></div>
+  <div class="row"><div class="ic">🐞</div><div class="b"><div class="t">"הבאגים שלי" + סטטוס</div><div class="d">המודד רואה את דיווחיו + סטטוס (התקבל/בטיפול/תוקן/נסגר) + צילום</div></div><span class="tag done">v0.5</span></div>
+  <div class="row"><div class="ic">📐</div><div class="b"><div class="t">3 דפי-אפיון חיים</div><div class="d">מנוע-מדידה · מחזור-פרויקט · טופס-QA-שטח</div></div><span class="tag done">פעיל</span></div>
+
+  <div class="grp">פיצ'רים ותיקונים ששוחררו</div>
+  <div class="row"><div class="ic">📏</div><div class="b"><div class="t">יחידות בס"מ בכל-המסכים</div></div><span class="tag done">v0.3 · אומת</span></div>
+  <div class="row"><div class="ic">📡</div><div class="b"><div class="t">הסרת כפתור-לייזר כפול ממסך-הבית</div></div><span class="tag done">v0.4 · אומת</span></div>
+  <div class="row"><div class="ic">🏠</div><div class="b"><div class="t">פישוט מסך-הבית</div><div class="d">בלי 'פעולות מהירות' / 'ניהול מדידות' / 'לו"ז היום' — פתיחת-פרויקט מסודרת בלבד</div></div><span class="tag done">v0.5 · אומת</span></div>
+  <div class="row"><div class="ic">🖥️</div><div class="b"><div class="t">מצב-immersive מלא</div><div class="d">כל סרגלי-הטאבלט מוסתרים, חוזרים בהחלקה</div></div><span class="tag done">v0.5 · אומת</span></div>
+  <div class="row"><div class="ic">📤</div><div class="b"><div class="t">"סגירת פרויקט והגשה"</div><div class="d">ניסוח + מיקום אחרי-הסגירה</div></div><span class="tag done">v0.5</span></div>
+
+  <!-- ===== v0.6 ===== -->
+  <h2>🟠 מוכן ב-v0.6 (ממתין לשחרורך)</h2>
+  <div class="row"><div class="ic">♻️</div><div class="b"><div class="t">איפוס-מיידי בבדיקות-פתוחות</div><div class="d">פריט שנענה נעלם מיד ולא-חוזר בפתיחה-מחדש</div></div><span class="tag v6">v0.6</span></div>
+  <div class="row"><div class="ic">📤</div><div class="b"><div class="t">"הגשת פרויקט"</div><div class="d">שינוי-טקסט — המודד לא צריך לדעת שיש ממיר (בקשת-מודד)</div></div><span class="tag v6">v0.6</span></div>
+  <div class="row"><div class="ic">#️⃣</div><div class="b"><div class="t">כותרת-באג = מספר-סידורי (#0001)</div><div class="d">+ ארכיון לבאגים-סגורים ב"הבאגים שלי"</div></div><span class="tag v6">v0.6</span></div>
+  <div class="row"><div class="ic">🎯</div><div class="b"><div class="t">מירכוז-לוגו + ברכה בשם-המודד</div></div><span class="tag v6">v0.6</span></div>
+  <div class="row"><div class="ic">🧹</div><div class="b"><div class="t">ניקוי-הגדרות</div><div class="d">הסרת "סוג עבודה" + רשימת-הבאגים; הסרת טלפון-לקוח מהאינטייק</div></div><span class="tag v6">v0.6</span></div>
+  <div class="row"><div class="ic">🗑️</div><div class="b"><div class="t">"מחיקת פרויקט" חזרה — במקום נסתר</div></div><span class="tag v6">v0.6</span></div>
+
+  <!-- ===== פתוח ===== -->
+  <h2>📋 פתוח — לאפיון (הגל הבא)</h2>
+  <div class="grp">🗂️ טופס-פתיחת-פרויקט (אינטייק)</div>
+  <div class="row"><div class="ic">📝</div><div class="b"><div class="t">טופס-אינטייק מסודר → מוצג בדו"ח כ"תעודת-משלוח"</div><div class="d">שם-פרויקט=שם-לקוח + פרטים · כתובת מובנית (בית/קומה/דירה/כניסה) · שאלות-גישה למוביל + צילום-גישה · מידות-מעלית (ג/ר/ע) בלייזר-D2 · "פרטים נוספים"</div></div><span class="tag plan">אפיון</span></div>
+  <div class="grp">💾 גיבוי · שחזור · לקוחות</div>
+  <div class="row"><div class="ic">💾</div><div class="b"><div class="t">גיבוי-אוטומטי + מבנה-תיקיות</div><div class="d">מפעל→פרויקט→חדרים; כל שמירה+תמונות ל-Drive; מאגר-לקוחות/מפעלים קבועים</div></div><span class="tag plan">אפיון</span></div>
+  <div class="row"><div class="ic">☁️</div><div class="b"><div class="t">פתיחת/שחזור פרויקט מ-Drive (.sol)</div><div class="d">+ מדיניות-שמירה: שבוע מקומי ואז ניקוי, נשאר ב-Drive</div></div><span class="tag plan">אפיון</span></div>
+  <div class="grp">📐 מנוע-מדידה + שערי-QA</div>
+  <div class="row"><div class="ic">📐</div><div class="b"><div class="t">מנוע-מדידה מאוחד (3 שיטות)</div><div class="d">לייזר-יד · P2P-חצובה · מטר; מסך-אחד, מתאר-מתמשך</div></div><span class="tag plan">אפיון</span></div>
+  <div class="row"><div class="ic">📐</div><div class="b"><div class="t">שיפוע רצפה/תקרה · 0+2 נקודות רב-עמדתי</div></div><span class="tag plan">אפיון</span></div>
+  <div class="row"><div class="ic">📏</div><div class="b"><div class="t">גבהים ≥5/חדר + מינ/מקס · רוחב-קיר מינ/מקס</div></div><span class="tag plan">אפיון</span></div>
+  <div class="row"><div class="ic">✅</div><div class="b"><div class="t">אישור-3D · ריכוך-שער-סגירה · workflow-חזיתות+צילומים</div></div><span class="tag plan">אפיון</span></div>
+  <div class="grp">🔧 ייצוא ולייזר</div>
+  <div class="row"><div class="ic">📦</div><div class="b"><div class="t">איכות ORD-export (Allmoxy)</div><div class="d">פירוק-חלקים · חומר/edgeband/כיוון-סיב · בורר מקס/מין</div></div><span class="tag plan">אפיון</span></div>
+  <div class="row"><div class="ic">📡</div><div class="b"><div class="t">השלמת X6/DST streaming</div><div class="d">זוויות/מידות מהמכשיר (DIST עובד; זוויות דורשות Measure-3D)</div></div><span class="tag wip">בטיפול</span></div>
+
+  <!-- ===== איך מתקדמים ===== -->
+  <h2>🧭 איך מתקדמים</h2>
+  <div class="phase cur"><h3><span class="num">0</span>עכשiv — שחרור v0.6</h3><p class="why">10 נצחונות-מהירים מוכנים. לבנות סופית ולהפיץ → המודד מעדכן ובודק.</p></div>
+  <div class="phase"><h3><span class="num">1</span>טופס-פתיחת-פרויקט</h3><p class="why">הבסיס לכל פרויקט — מגדיר את הדו"ח ואת המבנה. מאפיינים בדף מחזור-פרויקט, ואז בונים.</p>
+    <ul><li>שם=לקוח + כתובת-מובנית + שאלות-גישה + צילום-גישה</li><li>מידות-מעלית בלייזר · פרטים-נוספים</li><li>הפרטים מוצגים בדו"ח-המדידה</li></ul></div>
+  <div class="phase"><h3><span class="num">2</span>גיבוי · שחזור · מאגר-לקוחות</h3><p class="why">שהעבודה לא-תאבד ותסודר: מפעל→פרויקט→חדרים אוטומטית, גיבוי-כל-שמירה, פתיחה מ-Drive.</p></div>
+  <div class="phase"><h3><span class="num">3</span>מנוע-המדידה + שערי-QA</h3><p class="why">הלב: 3-שיטות במסך-אחד + הבקרות מטופס-ה-QA (שיפוע, גבהים-5, אישור-3D, חזיתות, ריכוך-סגירה).</p></div>
+  <div class="phase"><h3><span class="num">4</span>ייצוא ולייזר</h3><p class="why">איכות ORD למפעל (Allmoxy) + בורר-ייצוא + השלמת X6/DST.</p></div>
+
+  <div style="margin-top:18px">
+    <div class="grp">דפי-אפיון חיים (לפירוט + החלטות):</div>
+    <div class="lk">
+      <a href="https://claude.ai/code/artifact/20eb3165-46c3-4ae0-9dd0-23daa3a4380d">📐 מנוע-מדידה</a>
+      <a href="https://claude.ai/code/artifact/61f20178-43e0-4197-b6f9-78c0748e2a4c">🗂️ מחזור-פרויקט</a>
+      <a href="https://claude.ai/code/artifact/49e0fd93-a222-4cc8-9c7c-8938fae28c2d">📋 טופס-QA שטח</a>
+    </div>
+  </div>
+
+  <footer>Soline — מפת-דרכים · דף-צפייה · קלט דרך צ'אט / 🐞 באפליקציה</footer>
+</div>

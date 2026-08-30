@@ -186,16 +186,13 @@ fun HomeScreen(nav: NavController, modifier: Modifier = Modifier) {
 @Composable
 private fun TopBar(onSettings: () -> Unit) {
     Surface(color = Color.White, shadowElevation = 2.dp) {
-        Row(
-            Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Column(Modifier.weight(1f)) {
+        // לוגו ממורכז (בקשת-המודד), גלגל-הגדרות בקצה. חיבור-לייזר עבר לסרגל-הכלים (📡).
+        Box(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp)) {
+            Column(Modifier.align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
                 Text("soline", fontSize = 26.sp, fontWeight = FontWeight.Bold, color = Orange, lineHeight = 28.sp)
                 Text("SMART SPATIAL SOLUTIONS", fontSize = 10.sp, color = Teal, letterSpacing = 2.sp)
             }
-            // חיבור-לייזר עבר לסרגל-הכלים הצדדי (📡) + מסך-מכשירים — הוסר מדף-הבית למניעת כפילות.
-            IconButton(onClick = onSettings) {
+            IconButton(onClick = onSettings, modifier = Modifier.align(Alignment.CenterEnd)) {
                 Icon(Icons.Default.Settings, contentDescription = "הגדרות", tint = Muted)
             }
         }
@@ -205,8 +202,9 @@ private fun TopBar(onSettings: () -> Unit) {
 // ── ברכה + תאריך ────────────────────────────────────────────────────────────
 @Composable
 private fun Greeting(today: LocalDate) {
+    val name by il.co.soline.measure.data.Prefs.surveyorNameState
     Column(Modifier.padding(top = 4.dp, bottom = 2.dp)) {
-        Text("שלום", fontSize = 15.sp, color = Muted)
+        Text(if (name.isBlank()) "שלום" else "שלום, $name", fontSize = 15.sp, color = Muted)
         Text("לוח הבקרה שלך להיום", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Ink)
         Text(hebrewDate(today), fontSize = 13.sp, color = Teal, modifier = Modifier.padding(top = 4.dp))
     }

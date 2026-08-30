@@ -344,6 +344,7 @@ fun ProjectRoomsScreen(nav: NavController, projectId: Long) {
     val project by repo.project(projectId).collectAsStateWithLifecycle(null)
     var showAdd by remember { mutableStateOf(false) }
     var roomToDelete by remember { mutableStateOf<il.co.soline.measure.data.RoomEntity?>(null) }
+    var showDeleteProject by remember { mutableStateOf(false) }
     // שער-ייצוא (A8): מס' ממצאי-חסימה שנמצאו לפני-ייצוא (null=לא-נבדק/אין-דיאלוג).
     var exportBlocks by remember { mutableStateOf<Int?>(null) }
 
@@ -393,7 +394,7 @@ fun ProjectRoomsScreen(nav: NavController, projectId: Long) {
                     }
                 },
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-            ) { Text("📤  סגירת פרויקט והגשה (ייצוא לממיר)") }
+            ) { Text("📤  הגשת פרויקט") }
             if (rooms.isEmpty()) EmptyHint("אין חדרים. הקש + כדי להוסיף חדר.")
             else LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(16.dp)) {
                 items(rooms, key = { it.id }) { r ->
@@ -412,6 +413,13 @@ fun ProjectRoomsScreen(nav: NavController, projectId: Long) {
                             }
                         }
                     }
+                }
+                // מחיקת-פרויקט — נסתר בתחתית (הנתונים ממילא נשמרים ב-Drive). בקשת-מודד 180924.
+                item {
+                    TextButton(
+                        onClick = { showDeleteProject = true },
+                        modifier = Modifier.fillMaxWidth().padding(top = 20.dp),
+                    ) { Text("מחיקת פרויקט זה מהמכשיר", fontSize = 12.sp, color = Muted) }
                 }
             }
         }
@@ -441,7 +449,21 @@ fun ProjectRoomsScreen(nav: NavController, projectId: Long) {
             onDismiss = { roomToDelete = null },
         )
     }
-    // מחיקת-פרויקט הוסרה מהממשק: פרויקטים מגובים אוטומטית ל-Drive ומתנקים מקומית לאחר-שבוע.
+    if (showDeleteProject) {
+        project?.let { p ->
+            ConfirmDialog(
+                title = "מחיקת פרויקט \"${p.name}\" מהמכשיר",
+                message = "הפרויקט יימחק מהמכשיר. הנתונים נשמרים בגיבוי ב-Drive וניתן לשחזר משם.",
+                confirmLabel = "מחק",
+                onConfirm = {
+                    scope.launch { repo.deleteProject(p) }
+                    showDeleteProject = false
+                    nav.popBackStack()
+                },
+                onDismiss = { showDeleteProject = false },
+            )
+        } ?: run { showDeleteProject = false }
+    }
     if (showAdd) {
         val name = remember { mutableStateOf("") }
         FormDialog("חדר חדש", onDismiss = { showAdd = false }, onConfirm = {

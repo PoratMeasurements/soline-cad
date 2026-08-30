@@ -62,17 +62,19 @@ object RetestSync {
             val text = context.contentResolver.openInputStream(fileUri)
                 ?.use { it.readBytes().toString(Charsets.UTF_8) } ?: return emptyList()
             val arr = JSONObject(text).optJSONArray("items") ?: return emptyList()
+            val done = respondedSet(context) // סינון מיידי-וקבוע של פריטים שכבר-נענו
             (0 until arr.length()).mapNotNull { i ->
                 val o = arr.optJSONObject(i) ?: return@mapNotNull null
                 val id = o.optString("id")
                 if (id.isBlank()) return@mapNotNull null
-                RetestItem(
+                val item = RetestItem(
                     id = id,
                     title = o.optString("title"),
                     screen = o.optString("screen"),
                     fixed = o.optString("fixed"),
                     version = o.optString("version"),
                 )
+                if (done.contains(respondedKey(item))) null else item
             }
         } catch (_: Exception) {
             emptyList()
@@ -135,10 +137,26 @@ object RetestSync {
             ) ?: return false
             context.contentResolver.openOutputStream(target)
                 ?.use { it.write(json.toByteArray(Charsets.UTF_8)) }
+            markResponded(context, item) // איפוס-מיידי-וקבוע: לא-יחזור בפתיחה-מחדש
             true
         } catch (_: Exception) {
             false
         }
+    }
+
+    // ── רשומת "נענו" קבועה (SharedPreferences) — מפתח id|version כדי שבדיקה-חוזרת אחרי-תיקון תחזור ──
+    private fun respondedKey(item: RetestItem) = item.id + "|" + item.version
+
+    private fun respondedSet(context: Context): Set<String> {
+        val sp = context.getSharedPreferences("soline_retest", Context.MODE_PRIVATE)
+        return sp.getStringSet("responded", emptySet()) ?: emptySet()
+    }
+
+    private fun markResponded(context: Context, item: RetestItem) {
+        val sp = context.getSharedPreferences("soline_retest", Context.MODE_PRIVATE)
+        val cur = HashSet(sp.getStringSet("responded", emptySet()) ?: emptySet())
+        cur.add(respondedKey(item))
+        sp.edit().putStringSet("responded", cur).apply()
     }
 
     /** מאתר document-id של קובץ-בשם-נתון בשורש-ה-tree (בלי לרדת לתת-תיקיות). */

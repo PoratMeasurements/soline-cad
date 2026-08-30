@@ -45,6 +45,7 @@ import java.io.File
  */
 
 private data class MyBug(
+    val serial: Int,
     val id: String,
     val createdAt: String,
     val screen: String,
@@ -60,17 +61,21 @@ fun MyBugsScreen(nav: NavController) {
     var bugs by remember { mutableStateOf<List<MyBug>?>(null) }
     var refreshKey by remember { mutableStateOf(0) }
     var viewImg by remember { mutableStateOf<String?>(null) }
+    var showArchive by remember { mutableStateOf(false) }
 
     LaunchedEffect(refreshKey) {
         bugs = withContext(Dispatchers.IO) {
             val statuses = RetestSync.loadBugStatuses(context)
-            BugReportStore.list(context.filesDir).map { sr ->
+            val raw = BugReportStore.list(context.filesDir) // חדש-קודם
+            val n = raw.size
+            raw.mapIndexed { i, sr ->
                 val notes = try {
                     if (sr.json.name.endsWith(".json") && sr.json.exists())
                         BugReportBundle.fromJsonString(sr.json.readText(Charsets.UTF_8)).notes
                     else ""
                 } catch (_: Exception) { "" }
-                MyBug(sr.baseName, sr.createdAt, sr.screen, notes, sr.png.absolutePath, statuses[sr.baseName])
+                // מספר-סידורי כרונולוגי: הישן-ביותר = #0001
+                MyBug(n - i, sr.baseName, sr.createdAt, sr.screen, notes, sr.png.absolutePath, statuses[sr.baseName])
             }
         }
     }
@@ -109,21 +114,45 @@ fun MyBugsScreen(nav: NavController) {
                         subtitle = "כשתלחץ על 🐞 בכל מסך ותשלח דיווח — הוא יופיע כאן עם הסטטוס שלו.",
                     )
                 }
-                else -> LazyColumn(
-                    modifier = Modifier.padding(pad).fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    item {
-                        Text(
-                            "הבאגים שדיווחת והסטטוס שלהם. לכתיבה — 🐞 בכל מסך; לאימות תיקון — 'בדיקות פתוחות'.",
-                            fontSize = 13.sp, color = Muted,
-                        )
+                else -> {
+                    val active = list.filter { it.status?.status != BugStage.CLOSED }
+                    val archived = list.filter { it.status?.status == BugStage.CLOSED }
+                    LazyColumn(
+                        modifier = Modifier.padding(pad).fillMaxSize(),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        item {
+                            Text(
+                                "הבאגים שדיווחת והסטטוס שלהם. לכתיבה — 🐞 בכל מסך; לאימות תיקון — 'בדיקות פתוחות'.",
+                                fontSize = 13.sp, color = Muted,
+                            )
+                        }
+                        items(active, key = { it.id }) { b ->
+                            MyBugCard(b, onView = { viewImg = b.pngPath })
+                        }
+                        if (archived.isNotEmpty()) {
+                            item {
+                                Surface(
+                                    onClick = { showArchive = !showArchive },
+                                    shape = RoundedCornerShape(12.dp),
+                                    color = Color.Transparent,
+                                ) {
+                                    Text(
+                                        (if (showArchive) "▾ " else "▸ ") + "🗄️ ארכיון (סגורים · ${archived.size})",
+                                        fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Muted,
+                                        modifier = Modifier.padding(vertical = 8.dp),
+                                    )
+                                }
+                            }
+                            if (showArchive) {
+                                items(archived, key = { it.id }) { b ->
+                                    MyBugCard(b, onView = { viewImg = b.pngPath })
+                                }
+                            }
+                        }
+                        item { Spacer(Modifier.height(24.dp)) }
                     }
-                    items(list, key = { it.id }) { b ->
-                        MyBugCard(b, onView = { viewImg = b.pngPath })
-                    }
-                    item { Spacer(Modifier.height(24.dp)) }
                 }
             }
         }
@@ -141,14 +170,17 @@ private fun MyBugCard(b: MyBug, onView: () -> Unit) {
         Column(Modifier.fillMaxWidth().padding(2.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
-                    val title = b.notes.lineSequence().firstOrNull()?.takeIf { it.isNotBlank() } ?: "דיווח ${b.screen}"
-                    Text(title, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Ink, maxLines = 2)
+                    // כותרת = מספר-סידורי רץ (#0001) + מסך; טקסט-הדיווח מוצג בגוף.
                     Text(
-                        listOf(b.screen, dateOf(b)).filter { it.isNotBlank() }.joinToString(" · "),
-                        fontSize = 12.sp, color = Muted, modifier = Modifier.padding(top = 2.dp),
+                        "#%04d".format(b.serial) + " · " + b.screen,
+                        fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Ink, maxLines = 1,
                     )
+                    Text(dateOf(b), fontSize = 12.sp, color = Muted, modifier = Modifier.padding(top = 2.dp))
                 }
                 StatusBadge(b.status?.status)
+            }
+            b.notes.lineSequence().firstOrNull()?.takeIf { it.isNotBlank() }?.let { desc ->
+                Text(desc, fontSize = 13.sp, color = Ink, maxLines = 3, modifier = Modifier.padding(top = 6.dp))
             }
             // הערת-מיכאל (אם פורסמה)
             b.status?.note?.takeIf { it.isNotBlank() }?.let { note ->

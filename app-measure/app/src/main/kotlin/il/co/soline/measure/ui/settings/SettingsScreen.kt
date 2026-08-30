@@ -178,15 +178,7 @@ fun SettingsScreen(
                         )
                     }
 
-                    // ---- עבודה ----
-                    Section("עבודה") {
-                        DropdownRow(
-                            label = "סוג עבודה ברירת-מחדל",
-                            selected = jobType,
-                            options = Prefs.jobTypes,
-                            onSelectIndex = { Prefs.defaultJobType = Prefs.jobTypes[it] }
-                        )
-                    }
+                    // "סוג עבודה" הוסר לבקשת-המודד (175102) — ברירת-המחדל נשארת פנימית.
 
                     // ---- שיתוף-מיקום לשיפור-השירות (privacy-by-design) ----
                     Section("שיתוף-מיקום לשיפור-השירות") {
@@ -305,8 +297,7 @@ fun SettingsScreen(
                         )
                     }
 
-                    // ---- דיווחי-באגים ----
-                    BugReportsSection(context = context)
+                    // רשימת-דיווחי-הבאגים הוסרה מההגדרות (175419) — עברה למסך "הבאגים שלי".
 
                     Spacer(Modifier.height(8.dp))
                 }

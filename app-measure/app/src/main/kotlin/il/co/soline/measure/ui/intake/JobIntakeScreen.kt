@@ -132,7 +132,7 @@ fun JobIntakeScreen(
             // ── פרטי הלקוח-הפרטי ──
             Section("פרטי הלקוח") {
                 BigField(clientName, { clientName = it }, "שם הלקוח *")
-                BigField(clientPhone, { clientPhone = it }, "טלפון / נייד", KeyboardType.Phone)
+                // טלפון-לקוח הוסר לבקשת-המודד (180529) — לא-רלוונטי בשלב-האינטייק.
                 BigField(contact, { contact = it }, "איש-קשר באתר")
                 BigField(email, { email = it }, "אימייל", KeyboardType.Email)
             }
