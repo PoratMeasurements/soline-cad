@@ -32,6 +32,8 @@ import il.co.soline.measure.ui.Teal
 import il.co.soline.measure.ui.draw.LiveCadScreen
 import il.co.soline.measure.ui.measure.MeasureCaptureScreen
 import il.co.soline.measure.ui.p2p.P2PMeasureScreen
+import il.co.soline.measure.ui.semiauto.SemiAutoOutlineScreen
+import il.co.soline.measure.ui.template.RoomTemplateWizard
 import kotlinx.coroutines.launch
 
 /*
@@ -45,6 +47,8 @@ private enum class Tool(val glyph: String, val label: String) {
     LASER("📡", "לייזר"),
     DRAW("✏️", "שרטוט"),
     P2P("🎯", "P2P"),
+    TEMPLATE("▭", "תבנית"),
+    SEMIAUTO("✎", "היקף"),
 }
 
 @Composable
@@ -88,6 +92,26 @@ fun UnifiedMeasureHost(nav: NavController, roomId: Long) {
                     }
                 },
                 onBack = { tool = Tool.LASER },
+            )
+            Tool.TEMPLATE -> RoomTemplateWizard(
+                defaultHeightMm = Prefs.defaultWallHeightMm,
+                onCreate = { newWalls ->
+                    scope.launch {
+                        for (w in newWalls) repo.addWall(roomId, w.length, if (w.height > 0) w.height else Prefs.defaultWallHeightMm, w.angle)
+                        tool = Tool.DRAW
+                    }
+                },
+                onBack = { tool = Tool.DRAW },
+            )
+            Tool.SEMIAUTO -> SemiAutoOutlineScreen(
+                roomId = roomId,
+                onDone = { newWalls ->
+                    scope.launch {
+                        for (w in newWalls) repo.addWall(roomId, w.length, if (w.height > 0) w.height else Prefs.defaultWallHeightMm, w.angle)
+                        tool = Tool.DRAW
+                    }
+                },
+                onBack = { tool = Tool.DRAW },
             )
         }
 

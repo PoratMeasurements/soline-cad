@@ -526,46 +526,13 @@ fun RoomScreen(nav: NavController, roomId: Long) {
                     onSetChanges = { ch -> scope.launch { repo.setRoomFutureChanges(roomId, ch) } },
                 )
             }
-            // מנוע-המדידה המאוחד — מסך-אחד לכל-השיטות (לייזר/שרטוט/P2P) על אותו מתאר.
+            // מסך-מדידה אחד: כל שיטות-המדידה (לייזר · שרטוט · P2P · תבנית · היקף) בתוכו.
             Button(
                 onClick = { nav.navigate("unified/$roomId") },
                 colors = ButtonDefaults.buttonColors(containerColor = OkGreen),
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).heightIn(min = 56.dp),
-            ) { Text("🎛️  מנוע-מדידה מאוחד (לייזר · שרטוט · P2P)", fontWeight = FontWeight.Bold) }
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).heightIn(min = 64.dp),
+            ) { Text("🎛️  מדידת החדר — מסך-אחד לכל-השיטות", fontWeight = FontWeight.Bold, fontSize = 17.sp) }
             Spacer(Modifier.height(10.dp))
-            Text(
-                "הכלים הנפרדים (למטה) נשמרים עד שהמנוע-המאוחד יוכח בשטח.",
-                fontSize = 11.sp, color = Muted, modifier = Modifier.padding(horizontal = 16.dp),
-            )
-            Spacer(Modifier.height(6.dp))
-            Button(
-                onClick = { nav.navigate("template/$roomId") },
-                colors = ButtonDefaults.buttonColors(containerColor = Teal),
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-            ) { Text("▭  אשף תבניות חדר (מלבן/L/U/T/Z)") }
-            Spacer(Modifier.height(6.dp))
-            Button(
-                onClick = { nav.navigate("draw/$roomId") },
-                colors = ButtonDefaults.buttonColors(containerColor = Orange),
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-            ) { Text("🖉  שרטוט חי (CAD · קשת)") }
-            Spacer(Modifier.height(6.dp))
-            Button(
-                onClick = { nav.navigate("measure/$roomId") },
-                colors = ButtonDefaults.buttonColors(containerColor = Orange),
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-            ) { Text("📐  מדידה חיה (לייזר → קיר)") }
-            Spacer(Modifier.height(6.dp))
-            OutlinedButton(
-                onClick = { nav.navigate("semiauto/$roomId") },
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-            ) { Text("✎  שרטוט חצי-אוטומטי (היקף-החדר)") }
-            Spacer(Modifier.height(6.dp))
-            OutlinedButton(
-                onClick = { nav.navigate("p2p/$roomId") },
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-            ) { Text("📐  מדידת P2P (X6 · בניית-זוויות + T)") }
-            Spacer(Modifier.height(6.dp))
             Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
                 OutlinedButton(onClick = { nav.navigate("view3d/$roomId") }, modifier = Modifier.weight(1f)) { Text("🧊 תלת-מימד") }
                 Spacer(Modifier.width(8.dp))
