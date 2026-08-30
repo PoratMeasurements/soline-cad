@@ -1,16 +1,31 @@
 package il.co.soline.measure.ui.unified
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,7 +42,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import il.co.soline.measure.data.Prefs
 import il.co.soline.measure.data.SolineApp
+import il.co.soline.measure.data.WallEntity
+import il.co.soline.measure.ui.Cream
 import il.co.soline.measure.ui.Ink
+import il.co.soline.measure.ui.Muted
 import il.co.soline.measure.ui.Teal
 import il.co.soline.measure.ui.draw.LiveCadScreen
 import il.co.soline.measure.ui.measure.MeasureCaptureScreen
@@ -49,6 +67,7 @@ private enum class Tool(val glyph: String, val label: String) {
     P2P("🎯", "P2P"),
     TEMPLATE("▭", "תבנית"),
     SEMIAUTO("✎", "היקף"),
+    ELEMENT("🚪", "אלמנט"),
 }
 
 @Composable
@@ -113,6 +132,11 @@ fun UnifiedMeasureHost(nav: NavController, roomId: Long) {
                 },
                 onBack = { tool = Tool.DRAW },
             )
+            Tool.ELEMENT -> ElementsPicker(
+                walls = walls,
+                onBack = { tool = Tool.DRAW },
+                onPick = { wid -> nav.navigate("wall/$wid") },
+            )
         }
 
         // ── סרגל-כלים צף (קטן, בקצה-ההתחלה) ──
@@ -134,6 +158,54 @@ private fun BoxScope.ToolRail(current: Tool, onSelect: (Tool) -> Unit) {
         ) {
             Tool.entries.forEach { t ->
                 RailBtn(t.glyph, t.label, active = t == current) { onSelect(t) }
+            }
+        }
+    }
+}
+
+/** כלי-אלמנטים: בוחר קיר → פותח את עורך-האלמנטים שלו (WallScreen הקיים). */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ElementsPicker(walls: List<WallEntity>, onBack: () -> Unit, onPick: (Long) -> Unit) {
+    Scaffold(
+        containerColor = Cream,
+        topBar = {
+            TopAppBar(
+                title = { Text("הוספת אלמנט לקיר", fontWeight = FontWeight.Bold) },
+                navigationIcon = {
+                    IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "חזרה") }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White, titleContentColor = Ink),
+            )
+        },
+    ) { pad ->
+        Column(
+            Modifier.padding(pad).fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            Text("בחר קיר, ואז הוסף דלת / חלון / פתח / ארון / עמוד עם מידות.", fontSize = 13.sp, color = Muted)
+            if (walls.isEmpty()) {
+                Text("אין קירות עדיין — מדוד או שרטט קודם (📡 / ✏️).", fontSize = 14.sp, color = Muted)
+            } else {
+                walls.forEach { w ->
+                    Surface(
+                        onClick = { onPick(w.id) },
+                        shape = RoundedCornerShape(12.dp),
+                        color = Color.White,
+                        border = BorderStroke(1.dp, Teal.copy(alpha = 0.3f)),
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Text("🚪", fontSize = 20.sp)
+                            Spacer(Modifier.width(12.dp))
+                            Column(Modifier.weight(1f)) {
+                                Text("קיר ${w.idx + 1}", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Ink)
+                                Text("אורך ${Prefs.lenValue(w.length)}", fontSize = 12.sp, color = Muted)
+                            }
+                            Text("הוסף ◀", fontSize = 13.sp, color = Teal, fontWeight = FontWeight.SemiBold)
+                        }
+                    }
+                }
             }
         }
     }

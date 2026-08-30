@@ -509,7 +509,7 @@ fun RoomScreen(nav: NavController, roomId: Long) {
     var wallToDelete by remember { mutableStateOf<WallEntity?>(null) }
 
     Scaffold(containerColor = Cream, floatingActionButton = { AddFab { showAdd = true } }) { pad ->
-        Column(Modifier.padding(pad).fillMaxSize()) {
+        Column(Modifier.padding(pad).fillMaxSize().verticalScroll(rememberScrollState())) {
             BrandHeader("קירות החדר", onBack = { nav.popBackStack() })
             // ── פתיחת-מדידה: כיוון-כניסה (עדיפות) + מהלך-גבהים + שינויים-עתידיים ──
             room?.let { r ->
@@ -576,8 +576,8 @@ fun RoomScreen(nav: NavController, roomId: Long) {
             fit?.let { FitResults(it) }
 
             if (walls.isEmpty()) EmptyHint("אין קירות. הקש + כדי להוסיף קיר.")
-            else LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(16.dp)) {
-                items(walls, key = { it.id }) { w ->
+            else Column(Modifier.fillMaxWidth().padding(16.dp)) {
+                walls.forEach { w ->
                     val headSuffix = if (w.headStyle != "STRAIGHT") " · ראש: ${wallHeadLabel(w.headStyle)}" else ""
                     // שורת-קיר עם עריכה (ניווט) + מחיקת-קיר-בודד ישירה (A1/C1 בביקורת).
                     Card(
