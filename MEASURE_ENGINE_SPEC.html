@@ -46,6 +46,7 @@
   .dec.approved{border-inline-start:5px solid var(--ok)}.dec.discuss{border-inline-start:5px solid var(--warn)}.dec.change{border-inline-start:5px solid var(--change)}
   .dq{font-weight:800;font-size:16px;margin:0 0 4px}
   .dsub{font-size:13px;color:var(--muted);margin:0 0 12px}
+  .tchip{display:inline-block;font-size:10.5px;font-weight:800;color:var(--teal);border:1.5px solid var(--teal);border-radius:6px;padding:1px 7px;vertical-align:middle;margin-inline-end:5px}
   .opts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:11px}
   .ob{border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);border-radius:10px;padding:8px 13px;
     font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;transition:.12s}
@@ -85,11 +86,19 @@
 
 <script id="app-state" type="application/json">
 {"decisions":[
-{"id":"arch","q":"מבנה מסך-אחד מאוחד + סרגל-כלים בצד","sub":"מסך-מדידה אחד שמחליף את 6 המסכים הנפרדים; המודד בוחר כלי מסרגל-הצד, הכל על אותו שרטוט.","opts":["מאשר","לדיון","לשנות"],"choice":null,"comment":""},
-{"id":"outline","q":"מתאר-אחד מתמשך — מעבר-כלי לא-מוחק","sub":"כל הכלים כותבים לאותו מתאר (שמור ב-DB). המודד מחליף שיטה לפי-תנאי-השטח וממשיך על אותו שרטוט, בלי איפוס.","opts":["מאשר","לדיון","לשנות"],"choice":null,"comment":""},
-{"id":"phase1","q":"Phase-1 = 3 כלים לפני השאר","sub":"צייר-באצבע · הזרקת-לייזר · P2P — כדי לבדוק את ה-X6 מוקדם. השאר (תבניות/חצי-אוטומטי/אלכסון→זווית/קשת) ב-Phase-2.","opts":["מאשר","לדיון","לשנות"],"choice":null,"comment":""},
-{"id":"priority","q":"מהי שיטת-המדידה הכי-קריטית למודד בשטח?","sub":"עוזר לנו לתעדף את סדר-הבנייה של הכלים.","opts":["הזרקת-לייזר","P2P (X6+DST)","צייר-באצבע","תבניות-חדר"],"choice":null,"comment":""},
-{"id":"coexist","q":"להשאיר את המסכים-הישנים עד parity מלא","sub":"לא-למחוק את המסכים הקיימים עד שהמנוע-החדש מוכח בשטח — רשת-ביטחון.","opts":["מאשר","לדיון","לשנות"],"choice":null,"comment":""}
+{"id":"core","topic":"מנוע","q":"שיטת-הליבה ל-MVP","rec":"לייזר-ידני ראשון (הכי-נפוץ, ROI-מיידי); P2P שני; מטר-ידני תמיד-זמין","alt":"P2P ראשון → setup-כבד + סיכון-חומרה פתוח → מעכב-ערך","opts":["אושר","להכרעה","שאלות"],"choice":null,"comment":""},
+{"id":"trigger","topic":"UX","q":"טריגר-לכידה בשטח","rec":"כפתור-המכשיר כטריגר-ראשי + כפתור-מסך גיבוי (עבודת יד-אחת)","alt":"מסך-בלבד → שתי-ידיים, איטי, טעויות-אנוש","opts":["אושר","להכרעה","שאלות"],"choice":null,"comment":""},
+{"id":"level","topic":"מנוע","q":"שער-פילוס P2P","rec":"אישור-ידני חובה לפני ירי-ראשון (BLE לא-קורא פילוס אמין)","alt":"לסמוך/לדלג → מתאר-מעוות בשקט","opts":["אושר","להכרעה","שאלות"],"choice":null,"comment":""},
+{"id":"azimuth","topic":"מנוע","q":"עיגון-אזימוט P2P","rec":"טקס backsight/אפס-כיוון בתחילת-עמדה","alt":"אזימוט-שרירותי + סיבוב-בדיעבד → עבודת-תיקון","opts":["אושר","להכרעה","שאלות"],"choice":null,"comment":""},
+{"id":"zenith","topic":"מנוע","q":"מוסכמת זווית זנית↔אופק","rec":"זיהוי-אוטומטי + self-check (2-נק' אותו-גובה → Δh≈0); דורש בדיקת-חומרה","alt":"הנחה-קשיחה → סיכון-היפוך חישוב-P2P","opts":["אושר","להכרעה","שאלות"],"choice":null,"comment":""},
+{"id":"outlier","topic":"מנוע","q":"סף-חריגה בין-קריאות","rec":"2 ס״מ → keep/delete אדום (קיים), מוכלל לכל-מקור","alt":"סף פר-סוג-אלמנט → גמיש אך מורכב","opts":["אושר","להכרעה","שאלות"],"choice":null,"comment":""},
+{"id":"closure","topic":"גיאומטריה","q":"טיפול בשגיאת-סגירה","rec":"לסמן >2 ס״מ + הצעת-חלוקה (Bowditch)","alt":"תיקון-ידני-בלבד → פחות-מדויק","opts":["אושר","להכרעה","שאלות"],"choice":null,"comment":""},
+{"id":"provenance","topic":"מנוע","q":"פרובננס מטר-ידני","rec":"לתייג source + צבע-בדו״ח (אמון-נמוך)","alt":"יחס-שווה ללייזר → אובדן-שקיפות","opts":["אושר","להכרעה","שאלות"],"choice":null,"comment":""},
+{"id":"stations","topic":"גיאומטריה","q":"P2P עמדה-אחת מול רב-עמדתי","rec":"עמדה-אחת ל-MVP; רב-עמדתי (resection/traverse) ב-Phase-2","alt":"רב-עמדתי-מיד → מורכבות-יתר","opts":["אושר","להכרעה","שאלות"],"choice":null,"comment":""},
+{"id":"audio","topic":"UX","q":"חיווי-קולי","rec":"ביפ-אישור + צליל-שגיאה נבדל (ליבה); הקראה-קולית (אופציונלי)","alt":"ויזואלי-בלבד → טעויות כשלא-מסתכלים על-המסך","opts":["אושר","להכרעה","שאלות"],"choice":null,"comment":""},
+{"id":"sketch","topic":"ארכיטקטורה","q":"סקיצה (צייר-באצבע) כשכבה","rec":"שכבת-בסיס שכל-השיטות כותבות אליה — לא מקור-נתונים רביעי","alt":"מקור נפרד → כפילות-לוגיקה","opts":["אושר","להכרעה","שאלות"],"choice":null,"comment":""},
+{"id":"coexist","topic":"ארכיטקטורה","q":"דו-קיום עם המסכים-הישנים","rec":"להשאיר עד parity מלא — רשת-ביטחון","alt":"להחליף-מיד → סיכון-שטח","opts":["אושר","להכרעה","שאלות"],"choice":null,"comment":""},
+{"id":"fieldmode","topic":"UX","q":"מצב-שדה (שמש/אבק)","rec":"high-contrast + פונט-ענק + glove-mode","alt":"תמה-אחת → קריאות-נמוכה בשטח","opts":["אושר","להכרעה","שאלות"],"choice":null,"comment":""}
 ],
 "chat":[]}
 </script>
@@ -101,7 +110,7 @@
   var artifact=null, canWrite=true, msg='', chatOpen=false, chatText='', role='p';
   try{ role=localStorage.getItem('sol_spec_role')||'p'; }catch(e){}
   function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-  var CLS={"מאשר":"ok","לדיון":"discuss","לשנות":"change"};
+  var CLS={"אושר":"ok","להכרעה":"discuss","שאלות":"change","הזרקת-לייזר":"ok","P2P (X6+DST)":"ok","צייר-באצבע":"ok","תבניות-חדר":"ok"};
   var tmr={};
 
   function buildDoc(s){
@@ -136,7 +145,7 @@
     h+='<p class="lead">מסך-מדידה אחד שמחליף את 6 המסכים הנפרדים — המודד בוחר את הכלי הכי-מתאים לתנאי-השטח וממשיך על אותו שרטוט. לפני שנתחיל פיתוח — נאשר את האפיון יחד.<\/p>';
     if(!artifact) h+='<div class="banner">טוען…<\/div>';
     else if(!canWrite) h+='<div class="banner ro"><b>מצב-צפייה.<\/b> לסימון-החלטות — בקש גישת-עריכה (Share → יכול לערוך).<\/div>';
-    else h+='<div class="banner"><b>איך מחליטים:<\/b> לכל סעיף בחר <b>מאשר / לדיון / לשנות<\/b> והוסף הערה. נשמר אוטומטית וחוזר לצוות-הפיתוח. שאלות פתוחות → צ\'אט 💬.<\/div>';
+    else h+='<div class="banner"><b>איך מחליטים:<\/b> לכל שורה קרא את <b>המלצתי<\/b> ואת החלופה, ובחר <b>אושר / להכרעה / שאלות<\/b> + הערה. נשמר אוטומטית וחוזר לצוות-הפיתוח. דיון פתוח → צ\'אט 💬.<\/div>';
 
     // ── ארכיטקטורה ──
     h+='<h2><span class="n">A<\/span>העיקרון<\/h2>';
@@ -161,7 +170,8 @@
     state.decisions.forEach(function(d){
       var cl=d.choice?(CLS[d.choice]||''):'';
       h+='<div class="dec '+cl+'">';
-      h+='<p class="dq">'+esc(d.q)+'<\/p><p class="dsub">'+esc(d.sub)+'<\/p>';
+      h+='<p class="dq"><span class="tchip">'+esc(d.topic||'')+'<\/span> '+esc(d.q)+'<\/p>';
+      h+='<p class="dsub"><b style="color:var(--teal)">המלצתי:<\/b> '+esc(d.rec||d.sub||'')+(d.alt?'<br><b>חלופה:<\/b> '+esc(d.alt):'')+'<\/p>';
       h+='<div class="opts">';
       d.opts.forEach(function(o){ var on=d.choice===o; var ocl=CLS[o]||'ok';
         h+='<button class="ob '+ocl+'" aria-pressed="'+on+'" '+(canWrite?'':'disabled ')+'data-dec="'+d.id+'" data-opt="'+esc(o)+'">'+esc(o)+'<\/button>'; });
