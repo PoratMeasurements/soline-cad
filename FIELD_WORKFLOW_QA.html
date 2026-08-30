@@ -50,6 +50,11 @@
   .sb.done[aria-pressed=true]{background:var(--teal);border-color:var(--teal)}
   .sb.err[aria-pressed=true]{background:var(--err);border-color:var(--err)}
   .sb.ok[aria-pressed=true]{background:var(--ok);border-color:var(--ok)}
+  .inote{width:100%;margin-top:10px;border:1px dashed var(--accent);border-radius:9px;background:var(--surface2);color:var(--ink);
+    font-family:inherit;font-size:13px;padding:8px 11px;resize:vertical;min-height:34px}
+  .inote:focus{outline:2px solid var(--accent);outline-offset:1px;background:var(--surface)}
+  .inote::placeholder{color:var(--muted)}
+  .item.hasnote{border-inline-start-color:var(--accent)}
   .banner{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:11px 14px;font-size:13px;color:var(--muted);margin-bottom:14px}
   .banner b{color:var(--ink)}.banner.ro{border-inline-start:4px solid var(--warn)}
   .reset{background:transparent;border:1.5px solid var(--border);color:var(--muted);border-radius:99px;padding:5px 14px;font-family:inherit;font-weight:700;font-size:12px;cursor:pointer}
@@ -131,6 +136,9 @@
 
   function allItems(){ var a=[]; state.stations.forEach(function(s){ s.items.forEach(function(i){a.push(i);}); }); return a; }
   function setSt(id,st){ allItems().forEach(function(i){ if(i.id===id) i.st=st; }); render(); pub(); }
+  var ntmr={};
+  // הערה מקומית-בלבד (בלי render — נמנע ריצוד-מקלדת), פרסום מושהה כדי שאקרא משם
+  function setNote(id,txt){ allItems().forEach(function(i){ if(i.id===id) i.note=txt; }); clearTimeout(ntmr[id]); ntmr[id]=setTimeout(pub,1000); }
   function reset(){ allItems().forEach(function(i){ i.st="pend"; }); render(); pub(); }
   function counts(){ var c={pend:0,done:0,err:0,ok:0}; allItems().forEach(function(i){ c[i.st]=(c[i.st]||0)+1; }); return c; }
 
@@ -144,7 +152,7 @@
     h+='<p class="lead">צ\'קליסט-QA לשטח — מהרכב ועד ההגשה. מטרה: אפס-טעויות-אנוש ואפס-חזרה-שנייה לאתר. סמן לכל-משימה סטטוס.<\/p>';
     if(!artifact) h+='<div class="banner">טוען…<\/div>';
     else if(!canWrite) h+='<div class="banner ro"><b>מצב-צפייה.<\/b> לסימון — פתח בחשבון עם הרשאת-עריכה (הגרסה-לשטח תיבנה בתוך-האפליקציה).<\/div>';
-    else h+='<div class="banner"><b>איך עובדים:<\/b> לכל שורה — <b>ידני</b> (בקרת-מודד) או <b>אוטומטי</b> (בקרת-מערכת). בחר סטטוס: ממתין → בוצע → אושר (או שגיאה). ✓ = קריטריון-המעבר הושג.<\/div>';
+    else h+='<div class="banner"><b>איך עובדים:<\/b> לכל שורה — <b>ידני</b>/<b>אוטומטי</b> + סטטוס (ממתין→בוצע→אושר/שגיאה). <b>✍️ שדה-ההערה</b> בכל בקרה — כתוב שם <b>מה תרצה בפועל</b>, וקלוד יקרא משם וייישם.<\/div>';
     h+='<div class="prog"><div class="bar"><i style="width:'+pct+'%"><\/i><\/div><span>'+pct+'% אושר<\/span>'
       + (canWrite?' <button class="reset" id="rst">אפס טופס<\/button>':'') +'<\/div>';
 
@@ -152,19 +160,22 @@
       h+='<div class="stn"><span class="n">'+(idx+1)+'<\/span><span class="ic">'+s.ic+'<\/span>'
         +'<div><h2>'+esc(s.name)+'<\/h2><div class="c">'+esc(s.note)+'<\/div><\/div><\/div>';
       s.items.forEach(function(i){
-        h+='<div class="item '+(CLS[i.st]||'')+'">';
+        h+='<div class="item '+(CLS[i.st]||'')+((i.note&&i.note.trim())?' hasnote':'')+'">';
         h+='<div class="itop"><div class="it">'+esc(i.t)+'<\/div>'
           +'<span class="ctrl '+(i.c==='man'?'man':'auto')+'">'+(i.c==='man'?'ידני':'אוטו')+'<\/span><\/div>';
         h+='<div class="pass"><b>מעבר:<\/b> '+esc(i.pass)+'<\/div>';
         h+='<div class="sts">';
         STS.forEach(function(p){ var on=i.st===p[0];
           h+='<button class="sb '+p[0]+'" aria-pressed="'+on+'" '+(canWrite?'':'disabled ')+'data-id="'+i.id+'" data-st="'+p[0]+'">'+p[1]+'<\/button>'; });
-        h+='<\/div><\/div>';
+        h+='<\/div>';
+        h+='<textarea class="inote" data-note="'+i.id+'" placeholder="✍️ מה הייתי רוצה כאן בפועל… (קלוד יקרא מכאן)" '+(canWrite?'':'disabled')+'>'+esc(i.note||'')+'<\/textarea>';
+        h+='<\/div>';
       });
     });
     h+='<footer>Soline — טופס מחזור-חיי-פרויקט · '+(msg==='saving'?'שומר…':(msg==='saved'?'נשמר ✓':'מתעדכן חי'))+'<\/footer><\/div>';
     root.innerHTML=h;
     root.querySelectorAll('.sb').forEach(function(b){ b.onclick=function(){ if(canWrite) setSt(b.getAttribute('data-id'),b.getAttribute('data-st')); }; });
+    root.querySelectorAll('.inote').forEach(function(t){ t.oninput=function(){ if(canWrite) setNote(t.getAttribute('data-note'),t.value); }; });
     var r=document.getElementById('rst'); if(r) r.onclick=function(){ if(canWrite) reset(); };
   }
   render();
