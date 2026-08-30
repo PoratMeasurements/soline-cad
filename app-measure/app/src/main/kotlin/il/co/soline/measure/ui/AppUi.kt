@@ -384,22 +384,17 @@ fun ProjectRoomsScreen(nav: NavController, projectId: Long) {
     Scaffold(containerColor = Cream, floatingActionButton = { AddFab { showAdd = true } }) { pad ->
         Column(Modifier.padding(pad).fillMaxSize()) {
             BrandHeader("חדרים", onBack = { nav.popBackStack() })
-            // שער-סגירת-פרויקט: גישה-לאתר (פתיחה/סגירה) + כל-החדרים-הושלמו.
+            // סגירה והגשה — פעולה-אחת (בקשת-מודד 204418): שער-חסימות → ייצוא → גיבוי.
             Button(
-                onClick = { nav.navigate("closeproject/$projectId") },
-                colors = ButtonDefaults.buttonColors(containerColor = OkGreen),
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-            ) { Text("🔒  סגירת פרויקט (גישה + חדרים)") }
-            // הגשה: ייצוא-לממיר לאחר-הסגירה. שער-חסימות אם יש ממצאים.
-            OutlinedButton(
                 onClick = {
                     scope.launch {
                         val blocks = repo.projectBlockingIssues(projectId)
                         if (blocks > 0) exportBlocks = blocks else runExport()
                     }
                 },
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-            ) { Text("📤  הגשת פרויקט") }
+                colors = ButtonDefaults.buttonColors(containerColor = OkGreen),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp).heightIn(min = 56.dp),
+            ) { Text("🔒📤  סגירת פרויקט והגשה", fontWeight = FontWeight.Bold) }
             // גיבוי ידני ל-Drive (תיקיית-הלקוח/גיבוי) — מבנה: [לקוח]/[פרויקט]/<project>.sol
             OutlinedButton(
                 onClick = {
