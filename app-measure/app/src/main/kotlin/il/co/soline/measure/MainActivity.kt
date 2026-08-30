@@ -29,14 +29,14 @@ class MainActivity : ComponentActivity() {
     }
 
     /**
-     * מסתיר את סרגל-הניווט התחתון של הטאבלט (Michael: "מפריע לי למטה, חוסם לחיצות").
-     * הוא חוזר רגעית רק בהחלקה מקצה-המסך התחתון (BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE)
-     * ואז נעלם שוב — כך האייקונים למטה נגישים לכל רוחב-המסך.
-     * שורת-הסטטוס העליונה (שעה/סוללה) נשארת — לא נוגעים בה.
+     * מצב-immersive מלא — מסתיר את **כל** סרגלי-המערכת של הטאבלט (ניווט-תחתון + סטטוס-עליון),
+     * לפי בקשת-המודד ("הסרגל של הטאבלט מפריע — תסתיר אלא אם גללתי אותו למטה").
+     * הסרגלים חוזרים רגעית רק בהחלקה מקצה-המסך (BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE)
+     * ואז נעלמים שוב — כך כל שטח-המסך פנוי לתוכן-האפליקציה.
      */
     private fun hideNavBar() {
         val controller = WindowInsetsControllerCompat(window, window.decorView)
-        controller.hide(WindowInsetsCompat.Type.navigationBars())
+        controller.hide(WindowInsetsCompat.Type.systemBars())
         controller.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
     }

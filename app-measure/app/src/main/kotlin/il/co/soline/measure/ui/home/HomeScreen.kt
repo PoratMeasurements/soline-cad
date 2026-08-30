@@ -103,13 +103,11 @@ fun HomeScreen(nav: NavController, modifier: Modifier = Modifier) {
                         )
                     }
 
-                    // כניסות-ניהול: לו"ז + מדידות
+                    // כניסת-ניהול: לו"ז בלבד (המודד ביקש בלי 'ניהול מדידות')
                     item {
                         ManageRow(
                             todayCount = todayJobs.size,
-                            projectsCount = projects.size,
                             onSchedule = { nav.navigate("schedule") },
-                            onMeasurements = { nav.navigate("measurements") },
                         )
                     }
 
@@ -126,37 +124,13 @@ fun HomeScreen(nav: NavController, modifier: Modifier = Modifier) {
                         }
                     }
 
-                    // לו"ז-היום — מה על הפרק היום
-                    item {
-                        SectionHeaderLink(
-                            title = "לו\"ז היום",
-                            badge = if (todayJobs.isEmpty()) null else "${todayJobs.size}",
-                            linkText = "כל הלו\"ז",
-                            onLink = { nav.navigate("schedule") },
-                        )
-                    }
-                    if (todayJobs.isEmpty()) {
-                        item {
-                            EmptyState(
-                                emoji = "🗓️",
-                                title = "אין עבודות מתוזמנות להיום",
-                                subtitle = "תזמן עבודות במסך ניהול הלו\"ז כדי לראות אותן כאן.",
-                            )
-                        }
-                    } else {
-                        items(todayJobs.take(4), key = { it.id }) { job ->
-                            TodayJobCard(job) { nav.navigate("schedule") }
-                        }
-                    }
-
-                    // פעולות-שטח מהירות
-                    item { SectionHeader("פעולות מהירות") }
+                    // פתיחת-פרויקט מסודרת (בלי 'פעולות מהירות' — פותחים לפי הסכמה המסודרת)
+                    item { SectionHeader("פתיחת פרויקט") }
                     item {
                         PrimaryActions(
                             lastProjectName = lastProject?.name,
                             onNewJob = { nav.navigate("intake") },
                             onContinueLast = { lastProject?.let { nav.navigate("rooms/${it.id}") } },
-                            onNewProject = { showAdd = true },
                         )
                     }
 
@@ -269,22 +243,13 @@ private fun CellDivider() {
 @Composable
 private fun ManageRow(
     todayCount: Int,
-    projectsCount: Int,
     onSchedule: () -> Unit,
-    onMeasurements: () -> Unit,
 ) {
-    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        ManageCard(
-            emoji = "🗓️", title = "ניהול לו\"ז",
-            subtitle = if (todayCount > 0) "$todayCount עבודות היום" else "צפייה ותזמון",
-            accent = Teal, onClick = onSchedule, modifier = Modifier.weight(1f),
-        )
-        ManageCard(
-            emoji = "📐", title = "ניהול מדידות",
-            subtitle = if (projectsCount > 0) "$projectsCount פרויקטים" else "כל המדידות",
-            accent = Orange, onClick = onMeasurements, modifier = Modifier.weight(1f),
-        )
-    }
+    ManageCard(
+        emoji = "🗓️", title = "ניהול לו\"ז",
+        subtitle = if (todayCount > 0) "$todayCount עבודות היום" else "צפייה ותזמון עבודות",
+        accent = Teal, onClick = onSchedule, modifier = Modifier.fillMaxWidth(),
+    )
 }
 
 @Composable
@@ -414,11 +379,10 @@ private fun PrimaryActions(
     lastProjectName: String?,
     onNewJob: () -> Unit,
     onContinueLast: () -> Unit,
-    onNewProject: () -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         BigActionButton(
-            text = "פתיחת עבודה (נגר ← לקוח)",
+            text = "פתיחת פרויקט (פרטי-לקוח מלאים)",
             onClick = onNewJob,
             icon = Icons.Default.Add,
             container = Orange,
@@ -434,13 +398,6 @@ private fun PrimaryActions(
                 modifier = Modifier.fillMaxWidth(),
             )
         }
-        SolineButton(
-            text = "＋ פרויקט מהיר (ללא פרטי-לקוח)",
-            onClick = onNewProject,
-            style = SolineButtonStyle.SECONDARY,
-            accent = Orange,
-            modifier = Modifier.fillMaxWidth(),
-        )
     }
 }
 

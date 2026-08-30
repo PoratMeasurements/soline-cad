@@ -344,7 +344,6 @@ fun ProjectRoomsScreen(nav: NavController, projectId: Long) {
     val project by repo.project(projectId).collectAsStateWithLifecycle(null)
     var showAdd by remember { mutableStateOf(false) }
     var roomToDelete by remember { mutableStateOf<il.co.soline.measure.data.RoomEntity?>(null) }
-    var showDeleteProject by remember { mutableStateOf(false) }
     // שער-ייצוא (A8): מס' ממצאי-חסימה שנמצאו לפני-ייצוא (null=לא-נבדק/אין-דיאלוג).
     var exportBlocks by remember { mutableStateOf<Int?>(null) }
 
@@ -379,27 +378,22 @@ fun ProjectRoomsScreen(nav: NavController, projectId: Long) {
     Scaffold(containerColor = Cream, floatingActionButton = { AddFab { showAdd = true } }) { pad ->
         Column(Modifier.padding(pad).fillMaxSize()) {
             BrandHeader("חדרים", onBack = { nav.popBackStack() })
-            OutlinedButton(
-                onClick = {
-                    // שער-ייצוא: בודקים חסימות בכל-הפרויקט תחילה; אם יש — דיאלוג-אזהרה.
-                    scope.launch {
-                        val blocks = repo.projectBlockingIssues(projectId)
-                        if (blocks > 0) exportBlocks = blocks else runExport()
-                    }
-                },
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-            ) { Text("⬇  ייצוא לממיר (.sol → ORDX/PDP/DXF)") }
             // שער-סגירת-פרויקט: גישה-לאתר (פתיחה/סגירה) + כל-החדרים-הושלמו.
             Button(
                 onClick = { nav.navigate("closeproject/$projectId") },
                 colors = ButtonDefaults.buttonColors(containerColor = OkGreen),
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
             ) { Text("🔒  סגירת פרויקט (גישה + חדרים)") }
-            // מחיקת-פרויקט מהממשק (A3 בביקורת — קודם לא-נגיש) — פרויקט-מהיר שגוי נמחק כאן.
+            // הגשה: ייצוא-לממיר לאחר-הסגירה. שער-חסימות אם יש ממצאים.
             OutlinedButton(
-                onClick = { showDeleteProject = true },
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp),
-            ) { Text("🗑  מחק פרויקט זה", color = BlockRed) }
+                onClick = {
+                    scope.launch {
+                        val blocks = repo.projectBlockingIssues(projectId)
+                        if (blocks > 0) exportBlocks = blocks else runExport()
+                    }
+                },
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+            ) { Text("📤  סגירת פרויקט והגשה (ייצוא לממיר)") }
             if (rooms.isEmpty()) EmptyHint("אין חדרים. הקש + כדי להוסיף חדר.")
             else LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(16.dp)) {
                 items(rooms, key = { it.id }) { r ->
@@ -447,21 +441,7 @@ fun ProjectRoomsScreen(nav: NavController, projectId: Long) {
             onDismiss = { roomToDelete = null },
         )
     }
-    if (showDeleteProject) {
-        project?.let { p ->
-            ConfirmDialog(
-                title = "מחיקת פרויקט \"${p.name}\"",
-                message = "הפרויקט וכל חדריו, קירותיו והנתונים שלו יימחקו לצמיתות. לא ניתן לבטל.",
-                confirmLabel = "מחק",
-                onConfirm = {
-                    scope.launch { repo.deleteProject(p) }
-                    showDeleteProject = false
-                    nav.popBackStack()
-                },
-                onDismiss = { showDeleteProject = false },
-            )
-        } ?: run { showDeleteProject = false }
-    }
+    // מחיקת-פרויקט הוסרה מהממשק: פרויקטים מגובים אוטומטית ל-Drive ומתנקים מקומית לאחר-שבוע.
     if (showAdd) {
         val name = remember { mutableStateOf("") }
         FormDialog("חדר חדש", onDismiss = { showAdd = false }, onConfirm = {
