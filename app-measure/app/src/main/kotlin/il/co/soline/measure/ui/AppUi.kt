@@ -347,6 +347,7 @@ fun ProjectRoomsScreen(nav: NavController, projectId: Long) {
     var showAdd by remember { mutableStateOf(false) }
     var roomToDelete by remember { mutableStateOf<il.co.soline.measure.data.RoomEntity?>(null) }
     var showDeleteProject by remember { mutableStateOf(false) }
+    var showEditProject by remember { mutableStateOf(false) }
     // שער-ייצוא (A8): מס' ממצאי-חסימה שנמצאו לפני-ייצוא (null=לא-נבדק/אין-דיאלוג).
     var exportBlocks by remember { mutableStateOf<Int?>(null) }
 
@@ -396,6 +397,11 @@ fun ProjectRoomsScreen(nav: NavController, projectId: Long) {
                 colors = ButtonDefaults.buttonColors(containerColor = OkGreen),
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp).heightIn(min = 56.dp),
             ) { Text("🔒📤  סגירת פרויקט והגשה", fontWeight = FontWeight.Bold) }
+            // עריכת-פרטי-פרויקט (בקשת-מודד 212344, קריטי). כרגע שם+לקוח; כתובת/גישה — המשך.
+            OutlinedButton(
+                onClick = { showEditProject = true },
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+            ) { Text("✏️  ערוך פרטי-פרויקט") }
             // גיבוי ידני ל-Drive (תיקיית-הלקוח/גיבוי) — מבנה: [לקוח]/[פרויקט]/<project>.sol
             OutlinedButton(
                 onClick = {
@@ -483,6 +489,20 @@ fun ProjectRoomsScreen(nav: NavController, projectId: Long) {
                 onDismiss = { showDeleteProject = false },
             )
         } ?: run { showDeleteProject = false }
+    }
+    if (showEditProject) {
+        project?.let { p ->
+            val nm = remember(p.id) { mutableStateOf(p.name) }
+            val cl = remember(p.id) { mutableStateOf(p.client) }
+            FormDialog("עריכת פרטי-פרויקט", onDismiss = { showEditProject = false }, onConfirm = {
+                scope.launch { repo.updateProject(p.copy(name = nm.value.trim().ifBlank { p.name }, client = cl.value.trim())) }
+                showEditProject = false
+            }) {
+                OutlinedTextField(nm.value, { nm.value = it }, label = { Text("שם הפרויקט / לקוח") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                OutlinedTextField(cl.value, { cl.value = it }, label = { Text("מפעל / לקוח-מזמין") }, singleLine = true, modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
+                Text("כתובת ודרכי-גישה — עריכה-מלאה בהמשך.", fontSize = 11.sp, color = Muted, modifier = Modifier.padding(top = 6.dp))
+            }
+        } ?: run { showEditProject = false }
     }
     if (showAdd) {
         val name = remember { mutableStateOf("") }

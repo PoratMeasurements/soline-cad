@@ -15,6 +15,8 @@ class Repo(private val dao: SolineDao) {
 
     fun projects(): Flow<List<Project>> = dao.projects()
     fun project(id: Long): Flow<Project?> = dao.project(id)
+    suspend fun updateProject(p: Project) = dao.updateProject(p)
+
     suspend fun addProject(name: String, client: String): Long =
         dao.insertProject(Project(name = name, client = client))
     /**

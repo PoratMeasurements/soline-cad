@@ -22,6 +22,9 @@ interface SolineDao {
     @Insert
     suspend fun insertProject(p: Project): Long
 
+    @Update
+    suspend fun updateProject(p: Project)
+
     @Delete
     suspend fun deleteProject(p: Project)
 
