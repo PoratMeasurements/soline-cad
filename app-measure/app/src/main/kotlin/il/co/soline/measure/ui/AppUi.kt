@@ -161,6 +161,7 @@ fun SolineRoot() {
                 composable("draw/{rid}") { e -> e.longArg("rid")?.let { DrawScreenHost(nav, it) } }
                 composable("measure/{rid}") { e -> e.longArg("rid")?.let { MeasureHost(nav, it) } }
                 composable("unified/{rid}") { e -> e.longArg("rid")?.let { il.co.soline.measure.ui.unified.UnifiedMeasureHost(nav, it) } }
+                composable("measurestart/{rid}") { e -> e.longArg("rid")?.let { MeasureStartHost(nav, it) } }
                 composable("view3d/{rid}") { e -> e.longArg("rid")?.let { Room3DHost(nav, it) } }
                 composable("cad/{rid}") { e -> e.longArg("rid")?.let { CadHost(nav, it) } }
                 composable("elevation/{wid}") { e -> e.longArg("wid")?.let { ElevationHost(nav, it) } }
@@ -506,33 +507,18 @@ fun RoomScreen(nav: NavController, roomId: Long) {
     Scaffold(containerColor = Cream, floatingActionButton = { AddFab { showAdd = true } }) { pad ->
         Column(Modifier.padding(pad).fillMaxSize().verticalScroll(rememberScrollState())) {
             BrandHeader("קירות החדר", onBack = { nav.popBackStack() })
-            // ── פתיחת-מדידה: כיוון-כניסה (עדיפות) + מהלך-גבהים + שינויים-עתידיים ──
-            room?.let { r ->
-                MeasurementStartCard(
-                    room = r,
-                    wallCount = walls.size,
-                    onSetEntrance = { bearing, wallIdx, relation, vantage ->
-                        scope.launch {
-                            repo.setRoomEntrance(roomId, bearing, wallIdx)
-                            repo.setRoomEntranceText(roomId, relation, vantage)
-                        }
-                    },
-                    onSetHeights = { hs -> scope.launch { repo.setRoomHeightSweep(roomId, hs) } },
-                    onSetChanges = { ch -> scope.launch { repo.setRoomFutureChanges(roomId, ch) } },
-                )
-            }
-            // מסך-מדידה אחד: כל שיטות-המדידה (לייזר · שרטוט · P2P · תבנית · היקף) בתוכו.
+            // "פתיחת מדידה" (כניסה/גבהים/שינויים) עברה לתוך מנוע-המדידה (בקשת-מודד 210307).
+            // מסך-מדידה אחד: כל שיטות-המדידה בתוכו.
             Button(
                 onClick = { nav.navigate("unified/$roomId") },
                 colors = ButtonDefaults.buttonColors(containerColor = OkGreen),
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).heightIn(min = 64.dp),
             ) { Text("🎛️  מדידת החדר — מסך-אחד לכל-השיטות", fontWeight = FontWeight.Bold, fontSize = 17.sp) }
             Spacer(Modifier.height(10.dp))
-            Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
-                OutlinedButton(onClick = { nav.navigate("view3d/$roomId") }, modifier = Modifier.weight(1f)) { Text("🧊 תלת-מימד") }
-                Spacer(Modifier.width(8.dp))
-                OutlinedButton(onClick = { nav.navigate("cad/$roomId") }, modifier = Modifier.weight(1f)) { Text("✏️ עריכת מידות") }
-            }
+            OutlinedButton(
+                onClick = { nav.navigate("view3d/$roomId") },
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            ) { Text("🧊 תלת-מימד") }
             Spacer(Modifier.height(6.dp))
             OutlinedButton(
                 onClick = { nav.navigate("verify/$roomId") },
@@ -552,23 +538,9 @@ fun RoomScreen(nav: NavController, roomId: Long) {
                 OutlinedButton(onClick = { nav.navigate("ceiling/$roomId") }, modifier = Modifier.weight(1f)) { Text("▤ מדידת תקרה") }
             }
             Spacer(Modifier.height(6.dp))
-            OutlinedButton(
-                onClick = { nav.navigate("wallhead") },
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-            ) { Text("⌂ סגנון ראש קיר (ישר/משופע/גמלון)") }
-            Spacer(Modifier.height(6.dp))
-            OutlinedButton(
-                onClick = { nav.navigate("symbols") },
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-            ) { Text("🔣 סמלי CAD (25 + מותאמים)") }
-            Spacer(Modifier.height(6.dp))
-            Button(
-                onClick = { scope.launch { fit = repo.runFit(roomId) } },
-                colors = ButtonDefaults.buttonColors(containerColor = Teal),
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-            ) { Text("בדיקת התאמה (R4 — בליטה מול עומק)") }
+            // "סמלי CAD" הוסרו כפריט-נפרד — הופכים לטיפוסי-אלמנט למדידה שמיוצאים לממיר (בקשת-מודד).
 
-            fit?.let { FitResults(it) }
+            // "בדיקת התאמה" עברה לשלב הייצוא + הדו"ח-הסופי (מאחדת חשיבת-מודד+נגר) — לא כפתור כאן (בקשת-מודד).
 
             if (walls.isEmpty()) EmptyHint("אין קירות. הקש + כדי להוסיף קיר.")
             else Column(Modifier.fillMaxWidth().padding(16.dp)) {
@@ -1079,6 +1051,34 @@ fun DrawScreenHost(nav: NavController, roomId: Long) {
             }
         },
     )
+}
+
+// פתיחת-מדידה (כיוון-כניסה · גבהים · שינויים-עתידיים) — הועבר מ-RoomScreen למנוע (בקשת-מודד 210307).
+@Composable
+fun MeasureStartHost(nav: NavController, roomId: Long) {
+    val scope = rememberCoroutineScope()
+    val room by repo.room(roomId).collectAsStateWithLifecycle(null)
+    val walls by repo.walls(roomId).collectAsStateWithLifecycle(emptyList())
+    Scaffold(containerColor = Cream) { pad ->
+        Column(Modifier.padding(pad).fillMaxSize().verticalScroll(rememberScrollState())) {
+            BrandHeader("פתיחת מדידה", onBack = { nav.popBackStack() })
+            room?.let { r ->
+                MeasurementStartCard(
+                    room = r,
+                    wallCount = walls.size,
+                    onSetEntrance = { bearing, wallIdx, relation, vantage ->
+                        scope.launch {
+                            repo.setRoomEntrance(roomId, bearing, wallIdx)
+                            repo.setRoomEntranceText(roomId, relation, vantage)
+                        }
+                    },
+                    onSetHeights = { hs -> scope.launch { repo.setRoomHeightSweep(roomId, hs) } },
+                    onSetChanges = { ch -> scope.launch { repo.setRoomFutureChanges(roomId, ch) } },
+                )
+            }
+            Spacer(Modifier.height(24.dp))
+        }
+    }
 }
 
 @Composable

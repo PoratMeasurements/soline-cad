@@ -68,7 +68,6 @@ private enum class Mode(val glyph: String, val label: String) {
     TAPE("✍️", "מטר"),
     P2P("🎯", "P2P"),
     ELEMENT("🚪", "אלמנט"),
-    EDIT("✎", "עריכה"),
 }
 
 @Composable
@@ -86,6 +85,7 @@ fun UnifiedMeasureHost(nav: NavController, roomId: Long) {
     var tapeText by remember { mutableStateOf("") }
     var railRight by remember { mutableStateOf(false) } // צד-הצמדה של הסרגל (בקשת-מודד 205033)
     var railY by remember { mutableStateOf(0f) }         // גובה-הסרגל (נגרר)
+    var railCollapsed by remember { mutableStateOf(false) } // ✕ מכווץ את הסרגל, לא יוצא (211325)
 
     fun addWall(lenMm: Double) {
         if (lenMm <= 0) return
@@ -99,10 +99,23 @@ fun UnifiedMeasureHost(nav: NavController, roomId: Long) {
                 Modifier.fillMaxWidth().background(Color.White).padding(horizontal = 14.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
+                Surface(onClick = { nav.popBackStack() }, shape = RoundedCornerShape(999.dp), color = Cream) {
+                    Text("◀ יציאה", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Ink,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp))
+                }
+                Spacer(Modifier.width(8.dp))
                 Column(Modifier.weight(1f)) {
                     Text(room?.name ?: "חדר", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = Ink)
                     Text("${walls.size} קירות", fontSize = 11.sp, color = Muted)
                 }
+                Surface(
+                    onClick = { nav.navigate("measurestart/$roomId") },
+                    shape = RoundedCornerShape(999.dp), color = Teal.copy(alpha = 0.1f),
+                ) {
+                    Text("⚙️ פתיחה", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Teal,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp))
+                }
+                Spacer(Modifier.width(8.dp))
                 ConnChip(connected)
                 Spacer(Modifier.width(12.dp))
                 ReadoutTag(reading?.distanceMm)
@@ -165,24 +178,21 @@ fun UnifiedMeasureHost(nav: NavController, roomId: Long) {
                             Text("בחר קיר להוספת דלת/חלון/פתח/ארון:", fontSize = 12.sp, color = Muted)
                             WallChips(walls) { wid -> nav.navigate("wall/$wid") }
                         }
-                        Mode.EDIT -> {
-                            Text("בחר קיר לעריכת מידות/זווית:", fontSize = 12.sp, color = Muted)
-                            WallChips(walls) { wid -> nav.navigate("wall/$wid") }
-                        }
                     }
                 }
             }
         }
 
-        // ── סרגל-כלים קטן ונייד (נגרר · הצמדה לצד לפי בחירת-המודד) ──
+        // ── סרגל-כלים קטן ונייד (נגרר · הצמדה לצד · ✕ מכווץ) ──
         MovableRail(
             mode = mode,
             right = railRight,
             offsetY = railY,
+            collapsed = railCollapsed,
             onSelect = { mode = it },
             onDragY = { railY += it },
             onSnapSide = { railRight = it },
-            onBack = { nav.popBackStack() },
+            onToggleCollapse = { railCollapsed = !railCollapsed },
         )
     }
 }
@@ -267,34 +277,49 @@ private fun androidx.compose.foundation.layout.BoxScope.MovableRail(
     mode: Mode,
     right: Boolean,
     offsetY: Float,
+    collapsed: Boolean,
     onSelect: (Mode) -> Unit,
     onDragY: (Float) -> Unit,
     onSnapSide: (Boolean) -> Unit,
-    onBack: () -> Unit,
+    onToggleCollapse: () -> Unit,
 ) {
+    val align = if (right) Alignment.CenterEnd else Alignment.CenterStart
+    if (collapsed) {
+        // מכווץ — רק ידית-פתיחה קטנה (מציגה את הכלי-הפעיל)
+        Surface(
+            onClick = onToggleCollapse,
+            shape = RoundedCornerShape(16.dp),
+            color = Teal,
+            shadowElevation = 6.dp,
+            modifier = Modifier.align(align).padding(horizontal = 4.dp).offset { IntOffset(0, offsetY.roundToInt()) },
+        ) {
+            Box(Modifier.size(width = 40.dp, height = 48.dp), contentAlignment = Alignment.Center) {
+                Text(mode.glyph, fontSize = 18.sp)
+            }
+        }
+        return
+    }
     Surface(
         shape = RoundedCornerShape(22.dp),
         color = Color.White.copy(alpha = 0.94f),
         shadowElevation = 8.dp,
         modifier = Modifier
-            .align(if (right) Alignment.CenterEnd else Alignment.CenterStart)
+            .align(align)
             .padding(horizontal = 6.dp)
             .offset { IntOffset(0, offsetY.roundToInt()) }
             .pointerInput(Unit) {
-                detectDragGestures(
-                    onDrag = { change, drag -> change.consume(); onDragY(drag.y) },
-                    onDragEnd = { /* הצמדה נשמרת; שינוי-צד בלחיצה-ארוכה על הידית */ },
-                )
+                detectDragGestures(onDrag = { change, drag -> change.consume(); onDragY(drag.y) })
             },
     ) {
         Column(Modifier.padding(vertical = 6.dp, horizontal = 4.dp), verticalArrangement = Arrangement.spacedBy(5.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            // ידית-החלפת-צד
+            // ידית-החלפת-צד (גרירה = הזזה למעלה/מטה)
             Surface(onClick = { onSnapSide(!right) }, shape = RoundedCornerShape(8.dp), color = Cream) {
                 Box(Modifier.size(width = 46.dp, height = 18.dp), contentAlignment = Alignment.Center) { Text("⇄", fontSize = 13.sp, color = Muted) }
             }
             Mode.entries.forEach { m -> RailBtn(m.glyph, m.label, m == mode) { onSelect(m) } }
-            Surface(onClick = onBack, shape = RoundedCornerShape(12.dp), color = Cream) {
-                Box(Modifier.size(46.dp), contentAlignment = Alignment.Center) { Text("✕", fontSize = 16.sp, color = BlockRed) }
+            // ✕ מכווץ את הסרגל (לא יוצא מהמדידה)
+            Surface(onClick = onToggleCollapse, shape = RoundedCornerShape(12.dp), color = Cream) {
+                Box(Modifier.size(46.dp), contentAlignment = Alignment.Center) { Text("✕", fontSize = 16.sp, color = Muted) }
             }
         }
     }

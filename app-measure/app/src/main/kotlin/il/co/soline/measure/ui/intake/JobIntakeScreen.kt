@@ -108,7 +108,7 @@ fun JobIntakeScreen(
 
     // ── הערות-מודד (מתקפל) ──
     var surveyorNotes by remember { mutableStateOf("") }
-    var clientPresent by remember { mutableStateOf(true) } // לקוח נוכח במדידה? (195918)
+    var clientPresence by remember { mutableStateOf("start") } // none/start/all — נוכחות-לקוח (195918)
     var moreExpanded by remember { mutableStateOf(false) }
 
     fun laserCm(): String =
@@ -175,6 +175,12 @@ fun JobIntakeScreen(
             Section("פרטי הפרויקט") {
                 BigField(clientName, { clientName = it }, "שם הלקוח (= שם הפרויקט) *")
                 BigField(contact, { contact = it }, "איש-קשר באתר")
+                Text("נוכחות-לקוח במדידה:", fontSize = 12.sp, color = Muted)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Chip("לא נכח", selected = clientPresence == "none") { clientPresence = "none" }
+                    Chip("בתחילה", selected = clientPresence == "start") { clientPresence = "start" }
+                    Chip("לאורך-כולה", selected = clientPresence == "all") { clientPresence = "all" }
+                }
             }
 
             // ── כתובת מובנית ──
@@ -227,7 +233,6 @@ fun JobIntakeScreen(
 
             // ── הערות-מודד (מתקפל) ──
             CollapsibleSection("הערות-מודד", moreExpanded, { moreExpanded = !moreExpanded }) {
-                ToggleRow("לקוח נוכח במדידה", clientPresent) { clientPresent = it }
                 Text("כל דבר רלוונטי: משטח לא-ישר, קיר-עקום ידוע, אילוצי-זמן…", fontSize = 12.sp, color = Muted)
                 BigField(surveyorNotes, { surveyorNotes = it }, "הערות חופשיות", singleLine = false)
             }
@@ -251,7 +256,7 @@ fun JobIntakeScreen(
                                 if (entrance.isNotBlank()) add("כניסה ${entrance.trim()}")
                             }.joinToString(" · "),
                             accessNotes = buildAccessNotes(
-                                elevator, elevH, elevW, elevD, accessVehicle, accessRemark, surveyorNotes, clientPresent,
+                                elevator, elevH, elevW, elevD, accessVehicle, accessRemark, surveyorNotes, clientPresence,
                             ),
                         )
                     )
@@ -265,7 +270,7 @@ fun JobIntakeScreen(
 /** מאחד גישה + מעלית + הערות-מודד למחרוזת accessNotes אחת (מוצגת בדו"ח). */
 private fun buildAccessNotes(
     elevator: Boolean, h: String, w: String, d: String,
-    vehicle: String, remark: String, surveyorNotes: String, clientPresent: Boolean,
+    vehicle: String, remark: String, surveyorNotes: String, clientPresence: String,
 ): String = buildList {
     if (elevator) {
         val dims = listOf(h, w, d).map { it.trim() }
@@ -274,7 +279,7 @@ private fun buildAccessNotes(
     } else add("מעלית: אין")
     if (vehicle.isNotBlank()) add("גישת-רכב: ${vehicle.trim()}")
     if (remark.isNotBlank()) add("הערות-גישה: ${remark.trim()}")
-    add("לקוח נוכח במדידה: ${if (clientPresent) "כן" else "לא"}")
+    add("נוכחות-לקוח: " + when (clientPresence) { "all" -> "לאורך-כל-המדידה"; "start" -> "בתחילת-המדידה"; else -> "לא נכח" })
     if (surveyorNotes.isNotBlank()) add("הערות-מודד: ${surveyorNotes.trim()}")
 }.joinToString(" · ")
 

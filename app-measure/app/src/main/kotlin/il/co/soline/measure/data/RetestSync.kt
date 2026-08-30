@@ -37,7 +37,7 @@ object RetestVerdict {
 }
 
 /** סטטוס-באג שמיכאל מפרסם ל-Drive (bug_status.json) → מוצג למודד ב"הבאגים שלי". */
-data class BugStatus(val id: String, val status: String, val note: String, val version: String)
+data class BugStatus(val id: String, val status: String, val note: String, val version: String, val serial: Int = 0)
 
 /** קודי-סטטוס-באג. */
 object BugStage {
@@ -102,6 +102,7 @@ object RetestSync {
                     status = o.optString("status", BugStage.NEW),
                     note = o.optString("note", ""),
                     version = o.optString("version", ""),
+                    serial = o.optInt("serial", 0),
                 )
             }
             out

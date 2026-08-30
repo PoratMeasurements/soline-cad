@@ -76,8 +76,9 @@ fun MyBugsScreen(nav: NavController) {
                         BugReportBundle.fromJsonString(sr.json.readText(Charsets.UTF_8)).notes
                     else ""
                 } catch (_: Exception) { "" }
-                // מספר-סידורי כרונולוגי: הישן-ביותר = #0001
-                MyBug(n - i, sr.baseName, sr.createdAt, sr.screen, notes, sr.png.absolutePath, statuses[sr.baseName])
+                // מספר-סידורי גלובלי (מ-bug_status; רץ על כל-הבאגים משני-המכשירים) — 181837.
+                val gSerial = statuses[sr.baseName]?.serial ?: 0
+                MyBug(if (gSerial > 0) gSerial else n - i, sr.baseName, sr.createdAt, sr.screen, notes, sr.png.absolutePath, statuses[sr.baseName])
             }
         }
     }
