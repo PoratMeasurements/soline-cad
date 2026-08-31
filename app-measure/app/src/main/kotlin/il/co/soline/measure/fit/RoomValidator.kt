@@ -80,6 +80,13 @@ object RoomValidator {
                     "קיר #${w.idx}: הגובה (${round1(w.height)} מ\"מ) לא נמדד — ברירת-מחדל. מדוד מהלך-גבהים או ערוך ידנית"
                 )
             )
+            // ולידציית-גובה-מינימלי (בקשת-E2E 010207): גובה-קיר נמוך-חריג = חשד לטעות-מדידה.
+            if (w.height in 0.1..1500.0) out.add(
+                ValidationIssue(
+                    Severity.WARN, "LOW_HEIGHT",
+                    "קיר #${w.idx}: גובה ${round1(w.height)} מ\"מ נמוך-חריג — ודא שאין טעות-מדידה"
+                )
+            )
             if (w.length > cfg.maxWallLenMm) out.add(
                 ValidationIssue(
                     Severity.WARN, "SUSPECT_LENGTH",

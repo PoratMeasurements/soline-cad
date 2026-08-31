@@ -71,6 +71,25 @@ fun HomeScreen(nav: NavController, modifier: Modifier = Modifier) {
     var showAdd by remember { mutableStateOf(false) }
     val today = remember { LocalDate.now() }
 
+    // שחזור-פרויקט מחבילת-‏.sol‏ (בקשת-מודד 181005) — בורר-קובץ SAF → ייבוא → מעבר-לפרויקט.
+    val ctx = androidx.compose.ui.platform.LocalContext.current
+    var importing by remember { mutableStateOf(false) }
+    val restoreLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        if (uri != null) {
+            importing = true
+            scope.launch {
+                val pid = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                    runCatching { ctx.contentResolver.openInputStream(uri)?.use { repo.importSol(it) } }.getOrNull()
+                }
+                importing = false
+                if (pid != null) nav.navigate("rooms/$pid")
+                else android.widget.Toast.makeText(ctx, "קובץ .sol לא-תקין", android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     // "המשך עבודה אחרונה" — הפרויקט העדכני ביותר (חזרה-בקליק-אחד אל השטח)
     val lastProject = remember(projects) { projects.maxByOrNull { it.createdAt } }
 
@@ -131,6 +150,16 @@ fun HomeScreen(nav: NavController, modifier: Modifier = Modifier) {
                             lastProjectName = lastProject?.name,
                             onNewJob = { nav.navigate("intake") },
                             onContinueLast = { lastProject?.let { nav.navigate("rooms/${it.id}") } },
+                        )
+                    }
+                    // שחזור-פרויקט מ-Drive (181005)
+                    item {
+                        SolineButton(
+                            text = if (importing) "משחזר…" else "🔄 שחזר פרויקט מ-Drive (.sol)",
+                            onClick = { if (!importing) restoreLauncher.launch(arrayOf("*/*")) },
+                            style = SolineButtonStyle.SECONDARY,
+                            accent = Teal,
+                            modifier = Modifier.fillMaxWidth(),
                         )
                     }
 

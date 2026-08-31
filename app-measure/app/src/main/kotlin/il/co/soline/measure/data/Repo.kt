@@ -217,6 +217,49 @@ class Repo(private val dao: SolineDao) {
     suspend fun updateAccessory(a: AccessoryEntity) = dao.updateAccessory(a)
     suspend fun deleteAccessory(a: AccessoryEntity) = dao.deleteAccessory(a)
 
+    /**
+     * שחזור-פרויקט מחבילת-‏.sol‏ (בקשת-מודד 181005) — ההופכי של [exportSol]. קורא את
+     * החבילה דרך [SolReader] ומשחזר פרויקט **חדש** (id-חדש, לא-דורס קיים): חדרים · קירות
+     * (אורך/גובה/זווית/סופיט/heightMeasured/framePoints) · אלמנטים (כולל פרמטרי-פתח והערות) ·
+     * מהלך-גבהים ושינויים-עתידיים. מחזיר את מזהה-הפרויקט-החדש, או null אם הקובץ אינו-תקין.
+     */
+    suspend fun importSol(input: java.io.InputStream): Long? {
+        val sol = SolReader.read(input) ?: return null
+        val pid = addProject(sol.name, sol.client)
+        for (room in sol.rooms) {
+            val rid = addRoom(pid, room.name)
+            if (room.heightSweepMm.isNotBlank()) dao.setRoomHeightSweep(rid, room.heightSweepMm)
+            if (room.futureChanges.isNotBlank()) dao.setRoomFutureChanges(rid, room.futureChanges)
+            for (w in room.walls.sortedBy { it.idx }) {
+                val wid = addWall(rid, w.length, w.height, w.angle)
+                // שחזור שדות-קיר נוספים שלא-נכנסים ב-addWall.
+                updateWall(
+                    WallEntity(
+                        id = wid, roomId = rid, idx = w.idx, length = w.length, height = w.height,
+                        angle = w.angle, heightMeasured = w.heightMeasured,
+                        soffitHeightMm = w.soffitHeightMm, framePointsJson = w.framePointsJson,
+                    )
+                )
+                for (a in w.accessories) {
+                    addAccessory(
+                        AccessoryEntity(
+                            wallId = wid, type = a.type, name = a.name,
+                            depth = a.depth, fromLeft = a.fromLeft, width = a.width,
+                            fromBottom = a.fromBottom, height = a.height,
+                            openingKind = a.openingKind, sillHeight = a.sillHeight,
+                            wallThickness = a.wallThickness, frameThickness = a.frameThickness,
+                            frameReveal = a.frameReveal, leafThickness = a.leafThickness,
+                            openMode = a.openMode, hingeSide = a.hingeSide, swing = a.swing,
+                            leafCount = a.leafCount, glazing = a.glazing, fromCorner = a.fromCorner,
+                            measured = a.measured, notes = a.notes,
+                        )
+                    )
+                }
+            }
+        }
+        return pid
+    }
+
     /** שמירת נקודות מסגרת-החזית (X6) על הקיר */
     suspend fun saveWallFramePoints(wallId: Long, json: String) =
         dao.setWallFramePoints(wallId, json)

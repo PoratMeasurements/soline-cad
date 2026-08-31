@@ -35,6 +35,7 @@ import il.co.soline.measure.ui.Ink
 import il.co.soline.measure.ui.Muted
 import il.co.soline.measure.ui.Orange
 import il.co.soline.measure.ui.Teal
+import il.co.soline.measure.ui.WarnAmber
 import il.co.soline.measure.ui.components.BrandHeader
 import il.co.soline.measure.ui.components.SolineCard
 import il.co.soline.measure.update.UpdatePanel
@@ -398,6 +399,14 @@ private fun BugUploadSection() {
         Text(
             "בחר תיקיית-Drive מסונכרנת — כל דיווח-באג יועלה אליה אוטומטית (בלי שיתוף-ידני).",
             fontSize = 12.sp, color = Muted,
+        )
+        // בקשת-מודד 212824: "הבאגים שלי" מציג את כל-הבאגים מכל-המכשירים — אך רק אם
+        // כל טאבלט מקושר לאותה תיקייה. חיווי מפורש כדי שהשיתוף-בין-מכשירים יעבוד.
+        Text(
+            if (treeUri.isBlank())
+                "⚠️ ללא-קישור: לא-יוצגו באגים ממכשירים-אחרים. קשר את אותה התיקייה בכל טאבלט לשיתוף-מלא."
+            else "✓ מקושר — 'הבאגים שלי' יציג באגים מכל המכשירים המקושרים לתיקייה הזו.",
+            fontSize = 12.sp, color = if (treeUri.isBlank()) WarnAmber else Teal, fontWeight = FontWeight.SemiBold,
         )
         Button(
             onClick = { picker.launch(null) },
