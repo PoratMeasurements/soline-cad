@@ -79,7 +79,17 @@ data class ElementDef(
     val ordxName: String = "",
     /** מפרט-פתח (דלת/חלון/מיזוג-איוורור) — ≠null ⇒ נפתח טופס-פתח פרמטרי. */
     val opening: OpeningSpec? = null,
+    /**
+     * מידות-סטנדרט (מ"מ · בקשת-מודד 120826). >0 ⇒ אלמנט **מידות-קבועות**: הרוחב/הגובה
+     * ממולאים-מראש בטופס וניתנים-לעריכה (מקרר/תנור/מדיח/שקע… — גודל-מוכר). 0 ⇒ אלמנט
+     * **מידות-משתנות**: המודד מזין מאפס (עמוד/פאנל/צינור…). מקביל ל-OpeningSpec לפתחים.
+     */
+    val defaultWidth: Double = 0.0,
+    val defaultHeight: Double = 0.0,
 ) {
+    /** אלמנט "מידות-קבועות" — יש לו גודל-סטנדרט ממולא-מראש (ניתן-לעריכה). */
+    val fixedSize: Boolean get() = defaultWidth > 0.0 || defaultHeight > 0.0
+
     /**
      * שם-ה-ORDX האפקטיבי לפליטה ל-`<Name>` (נקרא ע"י [il.co.soline.measure.export.OrdxExporter]).
      * סדר-העדיפויות: (1) [ordxName] מפורש אם הוגדר; (2) דלת-ציר עם צד-ציר+כיוון —
@@ -137,9 +147,9 @@ private fun vent(
 object ElementCatalog {
     val all: List<ElementDef> = listOf(
         // ── חשמל → ORDX Fixture/Miscellaneous ─────────────────────────────
-        ElementDef("SOCKET_SINGLE", "שקע בודד", ElementGroup.ELECTRICAL, 6.8, ordxName = "Socket"),
-        ElementDef("SOCKET_MULTI", "שקע מרובע", ElementGroup.ELECTRICAL, 8.0, ordxName = "Duplex Socket"),
-        ElementDef("SWITCH", "מתג", ElementGroup.ELECTRICAL, 6.8, ordxName = "Switch"),
+        ElementDef("SOCKET_SINGLE", "שקע בודד", ElementGroup.ELECTRICAL, 6.8, ordxName = "Socket", defaultWidth = 86.0, defaultHeight = 86.0),
+        ElementDef("SOCKET_MULTI", "שקע מרובע", ElementGroup.ELECTRICAL, 8.0, ordxName = "Duplex Socket", defaultWidth = 172.0, defaultHeight = 86.0),
+        ElementDef("SWITCH", "מתג", ElementGroup.ELECTRICAL, 6.8, ordxName = "Switch", defaultWidth = 86.0, defaultHeight = 86.0),
         ElementDef("ELECTRICAL_WALL", "תשתית חשמל -קיר", ElementGroup.ELECTRICAL, 5.0, ordxName = "Wall Power Line"),
         ElementDef("ELECTRICAL_LINE", "תשתית חשמל", ElementGroup.ELECTRICAL, 5.0, ordxName = "Power Line"),
         ElementDef("ELECTRIC_APPLIANCE", "נקודת מוצר חשמל", ElementGroup.ELECTRICAL, 10.0, ordxName = "Appliance Outlet"),
@@ -152,11 +162,11 @@ object ElementCatalog {
         ElementDef("FLOOR_DRAIN", "ניקוז רצפתי", ElementGroup.PLUMBING, 0.0, round = true, ordxType = "Part", ordxName = "Sewer drainage"),
 
         // ── מוצרי חשמל → ORDX Appliance/Accessory ─────────────────────────
-        ElementDef("AC_UNIT", "מזגן", ElementGroup.APPLIANCES, 180.0, ordxClass = "Accessory", ordxType = "Miscellaneous", ordxName = "Air Condition"),
-        ElementDef("REFRIGERATOR", "מקרר", ElementGroup.APPLIANCES, 650.0, ordxClass = "Appliance", ordxType = "DishWasher", ordxName = "Refrigerator"),
-        ElementDef("OVEN", "תנור", ElementGroup.APPLIANCES, 560.0, ordxClass = "Appliance", ordxType = "DishWasher", ordxName = "Oven"),
-        ElementDef("MICROWAVE", "מיקרוגל", ElementGroup.APPLIANCES, 300.0, ordxClass = "Appliance", ordxType = "DishWasher", ordxName = "Microwave"),
-        ElementDef("DISHWASHER", "מדיח", ElementGroup.APPLIANCES, 570.0, ordxClass = "Appliance", ordxType = "DishWasher", ordxName = "DishWasher"),
+        ElementDef("AC_UNIT", "מזגן", ElementGroup.APPLIANCES, 180.0, ordxClass = "Accessory", ordxType = "Miscellaneous", ordxName = "Air Condition", defaultWidth = 900.0, defaultHeight = 300.0),
+        ElementDef("REFRIGERATOR", "מקרר", ElementGroup.APPLIANCES, 650.0, ordxClass = "Appliance", ordxType = "DishWasher", ordxName = "Refrigerator", defaultWidth = 600.0, defaultHeight = 1780.0),
+        ElementDef("OVEN", "תנור", ElementGroup.APPLIANCES, 560.0, ordxClass = "Appliance", ordxType = "DishWasher", ordxName = "Oven", defaultWidth = 600.0, defaultHeight = 595.0),
+        ElementDef("MICROWAVE", "מיקרוגל", ElementGroup.APPLIANCES, 300.0, ordxClass = "Appliance", ordxType = "DishWasher", ordxName = "Microwave", defaultWidth = 595.0, defaultHeight = 390.0),
+        ElementDef("DISHWASHER", "מדיח", ElementGroup.APPLIANCES, 570.0, ordxClass = "Appliance", ordxType = "DishWasher", ordxName = "DishWasher", defaultWidth = 600.0, defaultHeight = 820.0),
         ElementDef("WATER_BAR", "תמי4", ElementGroup.APPLIANCES, 130.0, ordxClass = "Appliance", ordxType = "DishWasher", ordxName = "Water Bar"),
 
         // ── סניטרי → ORDX Fixture/Part ────────────────────────────────────

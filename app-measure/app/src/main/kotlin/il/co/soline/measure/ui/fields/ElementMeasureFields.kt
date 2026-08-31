@@ -76,23 +76,27 @@ fun ElementMeasureFields(
     hasDepth: Boolean,
     round: Boolean,
     defaultDepth: Double = 0.0, // עומק-בליטה D מברירת-מחדל-הקטלוג — ממולא-מראש (ניתן-לעריכה)
+    // מידות-סטנדרט (מ"מ · בקשת-מודד 120826) — >0 ⇒ אלמנט מידות-קבועות: רוחב/גובה ממולאים-מראש.
+    defaultWidth: Double = 0.0,
+    defaultHeight: Double = 0.0,
     onValues: (fromLeftMm: Double, widthMm: Double, fromBottomMm: Double, heightMm: Double, depthMm: Double, measured: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    // ברירת-מחדל: עגול/קטן → מרכז; אחרת → היסטים-מפינות. rememberSaveable ⇒ שורד-סיבוב (P0-2).
-    var centerMode by rememberSaveable { mutableStateOf(round) }
+    val fixedSize = defaultWidth > 0.0 || defaultHeight > 0.0
+    // ברירת-מחדל: עגול/קטן או מידות-קבועות → מרכז (הרוחב מוצג וממולא); אחרת → היסטים-מפינות.
+    var centerMode by rememberSaveable { mutableStateOf(round || fixedSize) }
     // מצב-מרכז: מאיזה קצה נמדד מיקום-המרכז (בקשת-מודד 120716). true=שמאל (ברירת-מחדל).
     var centerFromLeft by rememberSaveable { mutableStateOf(true) }
 
-    // שדות משותפים לשני המצבים. עומק-הבליטה ממולא-מראש בברירת-המחדל של הקטלוג
-    // (מקרר 650, מזגן 180…) — לא ריק — כדי שלא-ייוצא D=0 בשקט (יסוד R4).
+    // שדות משותפים לשני המצבים. עומק/רוחב/גובה ממולאים-מראש בברירת-המחדל של הקטלוג
+    // (מקרר 600×1780, שקע 86×86…) — ניתנים-לעריכה — כדי שאלמנט מידות-קבועות יגיע מוכן (120826).
     val depth = rememberSaveable { mutableStateOf(if (hasDepth && defaultDepth > 0.0) fmtMm(defaultDepth) else "") }
     val fromBottom = rememberSaveable { mutableStateOf("") }
-    val height = rememberSaveable { mutableStateOf("") }
+    val height = rememberSaveable { mutableStateOf(if (defaultHeight > 0.0) fmtMm(defaultHeight) else "") }
 
     // מצב "מרכז"
     val centerPos = rememberSaveable { mutableStateOf("") }
-    val widthCenter = rememberSaveable { mutableStateOf("") }
+    val widthCenter = rememberSaveable { mutableStateOf(if (defaultWidth > 0.0) fmtMm(defaultWidth) else "") }
 
     // מצב "היסטים מפינות"
     val offsetLeft = rememberSaveable { mutableStateOf("") }
@@ -144,6 +148,11 @@ fun ElementMeasureFields(
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Column(modifier.fillMaxWidth()) {
+            if (fixedSize) Text(
+                "מידות-סטנדרט מולאו (רוחב/גובה) — ערוך אם שונה.",
+                fontSize = 12.sp, color = Teal, fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(vertical = 4.dp),
+            )
             ModeToggle(centerMode = centerMode, onSelect = { centerMode = it })
 
             if (centerMode) {

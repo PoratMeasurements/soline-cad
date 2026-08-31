@@ -1651,6 +1651,8 @@ private fun AddAccessoryDialog(wallId: Long, wallLengthMm: Double, def: ElementD
             hasDepth = def.hasDepth,
             round = def.round,
             defaultDepth = def.defaultDepth,
+            defaultWidth = def.defaultWidth,
+            defaultHeight = def.defaultHeight,
             onValues = { fl, w, fb, h, d, m -> vals = doubleArrayOf(fl, w, fb, h, d); measured = m },
         )
         OutlinedTextField(
@@ -1672,7 +1674,15 @@ private fun FormDialog(title: String, onDismiss: () -> Unit, onConfirm: () -> Un
         // שער-הזנה (קבוצה-D): "שמור" כבוי עד שהמידות תקינות (רוחב/גובה>0, מיקום לא-שלילי).
         confirmButton = { TextButton(onClick = onConfirm, enabled = confirmEnabled) { Text("שמור", color = if (confirmEnabled) Orange else Muted, fontWeight = FontWeight.Bold) } },
         dismissButton = { TextButton(onClick = onDismiss) { Text("ביטול", color = Muted) } },
-        title = { Text(title, fontWeight = FontWeight.Bold) },
+        title = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(title, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                // 🐞 נגיש גם מעל חלון-אלמנט (120539): סוגר את הדיאלוג ואז פותח את דיווח-הבאג.
+                TextButton(onClick = { onDismiss(); il.co.soline.measure.ui.bug.BugTrigger.start() }) {
+                    Text("🐞", fontSize = 18.sp)
+                }
+            }
+        },
         text = { Column(Modifier.verticalScroll(rememberScrollState())) { body() } },
         containerColor = Color.White,
         // טופס-הזנה: לא-נסגר בהקשה-מחוץ (מונע איבוד-קלט בטעות · P0-2). Back עדיין סוגר.

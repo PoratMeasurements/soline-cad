@@ -1109,7 +1109,15 @@ fun AccessoryEditor(
                 TextButton(onClick = onDismiss) { Text("ביטול", color = Muted) }
             }
         },
-        title = { Text(title, fontWeight = FontWeight.Bold, color = Ink) },
+        title = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(title, fontWeight = FontWeight.Bold, color = Ink, modifier = Modifier.weight(1f))
+                // 🐞 נגיש גם מעל חלון-האלמנט (120539): סוגר ואז פותח דיווח-באג.
+                TextButton(onClick = { onDismiss(); il.co.soline.measure.ui.bug.BugTrigger.start() }) {
+                    Text("🐞", fontSize = 18.sp)
+                }
+            }
+        },
         text = {
             Column(Modifier.verticalScroll(rememberScrollState())) {
                 // לייזר-חי + לכידת-גובה לשדה-הגובה (ONE-SHOT)

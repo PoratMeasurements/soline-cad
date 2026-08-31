@@ -41,6 +41,8 @@ fun ToolsFab(
     currentRoomId: Long? = null,
 ) {
     val bug = rememberBugReporter(currentRoute, currentProjectId, currentRoomId)
+    // מפרסמים את פעולת-הלכידה גלובלית כדי שדיאלוגים (מעל המשגר) יוכלו לדווח-באג (120539).
+    SideEffect { il.co.soline.measure.ui.bug.BugTrigger.start = bug.start }
     var menuOpen by remember { mutableStateOf(false) }
     var laserOpen by remember { mutableStateOf(false) }
     var diagOpen by remember { mutableStateOf(false) }
