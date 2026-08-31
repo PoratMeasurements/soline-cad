@@ -210,27 +210,27 @@ private fun buildChecklist(
         )
     )
 
-    // מינימום קירות בכל חדר
+    // מספר-קירות בכל חדר (מידע בלבד — שרטוט פתוח מותר · בקשת-מודד 121438)
     val thin = rooms.filter { it.size < MIN_WALLS }
     checks.add(
         Check(
-            thin.isEmpty() && rooms.isNotEmpty(),
-            "לכל חדר לפחות $MIN_WALLS קירות",
+            rooms.isNotEmpty(),
+            "בכל חדר יש קירות",
             when {
                 rooms.isEmpty() -> "אין חדרים"
                 thin.isEmpty() -> "${rooms.size} חדרים — מספר-קירות תקין"
-                else -> "${thin.size} חדרים עם פחות מ-$MIN_WALLS קירות"
+                else -> "${thin.size} חדרים עם שרטוט פתוח (מותר להגשה)"
             },
         )
     )
 
-    // סגירת-החדר + הצגת-הפער
+    // סטטוס-סגירת-המתאר (מידע בלבד — פתוח מותר · בקשת-מודד 121438)
     checks.add(
         Check(
-            calc.allClosed,
-            "מתאר-החדר סגור",
+            true,
+            "סטטוס-סגירת-מתאר",
             if (calc.allClosed) "כל החדרים נסגרים (פער ≤ ${mm(calc.maxGapMm)} ${Prefs.unitSuffix})"
-            else "פער-סגירה ${mm(calc.maxGapMm)} ${Prefs.unitSuffix} — יש להשלים/לאחות",
+            else "מתאר פתוח (פער ${mm(calc.maxGapMm)} ${Prefs.unitSuffix}) — מותר להגשה",
         )
     )
 

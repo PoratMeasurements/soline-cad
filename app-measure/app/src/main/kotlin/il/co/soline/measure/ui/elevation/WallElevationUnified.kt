@@ -1079,6 +1079,7 @@ fun AccessoryEditor(
     var widthTxt by remember { mutableStateOf(initial.width.mmU()) }
     var heightTxt by remember { mutableStateOf(initial.height.mmU()) }
     var depthTxt by remember { mutableStateOf(initial.depth.mmU()) }
+    var notesTxt by remember { mutableStateOf(initial.notes) } // הערת-מודד פר-אלמנט (§10)
 
     // הקלט מוזן ביחידת-התצוגה → המרה חזרה למ"מ לאחסון (fallback הוא כבר מ"מ).
     fun num(s: String, fallback: Double) = Prefs.parseToMm(s) ?: fallback
@@ -1096,6 +1097,7 @@ fun AccessoryEditor(
                         width = num(widthTxt, initial.width),
                         height = num(heightTxt, initial.height),
                         depth = num(depthTxt, initial.depth),
+                        notes = notesTxt.trim(),
                     ),
                 )
             }) { Text(confirmLabel, color = Orange, fontWeight = FontWeight.Bold) }
@@ -1169,6 +1171,9 @@ fun AccessoryEditor(
                 NumRow("גובה (${Prefs.unitSuffix})", heightTxt, KeyboardType.Number) { heightTxt = it }
                 Spacer(Modifier.height(8.dp))
                 NumRow("עומק-בליטה (${Prefs.unitSuffix})", depthTxt, KeyboardType.Number) { depthTxt = it }
+                Spacer(Modifier.height(8.dp))
+                // הערת-מודד חופשית פר-אלמנט (§10) — מה שהנגר/המשרד צריך לדעת על האלמנט הזה.
+                NumRow("📝 הערה לאלמנט (חופשי)", notesTxt, KeyboardType.Text) { notesTxt = it }
             }
         },
         containerColor = Color.White,

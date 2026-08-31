@@ -109,11 +109,13 @@ object RoomValidator {
         }
 
         // --- 2. סגירת-החדר + חיבור-אוטומטי/T (§2) ---
+        // בקשת-מודד 121438: אין "מינימום-קירות" ואין חובת "מצולע-סגור" — שרטוט **פתוח**
+        // הוא הגשה-לגיטימית. לכן מספר-קירות-נמוך = INFO ופער-סגירה = WARN (מתריע, לא-חוסם).
         if (walls.size < cfg.minWalls) {
             out.add(
                 ValidationIssue(
-                    Severity.BLOCK, "TOO_FEW_WALLS",
-                    "בחדר ${walls.size} קירות — דרושים לפחות ${cfg.minWalls} למצולע סגור"
+                    Severity.INFO, "TOO_FEW_WALLS",
+                    "בחדר ${walls.size} קירות — שרטוט פתוח (מותר להגשה)"
                 )
             )
         } else if (walls.all { it.length > 0.0 }) {
@@ -137,8 +139,8 @@ object RoomValidator {
                 else ->
                     out.add(
                         ValidationIssue(
-                            Severity.BLOCK, "ROOM_NOT_CLOSED",
-                            "החדר אינו סגור — פער $g מ\"מ בין קצות-הקירות"
+                            Severity.WARN, "ROOM_NOT_CLOSED",
+                            "החדר אינו-סגור (פער $g מ\"מ) — מותר להגיש פתוח; ודא שזו הכוונה"
                         )
                     )
             }

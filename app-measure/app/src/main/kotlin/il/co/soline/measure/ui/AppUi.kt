@@ -60,6 +60,7 @@ import il.co.soline.measure.geometry.WallHeadProfile
 import il.co.soline.measure.fit.FitDelta
 import il.co.soline.measure.fit.Severity
 import il.co.soline.measure.ui.draw.LiveCadScreen
+import il.co.soline.measure.ui.draw.SketchInjectHost
 import il.co.soline.measure.ui.measure.MeasureCaptureScreen
 import il.co.soline.measure.ui.view3d.Room3DView
 import il.co.soline.measure.ui.cad.CadDimensionEditor
@@ -159,6 +160,7 @@ fun SolineRoot() {
                 composable("closeroom/{rid}") { e -> e.longArg("rid")?.let { il.co.soline.measure.ui.checklist.CloseRoomScreen(nav, it) } }
                 composable("closeproject/{pid}") { e -> e.longArg("pid")?.let { il.co.soline.measure.ui.checklist.CloseProjectScreen(nav, it) } }
                 composable("draw/{rid}") { e -> e.longArg("rid")?.let { DrawScreenHost(nav, it) } }
+                composable("sketch/{rid}") { e -> e.longArg("rid")?.let { SketchInjectHost(nav, it) } }
                 composable("measure/{rid}") { e -> e.longArg("rid")?.let { MeasureHost(nav, it) } }
                 composable("unified/{rid}") { e -> e.longArg("rid")?.let { il.co.soline.measure.ui.unified.UnifiedMeasureHost(nav, it) } }
                 composable("measurestart/{rid}") { e -> e.longArg("rid")?.let { MeasureStartHost(nav, it) } }
@@ -898,19 +900,18 @@ private fun HeightSweepDialog(current: List<Double>, onDismiss: () -> Unit, onSa
     val connected by ble.connected.collectAsState()
     var armed by remember { mutableStateOf(false) }
     var armedFrom by remember { mutableStateOf(Long.MAX_VALUE) }
-    var pending by remember { mutableStateOf<Double?>(null) }   // מידה-חריגה הממתינה להחלטה
 
-    val outlierMm = 20.0                                        // סף >2 ס"מ
+    val outlierMm = 20.0                                        // סף >2 ס"מ מהחציון
     fun refMm(): Double? = if (list.isEmpty()) null else list.sorted()[list.size / 2]  // חציון-יציב
+    fun isOutlier(h: Double): Boolean = refMm()?.let { kotlin.math.abs(h - it) > outlierMm } ?: false
 
-    // קליטה-רציפה: כל ירייה מתקבלת אוטומטית ומיד נדרך לבאה; חריגה עוצרת להחלטה.
+    // קליטה-רציפה **בלי-חסימה** (בקשת-מודד 115901): כל ירייה נקלטת ומדלגת מיד לבאה;
+    // חריגות לא-עוצרות את המדידה — הן רק מסומנות באדום, והמודד מוחק/מאשר בסוף.
     LaunchedEffect(last) {
         val r = last; val d = r?.distanceMm
-        if (armed && pending == null && r != null && d != null && d > 0 && r.ts > armedFrom) {
+        if (armed && r != null && d != null && d > 0 && r.ts > armedFrom) {
             armedFrom = r.ts                                    // דילוג-אוטומטי לקריאה הבאה
-            val ref = refMm()
-            if (ref == null || kotlin.math.abs(d - ref) <= outlierMm) list.add(d)
-            else pending = d                                    // >2ס"מ → אדום, המתן להחלטה
+            list.add(d)
         }
     }
     LaunchedEffect(connected) { if (connected == null) { armed = false; armedFrom = Long.MAX_VALUE } }
@@ -923,39 +924,29 @@ private fun HeightSweepDialog(current: List<Double>, onDismiss: () -> Unit, onSa
                 fontSize = 12.sp, color = if (connected != null) OkGreen else Muted, modifier = Modifier.weight(1f),
             )
             OutlinedButton(
-                onClick = { pending = null; armed = !armed; armedFrom = last?.ts ?: 0L },
+                onClick = { armed = !armed; armedFrom = last?.ts ?: 0L },
                 colors = if (armed) ButtonDefaults.outlinedButtonColors(containerColor = Teal, contentColor = Color.White) else ButtonDefaults.outlinedButtonColors(),
             ) { Text(if (armed) "📡 יורה… (עצור)" else "📡 קלוט גבהים") }
         }
-        if (armed) Text("ירֵה שוב-ושוב — כל מדידה נקלטת אוטומטית ומדלגת לבאה.", fontSize = 11.sp, color = Teal)
-
-        // מידה-חריגה ממתינה להחלטה (>2ס"מ מהחציון)
-        pending?.let { p ->
-            Column(
-                Modifier.fillMaxWidth().padding(vertical = 6.dp)
-                    .background(BlockRed.copy(alpha = 0.10f), RoundedCornerShape(10.dp)).padding(10.dp),
-            ) {
-                Text("⚠️ מידה חריגה: ${Prefs.formatLen(p)}", color = BlockRed, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                Text(
-                    "סטייה ${Prefs.formatLen(kotlin.math.abs(p - (refMm() ?: p)))} מהחציון — ייתכן תקלה בלקיחת-המידה.",
-                    fontSize = 12.sp, color = Ink,
-                )
-                Row(Modifier.fillMaxWidth().padding(top = 6.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = { list.add(p); pending = null }, colors = ButtonDefaults.buttonColors(containerColor = Teal)) { Text("השאר", color = Color.White) }
-                    OutlinedButton(onClick = { pending = null }) { Text("מחק") }
-                }
-            }
-        }
+        if (armed) Text("ירֵה שוב-ושוב — כל מדידה נקלטת אוטומטית. חריגות מסומנות אדום; מחק בסוף.", fontSize = 11.sp, color = Teal)
 
         if (list.isEmpty()) Text("אין מדידות עדיין.", fontSize = 13.sp, color = Muted)
         else {
+            val outCount = list.count { isOutlier(it) }
             Text(
-                "מינ' ${Prefs.lenValue(list.min())} · מקס' ${Prefs.formatLen(list.max())} · המחייב = ${Prefs.formatLen(list.min())}",
-                fontSize = 13.sp, color = Teal, fontWeight = FontWeight.SemiBold,
+                "מינ' ${Prefs.lenValue(list.min())} · מקס' ${Prefs.formatLen(list.max())} · המחייב = ${Prefs.formatLen(list.min())}" +
+                    if (outCount > 0) " · ⚠️ $outCount חריגות" else "",
+                fontSize = 13.sp, color = if (outCount > 0) BlockRed else Teal, fontWeight = FontWeight.SemiBold,
             )
             list.forEachIndexed { i, h ->
+                val out = isOutlier(h)
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text(Prefs.formatLen(h), fontSize = 15.sp, color = Ink, modifier = Modifier.weight(1f))
+                    Text(
+                        (if (out) "⚠️ " else "") + Prefs.formatLen(h),
+                        fontSize = 15.sp, color = if (out) BlockRed else Ink,
+                        fontWeight = if (out) FontWeight.Bold else FontWeight.Normal,
+                        modifier = Modifier.weight(1f),
+                    )
                     IconButton(onClick = { list.removeAt(i) }) { Icon(Icons.Default.Delete, "מחק", tint = BlockRed) }
                 }
             }
@@ -1276,9 +1267,13 @@ fun CabinetHost(nav: NavController, wallId: Long) {
 fun SemiAutoHost(nav: NavController, roomId: Long) {
     val scope = rememberCoroutineScope()
     val existing by repo.walls(roomId).collectAsStateWithLifecycle(emptyList())
+    val room by repo.room(roomId).collectAsStateWithLifecycle(null)
+    // גובה-החדר האחיד מגיע ממהלך-הגבהים (המחייב = המינימום), לא נשאל שוב בסמיאוטו (121524).
+    val defHeight = room?.heightSweepMm?.let { RoomSurvey.parseHeights(it).minOrNull() } ?: Prefs.defaultWallHeightMm
     var pending by remember { mutableStateOf<List<WallEntity>?>(null) }
     SemiAutoOutlineScreen(
         roomId = roomId,
+        defaultHeightMm = defHeight,
         onDone = { newWalls ->
             if (existing.isEmpty()) scope.launch { addWizardWalls(roomId, newWalls, replace = false); nav.popBackStack() }
             else pending = newWalls
@@ -1537,6 +1532,7 @@ fun WallScreen(nav: NavController, wallId: Long) {
                             Column(Modifier.weight(1f).clickable { editing = a }.padding(16.dp)) {
                                 Text(a.name, fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Ink)
                                 Text("עומק ${Prefs.formatLen(a.depth)} · מיקום ${Prefs.lenValue(a.fromLeft)} · גובה ${Prefs.lenValue(a.fromBottom)} · רוחב ${Prefs.lenValue(a.width)}", fontSize = 12.sp, color = Muted)
+                                if (a.notes.isNotBlank()) Text("📝 ${a.notes}", fontSize = 12.sp, color = Teal, fontWeight = FontWeight.Medium)
                             }
                             IconButton(onClick = { editing = a }) { Text("✎", fontSize = 18.sp) }
                             IconButton(onClick = { scope.launch { repo.addAccessory(a.copy(id = 0, fromLeft = a.fromLeft + a.width + 50)) } }) { Text("📋", fontSize = 18.sp) }
@@ -1592,6 +1588,7 @@ private fun AddAccessoryDialog(wallId: Long, wallLengthMm: Double, def: ElementD
     if (spec != null) {
         // ── פתח פרמטרי (דלת/חלון/מיזוג-איוורור): טופס ממולא בברירת-מחדל-יצרן ──
         var res by remember { mutableStateOf<OpeningResult?>(null) }
+        var notes by remember { mutableStateOf("") } // הערת-מודד פר-אלמנט (§10)
         // שער-הזנה (קבוצה-D): רוחב/גובה>0, ההיסט הוזן-בפועל, ו-fromLeft לא-שלילי.
         val r0 = res
         val openingValid = r0 != null && r0.width > 0.0 && r0.height > 0.0 && r0.offsetProvided && r0.fromLeft >= 0.0
@@ -1607,7 +1604,7 @@ private fun AddAccessoryDialog(wallId: Long, wallLengthMm: Double, def: ElementD
                     frameReveal = r.frameReveal, leafThickness = r.leafThickness,
                     openMode = r.openMode, hingeSide = r.hingeSide, swing = r.swing,
                     leafCount = r.leafCount, glazing = r.glazing, fromCorner = r.fromCorner,
-                    measured = r.measured,
+                    measured = r.measured, notes = notes.trim(),
                 )
                 scope.launch { repo.addAccessory(a) }
             }
@@ -1620,6 +1617,10 @@ private fun AddAccessoryDialog(wallId: Long, wallLengthMm: Double, def: ElementD
                 defaultDepth = def.defaultDepth,
                 onValues = { res = it },
             )
+            OutlinedTextField(
+                notes, { notes = it }, label = { Text("📝 הערה לאלמנט (חופשי)") },
+                modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
+            )
             if (!openingValid) Text(
                 "יש להזין מיקום (היסט), רוחב וגובה תקינים (גדולים מ-0) לפני שמירה.",
                 color = BlockRed, fontSize = 12.sp, modifier = Modifier.padding(top = 6.dp),
@@ -1631,6 +1632,7 @@ private fun AddAccessoryDialog(wallId: Long, wallLengthMm: Double, def: ElementD
     // ── אלמנט-רגיל: fl, w, fb, h, d — משדות-המדידה (מרכז / היסטים-מפינות) ──
     var vals by remember { mutableStateOf(doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0)) }
     var measured by remember { mutableStateOf(false) }
+    var notes by remember { mutableStateOf("") } // הערת-מודד פר-אלמנט (§10)
     // שער-הזנה (קבוצה-D): רוחב/גובה>0 ו-fromLeft לא-שלילי (מצב-מרכז יכול לגזור שלילי).
     val elementValid = vals[1] > 0.0 && vals[3] > 0.0 && vals[0] >= 0.0
 
@@ -1639,7 +1641,7 @@ private fun AddAccessoryDialog(wallId: Long, wallLengthMm: Double, def: ElementD
         val a = AccessoryEntity(
             wallId = wallId, type = def.key, name = def.he,
             depth = vals[4], fromLeft = vals[0], width = vals[1], fromBottom = vals[2], height = vals[3],
-            measured = measured,
+            measured = measured, notes = notes.trim(),
         )
         scope.launch { repo.addAccessory(a) }; onDismiss()
     }) {
@@ -1650,6 +1652,10 @@ private fun AddAccessoryDialog(wallId: Long, wallLengthMm: Double, def: ElementD
             round = def.round,
             defaultDepth = def.defaultDepth,
             onValues = { fl, w, fb, h, d, m -> vals = doubleArrayOf(fl, w, fb, h, d); measured = m },
+        )
+        OutlinedTextField(
+            notes, { notes = it }, label = { Text("📝 הערה לאלמנט (חופשי)") },
+            modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
         )
         if (!elementValid) Text(
             "יש להזין רוחב וגובה תקינים (גדולים מ-0) ומיקום לא-שלילי לפני שמירה.",

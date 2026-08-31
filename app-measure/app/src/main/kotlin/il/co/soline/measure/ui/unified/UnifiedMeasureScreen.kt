@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import il.co.soline.measure.data.Prefs
+import il.co.soline.measure.data.RoomSurvey
 import il.co.soline.measure.data.SolineApp
 import il.co.soline.measure.data.WallEntity
 import il.co.soline.measure.ui.Cream
@@ -96,8 +97,9 @@ fun UnifiedMeasureHost(nav: NavController, roomId: Long) {
     val reading by ble.lastReading.collectAsStateWithLifecycle(null)
     val connected by ble.connected.collectAsStateWithLifecycle(null)
 
-    var station by remember { mutableStateOf(Station.WALLS) } // נכנסים היישר למדידה
-    val visited = remember { mutableStateOf(setOf(Station.WALLS)) }
+    // בקשת-מודד 210307: פתיחת-המדידה (שיטה/גבהים) היא הדבר-הראשון בפתיחת-חדר.
+    var station by remember { mutableStateOf(Station.METHOD) }
+    val visited = remember { mutableStateOf(setOf(Station.METHOD)) }
     var capture by remember { mutableStateOf(Capture.LASER) }
     var angle by remember { mutableStateOf(90.0) } // זווית-הפנייה לקיר-הבא
     var tapeText by remember { mutableStateOf("") }
@@ -141,7 +143,17 @@ fun UnifiedMeasureHost(nav: NavController, roomId: Long) {
             }
 
             // ── סרגל-התחנות (ניווט-ראשי · עמיד לאורך ולרוחב) ──
-            StationBar(current = station, visited = visited.value, wallsDone = walls.isNotEmpty()) { go(it) }
+            // ✓ מגובה-בנתונים (§4): קירות שנמדדו · חזית שנלכדה · חדר שנסגר. שאר-התחנות = "נצפו".
+            val done = buildSet {
+                if (walls.isNotEmpty()) add(Station.WALLS)
+                if (walls.any { it.framePointsJson.isNotBlank() }) add(Station.ELEV)
+                if ((room?.closedAt ?: 0L) != 0L) add(Station.CLOSE)
+            }
+            StationBar(current = station, visited = visited.value, done = done) { go(it) }
+
+            // ── חיווי גובה-תקרה מין/מקס (D2 · §5) — נראה כשנלכדו גבהים ──
+            val heights = room?.heightSweepMm?.let { RoomSurvey.parseHeights(it) } ?: emptyList()
+            if (heights.isNotEmpty()) CeilingChip(heights.min(), heights.max())
 
             // ── קנבס-המתאר המתמשך (תמיד אותו שרטוט) ──
             Box(Modifier.weight(1f).fillMaxWidth()) {
@@ -209,7 +221,7 @@ fun UnifiedMeasureHost(nav: NavController, roomId: Long) {
 // ── סרגל-התחנות ──────────────────────────────────────────────────────────────
 
 @Composable
-private fun StationBar(current: Station, visited: Set<Station>, wallsDone: Boolean, onPick: (Station) -> Unit) {
+private fun StationBar(current: Station, visited: Set<Station>, done: Set<Station>, onPick: (Station) -> Unit) {
     Row(
         Modifier.fillMaxWidth().background(Cream).horizontalScroll(rememberScrollState())
             .padding(horizontal = 8.dp, vertical = 6.dp),
@@ -218,7 +230,8 @@ private fun StationBar(current: Station, visited: Set<Station>, wallsDone: Boole
     ) {
         Station.entries.forEach { s ->
             val on = s == current
-            val done = if (s == Station.WALLS) wallsDone else s in visited && s != current
+            val isDone = s in done
+            val seen = !isDone && s in visited && s != current
             Surface(
                 onClick = { onPick(s) },
                 shape = RoundedCornerShape(999.dp),
@@ -235,7 +248,8 @@ private fun StationBar(current: Station, visited: Set<Station>, wallsDone: Boole
                     Text(s.glyph, fontSize = 13.sp)
                     Text(s.label, fontSize = 12.sp, fontWeight = FontWeight.Bold,
                         color = if (on) Color.White else Ink)
-                    if (done) Text("✓", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = OkGreen)
+                    if (isDone) Text("✓", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = OkGreen)
+                    else if (seen) Text("•", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Muted)
                 }
             }
         }
@@ -262,8 +276,9 @@ private fun MethodPanel(nav: NavController, roomId: Long, onPickInEngine: (Captu
         MethodCard("✍️", "מטר", "ידני") { onPickInEngine(Capture.TAPE) }
         MethodCard("🎯", "X6 P2P", "מעמדה") { nav.navigate("p2p/$roomId") }
         MethodCard("⚙️", "מתאר", "חצי-אוטו") { nav.navigate("semiauto/$roomId") }
-        MethodCard("✏️", "ציור-באצבע", "→ הזרקה") { nav.navigate("draw/$roomId") }
-        MethodCard("📏", "גבהים", "מין/מקס") { nav.navigate("floor/$roomId") }
+        MethodCard("✏️", "ציור-באצבע", "→ הזרקה") { nav.navigate("sketch/$roomId") }
+        MethodCard("📏", "גבהי-תקרה", "מין/מקס") { nav.navigate("measurestart/$roomId") }
+        MethodCard("📐", "מפלס-רצפה", "שיפוע") { nav.navigate("floor/$roomId") }
     }
 }
 
@@ -406,6 +421,26 @@ private fun StepNav(label: String, enabled: Boolean, onClick: () -> Unit) {
         Text(label, fontSize = 13.sp, fontWeight = FontWeight.Bold,
             color = if (enabled) Ink else Muted.copy(alpha = 0.5f),
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 9.dp))
+    }
+}
+
+@Composable
+private fun CeilingChip(minMm: Double, maxMm: Double) {
+    Surface(
+        Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 2.dp),
+        shape = RoundedCornerShape(10.dp),
+        color = Teal.copy(alpha = 0.08f),
+    ) {
+        Row(
+            Modifier.padding(horizontal = 12.dp, vertical = 5.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text("📏 תקרה", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Teal)
+            Text("מקס ${cm(maxMm)} · מין ${cm(minMm)} ס\"מ", fontSize = 11.sp, color = Ink)
+            if (maxMm != minMm) Text("שיפוע ${cm(maxMm - minMm)}", fontSize = 11.sp, color = Muted)
+            Text("· מחייב = מין", fontSize = 10.sp, color = Muted)
+        }
     }
 }
 

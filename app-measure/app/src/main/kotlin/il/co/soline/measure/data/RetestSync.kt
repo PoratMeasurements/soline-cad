@@ -139,10 +139,21 @@ object RetestSync {
             context.contentResolver.openOutputStream(target)
                 ?.use { it.write(json.toByteArray(Charsets.UTF_8)) }
             markResponded(context, item) // איפוס-מיידי-וקבוע: לא-יחזור בפתיחה-מחדש
+            // בקשת-מודד 212824: verdict "תקין" → ארכוב-מיידי ב"הבאגים שלי" מפעולת-המודד עצמה,
+            // בלי להמתין לעדכון-סטטוס מהשרת (bug_status.json). item.id = baseName של הבאג.
+            if (verdict == RetestVerdict.OK) markArchivedLocally(context, item.id)
             true
         } catch (_: Exception) {
             false
         }
+    }
+
+    /** מוסיף באג לרשימת-הארכיון המקומית של "הבאגים שלי" (SharedPreferences "soline_mybugs"). */
+    private fun markArchivedLocally(context: Context, bugId: String) {
+        val sp = context.getSharedPreferences("soline_mybugs", Context.MODE_PRIVATE)
+        val cur = HashSet(sp.getStringSet("archived", emptySet()) ?: emptySet())
+        cur.add(bugId)
+        sp.edit().putStringSet("archived", cur).apply()
     }
 
     // ── רשומת "נענו" קבועה (SharedPreferences) — מפתח id|version כדי שבדיקה-חוזרת אחרי-תיקון תחזור ──

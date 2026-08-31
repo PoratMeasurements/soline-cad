@@ -25,7 +25,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         PhotoEntity::class,          // פיצ'ר-תמונות: תמונות-שדה פר-חזית
         VideoEntity::class,          // רשימת-משימות-מדיה: סרטוני-שדה (גישה/הסבר)
     ],
-    version = 19,
+    version = 20,
     // ייצוא-סכימה מופעל (המלצת-הביקורת #1 · עמידות): Room פולט JSON-סכימה לכל-גרסה
     // אל `app/schemas/` (מוגדר ב-build.gradle · room.schemaLocation), הנשמר בבקרת-גרסאות.
     // כך אי-התאמת-סכימה עתידית נתפסת בסקירת-diff/בדיקת-מיגרציה במקום לפגוע בשקט
@@ -504,7 +504,19 @@ abstract class SolineDatabase : RoomDatabase() {
         }
 
         /**
-         * כל-המיגרציות בסדר-רץ (1→19). מקור-אמת יחיד: גם [get] רושם אותן וגם בדיקת-
+         * מיגרציה 19→20: **הערת-מודד פר-אלמנט** (תזרים-השדה §10). מוסיפה לטבלת
+         * accessories את `notes` (TEXT NOT NULL DEFAULT '') — טקסט-חופשי שהמודד מזין
+         * לאלמנט ספציפי (חריגה/דרישה/אזהרה לנגר). ALTER TABLE בלבד — אפס-מחיקת-נתונים;
+         * אלמנטים קיימים מקבלים '' (=ללא-הערה). תוספתי ותואם-לאחור.
+         */
+        private val MIGRATION_19_20 = object : Migration(19, 20) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `accessories` ADD COLUMN `notes` TEXT NOT NULL DEFAULT ''")
+            }
+        }
+
+        /**
+         * כל-המיגרציות בסדר-רץ (1→20). מקור-אמת יחיד: גם [get] רושם אותן וגם בדיקת-
          * המיגרציה (MigrationTest) מריצה אותן כשרשרת. internal בכוונה — נגיש-לבדיקה
          * באותו-מודול בלי לחשוף את פרטי-המיגרציה החוצה. תוספתי-בלבד (אין-שינוי-התנהגות).
          */
@@ -513,6 +525,7 @@ abstract class SolineDatabase : RoomDatabase() {
             MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11,
             MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15,
             MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19,
+            MIGRATION_19_20,
         )
 
         @Volatile private var INSTANCE: SolineDatabase? = null

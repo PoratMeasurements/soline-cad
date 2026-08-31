@@ -376,6 +376,8 @@ object SolWriter {
                     // §5: דגל "נמדד-מול-ברירת-מחדל-קטלוג" — מקביל ל-heightMeasured לקירות.
                     // מאפשר לנגר/לשער-האיכות להבחין מדידה-אמיתית מניחוש-מידת-יצרן.
                     sb.append("          \"measured\": ").append(a.measured).append(",\n")
+                    // §10: הערת-מודד חופשית פר-אלמנט — מה שהמודד רוצה שהנגר/המשרד ידעו.
+                    sb.append("          \"notes\": ").append(jstr(a.notes)).append(",\n")
                     // אלמנט-רגיל: height_mm הוא השדה האחרון. פתח (דלת/חלון/מיזוג): מוסיפים
                     // בלוק "opening" פרמטרי (OPENING_ELEMENT_SCHEMA.md) הנושא את מידות-האמת.
                     if (a.openingKind.isEmpty()) {

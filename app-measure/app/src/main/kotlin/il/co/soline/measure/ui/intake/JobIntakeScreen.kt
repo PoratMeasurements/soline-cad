@@ -175,11 +175,11 @@ fun JobIntakeScreen(
             Section("פרטי הפרויקט") {
                 BigField(clientName, { clientName = it }, "שם הלקוח (= שם הפרויקט) *")
                 BigField(contact, { contact = it }, "איש-קשר באתר")
-                Text("נוכחות-לקוח במדידה:", fontSize = 12.sp, color = Muted)
+                Text("נוכחות-לקוח בתחילת-המדידה:", fontSize = 12.sp, color = Muted)
+                // בקשת-מודד 195918: רק נוכח/לא-נוכח בתחילה — בלי "לאורך-כל-המדידה".
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Chip("לא נכח", selected = clientPresence == "none") { clientPresence = "none" }
-                    Chip("בתחילה", selected = clientPresence == "start") { clientPresence = "start" }
-                    Chip("לאורך-כולה", selected = clientPresence == "all") { clientPresence = "all" }
+                    Chip("נוכח בתחילה", selected = clientPresence == "start") { clientPresence = "start" }
+                    Chip("לא נוכח", selected = clientPresence == "none") { clientPresence = "none" }
                 }
             }
 
@@ -279,7 +279,7 @@ private fun buildAccessNotes(
     } else add("מעלית: אין")
     if (vehicle.isNotBlank()) add("גישת-רכב: ${vehicle.trim()}")
     if (remark.isNotBlank()) add("הערות-גישה: ${remark.trim()}")
-    add("נוכחות-לקוח: " + when (clientPresence) { "all" -> "לאורך-כל-המדידה"; "start" -> "בתחילת-המדידה"; else -> "לא נכח" })
+    add("נוכחות-לקוח: " + if (clientPresence == "start") "נוכח בתחילת-המדידה" else "לא נוכח")
     if (surveyorNotes.isNotBlank()) add("הערות-מודד: ${surveyorNotes.trim()}")
 }.joinToString(" · ")
 

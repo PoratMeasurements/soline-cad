@@ -129,6 +129,9 @@ fun SemiAutoOutlineScreen(
     onDone: (List<WallEntity>) -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
+    // גובה-החדר האחיד (מ"מ) — נקבע ברמת-החדר (מהלך-הגבהים) ותקף לכל-הקירות. בקשת-מודד
+    // 121524: לא-מציגים/מבקשים גובה כאן שוב; מקבלים אותו מוכן ומיישמים לכל קיר.
+    defaultHeightMm: Double = 2700.0,
 ) {
     val context = LocalContext.current
     // מד-הלייזר ברמת-האפליקציה — אותו סינגלטון כמו שאר-המסכים (שורד ניווט)
@@ -160,8 +163,8 @@ fun SemiAutoOutlineScreen(
     // עמדות-מדידה חדשות (New Origin) — אינדקסי-קודקוד בפריסה-המשולבת
     var stations by remember { mutableStateOf<Set<Int>>(emptySet()) }
 
-    // גובה-חדר אחיד (מ"מ) — נכתב לכל הקירות
-    var heightMm by remember { mutableStateOf(2700.0) }
+    // גובה-חדר אחיד (מ"מ) — נכתב לכל הקירות. נקבע ברמת-החדר (מהלך-גבהים), לא כאן (121524).
+    val heightMm = defaultHeightMm
 
     // מרחק-הירי-הממתין: פריים-לייזר חדש (ts) עם מרחק תקין הופך לירי-הבא
     var pendingMm by remember { mutableStateOf<Double?>(null) }
@@ -445,8 +448,6 @@ fun SemiAutoOutlineScreen(
                 committedCount = committed.size,
                 stationCount = stations.size,
                 onCombine = ::combine,
-                heightMm = heightMm,
-                onHeight = { heightMm = it.coerceIn(1000.0, 6000.0) },
                 canFinish = committed.isNotEmpty() || walls.isNotEmpty(),
                 onFinish = ::finish,
             )
@@ -482,8 +483,6 @@ private fun ControlPanel(
     committedCount: Int,
     stationCount: Int,
     onCombine: () -> Unit,
-    heightMm: Double,
-    onHeight: (Double) -> Unit,
     canFinish: Boolean,
     onFinish: () -> Unit,
 ) {
@@ -513,8 +512,6 @@ private fun ControlPanel(
                 ModeChip("↺ נגד-השעון (CCW)", directionCcw) { onDirection(true) }
                 ModeChip("↻ עם-השעון (CW)", !directionCcw) { onDirection(false) }
             }
-            Spacer(Modifier.height(8.dp))
-            HeightRow(heightMm, onHeight)
             Spacer(Modifier.height(10.dp))
 
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -559,8 +556,6 @@ private fun ControlPanel(
                 }
                 ConnBadge(connected, status)
             }
-            Spacer(Modifier.height(8.dp))
-            HeightRow(heightMm, onHeight)
             Spacer(Modifier.height(10.dp))
 
             // שורה 1: קלוט-קיר (ירי-אחד) + דלג

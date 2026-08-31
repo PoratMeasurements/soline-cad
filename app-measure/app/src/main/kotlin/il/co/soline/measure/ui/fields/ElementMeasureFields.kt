@@ -81,6 +81,8 @@ fun ElementMeasureFields(
 ) {
     // ברירת-מחדל: עגול/קטן → מרכז; אחרת → היסטים-מפינות. rememberSaveable ⇒ שורד-סיבוב (P0-2).
     var centerMode by rememberSaveable { mutableStateOf(round) }
+    // מצב-מרכז: מאיזה קצה נמדד מיקום-המרכז (בקשת-מודד 120716). true=שמאל (ברירת-מחדל).
+    var centerFromLeft by rememberSaveable { mutableStateOf(true) }
 
     // שדות משותפים לשני המצבים. עומק-הבליטה ממולא-מראש בברירת-המחדל של הקטלוג
     // (מקרר 650, מזגן 180…) — לא ריק — כדי שלא-ייוצא D=0 בשקט (יסוד R4).
@@ -108,7 +110,7 @@ fun ElementMeasureFields(
 
     // דיווח ערכים לאב בכל שינוי
     LaunchedEffect(
-        centerMode, depth.value, fromBottom.value, height.value,
+        centerMode, centerFromLeft, depth.value, fromBottom.value, height.value,
         centerPos.value, widthCenter.value, offsetLeft.value, offsetRight.value, wallLengthMm, measured,
     ) {
         val d = if (hasDepth) depth.value.toMm() else 0.0
@@ -116,8 +118,10 @@ fun ElementMeasureFields(
         val h = height.value.toMm()
         if (centerMode) {
             val w = widthCenter.value.toMm()
-            val center = centerPos.value.toMm()
-            val fromLeft = center - w / 2.0
+            val raw = centerPos.value.toMm()
+            // מיקום-המרכז המוחלט (מהקצה השמאלי) — מתהפך כשמודדים מהקצה הימני.
+            val centerAbs = if (centerFromLeft) raw else wallLengthMm - raw
+            val fromLeft = centerAbs - w / 2.0
             onValues(fromLeft, w, fb, h, d, measured)
         } else {
             onValues(oL, computedWidth, fb, h, d, measured)
@@ -128,7 +132,10 @@ fun ElementMeasureFields(
     // שדה-ריק אינו-אדום (הכפתור-בשער כבוי + הערת-סיכום מדריכים). fromLeft שלילי (מצב-מרכז) נדחה. ──
     val wVal = if (centerMode) widthCenter.value.toMm() else computedWidth
     val hVal = height.value.toMm()
-    val flVal = if (centerMode) centerPos.value.toMm() - wVal / 2.0 else oL
+    val flVal = if (centerMode) {
+        val raw = centerPos.value.toMm()
+        (if (centerFromLeft) raw else wallLengthMm - raw) - wVal / 2.0
+    } else oL
     val widthErr = if (centerMode && widthCenter.value.isNotBlank() && wVal <= 0.0) "רוחב חייב להיות גדול מ-0" else null
     val heightErr = if (height.value.isNotBlank() && hVal <= 0.0) "גובה חייב להיות גדול מ-0" else null
     val centerErr = if (centerMode && centerPos.value.isNotBlank() && widthCenter.value.isNotBlank() && flVal < 0.0)
@@ -140,7 +147,12 @@ fun ElementMeasureFields(
             ModeToggle(centerMode = centerMode, onSelect = { centerMode = it })
 
             if (centerMode) {
-                LaserNumField("מיקום-מרכז (${Prefs.unitSuffix} מהקצה השמאלי)", centerPos, onEdited = markMeasured, error = centerErr)
+                // מאיזה קצה נמדד מיקום-המרכז (בקשת-מודד 120716)
+                CenterSideToggle(centerFromLeft) { centerFromLeft = it }
+                LaserNumField(
+                    "מיקום-מרכז (${Prefs.unitSuffix} " + (if (centerFromLeft) "מהקצה השמאלי" else "מהקצה הימני") + ")",
+                    centerPos, onEdited = markMeasured, error = centerErr,
+                )
                 LaserNumField(if (round) "קוטר (${Prefs.unitSuffix})" else "רוחב (${Prefs.unitSuffix})", widthCenter, onEdited = markMeasured, error = widthErr)
             } else {
                 LaserNumField("היסט משמאל (${Prefs.unitSuffix})", offsetLeft, onEdited = markMeasured)
@@ -158,6 +170,17 @@ fun ElementMeasureFields(
             if (hasDepth) LaserNumField("עומק-בליטה D (${Prefs.unitSuffix})", depth, onEdited = markMeasured)
             LaserNumField("גובה מהרצפה (${Prefs.unitSuffix})", fromBottom, onEdited = markMeasured)
             LaserNumField("גובה האלמנט (${Prefs.unitSuffix})", height, onEdited = markMeasured, error = heightErr)
+        }
+    }
+}
+
+/** מתג-מקטעים: [ מהקצה השמאלי | מהקצה הימני ] — בסיס-מדידת מיקום-המרכז (120716). */
+@Composable
+private fun CenterSideToggle(fromLeft: Boolean, onSelect: (Boolean) -> Unit) {
+    Surface(shape = RoundedCornerShape(10.dp), color = Cream, modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+        Row(Modifier.padding(3.dp), horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+            SegmentCell("מהקצה השמאלי", selected = fromLeft, modifier = Modifier.weight(1f)) { onSelect(true) }
+            SegmentCell("מהקצה הימני", selected = !fromLeft, modifier = Modifier.weight(1f)) { onSelect(false) }
         }
     }
 }
