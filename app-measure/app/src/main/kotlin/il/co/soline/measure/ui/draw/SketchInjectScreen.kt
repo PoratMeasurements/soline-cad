@@ -49,6 +49,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import il.co.soline.measure.data.Prefs
 import il.co.soline.measure.data.SolineApp
+import il.co.soline.measure.data.WallEntity
+import il.co.soline.measure.geometry.WallBuilder
 import il.co.soline.measure.ui.Cream
 import il.co.soline.measure.ui.Ink
 import il.co.soline.measure.ui.Muted
@@ -144,10 +146,11 @@ fun SketchInjectHost(nav: NavController, roomId: Long) {
             // ── קנבס-הסקיצה (הקשה = פינה) ──
             Box(Modifier.weight(1f).fillMaxWidth()) {
                 SketchCanvas(pts = pts, closed = closed, lens = lens, selEdge = selEdge, n = n, edges = edges,
-                    onTap = { pts.add(it); closed = false })
+                    existing = existing, onTap = { pts.add(it); closed = false })
                 if (pts.isEmpty()) {
                     Text(
-                        "הקש על המסך כדי לסמן את פינות-החדר, פינה-אחר-פינה.",
+                        if (existing.isEmpty()) "הקש על המסך כדי לסמן את פינות-החדר, פינה-אחר-פינה."
+                        else "השרטוט-הקיים מוצג ברקע. הקש כדי להוסיף פינות חדשות.",
                         fontSize = 13.sp, color = Muted,
                         modifier = Modifier.align(Alignment.Center).padding(24.dp),
                     )
@@ -254,6 +257,7 @@ private fun SketchCanvas(
     selEdge: Int?,
     n: Int,
     edges: Int,
+    existing: List<WallEntity>,
     onTap: (Offset) -> Unit,
 ) {
     val teal = Teal.toArgb()
@@ -261,6 +265,27 @@ private fun SketchCanvas(
         Modifier.fillMaxSize().padding(8.dp)
             .pointerInput(Unit) { detectTapGestures(onTap = { onTap(it) }) },
     ) {
+        // ── רקע: השרטוט-הקיים (192339 — "השרטוט מוצג בכל שיטה, לא תצוגה ריקה") ──
+        if (existing.isNotEmpty()) {
+            val layout = WallBuilder.layout(existing.sortedBy { it.idx })
+            if (layout.size >= 2) {
+                var minX = Double.MAX_VALUE; var minY = Double.MAX_VALUE
+                var maxX = -Double.MAX_VALUE; var maxY = -Double.MAX_VALUE
+                for (p in layout) { minX = minOf(minX, p.x); minY = minOf(minY, p.y); maxX = maxOf(maxX, p.x); maxY = maxOf(maxY, p.y) }
+                val pad = 40.dp.toPx()
+                val spanX = (maxX - minX).coerceAtLeast(1.0); val spanY = (maxY - minY).coerceAtLeast(1.0)
+                val sc = minOf((size.width - 2 * pad) / spanX, (size.height - 2 * pad) / spanY).toFloat()
+                val cx = ((minX + maxX) / 2).toFloat(); val cy = ((minY + maxY) / 2).toFloat()
+                fun toScr(px: Double, py: Double) = Offset(
+                    (px.toFloat() - cx) * sc + size.width / 2f,
+                    (py.toFloat() - cy) * sc + size.height / 2f,
+                )
+                for (i in 0 until layout.size - 1) {
+                    drawLine(Muted.copy(alpha = 0.45f), toScr(layout[i].x, layout[i].y), toScr(layout[i + 1].x, layout[i + 1].y),
+                        strokeWidth = 2.dp.toPx(), cap = StrokeCap.Round)
+                }
+            }
+        }
         val lbl = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = teal; textAlign = Paint.Align.CENTER; textSize = 12.dp.toPx() }
         // קטעים
         for (i in 0 until edges) {

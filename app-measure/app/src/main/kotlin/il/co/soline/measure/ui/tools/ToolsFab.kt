@@ -9,7 +9,9 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import kotlin.math.roundToInt
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.SmallFloatingActionButton
@@ -51,10 +53,19 @@ fun ToolsFab(
     var menuOpen by remember { mutableStateOf(false) }
     var laserOpen by remember { mutableStateOf(false) }
     var diagOpen by remember { mutableStateOf(false) }
-    // המשגר נגרר (בקשת-מודד 205033) — כדי שלא יסתיר תוכן-לחיץ; נשמר בין-מסכים.
+    // המשגר נגרר **וחסום-לגבולות-המסך** (בקשת-מודד 205033) — נע בהחלקה עד קצוות-המסך
+    // בלי לצאת החוצה ובלי להיצמד-לצד. bottom-start עוגן ⇒ x∈[0,+], y∈[-,0].
     var dragOffset by remember { mutableStateOf(Offset.Zero) }
+    var boxSize by remember { mutableStateOf(IntSize.Zero) }
+    val margin = 220f // רוחב/גובה משוער של המשגר + שוליים (px) — שומר אותו נגיש
+    fun clamp(o: Offset): Offset {
+        if (boxSize.width == 0) return o
+        val maxX = (boxSize.width - margin).coerceAtLeast(0f)
+        val minY = -(boxSize.height - margin).coerceAtLeast(0f)
+        return Offset(o.x.coerceIn(0f, maxX), o.y.coerceIn(minY, 0f))
+    }
 
-    Box(Modifier.fillMaxSize()) {
+    Box(Modifier.fillMaxSize().onSizeChanged { boxSize = it }) {
         // פאנל-הלייזר (overlay-משלו) — נפתח מאייקון-הלייזר
         LaserPanel(visible = laserOpen, onClose = { laserOpen = false })
         // אבחון-לייזר חי — נפתח מכל-מסך; המודד מצלם ומצרף לדיווח-הבאג
@@ -84,8 +95,8 @@ fun ToolsFab(
                     onClick = { menuOpen = !menuOpen },
                     containerColor = Orange,
                     contentColor = Color.White,
-                    modifier = Modifier.pointerInput(Unit) {
-                        detectDragGestures { change, delta -> change.consume(); dragOffset += delta }
+                    modifier = Modifier.pointerInput(boxSize) {
+                        detectDragGestures { change, delta -> change.consume(); dragOffset = clamp(dragOffset + delta) }
                     },
                 ) { Text(if (menuOpen) "✕" else "🛠️", fontSize = 20.sp) }
             }

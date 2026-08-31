@@ -5,6 +5,9 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -74,6 +77,10 @@ fun RoomPlanCanvas(
     accessoriesByWall: Map<Long, List<AccessoryEntity>>,
     modifier: Modifier = Modifier,
 ) {
+    // זום+הזזה של התצוגה (בקשת-מודד 213400) — double-tap מאפס.
+    var zoom by remember { mutableStateOf(1f) }
+    var pan by remember { mutableStateOf(Offset.Zero) }
+
     // שכבות-תצוגה (שליטה בלייב — §3 "שליטה בתצוגה")
     var showDims by remember { mutableStateOf(true) }
     var showAngles by remember { mutableStateOf(true) }
@@ -134,13 +141,25 @@ fun RoomPlanCanvas(
                 return@Box
             }
 
-            Canvas(Modifier.fillMaxSize()) {
+            Canvas(
+                Modifier.fillMaxSize()
+                    .pointerInput(Unit) {
+                        detectTransformGestures { _, panChange, zoomChange, _ ->
+                            zoom = (zoom * zoomChange).coerceIn(0.3f, 8f)
+                            pan += panChange
+                        }
+                    }
+                    .pointerInput(Unit) {
+                        detectTapGestures(onDoubleTap = { zoom = 1f; pan = Offset.Zero })
+                    },
+            ) {
                 val plan = buildPlan(ordered)
                 val (bcx, bcy, scale) = fit(plan.verts, size.width, size.height, 56.dp.toPx())
 
+                // הטרנספורם כולל זום+הזזה של המשתמש (213400).
                 fun toScreen(p: Pt) = Offset(
-                    (p.x - bcx) * scale + size.width / 2f,
-                    (p.y - bcy) * scale + size.height / 2f,
+                    (p.x - bcx) * scale * zoom + size.width / 2f + pan.x,
+                    (p.y - bcy) * scale * zoom + size.height / 2f + pan.y,
                 )
 
                 // סרגל-רשת (רקע)
