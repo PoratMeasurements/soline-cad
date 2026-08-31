@@ -183,8 +183,12 @@ fun BugReportFab(
     }
 }
 
-/** בקר-דיווח-באג: [start] מפעיל לכידת-מסך→עורך; [busy] אמת בזמן-לכידה/עריכה (להסתיר את המשגר). */
-class BugReporterController(val start: () -> Unit, val busy: Boolean)
+/**
+ * בקר-דיווח-באג: [start] מפעיל לכידת-מסך→עורך; [startNoteOnly] פותח דיווח **הערה-בלבד**
+ * (בלי-צילום — לדיווח מתוך-דיאלוג, שם חלון-הדיאלוג אינו-ניתן-ללכידה · 120539/192750);
+ * [busy] אמת בזמן-לכידה/עריכה (להסתיר את המשגר).
+ */
+class BugReporterController(val start: () -> Unit, val busy: Boolean, val startNoteOnly: () -> Unit = {})
 
 /**
  * מפעיל-דיווח-באג גלובלי (בקשת-מודד 120539 · חוזר 212205). דיאלוגים (AlertDialog) נפתחים
@@ -194,6 +198,8 @@ class BugReporterController(val start: () -> Unit, val busy: Boolean)
  */
 object BugTrigger {
     var start: () -> Unit = {}
+    // דיווח הערה-בלבד (בלי-צילום) — לשימוש מתוך דיאלוגים (120539/192750).
+    var startNoteOnly: () -> Unit = {}
 }
 
 /**
@@ -229,6 +235,8 @@ fun rememberBugReporter(
         }
     }
 
+    var noteOnly by remember { mutableStateOf(false) }
+
     captured?.let { bmp ->
         BugEditorOverlay(
             bitmap = bmp,
@@ -238,8 +246,70 @@ fun rememberBugReporter(
             onClose = { captured = null; bmp.recycle() },
         )
     }
+    if (noteOnly) NoteOnlyBugOverlay(
+        screen = screenLabel(currentRoute),
+        projectId = currentProjectId,
+        roomId = currentRoomId,
+        onClose = { noteOnly = false },
+    )
 
-    return BugReporterController(start = start, busy = capturing || captured != null)
+    return BugReporterController(
+        start = start,
+        busy = capturing || captured != null || noteOnly,
+        startNoteOnly = { noteOnly = true },
+    )
+}
+
+/**
+ * דיווח-באג **הערה-בלבד** (בלי-צילום) — לדיווח מתוך-דיאלוג, שם חלון-הדיאלוג אינו-ניתן
+ * ללכידה ב-PixelCopy (120539/192750). דיאלוג פשוט: טקסט-הערה → שמירה. נשמר ומועלה
+ * דרך אותו צינור כמו דיווח-רגיל, עם תמונת-מציין קטנה ("ללא צילום").
+ */
+@Composable
+private fun NoteOnlyBugOverlay(
+    screen: String,
+    projectId: Long?,
+    roomId: Long?,
+    onClose: () -> Unit,
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var notes by remember { mutableStateOf("") }
+    var saving by remember { mutableStateOf(false) }
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = { if (!saving) onClose() },
+        confirmButton = {
+            androidx.compose.material3.TextButton(
+                enabled = notes.isNotBlank() && !saving,
+                onClick = {
+                    saving = true
+                    scope.launch {
+                        withContext(Dispatchers.IO) {
+                            val placeholder = Bitmap.createBitmap(160, 90, Bitmap.Config.ARGB_8888).apply { eraseColor(android.graphics.Color.DKGRAY) }
+                            persistReport(context, placeholder, IntSize(160, 90), emptyList(), notes, screen, projectId, roomId)
+                            placeholder.recycle()
+                        }
+                        Toast.makeText(context, "הדיווח נשמר ✓", Toast.LENGTH_SHORT).show()
+                        onClose()
+                    }
+                },
+            ) { Text(if (saving) "שומר…" else "שלח", color = BlockRed, fontWeight = FontWeight.Bold) }
+        },
+        dismissButton = { androidx.compose.material3.TextButton(onClick = { if (!saving) onClose() }) { Text("ביטול") } },
+        title = { Text("🐞 דיווח באג (הערה)", fontWeight = FontWeight.Bold) },
+        text = {
+            Column {
+                Text("דיווח מתוך חלון — בלי צילום-מסך. תאר את הבעיה:", fontSize = 12.sp)
+                Spacer(Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = notes, onValueChange = { notes = it },
+                    label = { Text("מה קרה?") },
+                    modifier = Modifier.fillMaxWidth(), minLines = 3,
+                )
+                Text("מסך: $screen", fontSize = 11.sp, color = Muted, modifier = Modifier.padding(top = 6.dp))
+            }
+        },
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -46,10 +46,14 @@ fun ToolsFab(
     currentRoute: String?,
     currentProjectId: Long? = null,
     currentRoomId: Long? = null,
+    onHome: () -> Unit = {},
 ) {
     val bug = rememberBugReporter(currentRoute, currentProjectId, currentRoomId)
-    // מפרסמים את פעולת-הלכידה גלובלית כדי שדיאלוגים (מעל המשגר) יוכלו לדווח-באג (120539).
-    SideEffect { il.co.soline.measure.ui.bug.BugTrigger.start = bug.start }
+    // מפרסמים את פעולות-הדיווח גלובלית כדי שדיאלוגים (מעל המשגר) יוכלו לדווח-באג (120539).
+    SideEffect {
+        il.co.soline.measure.ui.bug.BugTrigger.start = bug.start
+        il.co.soline.measure.ui.bug.BugTrigger.startNoteOnly = bug.startNoteOnly
+    }
     var menuOpen by remember { mutableStateOf(false) }
     var laserOpen by remember { mutableStateOf(false) }
     var diagOpen by remember { mutableStateOf(false) }
@@ -85,6 +89,7 @@ fun ToolsFab(
                     exit = fadeOut() + scaleOut(),
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        ToolMini("🏠", "דף הבית", Orange) { menuOpen = false; laserOpen = false; diagOpen = false; onHome() }
                         ToolMini("🐞", "דיווח באג", BlockRed) { menuOpen = false; laserOpen = false; diagOpen = false; bug.start() }
                         ToolMini("📡", "מד-לייזר", Teal) { menuOpen = false; diagOpen = false; laserOpen = true }
                         ToolMini("🔬", "אבחון-לייזר", Ink) { menuOpen = false; laserOpen = false; diagOpen = true }

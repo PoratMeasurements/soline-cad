@@ -161,6 +161,8 @@ fun SolineRoot() {
                 composable("closeproject/{pid}") { e -> e.longArg("pid")?.let { il.co.soline.measure.ui.checklist.CloseProjectScreen(nav, it) } }
                 composable("draw/{rid}") { e -> e.longArg("rid")?.let { DrawScreenHost(nav, it) } }
                 composable("sketch/{rid}") { e -> e.longArg("rid")?.let { SketchInjectHost(nav, it) } }
+                composable("heights/{rid}") { e -> e.longArg("rid")?.let { HeightsHost(nav, it) } }
+                composable("changes/{rid}") { e -> e.longArg("rid")?.let { ChangesHost(nav, it) } }
                 composable("measure/{rid}") { e -> e.longArg("rid")?.let { MeasureHost(nav, it) } }
                 composable("unified/{rid}") { e -> e.longArg("rid")?.let { il.co.soline.measure.ui.unified.UnifiedMeasureHost(nav, it) } }
                 composable("measurestart/{rid}") { e -> e.longArg("rid")?.let { MeasureStartHost(nav, it) } }
@@ -191,6 +193,7 @@ fun SolineRoot() {
                 currentRoute = curRoute,
                 currentProjectId = curPid,
                 currentRoomId = curRid,
+                onHome = { nav.navigate("projects") { popUpTo("projects") { inclusive = false }; launchSingleTop = true } },
             )
             } // Box
         }
@@ -346,6 +349,8 @@ fun ProjectRoomsScreen(nav: NavController, projectId: Long) {
     val context = LocalContext.current
     val rooms by repo.rooms(projectId).collectAsStateWithLifecycle(emptyList())
     val project by repo.project(projectId).collectAsStateWithLifecycle(null)
+    // האינטייק המקושר (כתובת/גישה) לעריכת כל-פרטי-הפרויקט (195918); null אם אין-קישור.
+    val editJob by remember(project?.jobId) { repo.job(project?.jobId ?: 0L) }.collectAsStateWithLifecycle(null)
     var showAdd by remember { mutableStateOf(false) }
     var roomToDelete by remember { mutableStateOf<il.co.soline.measure.data.RoomEntity?>(null) }
     var showDeleteProject by remember { mutableStateOf(false) }
@@ -494,15 +499,39 @@ fun ProjectRoomsScreen(nav: NavController, projectId: Long) {
     }
     if (showEditProject) {
         project?.let { p ->
+            val j = editJob
             val nm = remember(p.id) { mutableStateOf(p.name) }
             val cl = remember(p.id) { mutableStateOf(p.client) }
+            // שדות-האינטייק (נטענים מ-editJob כשקיים קישור) — עריכת כל-פרטי-הפרויקט (195918).
+            val contact = remember(j?.id) { mutableStateOf(j?.contact ?: "") }
+            val city = remember(j?.id) { mutableStateOf(j?.city ?: "") }
+            val addr1 = remember(j?.id) { mutableStateOf(j?.address1 ?: "") }
+            val addr2 = remember(j?.id) { mutableStateOf(j?.address2 ?: "") }
+            val access = remember(j?.id) { mutableStateOf(j?.accessNotes ?: "") }
             FormDialog("עריכת פרטי-פרויקט", onDismiss = { showEditProject = false }, onConfirm = {
-                scope.launch { repo.updateProject(p.copy(name = nm.value.trim().ifBlank { p.name }, client = cl.value.trim())) }
+                scope.launch {
+                    repo.updateProject(p.copy(name = nm.value.trim().ifBlank { p.name }, client = cl.value.trim()))
+                    if (j != null) repo.updateJob(j.copy(
+                        clientName = nm.value.trim().ifBlank { j.clientName },
+                        clientCompany = cl.value.trim(),
+                        contact = contact.value.trim(), city = city.value.trim(),
+                        address1 = addr1.value.trim(), address2 = addr2.value.trim(),
+                        accessNotes = access.value.trim(),
+                    ))
+                }
                 showEditProject = false
             }) {
                 OutlinedTextField(nm.value, { nm.value = it }, label = { Text("שם הפרויקט / לקוח") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                 OutlinedTextField(cl.value, { cl.value = it }, label = { Text("מפעל / לקוח-מזמין") }, singleLine = true, modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
-                Text("כתובת ודרכי-גישה — עריכה-מלאה בהמשך.", fontSize = 11.sp, color = Muted, modifier = Modifier.padding(top = 6.dp))
+                if (j != null) {
+                    OutlinedTextField(contact.value, { contact.value = it }, label = { Text("איש-קשר באתר") }, singleLine = true, modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
+                    OutlinedTextField(city.value, { city.value = it }, label = { Text("עיר") }, singleLine = true, modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
+                    OutlinedTextField(addr1.value, { addr1.value = it }, label = { Text("רחוב ומספר") }, singleLine = true, modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
+                    OutlinedTextField(addr2.value, { addr2.value = it }, label = { Text("קומה/דירה/כניסה") }, singleLine = true, modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
+                    OutlinedTextField(access.value, { access.value = it }, label = { Text("דרכי-גישה") }, modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
+                } else {
+                    Text("פרויקט זה נוצר ללא טופס-אינטייק — ניתן לערוך שם/מפעל בלבד.", fontSize = 11.sp, color = Muted, modifier = Modifier.padding(top = 6.dp))
+                }
             }
         } ?: run { showEditProject = false }
     }
@@ -529,11 +558,7 @@ fun RoomScreen(nav: NavController, roomId: Long) {
     Scaffold(containerColor = Cream, floatingActionButton = { AddFab { showAdd = true } }) { pad ->
         Column(Modifier.padding(pad).fillMaxSize().verticalScroll(rememberScrollState())) {
             BrandHeader("קירות החדר", onBack = { nav.popBackStack() })
-            // כפתור-מעבר-מהיר לדף-הבית הראשי (בקשת-מודד 192044).
-            OutlinedButton(
-                onClick = { nav.navigate("projects") { popUpTo("projects") { inclusive = false }; launchSingleTop = true } },
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 6.dp),
-            ) { Text("🏠 דף הבית") }
+            // כפתור-בית עבר לסרגל-הכלים (🛠️ → 🏠) לפי בקשת-מודד 192044.
             // "פתיחת מדידה" (כניסה/גבהים/שינויים) עברה לתוך מנוע-המדידה (בקשת-מודד 210307).
             // מסך-מדידה אחד: כל שיטות-המדידה בתוכו.
             Button(
@@ -920,14 +945,25 @@ private fun HeightSweepDialog(current: List<Double>, onDismiss: () -> Unit, onSa
                     if (outCount > 0) " · ⚠️ $outCount חריגות" else "",
                 fontSize = 13.sp, color = if (outCount > 0) BlockRed else Teal, fontWeight = FontWeight.SemiBold,
             )
+            val ref = refMm()
             list.forEachIndexed { i, h ->
                 val out = isOutlier(h)
+                // סטייה מהחציון (בקשת-מודד 115901) — מוצגת לכל מדידה, מודגשת-אדום בחריגה.
+                val devMm = ref?.let { h - it } ?: 0.0
+                val devTxt = (if (devMm >= 0) "+" else "−") + Prefs.formatLen(kotlin.math.abs(devMm))
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         (if (out) "⚠️ " else "") + Prefs.formatLen(h),
                         fontSize = 15.sp, color = if (out) BlockRed else Ink,
                         fontWeight = if (out) FontWeight.Bold else FontWeight.Normal,
                         modifier = Modifier.weight(1f),
+                    )
+                    if (ref != null) Text(
+                        "סטייה $devTxt",
+                        fontSize = 12.sp,
+                        color = if (out) BlockRed else Muted,
+                        fontWeight = if (out) FontWeight.Bold else FontWeight.Normal,
+                        modifier = Modifier.padding(end = 8.dp),
                     )
                     IconButton(onClick = { list.removeAt(i) }) { Icon(Icons.Default.Delete, "מחק", tint = BlockRed) }
                 }
@@ -1070,6 +1106,39 @@ fun MeasureStartHost(nav: NavController, roomId: Long) {
                 )
             }
             Spacer(Modifier.height(24.dp))
+        }
+    }
+}
+
+/** מסך-ייעודי למהלך-גבהים בלבד (דדופ · בקשות-מודד 192617/213617). */
+@Composable
+fun HeightsHost(nav: NavController, roomId: Long) {
+    val scope = rememberCoroutineScope()
+    val room by repo.room(roomId).collectAsStateWithLifecycle(null)
+    Box(Modifier.fillMaxSize().background(Cream)) {
+        room?.let { r ->
+            HeightSweepDialog(
+                RoomSurvey.parseHeights(r.heightSweepMm),
+                onDismiss = { nav.popBackStack() },
+                onSave = { scope.launch { repo.setRoomHeightSweep(roomId, it) }; nav.popBackStack() },
+            )
+        }
+    }
+}
+
+/** מסך-ייעודי לשינויים-עתידיים בלבד (דדופ · בקשות-מודד 192617/213617). */
+@Composable
+fun ChangesHost(nav: NavController, roomId: Long) {
+    val scope = rememberCoroutineScope()
+    val room by repo.room(roomId).collectAsStateWithLifecycle(null)
+    val walls by repo.walls(roomId).collectAsStateWithLifecycle(emptyList())
+    Box(Modifier.fillMaxSize().background(Cream)) {
+        room?.let { r ->
+            FutureChangesDialog(
+                RoomSurvey.parseFutureChanges(r.futureChanges), walls.size,
+                onDismiss = { nav.popBackStack() },
+                onSave = { scope.launch { repo.setRoomFutureChanges(roomId, it) }; nav.popBackStack() },
+            )
         }
     }
 }
@@ -1458,9 +1527,10 @@ fun IntakeHost(nav: NavController) {
     JobIntakeScreen(
         onSave = { job ->
             scope.launch {
-                repo.addJob(job)
+                val jid = repo.addJob(job)
                 // שם-הפרויקט = שם-לקוח-הקצה (= שם-התיקייה); client = המפעל-המזמין (לזיהוי תיקיית-הגיבוי).
-                val pid = repo.addProject(job.clientName.ifBlank { "עבודה חדשה" }, job.clientCompany)
+                // קישור jobId ⇒ עריכת כל-פרטי-הפרויקט (195918).
+                val pid = repo.addProject(job.clientName.ifBlank { "עבודה חדשה" }, job.clientCompany, jobId = jid)
                 nav.navigate("rooms/$pid") { popUpTo("projects") }
             }
         },
@@ -1660,8 +1730,8 @@ private fun FormDialog(title: String, onDismiss: () -> Unit, onConfirm: () -> Un
         title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(title, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                // 🐞 נגיש גם מעל חלון-אלמנט (120539): סוגר את הדיאלוג ואז פותח את דיווח-הבאג.
-                TextButton(onClick = { onDismiss(); il.co.soline.measure.ui.bug.BugTrigger.start() }) {
+                // 🐞 מעל חלון-אלמנט (120539/192750): דיווח הערה-בלבד (חלון-דיאלוג לא-ניתן-ללכידה).
+                TextButton(onClick = { onDismiss(); il.co.soline.measure.ui.bug.BugTrigger.startNoteOnly() }) {
                     Text("🐞", fontSize = 18.sp)
                 }
             }

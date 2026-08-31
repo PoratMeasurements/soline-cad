@@ -281,10 +281,10 @@ private fun MethodPanel(nav: NavController, roomId: Long, onPickInEngine: (Captu
     // פילוס וגבהים — כל פונקציות-רמת-החדר ליד השיטות (בקשות-מודד 192547/192521/192617/121718).
     Text("פילוס · גבהים · הערות:", fontSize = 13.sp, color = Ink)
     Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        MethodCard("📏", "מהלך-גבהים", "מין/מקס תקרה") { nav.navigate("measurestart/$roomId") }
+        MethodCard("📏", "מהלך-גבהים", "מין/מקס תקרה") { nav.navigate("heights/$roomId") }
         MethodCard("📐", "פילוס רצפה", "שיפוע") { nav.navigate("floor/$roomId") }
         MethodCard("📐", "פילוס תקרה", "שיפוע") { nav.navigate("ceiling/$roomId") }
-        MethodCard("📝", "שינויים עתידיים", "הערות") { nav.navigate("measurestart/$roomId") }
+        MethodCard("📝", "שינויים עתידיים", "הערות") { nav.navigate("changes/$roomId") }
     }
 }
 

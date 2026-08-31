@@ -17,8 +17,8 @@ class Repo(private val dao: SolineDao) {
     fun project(id: Long): Flow<Project?> = dao.project(id)
     suspend fun updateProject(p: Project) = dao.updateProject(p)
 
-    suspend fun addProject(name: String, client: String): Long =
-        dao.insertProject(Project(name = name, client = client))
+    suspend fun addProject(name: String, client: String, jobId: Long = 0): Long =
+        dao.insertProject(Project(name = name, client = client, jobId = jobId))
     /**
      * מחיקת-פרויקט עם cascade מלא: כל חדריו, קירותיו, בליטותיו, ארונותיו ונקודות-
      * המישוריות. מנקה ילדים מפורשות (הגנה גם אם אכיפת-FK כבויה) ואז את האב.

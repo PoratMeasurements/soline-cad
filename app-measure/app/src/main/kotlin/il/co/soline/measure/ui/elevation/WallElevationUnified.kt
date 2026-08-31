@@ -1112,8 +1112,8 @@ fun AccessoryEditor(
         title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(title, fontWeight = FontWeight.Bold, color = Ink, modifier = Modifier.weight(1f))
-                // 🐞 נגיש גם מעל חלון-האלמנט (120539): סוגר ואז פותח דיווח-באג.
-                TextButton(onClick = { onDismiss(); il.co.soline.measure.ui.bug.BugTrigger.start() }) {
+                // 🐞 מעל חלון-האלמנט (120539/192750): דיווח הערה-בלבד (חלון-דיאלוג לא-ניתן-ללכידה).
+                TextButton(onClick = { onDismiss(); il.co.soline.measure.ui.bug.BugTrigger.startNoteOnly() }) {
                     Text("🐞", fontSize = 18.sp)
                 }
             }
