@@ -100,25 +100,10 @@ fun UnifiedMeasureHost(nav: NavController, roomId: Long) {
     // בקשת-מודד 210307: פתיחת-המדידה (שיטה/גבהים) היא הדבר-הראשון בפתיחת-חדר.
     var station by remember { mutableStateOf(Station.METHOD) }
     val visited = remember { mutableStateOf(setOf(Station.METHOD)) }
-    var capture by remember { mutableStateOf(Capture.LASER) }
-    var angle by remember { mutableStateOf(90.0) } // זווית-הפנייה לקיר-הבא
-    var tapeText by remember { mutableStateOf("") }
-    var railRight by remember { mutableStateOf(false) } // צד-הצמדה של הסרגל (205033)
-    var railY by remember { mutableStateOf(0f) }         // גובה-הסרגל (נגרר)
-    var railCollapsed by remember { mutableStateOf(false) } // ✕ מכווץ, לא יוצא (211325)
-    var boxHpx by remember { mutableStateOf(0) }          // גובה-המסך (px) — לחסימת-גרירה (QA #3)
 
     fun go(s: Station) { station = s; visited.value = visited.value + s }
 
-    fun addWall(lenMm: Double) {
-        if (lenMm <= 0) return
-        // הזווית שנבחרה היא הפנייה בין הקיר-הקודם לחדש — נשמרת על הקיר ה*קודם*
-        // (מוסכמת WallBuilder). הקיר-הראשון: אין-קודם, הזווית נעדרת ולכן חסרת-משמעות.
-        val turnFromPrev = if (walls.isEmpty()) 0.0 else angle
-        scope.launch { repo.addWallWithTurn(roomId, lenMm, Prefs.defaultWallHeightMm, turnFromPrev) }
-    }
-
-    Box(Modifier.fillMaxSize().background(Cream).onSizeChanged { boxHpx = it.height }) {
+    Box(Modifier.fillMaxSize().background(Cream)) {
         Column(Modifier.fillMaxSize()) {
             // ── סרגל-עליון: יציאה · חדר · תחנה N/8 · חיבור · קריאה-חיה ──
             Row(
@@ -165,13 +150,9 @@ fun UnifiedMeasureHost(nav: NavController, roomId: Long) {
                 Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     when (station) {
                         Station.ACCESS -> AccessPanel(nav, roomId)
-                        Station.METHOD -> MethodPanel(nav, roomId) { capture = it; go(Station.WALLS) }
+                        Station.METHOD -> MethodPanel(nav, roomId)
                         Station.WALLS -> WallsPanel(
-                            nav = nav, roomId = roomId, walls = walls, capture = capture,
-                            angle = angle, onAngle = { angle = it },
-                            tapeText = tapeText, onTape = { tapeText = it },
-                            reading = reading?.distanceMm,
-                            onAdd = { addWall(it) },
+                            nav = nav, roomId = roomId, walls = walls,
                             onUndo = { scope.launch { repo.removeLastWall(roomId) } },
                         )
                         Station.ELEV -> StationWallPicker(
@@ -201,20 +182,8 @@ fun UnifiedMeasureHost(nav: NavController, roomId: Long) {
                 }
             }
         }
-
-        // ── סרגל-שיטה נייד (רק בתחנת-הקירות · נגרר · הצמדה-לצד · ✕ מכווץ) ──
-        if (station == Station.WALLS) {
-            MovableCaptureRail(
-                capture = capture,
-                right = railRight,
-                offsetY = railY,
-                collapsed = railCollapsed,
-                onSelect = { capture = it },
-                onDragY = { d -> railY = if (boxHpx > 0) (railY + d).coerceIn(-boxHpx / 2f, boxHpx / 2f) else railY + d },
-                onSnapSide = { railRight = it },
-                onToggleCollapse = { railCollapsed = !railCollapsed },
-            )
-        }
+        // כל שיטות-המדידה (לייזר D2/בוש · מטר · סקיצה) מאוחדות למסך-השרטוט (121524/192221/213532);
+        // אין עוד סרגל-שיטה נפרד — הכניסה היחידה לשרטוט היא כפתור "פתח שרטוט" בתחנת-הקירות.
     }
 }
 
@@ -269,14 +238,13 @@ private fun AccessPanel(nav: NavController, roomId: Long) {
 }
 
 @Composable
-private fun MethodPanel(nav: NavController, roomId: Long, onPickInEngine: (Capture) -> Unit) {
-    Text("שיטת-מדידה (אפשר לשלב):", fontSize = 13.sp, color = Ink)
+private fun MethodPanel(nav: NavController, roomId: Long) {
+    Text("שיטת-מדידה:", fontSize = 13.sp, color = Ink)
     Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        MethodCard("📡", "לייזר-קטן", "D2/בוש") { onPickInEngine(Capture.LASER) }
-        MethodCard("✍️", "מטר", "ידני") { onPickInEngine(Capture.TAPE) }
+        // כל השיטות מאוחדות לשרטוט: לייזר D2/בוש + מטר-ידני = הזרקה פר-קטע בתוך השרטוט
+        // (בקשות-מודד 121524/192221/213532/191959). אין עוד "לייזר-קטן"/"מטר" נפרדים.
+        MethodCard("✏️", "שרטוט", "לייזר/מטר") { nav.navigate("sketch/$roomId") }
         MethodCard("🎯", "X6 P2P", "מעמדה") { nav.navigate("p2p/$roomId") }
-        // איחוד ציור-באצבע + מתאר-חצי-אוטומטי לשיטה אחת (בקשות-מודד 191959/192221).
-        MethodCard("✏️", "שרטוט", "סקיצה+הזרקה") { nav.navigate("sketch/$roomId") }
     }
     // פילוס וגבהים — כל פונקציות-רמת-החדר ליד השיטות (בקשות-מודד 192547/192521/192617/121718).
     Text("פילוס · גבהים · הערות:", fontSize = 13.sp, color = Ink)
@@ -293,54 +261,20 @@ private fun WallsPanel(
     nav: NavController,
     roomId: Long,
     walls: List<WallEntity>,
-    capture: Capture,
-    angle: Double,
-    onAngle: (Double) -> Unit,
-    tapeText: String,
-    onTape: (String) -> Unit,
-    reading: Double?,
-    onAdd: (Double) -> Unit,
     onUndo: () -> Unit,
 ) {
-    // קישורי-שיטה מתקדמים (מסכים-ייעודיים)
+    // כל המדידה מתבצעת במסך-השרטוט המאוחד (לייזר D2/בוש + מטר-ידני, פר-קטע · 121524/192221).
+    Button(
+        onClick = { nav.navigate("sketch/$roomId") },
+        colors = ButtonDefaults.buttonColors(containerColor = Orange, contentColor = Color.White),
+        modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp),
+    ) { Text("✏️ פתח שרטוט (לייזר/מטר)", fontWeight = FontWeight.Bold, fontSize = 16.sp) }
     Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        LinkBtn("🎯 P2P", Teal) { nav.navigate("p2p/$roomId") }
-        LinkBtn("⚙️ מתאר-אוטו", Teal) { nav.navigate("semiauto/$roomId") }
-        LinkBtn("✏️ שרטוט-חי", Teal) { nav.navigate("draw/$roomId") }
+        LinkBtn("🎯 P2P (X6)", Teal) { nav.navigate("p2p/$roomId") }
+        LinkBtn("↩ בטל קיר-אחרון", Muted) { onUndo() }
     }
-    AngleChips(angle, walls.isEmpty(), onAngle)
-    when (capture) {
-        Capture.LASER -> Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            MiniBtn("↩", onUndo)
-            Button(
-                onClick = { reading?.let { onAdd(it) } },
-                enabled = reading?.let { it > 0 } == true,
-                colors = ButtonDefaults.buttonColors(containerColor = Orange, contentColor = Color.White),
-                modifier = Modifier.weight(1f).heightIn(min = 56.dp),
-            ) {
-                Text(reading?.let { "➕ הוסף קיר · ${cm(it)} ס\"מ" } ?: "מדוד עם הלייזר…",
-                    fontWeight = FontWeight.Bold, fontSize = 16.sp)
-            }
-        }
-        Capture.TAPE -> Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            MiniBtn("↩", onUndo)
-            OutlinedTextField(
-                value = tapeText, onValueChange = onTape,
-                label = { Text("אורך (${Prefs.unitSuffix})") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true, modifier = Modifier.weight(1f),
-                colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = Orange, cursorColor = Orange),
-            )
-            Button(
-                onClick = { Prefs.parseToMm(tapeText)?.let { onAdd(it); onTape("") } },
-                enabled = Prefs.parseToMm(tapeText)?.let { it > 0 } == true,
-                colors = ButtonDefaults.buttonColors(containerColor = Orange, contentColor = Color.White),
-                modifier = Modifier.heightIn(min = 56.dp),
-            ) { Text("➕ הוסף", fontWeight = FontWeight.Bold) }
-        }
-    }
-    Text("שיטה: ${capture.label} · בחר זווית-פנייה לקיר-הבא. הסרגל-הנייד מחליף שיטה.",
-        fontSize = 11.sp, color = Muted)
+    if (walls.isEmpty()) Text("אין קירות עדיין — פתח שרטוט כדי לצייר את החדר.", fontSize = 12.sp, color = Muted)
+    else WallChips(walls) { wid -> nav.navigate("wall/$wid") }
 }
 
 @Composable
