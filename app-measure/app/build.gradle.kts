@@ -13,8 +13,8 @@ android {
         applicationId = "il.co.soline.measure"
         minSdk = 26
         targetSdk = 35
-        versionCode = 17
-        versionName = "0.8.6.4"
+        versionCode = 18
+        versionName = "0.8.6.5"
     }
 
     buildFeatures {

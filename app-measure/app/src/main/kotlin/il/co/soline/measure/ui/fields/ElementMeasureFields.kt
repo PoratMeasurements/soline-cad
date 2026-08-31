@@ -79,10 +79,14 @@ fun ElementMeasureFields(
     // מידות-סטנדרט (מ"מ · בקשת-מודד 120826) — >0 ⇒ אלמנט מידות-קבועות: רוחב/גובה ממולאים-מראש.
     defaultWidth: Double = 0.0,
     defaultHeight: Double = 0.0,
+    // גובה-תקרה (מ"מ) — מאפשר מדידת מיקום-אנכי **מהתקרה** ולא רק מהרצפה (120716/192813).
+    ceilingHeightMm: Double = 0.0,
     onValues: (fromLeftMm: Double, widthMm: Double, fromBottomMm: Double, heightMm: Double, depthMm: Double, measured: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val fixedSize = defaultWidth > 0.0 || defaultHeight > 0.0
+    // מדידת-מיקום-אנכי: מהרצפה (ברירת-מחדל) או מהתקרה (בקשת-מודד 120716/192813).
+    var fromTop by rememberSaveable { mutableStateOf(false) }
     // ברירת-מחדל: עגול/קטן או מידות-קבועות → מרכז (הרוחב מוצג וממולא); אחרת → היסטים-מפינות.
     var centerMode by rememberSaveable { mutableStateOf(round || fixedSize) }
     // מצב-מרכז: מאיזה קצה נמדד מיקום-המרכז (בקשת-מודד 120716). true=שמאל (ברירת-מחדל).
@@ -114,11 +118,13 @@ fun ElementMeasureFields(
 
     // דיווח ערכים לאב בכל שינוי
     LaunchedEffect(
-        centerMode, centerFromLeft, depth.value, fromBottom.value, height.value,
-        centerPos.value, widthCenter.value, offsetLeft.value, offsetRight.value, wallLengthMm, measured,
+        centerMode, centerFromLeft, fromTop, depth.value, fromBottom.value, height.value,
+        centerPos.value, widthCenter.value, offsetLeft.value, offsetRight.value, wallLengthMm, ceilingHeightMm, measured,
     ) {
         val d = if (hasDepth) depth.value.toMm() else 0.0
-        val fb = fromBottom.value.toMm()
+        // אחסון תמיד כ"גובה מהרצפה"; אם נמדד מהתקרה — ממירים לפי גובה-התקרה.
+        val fbRaw = fromBottom.value.toMm()
+        val fb = if (fromTop && ceilingHeightMm > 0.0) (ceilingHeightMm - fbRaw).coerceAtLeast(0.0) else fbRaw
         val h = height.value.toMm()
         if (centerMode) {
             val w = widthCenter.value.toMm()
@@ -177,8 +183,24 @@ fun ElementMeasureFields(
             }
 
             if (hasDepth) LaserNumField("עומק-בליטה D (${Prefs.unitSuffix})", depth, onEdited = markMeasured)
-            LaserNumField("גובה מהרצפה (${Prefs.unitSuffix})", fromBottom, onEdited = markMeasured)
+            // מיקום-אנכי: מהרצפה או מהתקרה (זמין כשגובה-התקרה ידוע · 120716/192813)
+            if (ceilingHeightMm > 0.0) VerticalRefToggle(fromTop) { fromTop = it }
+            LaserNumField(
+                (if (fromTop && ceilingHeightMm > 0.0) "גובה מהתקרה" else "גובה מהרצפה") + " (${Prefs.unitSuffix})",
+                fromBottom, onEdited = markMeasured,
+            )
             LaserNumField("גובה האלמנט (${Prefs.unitSuffix})", height, onEdited = markMeasured, error = heightErr)
+        }
+    }
+}
+
+/** מתג-מקטעים: [ מהרצפה | מהתקרה ] — בסיס-מדידת המיקום-האנכי (120716/192813). */
+@Composable
+private fun VerticalRefToggle(fromTop: Boolean, onSelect: (Boolean) -> Unit) {
+    Surface(shape = RoundedCornerShape(10.dp), color = Cream, modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+        Row(Modifier.padding(3.dp), horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+            SegmentCell("מהרצפה", selected = !fromTop, modifier = Modifier.weight(1f)) { onSelect(false) }
+            SegmentCell("מהתקרה", selected = fromTop, modifier = Modifier.weight(1f)) { onSelect(true) }
         }
     }
 }

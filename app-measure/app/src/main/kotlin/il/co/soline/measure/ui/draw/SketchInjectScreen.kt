@@ -83,12 +83,16 @@ fun SketchInjectHost(nav: NavController, roomId: Long) {
     val reading by ble.lastReading.collectAsState()
     val connected by ble.connected.collectAsState(null)
 
+    val existing by repo.walls(roomId).collectAsState(emptyList())
     val pts = remember { mutableStateListOf<Offset>() }
     var closed by remember { mutableStateOf(false) }
     // אורך-אמת (מ"מ) פר-קטע לפי אינדקס-הקטע; חסר = טרם-הוזרק.
     val lens = remember { mutableStateMapOf<Int, Double>() }
     var selEdge by remember { mutableStateOf<Int?>(null) }
     var manual by remember { mutableStateOf("") }
+    // ברירת-מחדל: **לא-למחוק** את השרטוט הקיים (בקשת-מודד 192339 — "השרטוט לא נמחק/משתנה").
+    // מוסיפים את הסקיצה לקירות-הקיימים; החלפה רק בבחירה מפורשת.
+    var replaceExisting by remember { mutableStateOf(false) }
 
     val n = pts.size
     val edges = if (closed && n >= 3) n else (n - 1).coerceAtLeast(0)
@@ -106,11 +110,12 @@ fun SketchInjectHost(nav: NavController, roomId: Long) {
             atan2((b.y - a.y).toDouble(), (b.x - a.x).toDouble())
         }
         scope.launch {
-            repo.clearRoomWalls(roomId)
+            if (replaceExisting) repo.clearRoomWalls(roomId)
             for (i in 0 until edges) {
                 val turn = if (i < edges - 1) {
                     snapTurn(Math.toDegrees(normalizeRad(dirs[i + 1] - dirs[i])))
                 } else 0.0
+                // הוספה לקירות-הקיימים (מוסכמת WallBuilder: angle = פנייה-אל-הבא).
                 repo.addWall(roomId, lens.getValue(i), Prefs.defaultWallHeightMm, turn)
             }
             nav.popBackStack()
@@ -217,6 +222,14 @@ fun SketchInjectHost(nav: NavController, roomId: Long) {
                             },
                             fontWeight = FontWeight.Bold, fontSize = 15.sp,
                         )
+                    }
+                    // כשיש כבר קירות — בוחרים אם להוסיף (ברירת-מחדל) או להחליף (192339).
+                    if (existing.isNotEmpty()) {
+                        SmallBtn(
+                            if (replaceExisting) "🗑 מצב: מחליף את ${existing.size} הקירות הקיימים"
+                            else "➕ מצב: מוסיף ל-${existing.size} הקירות הקיימים (לא-מוחק)",
+                            enabled = true,
+                        ) { replaceExisting = !replaceExisting }
                     }
                     Button(
                         onClick = { build() },

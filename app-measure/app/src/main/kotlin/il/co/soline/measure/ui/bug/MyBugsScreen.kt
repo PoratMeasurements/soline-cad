@@ -70,7 +70,7 @@ fun MyBugsScreen(nav: NavController) {
             val statuses = RetestSync.loadBugStatuses(context)
             val raw = BugReportStore.list(context.filesDir) // חדש-קודם
             val n = raw.size
-            raw.mapIndexed { i, sr ->
+            val local = raw.mapIndexed { i, sr ->
                 val notes = try {
                     if (sr.json.name.endsWith(".json") && sr.json.exists())
                         BugReportBundle.fromJsonString(sr.json.readText(Charsets.UTF_8)).notes
@@ -80,6 +80,14 @@ fun MyBugsScreen(nav: NavController) {
                 val gSerial = statuses[sr.baseName]?.serial ?: 0
                 MyBug(if (gSerial > 0) gSerial else n - i, sr.baseName, sr.createdAt, sr.screen, notes, sr.png.absolutePath, statuses[sr.baseName])
             }
+            // בקשת-מודד 212824: **כל הבאגים אצל כל המודדים.** באגים ששודרו ע"י מכשירים-אחרים
+            // (קיימים ב-bug_status אך לא-מקומית) מוצגים גם-כן — סטטוס/סידורי, בלי-צילום-מקומי.
+            val localIds = local.map { it.id }.toSet()
+            val remote = statuses.filterKeys { it !in localIds }.map { (id, st) ->
+                val date = if (id.length >= 17) "${id.substring(4, 8)}-${id.substring(8, 10)}-${id.substring(10, 12)}" else id
+                MyBug(st.serial, id, date, "", "", "", st)
+            }
+            (local + remote).sortedByDescending { it.serial }
         }
     }
 
@@ -179,7 +187,7 @@ private fun MyBugCard(b: MyBug, onView: () -> Unit, onArchive: (() -> Unit)? = n
                 Column(Modifier.weight(1f)) {
                     // כותרת = מספר-סידורי רץ (#0001) + מסך; טקסט-הדיווח מוצג בגוף.
                     Text(
-                        "#%04d".format(b.serial) + " · " + b.screen,
+                        "#%04d".format(b.serial) + (if (b.screen.isNotBlank()) " · " + b.screen else " · דיווח-שטח"),
                         fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Ink, maxLines = 1,
                     )
                     Text(dateOf(b), fontSize = 12.sp, color = Muted, modifier = Modifier.padding(top = 2.dp))
@@ -201,9 +209,10 @@ private fun MyBugCard(b: MyBug, onView: () -> Unit, onArchive: (() -> Unit)? = n
             }
             Spacer(Modifier.height(8.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
-                TextButton(onClick = onView) {
+                // צילום זמין רק לדיווח-מקומי (למכשיר-אחר אין קובץ-תמונה מקומי · 212824).
+                if (b.pngPath.isNotBlank()) TextButton(onClick = onView) {
                     Text("📷 צפה בצילום", color = Teal, fontWeight = FontWeight.SemiBold)
-                }
+                } else Text("🌐 דיווח ממכשיר אחר", fontSize = 12.sp, color = Muted, modifier = Modifier.padding(8.dp))
                 if (onArchive != null) {
                     Spacer(Modifier.weight(1f))
                     TextButton(onClick = onArchive) {

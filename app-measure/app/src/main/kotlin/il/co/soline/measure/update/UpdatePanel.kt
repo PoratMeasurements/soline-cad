@@ -36,7 +36,7 @@ fun UpdatePanel() {
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
-            "גרסה נוכחית: ${UpdateChecker.currentName} (build ${UpdateChecker.currentCode})",
+            "גרסה נוכחית: ${UpdateChecker.currentName}",
             fontSize = 13.sp, color = Muted,
         )
 

@@ -529,6 +529,11 @@ fun RoomScreen(nav: NavController, roomId: Long) {
     Scaffold(containerColor = Cream, floatingActionButton = { AddFab { showAdd = true } }) { pad ->
         Column(Modifier.padding(pad).fillMaxSize().verticalScroll(rememberScrollState())) {
             BrandHeader("קירות החדר", onBack = { nav.popBackStack() })
+            // כפתור-מעבר-מהיר לדף-הבית הראשי (בקשת-מודד 192044).
+            OutlinedButton(
+                onClick = { nav.navigate("projects") { popUpTo("projects") { inclusive = false }; launchSingleTop = true } },
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 6.dp),
+            ) { Text("🏠 דף הבית") }
             // "פתיחת מדידה" (כניסה/גבהים/שינויים) עברה לתוך מנוע-המדידה (בקשת-מודד 210307).
             // מסך-מדידה אחד: כל שיטות-המדידה בתוכו.
             Button(
@@ -554,12 +559,7 @@ fun RoomScreen(nav: NavController, roomId: Long) {
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             ) { Text("🔒  סגירת חדר (רשימת משימות מדיה)") }
             Spacer(Modifier.height(6.dp))
-            Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
-                OutlinedButton(onClick = { nav.navigate("floor/$roomId") }, modifier = Modifier.weight(1f)) { Text("▦ מדידת רצפה") }
-                Spacer(Modifier.width(8.dp))
-                OutlinedButton(onClick = { nav.navigate("ceiling/$roomId") }, modifier = Modifier.weight(1f)) { Text("▤ מדידת תקרה") }
-            }
-            Spacer(Modifier.height(6.dp))
+            // מדידת-רצפה/תקרה (פילוס) עברו לתחנת-השיטה במנוע-המדידה (בקשות-מודד 121718/192902) — הוסרו מכאן.
             // "סמלי CAD" הוסרו כפריט-נפרד — הופכים לטיפוסי-אלמנט למדידה שמיוצאים לממיר (בקשת-מודד).
 
             // "בדיקת התאמה" עברה לשלב הייצוא + הדו"ח-הסופי (מאחדת חשיבת-מודד+נגר) — לא כפתור כאן (בקשת-מודד).
@@ -645,39 +645,22 @@ private fun MeasurementStartCard(
     onSetHeights: (List<Double>) -> Unit,
     onSetChanges: (List<RoomSurvey.FutureChange>) -> Unit,
 ) {
-    var showEntrance by remember { mutableStateOf(false) }
     var showHeights by remember { mutableStateOf(false) }
     var showChanges by remember { mutableStateOf(false) }
 
     val heights = remember(room.heightSweepMm) { RoomSurvey.parseHeights(room.heightSweepMm) }
     val changes = remember(room.futureChanges) { RoomSurvey.parseFutureChanges(room.futureChanges) }
-    val entranceSet = room.entranceBearingDeg >= 0.0 || room.entranceWallIdx >= 0
-    // הדגשת-פתיחה: כיוון-כניסה טרם-הוגדר בתחילת-מדידה (עדיין אין קירות).
-    val prompt = !entranceSet && wallCount == 0
 
     Card(
         Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 6.dp),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = if (prompt) WarnAmberBg else Color.White),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
     ) {
         Column(Modifier.padding(14.dp)) {
             Text("פתיחת מדידה", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = Ink)
             Spacer(Modifier.height(8.dp))
 
-            // כיוון-כניסה (עדיפות)
-            SurveyRow(
-                label = "כיוון כניסה",
-                value = entranceSummary(room),
-                emphasize = prompt,
-                onEdit = { showEntrance = true },
-            )
-            if (prompt) {
-                Text(
-                    "הגדר את כיוון-הכניסה של החדר לפני תחילת-המדידה — הדוח יצייר ממנו חץ-כניסה.",
-                    fontSize = 12.sp, color = WarnAmber, modifier = Modifier.padding(top = 2.dp, bottom = 4.dp),
-                )
-            }
-            HorizontalDivider(Modifier.padding(vertical = 6.dp), color = Muted.copy(alpha = 0.2f))
+            // כיוון-כניסה הוסר לפי בקשת-מודד 192417 ("לא מעניין כרגע").
 
             // מהלך-גבהים
             SurveyRow(
@@ -697,7 +680,6 @@ private fun MeasurementStartCard(
         }
     }
 
-    if (showEntrance) EntranceDialog(room, wallCount, onDismiss = { showEntrance = false }, onSave = { b, w, rel, van -> onSetEntrance(b, w, rel, van); showEntrance = false })
     if (showHeights) HeightSweepDialog(heights, onDismiss = { showHeights = false }, onSave = { onSetHeights(it); showHeights = false })
     if (showChanges) FutureChangesDialog(changes, wallCount, onDismiss = { showChanges = false }, onSave = { onSetChanges(it); showChanges = false })
 }
@@ -901,7 +883,7 @@ private fun HeightSweepDialog(current: List<Double>, onDismiss: () -> Unit, onSa
     var armed by remember { mutableStateOf(false) }
     var armedFrom by remember { mutableStateOf(Long.MAX_VALUE) }
 
-    val outlierMm = 20.0                                        // סף >2 ס"מ מהחציון
+    val outlierMm = 10.0                                        // סף >1 ס"מ מהחציון (בקשת-מודד 115901)
     fun refMm(): Double? = if (list.isEmpty()) null else list.sorted()[list.size / 2]  // חציון-יציב
     fun isOutlier(h: Double): Boolean = refMm()?.let { kotlin.math.abs(h - it) > outlierMm } ?: false
 
@@ -1553,7 +1535,7 @@ fun WallScreen(nav: NavController, wallId: Long) {
         )
     }
     chosen?.let { def ->
-        AddAccessoryDialog(wallId, wall?.length ?: 0.0, def, onDismiss = { chosen = null })
+        AddAccessoryDialog(wallId, wall?.length ?: 0.0, def, onDismiss = { chosen = null }, wallHeightMm = wall?.height ?: 0.0)
     }
     editing?.let { a ->
         // צילום-מוצמד-לאלמנט זמין רק לאביזר-שמור (id>0) שיש-לו הקשר-קיר לשם-הקובץ.
@@ -1582,7 +1564,7 @@ fun WallScreen(nav: NavController, wallId: Long) {
 }
 
 @Composable
-private fun AddAccessoryDialog(wallId: Long, wallLengthMm: Double, def: ElementDef, onDismiss: () -> Unit) {
+private fun AddAccessoryDialog(wallId: Long, wallLengthMm: Double, def: ElementDef, onDismiss: () -> Unit, wallHeightMm: Double = 0.0) {
     val scope = rememberCoroutineScope()
     val spec = def.opening
     if (spec != null) {
@@ -1653,6 +1635,7 @@ private fun AddAccessoryDialog(wallId: Long, wallLengthMm: Double, def: ElementD
             defaultDepth = def.defaultDepth,
             defaultWidth = def.defaultWidth,
             defaultHeight = def.defaultHeight,
+            ceilingHeightMm = wallHeightMm,
             onValues = { fl, w, fb, h, d, m -> vals = doubleArrayOf(fl, w, fb, h, d); measured = m },
         )
         OutlinedTextField(

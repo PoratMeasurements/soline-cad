@@ -270,15 +270,21 @@ private fun AccessPanel(nav: NavController, roomId: Long) {
 
 @Composable
 private fun MethodPanel(nav: NavController, roomId: Long, onPickInEngine: (Capture) -> Unit) {
-    Text("הסתכל על החלל ובחר שיטת-מדידה (אפשר לשלב):", fontSize = 13.sp, color = Ink)
+    Text("שיטת-מדידה (אפשר לשלב):", fontSize = 13.sp, color = Ink)
     Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         MethodCard("📡", "לייזר-קטן", "D2/בוש") { onPickInEngine(Capture.LASER) }
         MethodCard("✍️", "מטר", "ידני") { onPickInEngine(Capture.TAPE) }
         MethodCard("🎯", "X6 P2P", "מעמדה") { nav.navigate("p2p/$roomId") }
-        MethodCard("⚙️", "מתאר", "חצי-אוטו") { nav.navigate("semiauto/$roomId") }
-        MethodCard("✏️", "ציור-באצבע", "→ הזרקה") { nav.navigate("sketch/$roomId") }
-        MethodCard("📏", "גבהי-תקרה", "מין/מקס") { nav.navigate("measurestart/$roomId") }
-        MethodCard("📐", "מפלס-רצפה", "שיפוע") { nav.navigate("floor/$roomId") }
+        // איחוד ציור-באצבע + מתאר-חצי-אוטומטי לשיטה אחת (בקשות-מודד 191959/192221).
+        MethodCard("✏️", "שרטוט", "סקיצה+הזרקה") { nav.navigate("sketch/$roomId") }
+    }
+    // פילוס וגבהים — כל פונקציות-רמת-החדר ליד השיטות (בקשות-מודד 192547/192521/192617/121718).
+    Text("פילוס · גבהים · הערות:", fontSize = 13.sp, color = Ink)
+    Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        MethodCard("📏", "מהלך-גבהים", "מין/מקס תקרה") { nav.navigate("measurestart/$roomId") }
+        MethodCard("📐", "פילוס רצפה", "שיפוע") { nav.navigate("floor/$roomId") }
+        MethodCard("📐", "פילוס תקרה", "שיפוע") { nav.navigate("ceiling/$roomId") }
+        MethodCard("📝", "שינויים עתידיים", "הערות") { nav.navigate("measurestart/$roomId") }
     }
 }
 

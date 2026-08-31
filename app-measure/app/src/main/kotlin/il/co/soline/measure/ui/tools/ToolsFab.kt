@@ -5,7 +5,12 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.IntOffset
+import kotlin.math.roundToInt
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Surface
@@ -46,6 +51,8 @@ fun ToolsFab(
     var menuOpen by remember { mutableStateOf(false) }
     var laserOpen by remember { mutableStateOf(false) }
     var diagOpen by remember { mutableStateOf(false) }
+    // המשגר נגרר (בקשת-מודד 205033) — כדי שלא יסתיר תוכן-לחיץ; נשמר בין-מסכים.
+    var dragOffset by remember { mutableStateOf(Offset.Zero) }
 
     Box(Modifier.fillMaxSize()) {
         // פאנל-הלייזר (overlay-משלו) — נפתח מאייקון-הלייזר
@@ -56,7 +63,8 @@ fun ToolsFab(
         // המשגר עצמו — מוסתר בזמן לכידת/עריכת-באג (כדי לא להופיע בצילום)
         if (!bug.busy) {
             Column(
-                Modifier.align(Alignment.BottomStart).padding(start = 12.dp, bottom = 12.dp),
+                Modifier.align(Alignment.BottomStart).padding(start = 12.dp, bottom = 12.dp)
+                    .offset { IntOffset(dragOffset.x.roundToInt(), dragOffset.y.roundToInt()) },
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
@@ -76,6 +84,9 @@ fun ToolsFab(
                     onClick = { menuOpen = !menuOpen },
                     containerColor = Orange,
                     contentColor = Color.White,
+                    modifier = Modifier.pointerInput(Unit) {
+                        detectDragGestures { change, delta -> change.consume(); dragOffset += delta }
+                    },
                 ) { Text(if (menuOpen) "✕" else "🛠️", fontSize = 20.sp) }
             }
         }
