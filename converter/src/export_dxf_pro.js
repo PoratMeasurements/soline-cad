@@ -2,9 +2,9 @@
 /*
  * Soline — PROFESSIONAL DXF exporter (export_dxf_pro.js)
  * =============================================================================
- * A NEW exporter built to match the ELC_SND / Raumplan reference files
- * (`*_3D.dxf` in the TRIO client set) at quality level. See DXF_REFERENCE_STUDY.md
- * for the full format spec this mirrors.
+ * A NEW exporter built to match the quality of professional 3D DXF deliverables
+ * (`*_3D.dxf` reference exports). See DXF_REFERENCE_STUDY.md
+ * for the format conventions it follows.
  *
  * It is deliberately separate from export_dxf2d.js / export_dxf3d.js (owned by the
  * QA agent) and only READS the existing pipeline modules.
@@ -54,7 +54,7 @@ function mapBlock(b) { return VALID_3D_BLOCKS.has(b) ? b : 'CONTROLBOX'; }
 // ---------------------------------------------------------------------------
 // Soline shared DXF template (dxf_soline.js) — the SAME layer/style/font system
 // the 2D plan uses, so 2D and 3D share ONE Soline design language. Replaces the
-// old ELCAD-derived 37-layer table (Const_Walls / Elem_* / Dim_* …).
+// legacy 37-layer table (Const_Walls / Elem_* / Dim_* …) that some CAD tools expect.
 // ---------------------------------------------------------------------------
 const T = require('./dxf_soline');
 const { g, num, makeHandleGen, heToDxfUnicode, heToCp1255, isHebrew, L, LAYERS, STYLE_NAME, symbolLayer, refineDisciplineLayer, kindLayer, layerOut } = T;
@@ -65,9 +65,9 @@ function openingLayer(op, d) {
   return kind === 'window' ? L.CHALON : L.DELET;
 }
 
-// Soline element-symbol language (172 CVSM-schema symbols) — same source of truth
+// Soline element-symbol language (172 symbols) — same source of truth
 // the 2D plan uses. Here it drives (a) the 3D element BODY layer via the symbol's
-// discipline, and (b) the 2D-pro plan glyph. See docs/CVSM_ELEMENTS_LANGUAGE.md.
+// discipline, and (b) the 2D-pro plan glyph. See docs/ELEMENTS_LANGUAGE.md.
 const SYM = require('./element_symbols_soline');
 // Parametric door/window OPENING schema (docs/OPENING_ELEMENT_SCHEMA.md) — shared
 // with the 2D exporter so plan + model agree on frame depth / sill / head / mode.
@@ -133,7 +133,7 @@ function blockFromCategory(cat) {
 function resolveBlock(item) {
   if (CATALOG_MOD) {
     const r = CATALOG_MOD.classify(item);
-    // Only trust the catalog block when the element is corpus-confirmed; its
+    // Only trust the catalog block when the element is reference-confirmed; its
     // conservative fallback mislabels unmatched Hebrew names (gas/HVAC/water) as
     // electrical -> SOCKET. For those, derive the block from the local discipline.
     if (r && r.corpus && r.block3d) return mapBlock(r.block3d);
@@ -150,7 +150,7 @@ function resolveBlock(item) {
 function resolveBlockStrict(item) {
   if (CATALOG_MOD) {
     const r = CATALOG_MOD.classify(item);
-    // Corpus-confirmed elements always get their (validated) glyph.
+    // Reference-confirmed elements always get their (validated) glyph.
     if (r && r.corpus) return mapBlock(r.block3d);
   }
   for (const [re, blk] of NAME_BLOCK) if (re.test(item.name || '')) return blk;
@@ -189,7 +189,7 @@ const ELEMLAYER_BLOCK = {
   [ELEM.HVAC]: 'CONTROLBOX', [ELEM.LIGHTING]: 'LIGHTING', [ELEM.STRUCT]: 'CONTROLBOX',
   [ELEM.OPENING]: 'CONTROLBOX', [ELEM.MISC]: 'CONTROLBOX',
 };
-// The catalog's own elem3d layer names (ELCAD-style Elem_*) -> Soline body layers.
+// The catalog's own elem3d layer names (legacy Elem_*) -> Soline body layers.
 const ELEM3D_TO_SOLINE = {
   Elem_Electrical: ELEM.ELECTRICAL, Elem_Plumbing: ELEM.PLUMBING, Elem_Gas: ELEM.GAS,
   Elem_HVAC: ELEM.HVAC, Elem_Lighting: ELEM.LIGHTING, Elem_Struct: ELEM.STRUCT,
@@ -203,7 +203,7 @@ function elemLayer(item) {
   // SOL-* discipline layer using the symbol's discipline").
   const key = symKeyFor(item);
   if (key && SYM.SYMBOLS[key]) { const lay = symbolLayer(SYM.SYMBOLS[key].discipline); if (lay) return lay; }
-  // Fallbacks (catalog corpus / local regex) for anything the library can't resolve.
+  // Fallbacks (catalog reference / local regex) for anything the library can't resolve.
   const r = CATALOG_MOD ? CATALOG_MOD.classify(item) : null;
   if (r && r.corpus && r.elem3d) return mapElem3d(r.elem3d);
   const s = nameCat(item);

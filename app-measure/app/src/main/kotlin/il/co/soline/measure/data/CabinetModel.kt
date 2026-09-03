@@ -52,7 +52,7 @@ data class CabinetEntity(
 )
 
 /**
- * שבעת טיפוסי-הארון (InnoDraw §8 — Furniture: CW1D/CW2D/CT1D/CB1D/CB2D…),
+ * שבעת טיפוסי-הארון (ארונות-קיר, ארונות-שולחן וארונות-בסיס),
  * עם שם עברי, שיוך-חגורה (belt → kind של מנוע-ה-fit: base|upper|tall),
  * ורוחב/עומק/גובה ברירת-מחדל per-belt.
  *

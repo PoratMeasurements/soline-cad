@@ -126,7 +126,7 @@ fun DevicesScreen(nav: NavController) {
                         Box(Modifier.fillMaxWidth().padding(24.dp), contentAlignment = Alignment.Center) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Text("לא זוהה מד-לייזר בסריקה.", color = Muted, fontSize = 15.sp)
-                                Text("ודא שהמכשיר דלוק ולא מחובר לאפליקציה אחרת (CVSM).", color = Muted, fontSize = 13.sp)
+                                Text("ודא שהמכשיר דלוק ולא מחובר לאפליקציה אחרת.", color = Muted, fontSize = 13.sp)
                             }
                         }
                     }

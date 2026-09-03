@@ -17,7 +17,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         Carpenter::class,       // גל-חיווט: הנגר (הלקוח של Soline)
         JobEntity::class,       // גל-חיווט: פתיחת-עבודה עשירה
         LevelPointEntity::class, // סקר-מישוריות רצפה/תקרה
-        CustomSymbolEntity::class, // סמלי-CAD מותאמים-אישית (#f-cad-symbol)
+        CustomSymbolEntity::class, // סמלי-CAD מותאמים-אישית
         JobEventEntity::class,   // גל-ניהול: seam למנוע-מדדים/GPS עתידי
         LocationSampleEntity::class, // מנוע-מדדים-נסתר: דגימות-GPS גולמיות (צד-משרד)
         WorkMetricEntity::class,     // מנוע-מדדים-נסתר: רול-אפ-יומי (צד-משרד)
@@ -83,7 +83,7 @@ abstract class SolineDatabase : RoomDatabase() {
         }
 
         /**
-         * מיגרציה 3→4: מוסיפה לקיר את שדות סגנון-ראש-הקיר (CVSM #f-wall-topstyle):
+         * מיגרציה 3→4: מוסיפה לקיר את שדות סגנון-ראש-הקיר:
          * סגנון (ישר/משופע/גמלון/חצי-אי), גובה-רכס ומיקום-פסגה. ALTER TABLE בלבד —
          * שומרת את כל הקירות והמדידות הקיימות בלי מחיקה.
          */
@@ -96,7 +96,7 @@ abstract class SolineDatabase : RoomDatabase() {
         }
 
         /**
-         * מיגרציה 4→5: מוסיפה את טבלת סמלי-ה-CAD המותאמים-אישית (CVSM #f-cad-symbol).
+         * מיגרציה 4→5: מוסיפה את טבלת סמלי-ה-CAD המותאמים-אישית.
          * CREATE TABLE בלבד — אפס-מחיקת-נתונים לישויות הקיימות. ה-CREATE תואם בדיוק
          * לסכימה ש-Room מצפה לה עבור [CustomSymbolEntity].
          */

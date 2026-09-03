@@ -3,8 +3,8 @@
  * Soline — SHARED DXF TEMPLATE  (src/dxf_soline.js)
  * =============================================================================
  * Soline's OWN DXF layer/style/font system — a clean, Hebrew-named scheme that
- * REPLACES the ELCAD-derived layers (Const_Walls / Dim_Wall / Elem_* …) the owner
- * rejected. Used by BOTH exporters (export_dxf2d.js 2D plan, export_dxf_pro.js 3D)
+ * REPLACES the legacy layer names (Const_Walls / Dim_Wall / Elem_* …) that some
+ * CAD tools expect. Used by BOTH exporters (export_dxf2d.js 2D plan, export_dxf_pro.js 3D)
  * so the two deliverables share ONE Soline design language.
  *
  * Design decisions:

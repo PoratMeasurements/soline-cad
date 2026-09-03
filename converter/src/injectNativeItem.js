@@ -37,7 +37,7 @@
  * reproduces wall3_1socket.pdp and wall3_2socket.pdp BYTE-FOR-BYTE.  That is the
  * decisive correctness gate — the generative model is only trusted once it holds.
  *
- * PLACEMENT (cracked from GT 2026-08-17): Raumplan infers the host wall + mount
+ * PLACEMENT (derived from GT 2026-08-17): Raumplan infers the host wall + mount
  * face from the item's absolute (X,Y).  Every GT socket sits exactly 17 mm off the
  * wall centreline toward the room interior (the inward normal, i.e. toward the
  * room centroid).  Centreline placement (offset 0) only attaches on some wall
@@ -162,7 +162,7 @@ function freshGuid() {
   return g;
 }
 
-// ---- placement: inward-normal 17mm offset (cracked from GT) -----------------
+// ---- placement: inward-normal 17mm offset (derived from GT) -----------------
 // חוק-הגודל 🔒 (2026-08-25): שקע הוא טיפוס גודל-קבוע. Raumplan מצייר אותו בגודלו ה-native,
 // ומזריק-השקע הזה כבר תואם את החוק — הוא כותב אך ורק {X,Y,along,GUID} (patchSpec) ולעולם
 // אינו נוגע במטען-הגאומטריה/מידות של הרשומה. לכן הגליף נשמר בגודלו הקבוע (אין עיוות/הטיה).

@@ -11,8 +11,8 @@ import org.json.JSONObject
 /**
  * CustomElementStore — אחסון האלמנטים שהמשתמש יצר/שכפל (ספריית-האלמנטים האישית).
  *
- * מקבילה ישירה ל-`CatalogVariantManager` של CVSM 5.9.0 (ראה docs/CVSM_5.9_UPDATE.md §2):
- * וריאנטים אישיים הנגזרים מאלמנט-מובנה, נשמרים כרשימת-JSON ב-SharedPreferences (offline-first).
+ * וריאנטים-אלמנט מותאמים-אישית פר-פרויקט: וריאנטים אישיים הנגזרים מאלמנט-מובנה,
+ * נשמרים כרשימת-JSON ב-SharedPreferences (offline-first).
  *
  * דפוס-האחסון זהה ל-[Prefs]: object עם אתחול-עצל דרך `SolineApp.instance`, וכל ערך נחשף כ-[State]
  * מבוסס-`mutableStateOf` כדי שכל Composable שקורא [all]/[allState] יתעדכן (recompose) אוטומטית.

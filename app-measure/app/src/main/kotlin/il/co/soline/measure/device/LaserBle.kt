@@ -129,8 +129,8 @@ class LaserBle(private val context: Context) {
         val LEICA_MEAS = leica("010d")      // X6: מרחק + זווית אנכית (20B, indicate)
         val LEICA_D2_MEAS = leica("0101")   // DISTO D2: מרחק בלבד (float32 LE מטר, 4B)
         val LEICA_HANGLE = leica("010f")    // זווית אופקית מ-DST360 (read/poll ~150ms)
-        val LEICA_DST_CMD = leica("0120")   // פקודת-הפעלת-DST-360 (WRITE) — "raiseEvent 100\r\n" (מ-CVSM)
-        // פקודת-ההפעלה שמפעילה את מצב-ה-P2P של ה-DST 360 (אחרת האזימוט נשאר אפס). מ-ניתוח-CVSM.
+        val LEICA_DST_CMD = leica("0120")   // פקודת-הפעלת-DST-360 (WRITE) — "raiseEvent 100\r\n" (פרוטוקול Leica DST 360)
+        // פקודת-ההפעלה שמפעילה את מצב-ה-P2P של ה-DST 360 (אחרת האזימוט נשאר אפס). פרוטוקול Leica DST 360 — אומת בלכידת-BLE חיה.
         val DST_ACTIVATE_CMD = "raiseEvent 100\r\n".toByteArray(Charsets.US_ASCII)
         val BOSCH_SVC = UUID.fromString("02a6c0d0-0451-4000-b000-fb3210111989")
         val BOSCH_MEAS = UUID.fromString("02a6c0d1-0451-4000-b000-fb3210111989")
@@ -345,7 +345,7 @@ class LaserBle(private val context: Context) {
                     for (s in g.services) for (c in s.characteristics) log("  char ${c.uuid} props=0x%02X".format(c.properties))
                     // מדליקים notify/indicate על כל ה-characteristics כדי ללכוד את ערוץ-המדידה
                     enableAllNotifyIndicate(g)
-                    // הפעלת-DST-360 תוכנתית (מ-CVSM): כתיבת "raiseEvent 100\r\n" ל-3ab10120 מפעילה
+                    // הפעלת-DST-360 תוכנתית: כתיבת "raiseEvent 100\r\n" ל-3ab10120 מפעילה
                     // את מצב-ה-P2P — אחרת האזימוט נשאר אפס. נשלח אחרי ה-CCCD (התור מסדֵּר).
                     if (dstCmd != null) enqueue {
                         @Suppress("DEPRECATION")

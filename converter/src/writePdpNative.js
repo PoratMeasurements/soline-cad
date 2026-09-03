@@ -2,7 +2,7 @@
 /*
  * writePdpNative.js — build a Raumplan-native PDP room from ORDX walls.
  * =============================================================================
- * Cracked 2026-08-15 (see docs/PDP_NATIVE_FORMAT.md). Verified: room_4x3_clean.pdp
+ * Decoded 2026-08-15 (see docs/PDP_NATIVE_FORMAT.md). Verified: room_4x3_clean.pdp
  * loaded in Raumplan for Windows IV as a clean rectangle (face inward, 90° corners).
  *
  * Approach: reuse the user's empty base `חדר ריק.pdp` (6 wall slots) and overwrite

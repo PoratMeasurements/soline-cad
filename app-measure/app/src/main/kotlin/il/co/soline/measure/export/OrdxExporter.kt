@@ -8,8 +8,9 @@ import il.co.soline.measure.data.WallEntity
 import il.co.soline.measure.geometry.WallBuilder
 
 /**
- * OrdxExporter — ייצוא חדר בודד לפורמט ORDX (InnoDraw Order XML), הפורמט שהממיר
- * של Soline (ORDX → DXF/PDP/.sol) יודע לקרוא. מודל על סמך הדגימה
+ * OrdxExporter — ייצוא חדר בודד לפורמט-החליפין ORDX (InnoDraw Order XML), הפורמט
+ * שהממיר של Soline (ORDX → DXF/PDP/.sol) יודע לקרוא. "InnoDraw"/"ORDX" כאן מציינים
+ * את פורמט-החליפין בלבד, לא מקור-לקוד שלנו. מודל על סמך הדגימה
  * `docs/samples/measure_export_ALL_elements.ordx` וניתוח `docs/ORDX_BRIDGE.md`.
  *
  * העץ: Job → Rooms → Room → Walls → Wall → {Fixtures|Furnishings}. יחידות: מ"מ.
@@ -45,7 +46,7 @@ object OrdxExporter {
     private data class OrdxKind(val wrap: Wrap, val cls: String, val type: String, val name: String)
 
     /**
-     * סיווג-ORDX לבליטה — נשען על [ElementCatalog] המאומת-קורפוס (Class/Type/Name),
+     * סיווג-ORDX לבליטה — נשען על מזהי-הממשק שב-[ElementCatalog] (Class/Type/Name),
      * במקום חוקן-נפילה גנרי. כך "דלת פנימה שמאל" נפלטת כ-Decorative/EntryDoor/Hinged
      * Left In, שקע כ-Fixture/Miscellaneous/Socket, חלון כ-Decorative/Window/Window —
      * והממיר שולף את זהות-האלמנט וסמל-ה-2D/‏PDP הנכונים.
@@ -204,7 +205,7 @@ object OrdxExporter {
         sb.append(pad).append("  <Catalog>").append(esc(CATALOG)).append("</Catalog>\n")
         sb.append(pad).append("  <Properties>\n")
         sb.append(pad).append("    <General>\n")
-        // <Name> = זהות-ORDX המאומתת-קורפוס (Socket/Window/Hinged Left In/…),
+        // <Name> = מזהה-הממשק של ORDX (Socket/Window/Hinged Left In/…),
         // הנקודה שממנה הממיר שולף את סמל-ה-2D/‏PDP הנכון. השם-העברי נשמר ב-Description.
         sb.append(pad).append("      <Name>").append(esc(k.name)).append("</Name>\n")
         sb.append(pad).append("      <Description>").append(esc(a.name)).append("</Description>\n")

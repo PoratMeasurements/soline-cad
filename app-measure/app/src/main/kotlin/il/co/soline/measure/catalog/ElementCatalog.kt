@@ -55,13 +55,13 @@ data class OpeningSpec(
  * הגדרת-אלמנט אחת בקטלוג.
  *
  * @param key         מזהה יציב — נשמר כ-AccessoryEntity.type.
- * @param he          שם-תצוגה בעברית (כפי שב-CVSM).
+ * @param he          שם-תצוגה בעברית.
  * @param group       אחת מקבוצות [ElementGroup].
  * @param defaultDepth עומק-בליטה D ברירת-מחדל (מ"מ) — יסוד R4.
  * @param round       אובייקט עגול (מדידת-רדיוס/קוטר).
  * @param hasDepth    האם לאלמנט יש עומק-בליטה (פתחים/הערות/סימונים = false).
- * @param ordxClass   מחלקת-ORDX (מאומת-קורפוס) — לייצוא נכון.
- * @param ordxType    טיפוס-ORDX (מאומת-קורפוס).
+ * @param ordxClass   מחלקת-ORDX — מזהה-ממשק שהפורמט מחייב לבחירת פריט-הספרייה.
+ * @param ordxType    טיפוס-ORDX — מזהה-ממשק שהפורמט מחייב לבחירת פריט-הספרייה.
  */
 data class ElementDef(
     val key: String,
@@ -73,8 +73,9 @@ data class ElementDef(
     val ordxClass: String = "Fixture",
     val ordxType: String = "Miscellaneous",
     /**
-     * שם-ה-ORDX/InnoDraw המאומת-קורפוס (זהות-האלמנט ב-`<Name>`). ריק ⇒ הייצוא נופל
-     * לגזירה-דינמית (דלת-ציר) או לשם-העברי [he]. שמור על תאימות-קורפוס עם
+     * שם-ה-ORDX (זהות-האלמנט ב-`<Name>`) — מזהה-הממשק שהפורמט מחייב לבחירת
+     * פריט-הספרייה; לא תוכן-יצירתי, נשמר באנגלית כפי שהפורמט מחייב. ריק ⇒ הייצוא
+     * נופל לגזירה-דינמית (דלת-ציר) או לשם-העברי [he]. שמור על תאימות-ממשק עם
      * `converter/src/element_catalog.js`.
      */
     val ordxName: String = "",
@@ -95,7 +96,7 @@ data class ElementDef(
      * שם-ה-ORDX האפקטיבי לפליטה ל-`<Name>` (נקרא ע"י [il.co.soline.measure.export.OrdxExporter]).
      * סדר-העדיפויות: (1) [ordxName] מפורש אם הוגדר; (2) דלת-ציר עם צד-ציר+כיוון —
      * נגזר דינמית "Hinged {Left|Right} {In|Out}"; (3) אחרת השם-העברי [he].
-     * כך זהות-הפתח המאומתת-קורפוס נשמרת גם לאחר מעבר-המודל לפתח-פרמטרי (OpeningSpec).
+     * כך מזהה-הממשק של הפתח נשמר גם לאחר מעבר-המודל לפתח-פרמטרי (OpeningSpec).
      */
     fun effectiveOrdxName(): String {
         if (ordxName.isNotBlank()) return ordxName
@@ -144,7 +145,7 @@ private fun vent(
     opening = OpeningSpec(kind, w, h, sill, 100.0, 0.0, 0.0, 0.0, "fixed", null, null, 1, "none"),
 )
 
-/** הקטלוג המלא — רשימת "אלמנטים למדידה" של CVSM, ממופה ל-ORDX. */
+/** הקטלוג המלא — רשימת האלמנטים-למדידה, ממופה למזהי-הממשק של ORDX. */
 object ElementCatalog {
     val all: List<ElementDef> = listOf(
         // ── חשמל → ORDX Fixture/Miscellaneous ─────────────────────────────
@@ -275,7 +276,7 @@ object ElementCatalog {
     fun of(key: String): ElementDef? = all.firstOrNull { it.key == key }
 
     // ── תצוגה ממוזגת: מובנה + אישי (CustomElementStore) ──────────────────────
-    // מיושר ל-CVSM 5.9: הקטלוג הרשמי + הווריאנטים האישיים באותה רשימה מקובצת.
+    // הקטלוג המובנה + הווריאנטים האישיים באותה רשימה מקובצת.
 
     /** כל האלמנטים — מובנים תחילה ואז האישיים ([custom] מגיע בד"כ מ-CustomElementStore.all). */
     fun allWith(custom: List<ElementDef>): List<ElementDef> = all + custom

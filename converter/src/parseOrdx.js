@@ -97,8 +97,8 @@ function parseWall(node) {
 // distinct vertices and map each into the SAME plan frame the walls use:
 //     planX = Floor.Position.X + localX
 //     planY = Floor.Position.Z - localY
-// This mapping was verified vertex-exact (0.00 mm) against the wall endpoints of a
-// real corpus file. Returns an array of {x,y} (mm, pre-flip ORDX frame) or
+// This mapping was verified vertex-exact (0.00 mm) against the wall endpoints of one
+// of our reference files. Returns an array of {x,y} (mm, pre-flip ORDX frame) or
 // undefined when the source has no floor-shape.
 function parseFloorShape(roomNode) {
   const floor = nodeAt(roomNode, 'Floors/Floor');

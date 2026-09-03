@@ -62,7 +62,7 @@ function generateSymbol(polylines) {
 // the copied topology blocks — changing it triggers error 921. So emit the symbol
 // as exactly `strokes` two-point line-segments padded to the donor block length,
 // keeping the structure identical to the donor (only vertex positions differ).
-// Symbols with more segments than fit need the length-ref crack (see STATUS).
+// Symbols with more segments than fit need the length-ref fix (see STATUS).
 function generateSymbolFixed(polylines, byteLen = 168, padPoint = [0, 0]) {
   const maxStrokes = Math.floor(byteLen / 12); // each 2-pt stroke = 12 bytes
   const segs = [];

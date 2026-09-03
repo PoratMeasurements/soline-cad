@@ -130,7 +130,7 @@ data class WallEntity(
      * נפרד מ-framePointsJson: הראשון נושא מתאר-חזית (A), זה נושא מבט-על-בטן (B) + מסגור.
      */
     val wallProfileJson: String = "",
-    // סגנון-ראש-קיר (CVSM #f-wall-topstyle) — נשמר פר-קיר.
+    // סגנון-ראש-קיר — נשמר פר-קיר.
     val headStyle: String = "STRAIGHT", // WallHeadProfile.HeadStyle.name
     val headRidgeMm: Double = 0.0,      // גובה-רכס מוחלט (מ"מ); 0 = שווה-לגובה-הבסיס
     val headPeakMm: Double = 0.0,       // מיקום-פסגה לאורך-הקיר (מ"מ, לגמלון בלבד)

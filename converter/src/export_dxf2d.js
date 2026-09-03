@@ -3,8 +3,8 @@
  * Soline — PROFESSIONAL 2D DXF measurement plan (DR1) exporter.
  * =============================================================================
  * Produces a *submittable* top-view measurement drawing (תכנית מדידה) that reads
- * like the real El-Kincho / Adore / Formaggio deliverables studied in
- * docs/DXF_2D_METHOD.md and the reference corpus (…/קבצים ללמידה/*_DR1.dxf).
+ * like a professional measurement deliverable, per the drafting conventions in
+ * docs/DXF_2D_METHOD.md and validated against our own reference exports (*_DR1.dxf).
  *
  * This is a ground-up rewrite of the old symbol-gallery exporter. It targets the
  * professional plan, not a legend of icons. It is SELF-CONTAINED: it reads only
@@ -19,7 +19,7 @@
  *      chain (e.g. an alcove) get a flush square cap instead of a half-thickness
  *      stub. See buildWallPoly().
  *   2. A manual DIMENSION engine (the reference deliverables carry NO `DIMENSION`
- *      entities — verified against the El-Kincho / Teveth corpus): every measurement
+ *      entities — validated against our own reference exports): every measurement
  *      = 2 extension LINEs + 1 dimension LINE + 2 SOLID arrowheads + 1 TEXT (cm),
  *      aligned + upright, number lifted clearly above the line. Rendered as clean,
  *      NON-OVERLAPPING NESTED chains: element positions nearest the wall, per-wall
@@ -56,8 +56,8 @@ try { CATALOG_MOD = require('./element_catalog'); } catch (_) { CATALOG_MOD = nu
 
 // ---------------------------------------------------------------------------
 // Soline shared DXF template (layers/style/font/sections). This is the NEW
-// Soline layer system — see src/dxf_soline.js. It replaces the old ELCAD-derived
-// layer names (Walls / Const_Doors / Dim_* / Text_* …) the owner rejected.
+// Soline layer system — see src/dxf_soline.js. It replaces the legacy layer names
+// (Walls / Const_Doors / Dim_* / Text_* …) that some CAD tools expect.
 // ---------------------------------------------------------------------------
 const T = require('./dxf_soline');
 const { g, num, makeHandleGen, heToDxfUnicode, heToCp1255, isHebrew, cm, L, LAYERS, STYLE_NAME, symbolLayer, refineDisciplineLayer, kindLayer, DISC_HE, colorOf, LW_BORDER, layerOut } = T;
@@ -79,17 +79,17 @@ function dimLayerFor(reg, discLayer, n) {   // eslint-disable-line no-unused-var
   return { layer, color: colorOf(layer) };
 }
 
-// Soline element-symbol language (172 CVSM-schema symbols). Replaces the old ~8
+// Soline element-symbol language (172 symbols). Replaces the old ~8
 // crude glyphs: symbolFor() resolves an item by name/Hebrew/type; toDxf2dGlyph()
 // emits the glyph in the GLYPHS/BLOCKS_2D format (wall at Y=0, +Y into room), at
-// the item's true width/height. See docs/CVSM_ELEMENTS_LANGUAGE.md.
+// the item's true width/height. See docs/ELEMENTS_LANGUAGE.md.
 const SYM = require('./element_symbols_soline');
 // Parametric door/window OPENING schema (docs/OPENING_ELEMENT_SCHEMA.md): derives
 // geom/config (frame, openMode, hinge, swing, sill…) from the placed opening, so the
 // plan renders each door/window from its fields — not a generic box. Shared with the
 // 3D exporter so both agree on the same opening parameters.
 const OPEN = require('./opening_schema');
-// A few CVSM/Hebrew synonyms not yet in the library's map, so common elements
+// A few Hebrew synonyms not yet in the library's map, so common elements
 // never fall through to the generic glyph.
 const SYM_SYNONYM = [[/מתג/, 'switch_single']];
 function symKeyFor(it) {
@@ -155,7 +155,7 @@ const CLASSIFY = [
 // המקומי (CLASSIFY) אם הקטלוג לא נטען או שהאלמנט אינו מזוהה בו.
 function classify(item) {
   const r = CATALOG_MOD ? CATALOG_MOD.classify(item) : null;
-  // Corpus-confirmed catalog classification (or a window/door, which the catalog
+  // Reference-confirmed catalog classification (or a window/door, which the catalog
   // types reliably) is authoritative. The catalog's CONSERVATIVE fallback, however,
   // over-assigns 'electrical' to any Hebrew name it can't match against an
   // elements.json row — so for those we classify from the element's own name here.

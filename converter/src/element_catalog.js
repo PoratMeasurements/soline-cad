@@ -3,10 +3,10 @@
  * element_catalog.js — מקור-האמת היחיד לכל אלמנט של Soline.
  * =============================================================================
  * טבלה משותפת אחת שממנה שולפים שלושת המייצאים (ORDX, DXF-2D, DXF-3D), כדי שסיווג,
- * מידות וסמלים יישארו עקביים בין הפורמטים. הכל מעוגן בקורפוס-ה-ORDX האמיתי
- * (ראה docs/ORDX_ELEMENT_SPEC.md) — 15 האלמנטים המאומתים מקבלים Class/Type,
- * שם-InnoDraw מקורי ומידות ודאיים; כל היתר מסווגים לפי החוקן (קטגוריה/שם) באופן
- * שמרני ומסומן.
+ * מידות וסמלים יישארו עקביים בין הפורמטים. שמות-השדה וה-Class/Type הם המזהים
+ * שכלי-היעד דורש כדי לקרוא את הקובץ (אינטראופרביליות); אומתו מול קובצי-הייחוס
+ * שלנו — 15 האלמנטים המאומתים מקבלים Class/Type, שם-קטלוג ומידות ודאיים; כל
+ * היתר מסווגים לפי החוקן (קטגוריה/שם) באופן שמרני ומסומן.
  *
  * חוזה קואורדינטות (ORDX, מקומי-לקיר):  X = לאורך הקיר · Y = גובה על הקיר ·
  *   Z = היסט-עומק מחוץ-למישור-הקיר. מידות: Width = לאורך הקיר, Depth = בליטה
@@ -59,10 +59,10 @@ const DISC_DEFAULTS = {
 const DISCIPLINES = Object.keys(DISC_DEFAULTS);
 
 // ---------------------------------------------------------------------------
-// טבלת-הקורפוס המאומתת. כל שורה אומתה תוכניתית מול 249 קבצי-ORDX אמיתיים
-// (scratch_corpus_scan.js → Name→Class/Type + מוסכמת-קינון בפועל). מפתח = שם-
-// ה-ORDX המקורי, lowercased. שדות: cls/type (הזוג הקובע), name (שם-InnoDraw),
-// measure ('nested'|'direct' — כפי שהקורפוס פולט בפועל, לא לפי-כלל), w/d/h,
+// טבלת המזהים המאומתת. כל שורה אומתה מול קובצי-הייחוס שלנו (Name→Class/Type +
+// מוסכמת-קינון בפועל). מפתח = שם-האלמנט ב-ORDX, lowercased. שדות: cls/type
+// (הזוג הקובע), name (שם-הקטלוג לפליטה),
+// measure ('nested'|'direct' — כפי שהפורמט דורש, לא לפי-כלל), w/d/h,
 // mount (Y), z (היסט-עומק: חלון/דלת שקועים = -100), disc, override לסמלים.
 // corpus=true => ודאי מלא. ⚠ מוסכמת-הקינון אינה "רק חלון/דלת" — ראה ORDX_SPEC_
 // VALIDATION.md: Beam/Power Box/ShutterBox/SocketEx/WindowSill/Air Opening/
@@ -395,7 +395,7 @@ function classify(nameOrItem) {
   const z = (item && item.position && num(item.position.z) != null) ? num(item.position.z)
     : (conf && conf.z != null ? conf.z : null);
 
-  // שם-InnoDraw לפליטה ל-ORDX + שם עברי לתצוגה/Description.
+  // שם-הקטלוג לפליטה ל-ORDX + שם עברי לתצוגה/Description.
   const ordxName = (item && item.ordx_name) || (conf && conf.name) || (row && row.en) || rawName;
   const he = (item && (item.heName || item.he)) || (row && row.he) || null;
 

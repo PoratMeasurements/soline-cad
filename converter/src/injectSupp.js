@@ -3,7 +3,7 @@
  * injectSupp.js - inject ONE Raumplan-native SUPP_FR item (socket/switch/tap) into an
  * EMPTY native wall base, so it renders with Raumplan's OWN icon. No hand-drawn base.
  * ==========================================================================================
- * WHY THIS IS HARD (cracked 2026-08-16): a Raumplan item is NOT one record. Adding one socket
+ * WHY THIS IS HARD (derived 2026-08-16): a Raumplan item is NOT one record. Adding one socket
  * to the empty base P0 -> P1 costs +14169 B spread over THREE payloads plus small view edits:
  *   A  431 B   SUPP_FR placement record   (inserted right after the wall-header terminator)
  *   B  ~4224 B 2D symbol section          (68 vector primitives; fills the empty symbol layer)

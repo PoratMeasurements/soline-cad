@@ -3,7 +3,7 @@
  * convertNative.js — ORDX room -> Raumplan-NATIVE PDP (header ffffff7f).
  * =============================================================================
  * This is the format Michael saves from Raumplan and whose items use RAUMPLAN's
- * OWN icons (SUPP_FR), not InnoDraw's. Walls cracked 2026-08-16 (docs/native_wall_
+ * OWN icons (SUPP_FR), not InnoDraw's. Walls derived 2026-08-16 (docs/native_wall_
  * reshape.md): the DISPLAY source is the real-wall table @0x1a5.
  *
  * WALL RECIPE (verified: native_dining7 loaded with correct shape + orientation +
@@ -90,7 +90,7 @@ function buildRoomNative(room) {
 }
 
 // ---------------------------------------------------------------------------
-// Item placement (CRACKED + live-confirmed, docs/item_position_source.md).
+// Item placement (derived + live-confirmed, docs/item_position_source.md).
 // A Raumplan item is positioned by THREE record int32 fields relative to its
 // SUPP_FR marker, which MUST be written consistently or the item detaches/vanishes:
 //   +133 = world X, +137 = world Y (on the host wall line), +141 = along-wall mm.

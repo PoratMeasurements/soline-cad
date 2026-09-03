@@ -1,7 +1,7 @@
 'use strict';
 // ORDX -> PDP writer (template-patch strategy).
 //
-// Strategy notes (reverse-engineered from matched pair twister-n6+7):
+// Strategy notes (derived from matched pair twister-n6+7):
 //   * PDP parametric data = int16 LE, millimetres.
 //   * Coordinate transform: PDP_x = ORDX_x + offX ; PDP_y = -ORDX_y + offY
 //     (Y axis negated). offX/offY are an arbitrary per-file translation.

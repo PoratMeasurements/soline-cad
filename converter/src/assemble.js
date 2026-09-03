@@ -62,7 +62,7 @@ function assemble({ ordxPath, model, base, donor, offX, offY }) {
   // Icon policy: DEDICATED SYMBOL PER TYPE (designed by the symbol agent). BUT a
   // custom symbol changes block#1's byte length, and that length is referenced
   // elsewhere -> error 921. So generated symbols are DISABLED until those length
-  // refs are cracked; we inject the donor symbol (fixed 168B) which LOADS. This
+  // refs are resolved; we inject the donor symbol (fixed 168B) which LOADS. This
   // keeps the pipeline valid; the icon fix lands once symbol-array refs are solved.
   const items = places.map((p) => ({ place: p, symbol: null }));
   const { buf } = injectItems(base, donor, items);

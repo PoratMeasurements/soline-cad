@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey
  *
  * ה-Carpenter הוא הלקוח של Soline; כל JobEntity הוא פרויקט שהנגר פותח עבור
  * הלקוח-הפרטי שלו, כולל פרטי-קשר, כתובת, כתובת-משלוח ודרכי-גישה לפני-שרטוט.
- * שדות-הלקוח/משלוח משקפים את ProjectDetailsForm של CVSM (5.4.0).
+ * שדות-הלקוח/משלוח הם טופס-פרטי-הפרויקט (פרטי-קשר, כתובת, כתובת-משלוח).
  *
  * ישויות חדשות — offline-first (Room). האינטגרטור מוסיף אותן ל-SolineDatabase
  * עם bump-גרסה + migration; אין לשנות את הישויות הקיימות. */
@@ -33,7 +33,7 @@ data class JobEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val carpenterId: Long = 0,        // הנגר (הלקוח של Soline) שפתח את הפרויקט
 
-    // ── פרטי הלקוח-הפרטי (מראה את ProjectDetailsForm של CVSM) ──
+    // ── פרטי הלקוח-הפרטי (טופס-פרטי-הפרויקט) ──
     val clientName: String,           // שם הלקוח-הפרטי של הנגר
     val clientPhone: String = "",     // טלפון / נייד
     val clientCompany: String = "",   // חברה (רשות)

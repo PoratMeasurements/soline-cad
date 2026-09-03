@@ -139,7 +139,7 @@ object SolWriter {
                 putEntry(zip, "measured/room-${room.id}.json", buildRoom(room, walls, accByWall, cabs, levels), stamp)
             }
             // הערה: לא מטמיעים יותר measured/source.ordx — הנתיב-הנייטיב (room-json) נושא כעת
-            // גם את שכבת-התכנון (ארונות), והממיר בונה ORDX מאומת-קורפוס + מרנדר ארונות+צוקל ממנו.
+            // גם את שכבת-התכנון (ארונות), והממיר בונה ORDX + מרנדר ארונות+צוקל ממנו.
             val checklistJson = buildChecklist(rooms, wallsByRoom, photosByRoom, videosByRoom, projectPhotos, projectVideos)
             putEntry(zip, "annotations.json", buildAnnotations(photoRecs, videoRecs, checklistJson), stamp)
             putEntry(zip, "revisions.json", buildRevisions(nowIso), stamp)

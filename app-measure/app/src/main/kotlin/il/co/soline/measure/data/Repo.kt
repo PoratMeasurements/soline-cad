@@ -268,7 +268,7 @@ class Repo(private val dao: SolineDao) {
     suspend fun saveWallProfile(wallId: Long, json: String) =
         dao.setWallProfile(wallId, json)
 
-    /** שמירת סגנון-ראש-הקיר (CVSM #f-wall-topstyle) פר-קיר. */
+    /** שמירת סגנון-ראש-הקיר פר-קיר. */
     suspend fun saveWallHead(wallId: Long, style: String, ridgeMm: Double, peakMm: Double) =
         dao.setWallHead(wallId, style, ridgeMm, peakMm)
 
@@ -465,7 +465,7 @@ class Repo(private val dao: SolineDao) {
     /** פותח-מחדש פרויקט-סגור (מאפס את חותמת-הסגירה ל-null). */
     suspend fun reopenProject(projectId: Long) = dao.setProjectClosedAt(projectId, null)
 
-    // ── custom CAD symbols (סמלי-CAD מותאמים-אישית · #f-cad-symbol) ───────────
+    // ── custom CAD symbols (סמלי-CAD מותאמים-אישית) ───────────
     fun customSymbols(): Flow<List<CustomSymbolEntity>> = dao.customSymbols()
     suspend fun addCustomSymbol(s: CustomSymbolEntity): Long = dao.insertCustomSymbol(s)
     suspend fun updateCustomSymbol(s: CustomSymbolEntity) = dao.updateCustomSymbol(s)

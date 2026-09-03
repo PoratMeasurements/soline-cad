@@ -431,7 +431,7 @@ interface SolineDao {
     @Query("UPDATE rooms SET closedAt = :ts WHERE id = :roomId")
     suspend fun setRoomClosedAt(roomId: Long, ts: Long)
 
-    // ── custom CAD symbols (סמלי-CAD מותאמים-אישית · #f-cad-symbol) ───────────
+    // ── custom CAD symbols (סמלי-CAD מותאמים-אישית) ───────────
     @Query("SELECT * FROM custom_symbols ORDER BY createdAt DESC")
     fun customSymbols(): Flow<List<CustomSymbolEntity>>
 

@@ -141,7 +141,7 @@ const GT_CODES = {
   'ק.בקורת':        { code: 2,  block: '02 00 12 00 00 00 00 0c 00 00 00', dims: [100, 10, 100] },
   'עמוד':           { code: 1,  block: '01 00 00 04 00 00 00 04 00 00 00', dims: [1000, 1000, 2600] },
   'עמוד עגול':      { code: 1,  block: '01 00 02 10 00 00 00 09 00 00 00', dims: [200, 200, 2600] },
-  // Not present in the Rosetta file (kept from earlier corpus/InnoDraw samples; see master doc):
+  // Not present in the Rosetta file (kept from earlier reference/InnoDraw samples; see master doc):
   'ביוב קיר':       { code: 1,  block: '01 00 00 06 00 00 00 1e 00 00 00', dims: null },
   'תעלה':           { code: 1,  block: '01 00 00 04 00 00 00 04 00 00 00', dims: null },
   'אסלה':           { code: 7,  block: '07 00 00 21 00 00 00 28 00 00 00', dims: null },
@@ -732,7 +732,7 @@ function collectItems(walls) {
 // ---------------------------------------------------------------------------
 // stampItemRecord — LEGACY (whole-record replacement, the E4214 cause). Kept for
 // back-compat with older callers/tests ONLY; the current PDP path never calls it.
-// Produces a 173-B record from a corpus blob, stamping the position triple. Do NOT
+// Produces a 173-B record from a reference blob, stamping the position triple. Do NOT
 // use for output — swapping in a foreign record triggers E4214 (see header).
 // ---------------------------------------------------------------------------
 function stampItemRecord(bin, it, Cx, Cy, opts = {}) {
@@ -750,7 +750,7 @@ function stampItemRecord(bin, it, Cx, Cy, opts = {}) {
 }
 
 // ---------------------------------------------------------------------------
-// גודל-אלמנט: קבוע (native) מול משתנה (שלנו) — הפיצוח של 2026-08-25.
+// גודל-אלמנט: קבוע (native) מול משתנה (שלנו) — הפענוח של 2026-08-25.
 // ---------------------------------------------------------------------------
 // אושר ע"י הבעלים בבדיקה חיה ב-Raumplan (docs/PDP_SIZE_CLASSIFICATION.md). ב-Raumplan כל
 // אלמנט שייך לאחת משתי משפחות-גודל:

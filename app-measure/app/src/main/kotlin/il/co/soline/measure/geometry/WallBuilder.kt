@@ -8,7 +8,7 @@ import kotlin.math.hypot
 import kotlin.math.sin
 
 /**
- * מנוע-הגאומטריה לבניית-הקירות (MICHAEL_WISHLIST §2 — "שיטת-בניית-הקירות").
+ * מנוע-הגאומטריה לבניית-הקירות (MICHAEL_WISHLIST §2 — "שיטת-בניית-הקירות"; רשימת-השדה של הבעלים).
  *
  * אובייקט Kotlin טהור (בלי Android/Compose) שממיר רשימת-קירות מסודרת —
  * כל קיר עם [WallEntity.length] (מ"מ) וזווית-פנייה [WallEntity.angle] (מעלות, לקיר הבא) —

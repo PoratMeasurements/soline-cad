@@ -11,7 +11,7 @@
  *   This is the PDP -> scene half of the bidirectional converter. It only READS;
  *   it never writes PDP (that is writePdp.js) and touches no other module.
  *
- * WHAT IS SOLID vs. WHAT IS NOT (honest scope — verified on the TRIO corpus)
+ * WHAT IS SOLID vs. WHAT IS NOT (honest scope — verified on the TRIO reference set)
  *   SOLID:
  *     - Job name / customer / category strings (ASCII/latin1 runs near the head).
  *     - Primitive & catalog INVENTORY by marker scan: KORPUS (cabinet carcass,
@@ -20,14 +20,14 @@
  *       offsets + record stride. This reliably answers "how many cabinets and
  *       which catalog modules does this design contain".
  *     - KORPUS record stride = 210 bytes (matches DXF_REFERENCE_STUDY "מש 3D 210B").
- *   NOT YET CRACKED (documented, not guessed):
+ *   NOT YET DECODED (documented, not guessed):
  *     - The exact float32 position + W/D/H of each KORPUS carcass. The 210-byte
  *       record is deeply parametrized (local frame + transform/index tables), so
  *       per-cabinet geometry is inventoried, not decoded. The viewer therefore
  *       reconstructs cabinet volumes from the catalog inventory using standard
  *       module dimensions (see CATALOG below), snapped to the walls.
  *     - Universal wall offsets: the 0xd2/0xd4 int16 table (writePdp.js) is
- *       template-specific and does NOT generalize across the corpus, so wall
+ *       template-specific and does NOT generalize across the reference set, so wall
  *       reading is best-effort with a validity check; the reliable wall source
  *       for the viewer is the ORDX pipeline (parseOrdx).
  *
@@ -43,7 +43,7 @@ const fs = require('fs');
 
 // ---------------------------------------------------------------------------
 // Catalog knowledge — Raumplan/German kitchen module conventions (mm).
-// Maps the article codes seen in the corpus to standard carcass dimensions so
+// Maps the article codes seen in the reference set to standard carcass dimensions so
 // the viewer can render a faithful cabinet VOLUME even before the per-record
 // geometry is decoded. Dimensions are catalog-standard, not invented.
 //   base  : floor-standing carcass, toe-kick 100 + body 720, worktop ~900

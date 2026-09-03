@@ -29,13 +29,13 @@ function esc(s) {
   return String(s).replace(/[&<>"']/g, (c) => ESC[c]);
 }
 
-// Coordinates / wall geometry / decorative Size: corpus uses 6 decimals.
+// Coordinates / wall geometry / decorative Size: our reference exports use 6 decimals.
 function fmtF(n) {
   if (n == null || !Number.isFinite(Number(n))) return null;
   return Number(n).toFixed(6);
 }
 
-// Fixture dimensions sit as plain integers in the corpus (e.g. <Width>160</Width>).
+// Fixture dimensions sit as plain integers in the format (e.g. <Width>160</Width>).
 function fmtDim(n) {
   if (n == null || !Number.isFinite(Number(n))) return null;
   const v = Number(n);
@@ -60,11 +60,13 @@ function leaf(indent, tag, value) {
 // ---------------------------------------------------------------------------
 // ORDX element catalog + Class/Type taxonomy
 // ---------------------------------------------------------------------------
-// Genuine InnoDraw/CV ORDX represents every placed element with a Class + Type
-// pair that a downstream tool (Cabinet Vision, Raumplan) uses to pick a library
-// item, plus a full attribute set (bilingual name, W/D/H, mount height, catalog).
-// The taxonomy below was reverse-engineered from the real ORDX corpus (296 real
-// items across kitchen DR files + the mimran sets + the ALL-elements sample):
+// The Class/Type string values and attribute names below are the identifiers the
+// target software requires to read the file (interoperability) — not our creative
+// content. In the ORDX format every placed element carries a Class + Type pair
+// that a downstream tool uses to pick a library item, plus a full attribute set
+// (bilingual name, W/D/H, mount height, catalog).
+// The taxonomy below reflects the format's identifiers and was validated against
+// our own reference exports:
 //
 //   Class=Fixture,    Type=Miscellaneous  -> wall electrical/comms/smart devices
 //                                             (Socket, Duplex Socket, Switch,
@@ -83,7 +85,7 @@ function leaf(indent, tag, value) {
 // This map is what makes the elements that go INTO the ORDX complete and correct
 // instead of a thin "everything is Fixture/Miscellaneous" subset.
 
-// מקור-האמת היחיד לסיווג/מידות: element_catalog (מעוגן ב-249 קבצי-ORDX אמיתיים).
+// מקור-האמת היחיד לסיווג/מידות: element_catalog (אומת מול קובצי-הייחוס שלנו).
 // הממיר מתדרדר בחן לחוקן פנימי אם המודול חסר.
 let CATALOG_MOD = null;
 try { CATALOG_MOD = require('./element_catalog'); } catch (_) { CATALOG_MOD = null; }
@@ -118,14 +120,14 @@ function resolveORDX(nameOrObj) {
     type: r.ordxType,
     w: r.w, d: r.d, h: r.h,
     mount: r.mount,
-    measure: r.measure,          // 'nested' | 'direct' — מוסכמת-מידה מהקורפוס
+    measure: r.measure,          // 'nested' | 'direct' — מוסכמת-מידה של הפורמט
   };
 }
 
 // Build an <Attributes> parameter list from a canonical object's extra fields.
-// Genuine ORDX carries such <Parameter> rows (e.g. SLOTDX/SLOTDY for an AC
+// The ORDX format carries such <Parameter> rows (e.g. SLOTDX/SLOTDY for an AC
 // ceiling-drop). We surface orientation, mount-status and protrusion the same
-// way so InnoDraw ignores what it does not know while nothing is lost silently.
+// way so the target software ignores what it does not know while nothing is lost silently.
 function attributesFromObject(object, placement) {
   const p = placement || {};
   const params = [];
@@ -133,8 +135,8 @@ function attributesFromObject(object, placement) {
     if (val == null || val === '') return;
     params.push({ name: nm, type: ty, value: val });
   };
-  // הקורפוס נושא אך ורק Parameter/Type = M (0 מופעי S ב-249 קבצים; ראה
-  // ORDX_SPEC_VALIDATION.md §2.6/§3). לכן פולטים רק פרמטרים מספריים (M) —
+  // הפורמט נושא אך ורק Parameter/Type = M (אומת מול קובצי-הייחוס שלנו). לכן
+  // פולטים רק פרמטרים מספריים (M) —
   // מטא-נתונים מחרוזתיים (FACE/STATUS) לא נפלטים כדי לא לזהם את הקובץ בערך
   // שכלי-היעד לא מכיר.
   const rot = p.rotation_deg != null ? p.rotation_deg : object.rotation_deg;
@@ -166,7 +168,7 @@ function attributesFromObject(object, placement) {
 //   object.dimensions_mm {W,D,H}  (OBJECT_MODEL contract)
 //   object.{width_mm,depth_mm,height_mm}  (elements.json shape)
 // ORDX-specific overrides (optional): object.ordx_name / ordx_class /
-// ordx_type / ordx_kind / catalog. Position semantics follow the corpus:
+// ordx_type / ordx_kind / catalog. Position semantics follow the format:
 // placement.x = distance ALONG the wall, placement.y = height on the wall,
 // placement.z = optional out-of-plane offset.
 function objectToFixture(object, placement) {
@@ -192,9 +194,9 @@ function objectToFixture(object, placement) {
   // Class/Type: explicit override wins, else the resolved genuine taxonomy.
   const cls = object.ordx_class || r.cls || 'Fixture';
   const type = object.ordx_type || r.type || 'Miscellaneous';
-  // מוסכמת-מידה (nested/direct) — מהקטלוג, מעוגן בקורפוס.
+  // מוסכמת-מידה (nested/direct) — מהקטלוג, לפי הפורמט.
   const measure = object.ordx_measure || r.measure || 'direct';
-  // Decorative openings (window/door) anchor by kind Furnishing in the corpus;
+  // Decorative openings (window/door) anchor by kind Furnishing in the format;
   // Fixtures (sockets/MEP) too. Kind override still honored.
   const kind = object.ordx_kind || (cls === 'Fixture' ? 'fixture' : 'furnishing');
 
@@ -231,7 +233,7 @@ function objectToFixture(object, placement) {
 // serialization
 // ---------------------------------------------------------------------------
 
-// מוסכמת-הקינון נקבעת per-element ע"י הקטלוג (measure), לא לפי סוג בלבד — הקורפוס
+// מוסכמת-הקינון נקבעת per-element ע"י הקטלוג (measure), לא לפי סוג בלבד — הפורמט
 // מקנן גם Beam/Power Box/ShutterBox/SocketEx/Cabinet/Air Condition וכו'
 // (ראה ORDX_SPEC_VALIDATION.md §2.3). fallback: חלון/דלת/קורה מקוננים.
 function isNestedSizeMeasure(measure, type) {
@@ -251,7 +253,7 @@ function serializeSize(size, measure, type, ind, out) {
     if (depth != null) out.lines.push(leaf(ind + 1, 'Depth', fmtF(depth)));
     out.push(ind, '</Size>');
   } else {
-    // Direct children, corpus order: Width, Depth, Height, then empty <Size/>.
+    // Direct children, format order: Width, Depth, Height, then empty <Size/>.
     if (width != null) out.lines.push(leaf(ind, 'Width', fmtDim(width)));
     if (depth != null) out.lines.push(leaf(ind, 'Depth', fmtDim(depth)));
     if (height != null) out.lines.push(leaf(ind, 'Height', fmtDim(height)));
@@ -263,12 +265,12 @@ function serializeSize(size, measure, type, ind, out) {
 // Non-destructively complete a placed item before serialization: fill ONLY the
 // attributes that are missing (Class, Type, and a Hebrew Description) from the
 // catalog taxonomy. Never overrides values already present and never touches
-// Size or Position, so a genuine ORDX (which already carries Class/Type/dims)
-// re-exports byte-for-byte-equivalently and the verified round-trip is preserved.
+// Size or Position, so an input file that already carries Class/Type/dims
+// re-exports to a file the target software accepts and the verified round-trip is preserved.
 function enrichItem(item) {
   if (!item) return item;
   // מוסכמת-המידה (nested/direct) נשלפת תמיד מהקטלוג לפי זהות-האלמנט, גם כשהפריט
-  // כבר "שלם" — כדי ש-SocketEx/Power Box/Beam וכו' יקננו כמו בקורפוס. אינה חלק
+  // כבר "שלם" — כדי ש-SocketEx/Power Box/Beam וכו' יקננו כפי שהפורמט מחייב. אינה חלק
   // מהשוואת ה-round-trip, ולכן בטוחה לחלוטין.
   if (item.measure == null) {
     const rm = resolveORDX(item.name || item.description);
@@ -278,8 +280,8 @@ function enrichItem(item) {
   // A generic Fixture/Miscellaneous pair is the placeholder default upstream
   // synthesizers stamp on EVERY element. When the catalog confidently classifies
   // the same name as something more specific (Decorative, or a wet/gas Part), the
-  // placeholder is upgraded. This is safe for genuine ORDX: every element that is
-  // legitimately Fixture/Miscellaneous in the corpus (Socket, Switch, Junction
+  // placeholder is upgraded. This is safe for the format: every element that is
+  // legitimately Fixture/Miscellaneous (Socket, Switch, Junction
   // Box, Power Line, SocketEx) also resolves to Fixture/Miscellaneous, so nothing
   // real is reclassified; Decorative/Part items already carry non-default values.
   const isPlaceholder = item.class === 'Fixture' && item.type === 'Miscellaneous';
@@ -323,14 +325,14 @@ function serializeItem(item, ind, out) {
   if (item.type) out.lines.push(leaf(ind + 3, 'Type', item.type));
   serializeSize(item.size, item.measure, item.type, ind + 3, out);
   out.push(ind + 2, '</General>');
-  // Soline extras (orientation/status/protrusion/slot dims) as genuine-tolerated
-  // <Attributes><Parameter> rows. InnoDraw ignores unknown parameters.
+  // Soline extras (orientation/status/protrusion/slot dims) as format-tolerated
+  // <Attributes><Parameter> rows. The target software ignores unknown parameters.
   serializeAttributes(item.attributes, ind + 2, out);
   out.push(ind + 1, '</Properties>');
 
   if (item.position) {
     const { x, y } = item.position;
-    // פתחים שקועים (חלון/דלת) יושבים בעובי-הקיר: Z=-100 בקורפוס (כמעט תמיד).
+    // פתחים שקועים (חלון/דלת) יושבים בעובי-הקיר: Z=-100 בפורמט (כמעט תמיד).
     // מחושב מקומית (ללא מוטציה של המודל) כדי שפתח שנוצר מ-Soline יישב נכון,
     // בלי לפגוע ב-round-trip.
     let z = item.position.z;
@@ -357,8 +359,8 @@ function serializeItemGroup(items, containerTag, itemTag, ind, out) {
 // ---------------------------------------------------------------------------
 // PLANNING (cabinets) -> ORDX. Each cabinet from the .sol planning layer (see
 // readSol.js schema) is emitted as a genuine <Furnishing> with Class=Base,
-// Type=Standard, Catalog=InnoDraw and a NESTED <Size> (corpus-confirmed for
-// base-cabinet furnishings — see element_catalog.js / ORDX_SPEC_VALIDATION.md;
+// Type=Standard, Catalog=InnoDraw and a NESTED <Size> (validated against our
+// reference exports for base-cabinet furnishings — see element_catalog.js;
 // we deliberately do NOT use <Assembly>). The item is built as the same in-memory
 // descriptor a placed furnishing has, so it flows through serializeItem unchanged
 // and re-parses losslessly (name kept verbatim, so the summary round-trip holds).
@@ -421,7 +423,7 @@ function serializeWall(wall, ind, out, extraFurnishings) {
 
   const dim = wall.dimensions;
   if (dim) {
-    // Corpus order; null fields (e.g. Length/Soffit here) are omitted.
+    // Format field order; null fields (e.g. Length/Soffit here) are omitted.
     const order = [
       ['length', 'Length'],
       ['height', 'Height'],
