@@ -92,9 +92,9 @@ import kotlin.math.roundToInt
 import kotlin.math.sin
 
 /* ─────────────────────────────────────────────────────────────────────────────
- *  WallElevationUnified — מסך-החזית המאוחד של Soline Measure (InnoDraw "Wall
- *  Front View" / Elevation; INNODRAW_FEATURES §7 שורות 145/152, MICHAEL_WISHLIST
- *  §3/§5). זהו הלב של מדידת-מטבח, וכאן שני הכלים חיים תחת מסך אחד:
+ *  WallElevationUnified — מסך-החזית (Wall Front View / Elevation) המאוחד של
+ *  Soline Measure (MICHAEL_WISHLIST §3/§5). זהו הלב של מדידת-מטבח, וכאן שני
+ *  הכלים חיים תחת מסך אחד:
  *
  *   (א) מצב **מסגרת** — לוכדים סדרת-נקודות בלייזר (מרחק + זווית-אנכית של ה-X6 →
  *       (מיקום-אופקי, גובה)) או בהקשה-ידנית, המשרטטת את מתאר-פני-הקיר האמיתי:

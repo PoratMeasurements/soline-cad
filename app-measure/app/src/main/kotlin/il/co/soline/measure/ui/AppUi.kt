@@ -1392,7 +1392,7 @@ private fun DuplicateWallsDialog(
     )
 }
 
-// ── סגנון-ראש-קיר (תצוגת-חזית — CVSM #f-wall-topstyle) ─────────────────────
+// ── סגנון-ראש-קיר (בורר סגנון-ראש-הקיר בתצוגת-חזית) ─────────────────────
 @Composable
 fun WallHeadHost(nav: NavController) {
     WallHeadStyleScreen(
@@ -1401,10 +1401,10 @@ fun WallHeadHost(nav: NavController) {
     )
 }
 
-// ── לוח סמלי-CAD (CVSM #f-cad-symbol / #f-elev-cadsymbol) ────────────────────
+// ── לוח סמלי-CAD (בורר סמלי-הסימון לשרטוט — תוכנית/חזית) ────────────────────
 /**
  * לוח 25 הסמלים המובנים + הסמלים-המותאמים (Room). גל-זה: עיון/יצירה/מחיקה + תצוגה-מקדימה
- * חיה (תוכנית/חזית). הצבת-הסמל על קנבס-השרטוט היא גל-המשך (ראה CVSM_BUILD_TRACKER Follow-up),
+ * חיה (תוכנית/חזית). הצבת-הסמל על קנבס-השרטוט היא גל-המשך מתוכנן,
  * ולכן בחירת-סמל כאן מאשרת בטוסט בלבד.
  */
 @Composable
@@ -1595,7 +1595,7 @@ fun WallScreen(nav: NavController, wallId: Long) {
             }
         }
     }
-    // הוספת-אלמנט: תחילה בורר-הקטלוג המלא (CVSM), ואז מידות מותאמות לאלמנט שנבחר
+    // הוספת-אלמנט: תחילה בורר-הקטלוג המלא, ואז מידות מותאמות לאלמנט שנבחר
     var chosen by remember { mutableStateOf<ElementDef?>(null) }
     if (showAdd) {
         ElementPickerSheet(

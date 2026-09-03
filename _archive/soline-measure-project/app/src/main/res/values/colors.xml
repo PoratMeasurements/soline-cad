@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- מותג Soline (מהלוגו הרשמי) -->
-    <color name="soline_orange">#F49A1A</color>
-    <color name="soline_teal">#1596A8</color>
-    <color name="soline_cream">#FBF4E6</color>
-    <color name="soline_ink">#2B2B2B</color>
-</resources>

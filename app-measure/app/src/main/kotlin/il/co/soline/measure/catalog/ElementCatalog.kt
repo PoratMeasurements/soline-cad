@@ -1,12 +1,13 @@
 package il.co.soline.measure.catalog
 
-/* קטלוג-אלמנטים של Soline Measure — מיושר לחבילת "אלמנטים למדידה" של CVSM
- * (Package.lst · 27.cat), שכן אלה האלמנטים הנתמכים ב-ORDX. כל אלמנט נשמר
- * כ-AccessoryEntity.type = key, name = he.
+/* קטלוג-אלמנטים של Soline Measure — קבוצת האלמנטים הנתמכים בייצוא-ORDX. ערכי
+ * ה-ORDX (class/type/name) הם מזהי-הממשק שתוכנת-ה-CAD היעד דורשת כדי לבחור את
+ * פריט-הספרייה המתאים — לא תוכן-יצירתי; נשמרים באנגלית כפי שהפורמט מחייב.
+ * כל אלמנט נשמר כ-AccessoryEntity.type = key, name = he.
  *
  * הקטלוג עצמאי מ-AccType הבסיסי (data/Entities.kt) — הוא מקור-האמת של בורר-האלמנטים. */
 
-/** קבוצות-האלמנטים (מיושר לקטגוריות CVSM). */
+/** קבוצות-האלמנטים. */
 object ElementGroup {
     const val ELECTRICAL = "חשמל"
     const val PLUMBING = "אינסטלציה"

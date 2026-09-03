@@ -53,7 +53,7 @@ import kotlin.math.max
 import kotlin.math.roundToInt
 
 /* ─────────────────────────────────────────────────────────────────────────────
- *  WallHeadStyleScreen — סגנון-ראש-קיר (CVSM `#f-wall-topstyle`).
+ *  WallHeadStyleScreen — בורר סגנון-ראש-הקיר.
  *
  *  תצוגה-מקדימה של חמשת-סגנונות-הראש (ישר/משופע-שמאל/משופע-ימין/גמלון/חצי-אי)
  *  עם גובה-רכס ומיקום-פסגה, ופרופיל-החזית המחושב מ-WallHeadProfile.

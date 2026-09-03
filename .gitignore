@@ -31,3 +31,5 @@ _LATEST/apk/
 # Logs / temp
 *.log
 *.tmp
+_private_research/
+_archive/

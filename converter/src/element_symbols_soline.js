@@ -2,18 +2,18 @@
 /*
  * element_symbols_soline.js — ספריית סמלי-האלמנטים של Soline (2D symbol language)
  * =============================================================================
- * מקור-אמת יחיד לגאומטריית הסמל של כל אלמנט. נבנה בעקבות הנדסת-לאחור של שפת-הסמלים
- * של CVSM (com.roommeasure.app) — ראה docs/CVSM_ELEMENTS_LANGUAGE.md.
+ * מקור-אמת יחיד לגאומטריית הסמל של כל אלמנט. גאומטריית סמל 2D המצוירת בתיבת-יחידה
+ * מנורמלת לפי מוסכמות-שרטוט תקניות (IEC לחשמל, תקני אינסטלציה/אדריכלות).
  *
  * למה זה קיים: הייצוא הקודם החזיק ~8 גליפים גסים בלבד (SOCKET/GAS/WATER/…); כל
  * שאר 170 האלמנטים נפלו ל-CONTROLBOX/תיבה+תווית — ולכן "לא נראו טוב". המודול הזה
  * מגדיר סמל איכותי (תקן IEC לחשמל, תקני אינסטלציה/גז/מיזוג/אדריכלות) לכל טיפוס.
  *
  * ---------------------------------------------------------------------------
- * שפת-הסמל (זהה לסכימת renderSymbol של CVSM — ראה app.js):
+ * שפת-הסמל (תיבת-יחידה מנורמלת לפי מוסכמות-שרטוט תקניות):
  *   מערכת קואורדינטות: תיבת-יחידה מנורמלת [0..1]×[0..1], y כלפי-מטה, מרכז ב-(0.5,0.5).
  *   ברירת-מחדל: הקיר על הקצה התחתון (y=1.0); האלמנט בולט אל תוך החדר כלפי מעלה (y↓0).
- *   הרנדרר ממפה u→(u-0.5)*W ; v→(v-0.5)*H  (בדיוק כמו ux/uy של CVSM).
+ *   הרנדרר ממפה u→(u-0.5)*W ; v→(v-0.5)*H  (מיפוי סטנדרטי מתיבת-יחידה למידות).
  *
  *   פרימיטיבים (שדה t):
  *     line   {x1,y1,x2,y2}
@@ -28,7 +28,7 @@
  *   symbolFor(typeOrItem) -> { key, category, discipline, mount, dims:{w,h,d}, plan:[...], elev? }
  *   resolve(typeOrItem)   -> אליאס ל-symbolFor (מחזיר null אם אין התאמה → הרנדרר שם placeholder)
  *   listSymbols()         -> [key,...]  ·  SYMBOLS[key] = ההגדרה הגולמית
- *   toReportDef(sym)      -> { plan, elev }  בפורמט CVSM symbol_defs (להזרקה ל-DATA.symbol_defs)
+ *   toReportDef(sym)      -> { plan, elev }  בפורמט symbol_defs של הדו״ח (להזרקה ל-DATA.symbol_defs)
  *   toDxf2dGlyph(sym,opt) -> [ primitives ]  בפורמט GLYPHS/BLOCKS_2D (mm מקומי, קיר ב-Y=0, +Y לחדר)
  *
  * חוזה-אינטגרציה למייצאים (הם מבצעים את החיבור — מודול זה לא נוגע ב-export_*):
@@ -1132,7 +1132,7 @@ const NAME_MAP = [
   [/future ceiling|תקרה עתידית/i, 'future_ceiling'],
   [/^note$|^הערה$|\bnote\b/i, 'note'],
 
-  // --- שמות אפליקציית-המדידה (CVSM/InnoDraw) שאינם בקטלוג 170 (ordx_item_dictionary) ---
+  // --- שמות-אלמנטים נוספים שאינם בקטלוג 170 (ordx_item_dictionary) ---
   [/מפתח עם משקוף/i, 'door_frame'],
   [/פתח עד הרצפה/i, 'passage'],
   [/safe ?room|mamad|ממ.?ד/i, 'door_mamad'],   // ברירת-מחדל למ״מ בודד (אחרי חלון-ממ״ד) → דלת
@@ -1233,8 +1233,8 @@ function listSymbols() { return Object.keys(SYMBOLS); }
 // ---------------------------------------------------------------------------
 // אדפטרים למייצאים
 // ---------------------------------------------------------------------------
-// (1) פורמט דו״ח CVSM (renderSymbol): { plan, elev }. plan/elev = מערך פרימיטיבים
-//     בדיוק כפי שהם (הרנדרר של CVSM/viz יודע לצייר t=line/rect/ellipse/arc/poly/label).
+// (1) פורמט דו״ח: { plan, elev }. plan/elev = מערך פרימיטיבים
+//     בדיוק כפי שהם (הרנדרר יודע לצייר t=line/rect/ellipse/arc/poly/label).
 function toReportDef(symOrKey) {
   const sym = typeof symOrKey === 'string' ? SYMBOLS[symOrKey] : symOrKey;
   if (!sym) return null;
